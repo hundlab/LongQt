@@ -56,7 +56,8 @@ void Dialog::doTask(Protocol &proto)
 
     if (int(proto.saveflag)==1)
     {
-        std::sprintf(filename,"/Users/thomashund/Documents/projects/QtDocs/MyConcurrentModel/data/s%d.dat",proto.myId);   // introduce my id?
+        std::sprintf(filename,"/Users/onal01/Desktop/Repo/MyConcurrentModel/data/s%d.dat", proto.myId);
+       // std::sprintf(filename,"/Users/thomashund/Documents/projects/QtDocs/MyConcurrentModel/data/s%d.dat",proto.myId);   // introduce my id?
         try{
             if (finalSVvals->writevals(proto.cell->vars,filename)==0)
                 throw QString("Error saving final state variable values");
@@ -89,8 +90,9 @@ void Dialog::on_pushButton_clicked()
        if (int(protos[i].readflag)==1){
            try
            {
-                std::sprintf(filename,"/Users/thomashund/Documents/projects/QtDocs/MyConcurrentModel/data/r%d.dat",protos[i].myId);   // introduce my id?
-                if (initialSVvals->readvals(protos[i].cell->vars,filename)==0)
+                //std::sprintf(filename,"/Users/thomashund/Documents/projects/QtDocs/MyConcurrentModel/data/r%d.dat",protos[i].myId);   // introduce my id?
+                std::sprintf(filename,"/Users/onal01/Desktop/Repo/MyConcurrentModel/data/r%d.dat", protos[i].myId);
+               if (initialSVvals->readvals(protos[i].cell->vars,filename)==0)
                     throw QString("Error reading initial state variable values...simulation terminated");
                 vector.append(protos[i]);                // Initialize vector for QtConcurrent...move into try statement?
             }
