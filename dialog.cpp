@@ -1,6 +1,9 @@
+#include "proto.h"
 #include "dialog.h"
 #include "ui_dialog.h"
 #include "myoutput.h"
+
+void setupSim(Protocol* proto, int simNum);
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -14,10 +17,82 @@ Dialog::~Dialog()
     delete ui;
 }
 
+void Dialog::doTask(Protocol &proto) {
+    proto.runSim();
+}
+
+void Dialog::on_pushButton_clicked() {
+    int i = 0;
+    QVector<Protocol> vector;
+    std::vector<Protocol> protos(ui->spinBox->value()); // create vector of Protocols for QtConcurrent
+
+    
+    for( i = 0; i < ui->spinBox->value(); i++) {
+        setupSim(&protos[i] ,i+1);
+        vector.append(protos[i]);
+    }
+
+    QProgressDialog pdialog;
+    pdialog.setLabelText("Processing");
+    QFutureWatcher<void> watcher;
+
+    connect(&pdialog,SIGNAL(canceled()),&watcher,SLOT(cancel()));  // connect signals and slots for watcher and dialog
+    connect(&watcher,SIGNAL(finished()),&pdialog,SLOT(reset()));
+    connect(&watcher,SIGNAL(progressRangeChanged(int,int)),&pdialog,SLOT(setRange(int,int)));
+    connect(&watcher,SIGNAL(progressValueChanged(int)),&pdialog,SLOT(setValue(int)));
+    
+    //QFuture = QtConcurrent::map(vector,&Dialog::doTask);
+    watcher.setFuture(QtConcurrent::map(vector,&Dialog::doTask));  // pass vector of protocols to QtConcurrent
+
+    pdialog.exec();
+    watcher.waitForFinished();       // watch for QtConcurrent to finish
+
+    if(watcher.isCanceled())
+    {
+       qDebug()<<"canceled!";
+       QMessageBox::critical(this,"Cancel","Simulation canceled!");
+    }
+    else
+    {
+       qDebug()<<"finished!";
+       QMessageBox::information(this,"Finish","Simulation finished!");
+    }
+
+    for(int i = 0; i < ui->spinBox->value(); i++)
+    {
+        delete protos[i].cell;
+    }
+
+}
+
+void setupSim(Protocol* proto, int simNum) {
+    proto->cell = new ControlSa;
+    proto->readfile = "./data/r"+ simNum ; // File to read SV ICs
+    proto->savefile = "./data/s"+ simNum ; // File to save final SV
+    proto->dvarfile = "dvars.txt";  // File with SV to write.
+    proto->pvarfile = "pvars.txt"; 
+    proto->simvarfile = "simvars.txt";  // File to specify sim params
+    proto->measfile = "mvars.txt"; // File containing property names to track
+
+
+    proto->readvals(proto->pars, proto->simvarfile);  // Read in sim vars
+    proto->read_model_params(); 
+
+    
+    proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
+    
+    
+    proto->initializeMeasure(int(proto->maxmeassize));   //initializeMeasures from measfile
+    
+    proto->douts = new Output[proto->getNeededDOutputSize()];   // Array of i/o data streams
+   
+}
+
+/*
 void Dialog::doTask(Protocol &proto)
 {
     // work goes here for thread
-    QPointer<MyOutput> finalSVvals = new MyOutput;
+    Output finalSVvals;
     char filename[200];   // file for saving final state var vals
 
     qDebug() << "Starting thread...V = " << proto.cell->vOld;
@@ -56,9 +131,9 @@ void Dialog::doTask(Protocol &proto)
 
     if (int(proto.saveflag)==1)
     {
-        std::sprintf(filename,"/Users/thomashund/Documents/projects/QtDocs/MyConcurrentModel/data/s%d.dat",proto.myId);   // introduce my id?
+        std::sprintf(filename,"./data/s%d.dat",proto.myId);   // introduce my id?
         try{
-            if (finalSVvals->writevals(proto.cell->vars,filename)==0)
+            if (finalSVvals.writevals(proto.cell->vars,filename)==0)
                 throw QString("Error saving final state variable values");
         }
         catch(QString sErr)
@@ -89,8 +164,8 @@ void Dialog::on_pushButton_clicked()
        if (int(protos[i].readflag)==1){
            try
            {
-                std::sprintf(filename,"/Users/thomashund/Documents/projects/QtDocs/MyConcurrentModel/data/r%d.dat",protos[i].myId);   // introduce my id?
-                if (initialSVvals->readvals(protos[i].cell->vars,filename)==0)
+                std::sprintf(filename,"./data/r%d.dat",protos[i].myId);   // introduce my id?
+                if (protos[i].readvals(protos[i].cell->vars,filename)==0)
                     throw QString("Error reading initial state variable values...simulation terminated");
                 vector.append(protos[i]);                // Initialize vector for QtConcurrent...move into try statement?
             }
@@ -136,3 +211,4 @@ void Dialog::on_pushButton_clicked()
     }
 
 }
+*/
