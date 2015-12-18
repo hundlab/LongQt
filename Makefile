@@ -14,7 +14,11 @@ CC            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefau
 CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CONCURRENT_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.7 -Wall -W -fPIC $(DEFINES)
+<<<<<<< HEAD
 CXXFLAGS      = -pipe -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -std=c++11 -stdlib=libc++ -mmacosx-version-min=10.7 -Wall -W -fPIC $(DEFINES)
+=======
+CXXFLAGS      = -pipe -std=c++11 -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -std=c++11 -stdlib=libc++ -mmacosx-version-min=10.7 -Wall -W -fPIC $(DEFINES)
+>>>>>>> danielle-daniel-merge
 INCPATH       = -I. -Imodellib -I../5.5/clang_64/lib/QtWidgets.framework/Headers -I../5.5/clang_64/lib/QtGui.framework/Headers -I../5.5/clang_64/lib/QtConcurrent.framework/Headers -I../5.5/clang_64/lib/QtCore.framework/Headers -I. -I../../Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I../../Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I../5.5/clang_64/mkspecs/macx-clang -F/Applications/Qt/5.5/clang_64/lib
 QMAKE         = /Applications/Qt/5.5/clang_64/bin/qmake
 DEL_FILE      = rm -f
@@ -643,8 +647,11 @@ moc_dialog.cpp: ../5.5/clang_64/lib/QtWidgets.framework/Headers/QDialog \
 		modellib/proto.h \
 		modellib/kurata08.h \
 		modellib/cell.h \
+<<<<<<< HEAD
 		../5.5/clang_64/lib/QtCore.framework/Headers/QString \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qstring.h \
+=======
+>>>>>>> danielle-daniel-merge
 		dialog.h
 	/Applications/Qt/5.5/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Applications/Qt/5.5/clang_64/mkspecs/macx-clang -I/Applications/Qt/MyConcurrentModel -I/Applications/Qt/MyConcurrentModel/modellib -I/Applications/Qt/5.5/clang_64/lib/QtWidgets.framework/Headers -I/Applications/Qt/5.5/clang_64/lib/QtGui.framework/Headers -I/Applications/Qt/5.5/clang_64/lib/QtConcurrent.framework/Headers -I/Applications/Qt/5.5/clang_64/lib/QtCore.framework/Headers -F/Applications/Qt/5.5/clang_64/lib dialog.h -o moc_dialog.cpp
 
@@ -715,13 +722,23 @@ main.o: main.cpp dialog.h \
 		modellib/proto.h \
 		modellib/kurata08.h \
 		modellib/cell.h \
+<<<<<<< HEAD
 		../5.5/clang_64/lib/QtCore.framework/Headers/QString \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qstring.h \
+=======
+>>>>>>> danielle-daniel-merge
 		../5.5/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../5.5/clang_64/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
+<<<<<<< HEAD
 dialog.o: dialog.cpp dialog.h \
+=======
+dialog.o: dialog.cpp modellib/proto.h \
+		modellib/kurata08.h \
+		modellib/cell.h \
+		dialog.h \
+>>>>>>> danielle-daniel-merge
 		../5.5/clang_64/lib/QtWidgets.framework/Headers/QDialog \
 		../5.5/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
 		../5.5/clang_64/lib/QtWidgets.framework/Headers/QProgressDialog \
@@ -752,11 +769,14 @@ dialog.o: dialog.cpp dialog.h \
 		../5.5/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h \
 		../5.5/clang_64/lib/QtCore.framework/Headers/QPointer \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qpointer.h \
+<<<<<<< HEAD
 		modellib/proto.h \
 		modellib/kurata08.h \
 		modellib/cell.h \
 		../5.5/clang_64/lib/QtCore.framework/Headers/QString \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qstring.h \
+=======
+>>>>>>> danielle-daniel-merge
 		ui_dialog.h \
 		myoutput.h \
 		../5.5/clang_64/lib/QtCore.framework/Headers/QObject \
@@ -769,6 +789,7 @@ dialog.o: dialog.cpp dialog.h \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qtextstream.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dialog.o dialog.cpp
 
+<<<<<<< HEAD
 cell.o: modellib/cell.cpp modellib/cell.h \
 		../5.5/clang_64/lib/QtCore.framework/Headers/QString \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qstring.h
@@ -778,13 +799,23 @@ kurata08.o: modellib/kurata08.cpp modellib/kurata08.h \
 		modellib/cell.h \
 		../5.5/clang_64/lib/QtCore.framework/Headers/QString \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qstring.h
+=======
+cell.o: modellib/cell.cpp modellib/cell.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cell.o modellib/cell.cpp
+
+kurata08.o: modellib/kurata08.cpp modellib/kurata08.h \
+		modellib/cell.h
+>>>>>>> danielle-daniel-merge
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kurata08.o modellib/kurata08.cpp
 
 proto.o: modellib/proto.cpp modellib/proto.h \
 		modellib/kurata08.h \
 		modellib/cell.h \
+<<<<<<< HEAD
 		../5.5/clang_64/lib/QtCore.framework/Headers/QString \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qstring.h \
+=======
+>>>>>>> danielle-daniel-merge
 		../5.5/clang_64/lib/QtCore.framework/Headers/QDebug \
 		../5.5/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o proto.o modellib/proto.cpp

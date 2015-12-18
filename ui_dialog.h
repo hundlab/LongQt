@@ -26,8 +26,13 @@ class Ui_Dialog
 {
 public:
     QHBoxLayout *horizontalLayout;
+<<<<<<< HEAD
     QComboBox *comboBox_2;
     QComboBox *comboBox;
+=======
+    QComboBox *comboBox;
+    QComboBox *comboBox_2;
+>>>>>>> danielle-daniel-merge
     QSpinBox *spinBox;
     QPushButton *pushButton;
 
@@ -35,21 +40,36 @@ public:
     {
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName(QStringLiteral("Dialog"));
+<<<<<<< HEAD
         Dialog->resize(350, 48);
+=======
+        Dialog->resize(420, 50);
+>>>>>>> danielle-daniel-merge
         horizontalLayout = new QHBoxLayout(Dialog);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+<<<<<<< HEAD
         comboBox_2 = new QComboBox(Dialog);
         comboBox_2->setObjectName(QStringLiteral("comboBox_2"));
 
         horizontalLayout->addWidget(comboBox_2);
 
+=======
+>>>>>>> danielle-daniel-merge
         comboBox = new QComboBox(Dialog);
         comboBox->setObjectName(QStringLiteral("comboBox"));
 
         horizontalLayout->addWidget(comboBox);
 
+<<<<<<< HEAD
+=======
+        comboBox_2 = new QComboBox(Dialog);
+        comboBox_2->setObjectName(QStringLiteral("comboBox_2"));
+
+        horizontalLayout->addWidget(comboBox_2);
+
+>>>>>>> danielle-daniel-merge
         spinBox = new QSpinBox(Dialog);
         spinBox->setObjectName(QStringLiteral("spinBox"));
 
