@@ -10,6 +10,15 @@ Dialog::Dialog(QWidget *parent) :
     ui(new Ui::Dialog)
 {
     ui->setupUi(this);
+    ui->comboBox->addItem("Choose Cell");
+    ui->comboBox->addItem("Ventricular");
+    ui->comboBox->addItem("Sinoatrial Node");
+    ui->comboBox->addItem("Atrial");
+    ui->comboBox->addItem("Kurata");
+    ui->comboBox_2->addItem("Choose Species");
+    ui->comboBox_2->addItem("Mouse");
+    ui->comboBox_2->addItem("Rabbit");
+    ui->comboBox_2->addItem("Human");
 }
 
 Dialog::~Dialog()
@@ -26,11 +35,12 @@ void Dialog::on_pushButton_clicked() {
     QVector<Protocol> vector;
     std::vector<Protocol> protos(ui->spinBox->value()); // create vector of Protocols for QtConcurrent
 
-    
     for( i = 0; i < ui->spinBox->value(); i++) {
         setupSim(&protos[i] ,i+1);
         vector.append(protos[i]);
     }
+    //very brittle way of chosing cells!! //Dani
+    if(ui->comboBox->currentText() == "Kurata"){
 
     QProgressDialog pdialog;
     pdialog.setLabelText("Processing");
@@ -62,7 +72,12 @@ void Dialog::on_pushButton_clicked() {
     {
         delete protos[i].cell;
     }
-
+    }
+       else{
+        QMessageBox msgBox;
+        msgBox.setText("Code Currently Being Modified\n Please choose a different cell.\n (Kurata)");
+        msgBox.exec();
+    }
 }
 
 void setupSim(Protocol* proto, int simNum) {
