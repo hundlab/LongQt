@@ -2,6 +2,7 @@
 #include "dialog.h"
 #include "ui_dialog.h"
 #include "myoutput.h"
+#include "varmenu.h"
 
 void setupSim(Protocol* proto, int simNum);
 
@@ -30,6 +31,8 @@ void Dialog::on_pushButton_clicked() {
     for( i = 0; i < ui->spinBox->value(); i++) {
         setupSim(&protos[i] ,i+1);
         vector.append(protos[i]);
+        simvarMenu* test = new simvarMenu(0, protos[i]);
+        test->show();
     }
 
     QProgressDialog pdialog;
