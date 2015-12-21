@@ -17,6 +17,6 @@ data/s8.dat
 
 test.pro
 
-test.cpp
+main_test.cpp
 
 
