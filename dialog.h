@@ -1,9 +1,9 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include <QDialog>
-#include <QProgressDialog>
 #include <QDebug>
+#include <QProgressDialog>
+#include <QDialog>
 #include <QtConcurrent>
 #include <QThread>
 #include <QFutureWatcher>

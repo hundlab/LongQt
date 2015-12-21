@@ -19,4 +19,6 @@ test.pro
 
 main_test.cpp
 
+MyConcurrentModel.app/
+
 
