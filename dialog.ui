@@ -6,14 +6,32 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>222</width>
+<<<<<<< HEAD
+    <width>350</width>
+    <height>48</height>
+=======
+    <width>420</width>
     <height>50</height>
+>>>>>>> danielle-daniel-merge
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+<<<<<<< HEAD
+    <widget class="QComboBox" name="comboBox_2"/>
+   </item>
+   <item>
+    <widget class="QComboBox" name="comboBox"/>
+=======
+    <widget class="QComboBox" name="comboBox"/>
+   </item>
+   <item>
+    <widget class="QComboBox" name="comboBox_2"/>
+>>>>>>> danielle-daniel-merge
+   </item>
    <item>
     <widget class="QSpinBox" name="spinBox"/>
    </item>
