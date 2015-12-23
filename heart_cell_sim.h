@@ -2,6 +2,7 @@
 #define HEART_CELL_SIM_H
 
 #include <QPushButton>
+#include <QLabel>
 #include <QSpinBox>
 #include <QComboBox>
 #include "proto.h"
@@ -33,6 +34,7 @@ class Simulation : public QWidget {
 //buttons
     QPushButton* run_button;
     QSpinBox* num_of_sims;
+    QLabel* num_of_sims_label;
     QPushButton* edit_sim_button;
     QPushButton* load_sim_button;
     QPushButton* edit_pvars_button;

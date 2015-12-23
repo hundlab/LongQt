@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QSpinBox>
+#include <QLabel>
 
 #include "proto.h"
 #include "heart_cell_sim.h"
@@ -32,6 +33,7 @@ Simulation::Simulation(QWidget* parent){
     QHBoxLayout* file_buttons = new QHBoxLayout();
 //create buttons/combo boxes
     num_of_sims = new QSpinBox(this);
+    num_of_sims_label = new QLabel("Number of Simulations:", this);
     run_button = new QPushButton("Run Simulations", this);
     edit_sim_button = new QPushButton("Edit Simulaiton Variables", this);
     load_sim_button = new QPushButton("Read Simulation Variables", this);
@@ -77,8 +79,9 @@ Simulation::Simulation(QWidget* parent){
 //main_layout
     main_layout->addWidget(cell_type, 0,0,1,1);
     main_layout->addWidget(cell_species, 0,1,1,1);
-    main_layout->addWidget(num_of_sims,0,2,1,1);
-    main_layout->addWidget(init_cell_button,0,3,1,1);
+    main_layout->addWidget(init_cell_button,0,2,1,1);
+    main_layout->addWidget(num_of_sims_label, 0,3,1,1);
+    main_layout->addWidget(num_of_sims,0,4,1,1);
     main_layout->addLayout(file_buttons,1,0,1,4);
     main_layout->addLayout(advanced, max_height -1, 0,1,4);
     main_layout->addWidget(run_button, max_height, max_width);
@@ -125,11 +128,13 @@ void Simulation::edit_simvars() {
     simvarMenu* menu = new simvarMenu(proto, this);
     menu->show();
     simvars_read = true;
+    init_douts();
     set_sim_ready();
 };
 
 void Simulation::load_simvars() {
     simvars_read = !(bool)proto->readpars(proto->pars, proto->simvarfile);
+    init_douts();
     set_sim_ready();
 };
 
@@ -151,6 +156,7 @@ void Simulation::edit_mvars() {};
 
 void Simulation::load_mvars() {
     mvars_read = !(bool)proto->initializeMeasure(int(proto->maxmeassize));
+    init_douts();
     set_sim_ready();
 };
 
