@@ -24,6 +24,7 @@ SOURCES += main.cpp\
 #    modellib/kurata08mod.cpp \
     modellib/proto.cpp \
     varmenu.cpp \
+    heart_cell_sim.cpp \
     myoutput.cpp
 
 HEADERS  += dialog.h \
@@ -32,6 +33,7 @@ HEADERS  += dialog.h \
 #    modellib/kurata08mod.h \
     modellib/proto.h \
     varmenu.h \
+    heart_cell_sim.h \ 
     myoutput.h
 
 FORMS    += dialog.ui

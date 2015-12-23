@@ -14,7 +14,7 @@ using namespace std;
 class simvarMenu :public QWidget {
 Q_OBJECT
   public:
-    simvarMenu(QWidget * parent, Protocol initial_proto);
+    simvarMenu(Protocol* initial_proto, QWidget* parent = 0);
     ~simvarMenu();
   private:
     void update_menu();

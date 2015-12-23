@@ -14,9 +14,9 @@
 
 
 
-simvarMenu::simvarMenu(QWidget *parent, Protocol initial_proto) {
+simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)  {
     unsigned int i, row_len = 6;
-    proto = initial_proto;
+    proto = *initial_proto;
     this->parent = parent;
     map<string,double*> pars = proto.pars;
     map<string,double*>::iterator it;
