@@ -24,9 +24,23 @@ Simulation::Simulation(QWidget* parent){
     QHBoxLayout* file_buttons = new QHBoxLayout();
 //create buttons/combo boxes
     QPushButton* run = new QPushButton("Run Simulations", this);
-    run->setEnabled(sim_ready);
     QPushButton* edit_sim = new QPushButton("Edit Simulaiton Variables", this);
     QPushButton* load_sim = new QPushButton("Read Simulation Variabels", this);
+    QComboBox* cell_type = new QComboBox(this);
+    QComboBox* cell_species = new QComboBox(this);
+//set button/combo box inital values
+    run->setEnabled(sim_ready);
+    cell_type->addItem("Default Cell");
+    cell_type->addItem("Choose Cell");
+    cell_type->addItem("Ventricular");
+    cell_type->addItem("Sinoatrial Node");
+    cell_type->addItem("Atrial");
+    cell_type->addItem("Kurata");
+    cell_species->addItem("Default Species");
+    cell_species->addItem("Choose Species");
+    cell_species->addItem("Mouse");
+    cell_species->addItem("Rabbit");
+    cell_species->addItem("Human");
 //add buttons to layouts
 //advanced buttons
     advanced_buttons->addButton(edit_sim);
@@ -34,6 +48,8 @@ Simulation::Simulation(QWidget* parent){
 //load variables buttons
     file_buttons->addWidget(load_sim);
 //main_layout
+    main_layout->addWidget(cell_type, 0,0);
+    main_layout->addWidget(cell_species, 0,1);
     main_layout->addLayout(file_buttons,1,-1);
     main_layout->addLayout(advanced, max_height -1, 1);
     main_layout->addWidget(run, max_height, max_width);
