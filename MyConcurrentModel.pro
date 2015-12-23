@@ -8,7 +8,7 @@ QT       += core gui concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = MyConcurrentModel
+TARGET = MyConcurrentModel.out
 TEMPLATE = app
 
 #QMAKE_MAC_SDK = macosx10.11

@@ -1,24 +1,26 @@
+#executables and libraries
+*.so
+*.out
+*.exe
+*.app
 
-data/s1.dat
-
-data/s2.dat
-
-data/s3.dat
-
-data/s4.dat
-
-data/s5.dat
-
-data/s6.dat
-
-data/s7.dat
-
-data/s8.dat
-
-test.pro
-
-main_test.cpp
-
+#objects and other compiled files
+moc_*
+*.o
+.qmake.stash
 MyConcurrentModel.app/
 
+#temporary modellib folers for merging
+modellib/modelnew/
+modellib/modelold/
 
+#data files and temp text editor files
+data/
+*.txt
+*.swp
+
+#testing utils
+test.pro
+main_test.cpp
+
+#.gitignore
