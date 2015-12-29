@@ -6,6 +6,9 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QLabel>
+#include <QProgressDialog>
+#include <QFutureWatcher>
+#include <QtConcurrent>
 
 #include "proto.h"
 #include "heart_cell_sim.h"
@@ -121,7 +124,53 @@ void Simulation::init_douts() {
     }
 };
 
+void Simulation::doTask(Protocol& toRun) {
+   toRun.runSim(); 
+};
+
 void Simulation::run_sims() {
+    unsigned int i = 0;
+    QVector<Protocol> vector;
+//    std::vector<Protocol> protos(num_sims); // create vector of Protocols for QtConcurrent
+doTask(*(new Protocol(*proto)));
+   for( i = 0; i < num_sims; i++) {
+//        protos[i] = Protocol(*proto);
+        vector.append(*proto);
+   }
+    //very brittle way of chosing cells!! //Dani
+//    if(ui->comboBox->currentText() == "Kurata"){
+
+    QProgressDialog pdialog;
+    pdialog.setLabelText("Processing");
+    QFutureWatcher<void> watcher;
+
+    connect(&pdialog,SIGNAL(canceled()),&watcher,SLOT(cancel()));  // connect signals and slots for watcher and dialog
+    connect(&watcher,SIGNAL(finished()),&pdialog,SLOT(reset()));
+    connect(&watcher,SIGNAL(progressRangeChanged(int,int)),&pdialog,SLOT(setRange(int,int)));
+    connect(&watcher,SIGNAL(progressValueChanged(int)),&pdialog,SLOT(setValue(int)));
+    
+    QFuture<void> next = QtConcurrent::map(vector,&Simulation::doTask);  // pass vector of protocols to QtConcurrent
+
+    watcher.setFuture(next);
+    pdialog.exec();
+    watcher.waitForFinished();       // watch for QtConcurrent to finish
+
+    if(watcher.isCanceled())
+    {
+       qDebug()<<"canceled!";
+       QMessageBox::critical(this,"Cancel","Simulation canceled!");
+    }
+    else
+    {
+       qDebug()<<"finished!";
+       QMessageBox::information(this,"Finish","Simulation finished!");
+    }
+
+//       else{
+//        QMessageBox msgBox;
+//        msgBox.setText("Code Currently Being Modified\n Please choose a different cell.\n (Kurata)");
+//        msgBox.exec();
+//    }
 };
 
 void Simulation::edit_simvars() {

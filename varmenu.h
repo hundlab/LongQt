@@ -38,4 +38,5 @@ Q_OBJECT
     void update_pvars(int id);
     void set_write_close(int state);
 };
+
 #endif // VARMENU_H

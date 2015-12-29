@@ -31,6 +31,8 @@ class Simulation : public QWidget {
     void set_sim_ready();
     void set_cell_ready();
     void init_douts();
+//utility functions
+    static void doTask(Protocol& toRun);
 //buttons
     QPushButton* run_button;
     QSpinBox* num_of_sims;
