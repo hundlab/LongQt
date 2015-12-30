@@ -31,9 +31,8 @@ Simulation::Simulation(QWidget* parent){
     unsigned int max_width = 14;
 //create layouts
     QGridLayout* main_layout = new QGridLayout(this);
-    QButtonGroup* advanced_buttons = new QButtonGroup(this);
-    QGridLayout* advanced = new QGridLayout();
-    QHBoxLayout* file_buttons = new QHBoxLayout();
+    QGridLayout* advanced = new QGridLayout;
+    QHBoxLayout* file_buttons = new QHBoxLayout;
 //create buttons/combo boxes
     num_of_sims = new QSpinBox(this);
     num_of_sims_label = new QLabel("Number of Simulations:", this);
@@ -46,6 +45,7 @@ Simulation::Simulation(QWidget* parent){
     load_dvars_button = new QPushButton("Read Output Variables", this);
     edit_mvars_button = new QPushButton("Edit Measurement Variables", this);
     load_mvars_button = new QPushButton("Read Measurement Variables", this);
+    load_all_button = new QPushButton("Read Variables and Constants", this);
     init_cell_button = new QPushButton("Use cell preference", this);
     cell_type = new QComboBox(this);
     cell_species = new QComboBox(this);
@@ -56,6 +56,7 @@ Simulation::Simulation(QWidget* parent){
     edit_pvars_button->setEnabled(cell_ready);
     load_dvars_button->setEnabled(cell_ready);
     edit_dvars_button->setEnabled(cell_ready);
+    load_all_button->setEnabled(cell_ready);
     cell_type->addItem("Default Cell");
     cell_type->addItem("Choose Cell");
     cell_type->addItem("Ventricular");
@@ -69,7 +70,6 @@ Simulation::Simulation(QWidget* parent){
     cell_species->addItem("Human");
 //add buttons to layouts
 //advanced buttons
-    advanced_buttons->addButton(edit_sim_button);
     advanced->addWidget(edit_sim_button, 0,0);
     advanced->addWidget(edit_pvars_button,0,1);
     advanced->addWidget(edit_dvars_button,0,2);
@@ -79,13 +79,14 @@ Simulation::Simulation(QWidget* parent){
     file_buttons->addWidget(load_pvars_button);
     file_buttons->addWidget(load_dvars_button);
     file_buttons->addWidget(load_mvars_button);
+    file_buttons->addWidget(load_all_button);
 //main_layout
     main_layout->addWidget(cell_type, 0,0,1,1);
     main_layout->addWidget(cell_species, 0,1,1,1);
     main_layout->addWidget(init_cell_button,0,2,1,1);
     main_layout->addWidget(num_of_sims_label, 0,3,1,1);
     main_layout->addWidget(num_of_sims,0,4,1,1);
-    main_layout->addLayout(file_buttons,1,0,1,4);
+    main_layout->addLayout(file_buttons,1,0,1,5);
     main_layout->addLayout(advanced, max_height -1, 0,1,4);
     main_layout->addWidget(run_button, max_height, max_width);
 //connect buttons
@@ -98,6 +99,10 @@ Simulation::Simulation(QWidget* parent){
     connect(load_dvars_button, SIGNAL(clicked()), this, SLOT(load_dvars()));
     connect(edit_mvars_button, SIGNAL(clicked()), this, SLOT(edit_mvars()));
     connect(load_mvars_button, SIGNAL(clicked()), this, SLOT(load_mvars()));
+    connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_simvars()));
+    connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_pvars()));
+    connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_dvars()));
+    connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_mvars()));
     connect(init_cell_button, SIGNAL(clicked()), this, SLOT(init_cell()));
     connect(num_of_sims, SIGNAL(valueChanged(int)), this, SLOT(set_num_sims(int)));
 };
@@ -115,6 +120,7 @@ void Simulation::set_cell_ready() {
     edit_pvars_button->setEnabled(cell_ready);
     load_dvars_button->setEnabled(cell_ready);
     edit_dvars_button->setEnabled(cell_ready);
+    load_all_button->setEnabled(cell_ready);
 };
 
 void Simulation::init_douts() {
@@ -130,12 +136,20 @@ void Simulation::doTask(Protocol& toRun) {
 
 void Simulation::run_sims() {
     unsigned int i = 0;
+    Protocol* temp;
     QVector<Protocol> vector;
 //    std::vector<Protocol> protos(num_sims); // create vector of Protocols for QtConcurrent
-doTask(*(new Protocol(*proto)));
    for( i = 0; i < num_sims; i++) {
+        temp = new Protocol(*proto);
+        temp->readfile = "./data/r"+ to_string(i) + ".dat"; // File to read SV ICs
+        temp->savefile = "./data/s"+ to_string(i) + ".dat"; // File to save final SV
+        temp->savefile = proto->savefile + ".dat";
+        temp->propertyoutfile = "./data/dt%d_%s" + to_string(i) + string(".dat");
+        temp->dvarsoutfile = "./data/dt%d_dvars"+ to_string(i) + string(".dat");
+        temp->finalpropertyoutfile = "./data/dss_%s"+ to_string(i) + string(".dat");
+        temp->finaldvarsoutfile = "./data/dss_pvars"+ to_string(i) + string(".dat");
 //        protos[i] = Protocol(*proto);
-        vector.append(*proto);
+        vector.append(*temp);
    }
     //very brittle way of chosing cells!! //Dani
 //    if(ui->comboBox->currentText() == "Kurata"){

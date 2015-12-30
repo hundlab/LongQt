@@ -27,12 +27,12 @@ class Simulation : public QWidget {
     bool dvars_read;
     bool douts_ready;
 //boolean manipulation functions
-//also set buttons to enabled
+//also set buttons to match booleans
     void set_sim_ready();
     void set_cell_ready();
-    void init_douts();
+    void init_douts();//initialize proto->douts when ready
 //utility functions
-    static void doTask(Protocol& toRun);
+    static void doTask(Protocol& toRun);//run the simulaiton
 //buttons
     QPushButton* run_button;
     QSpinBox* num_of_sims;
@@ -45,22 +45,23 @@ class Simulation : public QWidget {
     QPushButton* load_dvars_button;
     QPushButton* edit_mvars_button;
     QPushButton* load_mvars_button;
+    QPushButton* load_all_button;
     QPushButton* init_cell_button;
     QComboBox* cell_type;
     QComboBox* cell_species;
 
   private slots:
-    void run_sims();
-    void edit_simvars();
-    void load_simvars();
-    void edit_pvars();
-    void load_pvars();
-    void edit_dvars();
-    void load_dvars();
-    void edit_mvars();
-    void load_mvars();
-    void init_cell();
-    void set_num_sims(int value);
+    void run_sims();//action for running the simulation
+    void edit_simvars();//open simvarMenu
+    void load_simvars();//wrapper for proto->readpars
+    void edit_pvars();//open pvarsMenu
+    void load_pvars();//wrapper for proto->readpvars
+    void edit_dvars();//open dvarsMenu
+    void load_dvars();//wrapper for proto->resizemap
+    void edit_mvars();//open mvarsMenu
+    void load_mvars();//wrapper for proto->initializeMeasure
+    void init_cell();//initialize proto->cell
+    void set_num_sims(int value);//make num_sims match num_of_sims
 };
 
 #endif // HEART_CELL_SIM_H

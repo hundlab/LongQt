@@ -24,19 +24,33 @@ Q_OBJECT
     Protocol proto;
     QWidget* parent;
     bool write_close;
+//Buttons & thier labels
     QDoubleSpinBox** simvars;
     QLabel** simvar_names;
-    QSignalMapper* simvar_map;
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QPushButton* close_button;
-    void update_menu();
+//Map from button output to signal input
+    QSignalMapper* simvar_map;
+//screen functions
+    void update_menu(); //make menu match pars
 
   private slots:
-    bool read_simvars();
-    bool write_simvars();
-    void update_pvars(int id);
-    void set_write_close(int state);
+    bool read_simvars(); //wrapper for Protocol::readpars with QFileDialog
+    bool write_simvars(); //wrapper for Protocol::writepars
+    void update_pvars(int id); //make a Protocol::pars entry match the screen
+    void set_write_close(int state); //update function for write_close
 };
 
+class pvarMenu :public QWidget {
+
+};
+
+class dvarMenu :public QWidget {
+
+};
+
+class mvarMenu :public QWidget {
+
+};
 #endif // VARMENU_H
