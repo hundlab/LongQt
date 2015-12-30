@@ -95,7 +95,7 @@ Simulation::Simulation(QWidget* parent){
     connect(load_sim_button, SIGNAL(clicked()),this, SLOT(load_simvars()));
     connect(edit_pvars_button, SIGNAL(clicked()), this, SLOT(edit_pvars()));
     connect(load_pvars_button, SIGNAL(clicked()), this, SLOT(load_pvars()));
-    connect(edit_dvars_button, SIGNAL(clicked()), this, SLOT(edit_pvars()));
+    connect(edit_dvars_button, SIGNAL(clicked()), this, SLOT(edit_dvars()));
     connect(load_dvars_button, SIGNAL(clicked()), this, SLOT(load_dvars()));
     connect(edit_mvars_button, SIGNAL(clicked()), this, SLOT(edit_mvars()));
     connect(load_mvars_button, SIGNAL(clicked()), this, SLOT(load_mvars()));
@@ -208,7 +208,12 @@ void Simulation::load_pvars() {
     set_sim_ready();
 };
 
-void Simulation::edit_dvars() {};
+void Simulation::edit_dvars() {
+    dvarMenu* menu = new dvarMenu(proto, this);
+    menu->show();
+    dvars_read = true;
+    set_sim_ready();
+};
 
 void Simulation::load_dvars() {
     dvars_read = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap

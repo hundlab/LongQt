@@ -1805,6 +1805,7 @@ varmenu.o: varmenu.cpp ../../Qt/5.5/gcc_64/include/QtWidgets/QWidget \
 		../../Qt/5.5/gcc_64/include/QtCore/QDate \
 		../../Qt/5.5/gcc_64/include/QtCore/qdatetime.h \
 		../../Qt/5.5/gcc_64/include/QtGui/QCloseEvent \
+		../../Qt/5.5/gcc_64/include/QtWidgets/QHBoxLayout \
 		varmenu.h \
 		../../Qt/5.5/gcc_64/include/QtCore/QSignalMapper \
 		../../Qt/5.5/gcc_64/include/QtCore/qsignalmapper.h \
