@@ -34,7 +34,6 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)  {
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
     QHBoxLayout* button_group;
-//    simvar_map = new QSignalMapper(this);
 //initialize buttons &lables
     simvars = (QDoubleSpinBox**)malloc(pars.size()*sizeof(QDoubleSpinBox*));
     simvar_names = (QLabel**)malloc(pars.size()*sizeof(QLabel*));
@@ -54,11 +53,7 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)  {
         button_group->addWidget(simvar_names[i]);
         button_group->addWidget(simvars[i]);
         central_layout->addLayout(button_group, (2*i)/row_len+1, (2*i)%row_len, 1, 2);
-//        main_layout->addWidget(simvar_names[i],(2*i)/row_len+1, (2*i)%row_len);
-//        main_layout->addWidget(simvars[i],(2*i+1)/row_len+1, (2*i+1)%row_len);
-//        connect(simvars[i], SIGNAL(editingFinished()),simvar_map, SLOT(map()));
         connect(simvars[i], static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=] (double value) {update_pvars(pair<string,double>(name, value));});
-//        simvar_map->setMapping(simvars[i],i);
     }
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
@@ -68,7 +63,6 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)  {
     setLayout(main_layout); 
     setWindowTitle(tr("Simulation Variables Menu"));
 //connect buttons   
-//    connect(simvar_map, SIGNAL(mapped(int)), this, SLOT(update_pvars(int)));
     connect(get_vars, SIGNAL(clicked()), this, SLOT(read_simvars())); 
     connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 

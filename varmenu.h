@@ -31,8 +31,6 @@ Q_OBJECT
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QPushButton* close_button;
-//Map from button output to signal input
-    QSignalMapper* simvar_map;
 //screen functions
     void update_menu(); //make menu match pars
 
