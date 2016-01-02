@@ -22,7 +22,7 @@ Q_OBJECT
     void closeEvent(QCloseEvent* event);
 
   private:
-    Protocol proto;
+    Protocol* proto;
     QWidget* parent;
     bool write_close;
 //Buttons & their labels
@@ -39,7 +39,7 @@ Q_OBJECT
   private slots:
     bool read_simvars(); //wrapper for Protocol::readpars with QFileDialog
     bool write_simvars(); //wrapper for Protocol::writepars
-    void update_pvars(int id); //make a Protocol::pars entry match the screen
+    void update_pvars(pair<string, double> p); //make a Protocol::pars entry match the screen
     void set_write_close(int state); //update function for write_close
 };
 
@@ -53,7 +53,7 @@ Q_OBJECT
 
 
   private:
-    Protocol proto;
+    Protocol* proto;
     QWidget* parent;
     bool write_close;
 //Buttons & their labels
