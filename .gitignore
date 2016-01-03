@@ -12,6 +12,7 @@ MyConcurrentModel.app/
 moc_dialog.cpp
 moc_myoutput.cpp
 ui_dialog.h
+Makefile
 
 #temporary modellib folers for merging
 modellib/modelnew/
