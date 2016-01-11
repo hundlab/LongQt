@@ -245,12 +245,26 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
     get_vars = new QPushButton(tr("Import settings"), this);
     set_vars = new QCheckBox(tr("Write File on Exit"), this);
     close_button = new QPushButton(tr("Save and Exit"), this);
-    vars_list = new QListWidget(this);
+    vars_view = new QListWidget(this);
+    meas_view = new QListWidget(this);
+    meas_list_label = new QLabel("Variables to Track",this);
+    vars_list_label = new QLabel("Aspects to Measure", this);
+    addto_meas_list_button = new QPushButton("+", this);
+    removefr_meas_list_button = new QPushButton("-", this);
+    addto_vars_list_button = new QPushButton("+", this);
+    removefr_vars_list_button = new QPushButton("-", this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
     set_vars->setChecked(write_close);
 //central_layout
-    central_layout->addWidget(vars_list);    
+    central_layout->addWidget(vars_list_label, 0,0);
+    central_layout->addWidget(meas_list_label, 0,2);
+    central_layout->addWidget(vars_view, 1,0,1,2);
+    central_layout->addWidget(meas_view, 1,2,1,2);
+    central_layout->addWidget(addto_vars_list_button,2,0);
+    central_layout->addWidget(removefr_vars_list_button,2,1);
+    central_layout->addWidget(addto_meas_list_button,2,2);
+    central_layout->addWidget(removefr_meas_list_button,2,3);
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
     main_layout->addWidget(set_vars, 0,1);
@@ -259,12 +273,11 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
     setLayout(main_layout); 
     setWindowTitle(tr("Output Variables Menu"));
 //connect buttons   
-    connect(get_vars, SIGNAL(clicked()), this, SLOT(read_dvars())); 
+    connect(get_vars, SIGNAL(clicked()), this, SLOT(read_mvars())); 
     connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
     update_menu();
-    
 }
 
 mvarMenu::~mvarMenu(){}
@@ -301,14 +314,6 @@ bool mvarMenu::write_mvars(){
     }
     return ret;
 
-}
-
-void mvarMenu::update_datamap(pair<string,double*> p, int state){
-    if((state = 0)) {
-        proto->datamap.erase(p.first);
-    } else {
-        proto->datamap.insert(p);
-    }
 }
 
 void mvarMenu::set_write_close(int state) {

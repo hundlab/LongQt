@@ -7,6 +7,8 @@
 #include <QDoubleSpinBox>
 #include <QSignalMapper>
 #include <QListWidget>
+#include <QVector>
+#include <QStringList>
 
 #include "proto.h"
 
@@ -80,16 +82,24 @@ Q_OBJECT
     mvarMenu(Protocol* initial_proto, QWidget* parent = 0);
     ~mvarMenu();
 
-
   private:
     Protocol* proto;
     QWidget* parent;
     bool write_close;
+    QVector<QStringList> meas_list;
+    QStringList vars_list;
 //Buttons & their labels
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QPushButton* close_button;
-    QListWidget* vars_list;
+    QListWidget* vars_view;
+    QListWidget* meas_view;
+    QLabel* meas_list_label;
+    QLabel* vars_list_label;
+    QPushButton* addto_meas_list_button;
+    QPushButton* removefr_meas_list_button;
+    QPushButton* addto_vars_list_button;
+    QPushButton* removefr_vars_list_button;
 //screen functions
     void update_menu(); //make menu match pars
 
@@ -99,8 +109,11 @@ Q_OBJECT
   private slots:
     bool read_mvars(); //wrapper for Protocol::readpars with QFileDialog
     bool write_mvars(); //wrapper for Protocol::writepars
-    void update_datamap(pair<string,double*> p, int state); //make a Protocol::pars entry match the screen
     void set_write_close(int state); //update function for write_close
+    void addto_meas_list();
+    void removefr_meas_list();
+    void addto_vars_list();
+    void removefr_vars_list();
 
 ;
 };
