@@ -13,6 +13,7 @@
 #include <QCloseEvent>
 #include <limits>
 #include <QHBoxLayout>
+#include <QListWidget>
 
 #include "varmenu.h"
 #include "proto.h"
@@ -224,3 +225,95 @@ void dvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
 }
+
+/*#################################
+    begin mvarMenu class
+###################################*/
+mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
+//setup class variables
+    proto = initial_proto;
+    this->parent = parent;
+    write_close = true;
+//setup useful constants and aliases
+    unsigned int row_len = 6;
+    map<string,double*> vars = proto->cell->vars;
+    map<string,double*>::iterator it;
+//initialize layouts and signal maps
+    QGridLayout* main_layout = new QGridLayout(this);
+    QGridLayout* central_layout = new QGridLayout;
+//initialize buttons &lables
+    get_vars = new QPushButton(tr("Import settings"), this);
+    set_vars = new QCheckBox(tr("Write File on Exit"), this);
+    close_button = new QPushButton(tr("Save and Exit"), this);
+    vars_list = new QListWidget(this);
+//    QCheckBox readflag = new QCheckBox("Read in variable files", this);
+//set button inital states
+    set_vars->setChecked(write_close);
+//central_layout
+    central_layout->addWidget(vars_list);    
+//main_layout
+    main_layout->addWidget(get_vars, 0,0);
+    main_layout->addWidget(set_vars, 0,1);
+    main_layout->addLayout(central_layout, 1,0, row_len, row_len); 
+    main_layout->addWidget(close_button, row_len +1, row_len -1);
+    setLayout(main_layout); 
+    setWindowTitle(tr("Output Variables Menu"));
+//connect buttons   
+    connect(get_vars, SIGNAL(clicked()), this, SLOT(read_dvars())); 
+    connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
+    connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
+//make menu match proto
+    update_menu();
+    
+}
+
+mvarMenu::~mvarMenu(){}
+
+void mvarMenu::update_menu() {
+}
+
+void mvarMenu::closeEvent(QCloseEvent* event){
+    if(write_close) {
+        !(bool)proto->writedvars(proto->datamap, string("dvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
+    }
+    event->accept();
+}
+
+bool mvarMenu::read_mvars(){
+
+    bool ret = false;
+    QString fileName = QFileDialog::getOpenFileName(this);
+    if (!fileName.isEmpty()){
+        proto->measfile = fileName.toStdString();
+        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));//create measure from mvarfile
+   }
+    update_menu();
+    return ret;
+}
+
+bool mvarMenu::write_mvars(){
+    
+    bool ret = false;
+    QString fileName = QFileDialog::getOpenFileName(this);
+    if (!fileName.isEmpty()){
+        proto->dvarfile = fileName.toStdString();
+    ret = !(bool)proto->writedvars(proto->datamap, proto->dvarfile);
+    }
+    return ret;
+
+}
+
+void mvarMenu::update_datamap(pair<string,double*> p, int state){
+    if((state = 0)) {
+        proto->datamap.erase(p.first);
+    } else {
+        proto->datamap.insert(p);
+    }
+}
+
+void mvarMenu::set_write_close(int state) {
+    write_close = (bool) state;
+    set_vars->setChecked(write_close);
+}
+
+

@@ -18,7 +18,7 @@ CONFIG += c++11
 INCLUDEPATH += ./modellib
 
 SOURCES += main.cpp\
-        dialog.cpp \
+#        dialog.cpp \
     modellib/cell.cpp \
     modellib/kurata08.cpp \
 #    modellib/kurata08mod.cpp \
@@ -27,13 +27,14 @@ SOURCES += main.cpp\
     heart_cell_sim.cpp \
     myoutput.cpp
 
-HEADERS  += dialog.h \
-    modellib/cell.h \
+HEADERS  +=    modellib/cell.h \
     modellib/kurata08.h \
 #    modellib/kurata08mod.h \
     modellib/proto.h \
     varmenu.h \
     heart_cell_sim.h \ 
-    myoutput.h
+    myoutput.h 
+#    dialog.h \
+
 
 FORMS    += dialog.ui

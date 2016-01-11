@@ -75,10 +75,10 @@ Simulation::Simulation(QWidget* parent){
     advanced->addWidget(edit_dvars_button,0,2);
     advanced->addWidget(edit_mvars_button,0,3);
 //load variables buttons
-    file_buttons->addWidget(load_sim_button);
-    file_buttons->addWidget(load_pvars_button);
-    file_buttons->addWidget(load_dvars_button);
-    file_buttons->addWidget(load_mvars_button);
+//    file_buttons->addWidget(load_sim_button);
+//    file_buttons->addWidget(load_pvars_button);
+//    file_buttons->addWidget(load_dvars_button);
+//    file_buttons->addWidget(load_mvars_button);
     file_buttons->addWidget(load_all_button);
 //main_layout
     main_layout->addWidget(cell_type, 0,0,1,1);
@@ -220,7 +220,12 @@ void Simulation::load_dvars() {
     set_sim_ready();
 };
 
-void Simulation::edit_mvars() {};
+void Simulation::edit_mvars() {
+    mvarMenu* menu = new mvarMenu(proto, this);
+    menu->show();
+    mvars_read = true;
+    set_sim_ready();
+};
 
 void Simulation::load_mvars() {
     mvars_read = !(bool)proto->initializeMeasure(int(proto->maxmeassize));

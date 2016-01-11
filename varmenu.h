@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QDoubleSpinBox>
 #include <QSignalMapper>
+#include <QListWidget>
 
 #include "proto.h"
 
@@ -73,5 +74,34 @@ Q_OBJECT
 
 };
 
-//class mvarMenu :public QWidget {};
+class mvarMenu :public QWidget {
+Q_OBJECT
+  public:
+    mvarMenu(Protocol* initial_proto, QWidget* parent = 0);
+    ~mvarMenu();
+
+
+  private:
+    Protocol* proto;
+    QWidget* parent;
+    bool write_close;
+//Buttons & their labels
+    QCheckBox* set_vars;
+    QPushButton* get_vars;
+    QPushButton* close_button;
+    QListWidget* vars_list;
+//screen functions
+    void update_menu(); //make menu match pars
+
+  protected:
+    void closeEvent(QCloseEvent* event);
+
+  private slots:
+    bool read_mvars(); //wrapper for Protocol::readpars with QFileDialog
+    bool write_mvars(); //wrapper for Protocol::writepars
+    void update_datamap(pair<string,double*> p, int state); //make a Protocol::pars entry match the screen
+    void set_write_close(int state); //update function for write_close
+
+;
+};
 #endif // VARMENU_H
