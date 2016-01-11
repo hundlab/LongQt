@@ -38,14 +38,14 @@ Simulation::Simulation(QWidget* parent){
     num_of_sims_label = new QLabel("Number of Simulations:", this);
     run_button = new QPushButton("Run Simulations", this);
     edit_sim_button = new QPushButton("Edit Simulaiton Variables", this);
-    load_sim_button = new QPushButton("Read Simulation Variables", this);
+    load_sim_button = new QPushButton("Read Simulation Variables");
     edit_pvars_button = new QPushButton("Edit Simulation Constants", this);
-    load_pvars_button = new QPushButton("Read Simulaiton Constants", this);
+    load_pvars_button = new QPushButton("Read Simulaiton Constants");
     edit_dvars_button = new QPushButton("Edit Output Variables", this);
-    load_dvars_button = new QPushButton("Read Output Variables", this);
+    load_dvars_button = new QPushButton("Read Output Variables");
     edit_mvars_button = new QPushButton("Edit Measurement Variables", this);
-    load_mvars_button = new QPushButton("Read Measurement Variables", this);
-    load_all_button = new QPushButton("Read Variables and Constants", this);
+    load_mvars_button = new QPushButton("Read Measurement Variables");
+    load_all_button = new QPushButton("Read Variables and Constants");
     init_cell_button = new QPushButton("Use cell preference", this);
     cell_type = new QComboBox(this);
     cell_species = new QComboBox(this);
@@ -75,10 +75,10 @@ Simulation::Simulation(QWidget* parent){
     advanced->addWidget(edit_dvars_button,0,2);
     advanced->addWidget(edit_mvars_button,0,3);
 //load variables buttons
-    file_buttons->addWidget(load_sim_button);
-    file_buttons->addWidget(load_pvars_button);
-    file_buttons->addWidget(load_dvars_button);
-    file_buttons->addWidget(load_mvars_button);
+//    file_buttons->addWidget(load_sim_button);
+//    file_buttons->addWidget(load_pvars_button);
+//    file_buttons->addWidget(load_dvars_button);
+//    file_buttons->addWidget(load_mvars_button);
     file_buttons->addWidget(load_all_button);
 //main_layout
     main_layout->addWidget(cell_type, 0,0,1,1);
