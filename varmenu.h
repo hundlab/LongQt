@@ -86,8 +86,7 @@ Q_OBJECT
     Protocol* proto;
     QWidget* parent;
     bool write_close;
-    QVector<QStringList> meas_list;
-    QStringList vars_list;
+    QMap<QString,QStringList>* vars_list;
 //Buttons & their labels
     QCheckBox* set_vars;
     QPushButton* get_vars;
@@ -110,10 +109,10 @@ Q_OBJECT
     bool read_mvars(); //wrapper for Protocol::readpars with QFileDialog
     bool write_mvars(); //wrapper for Protocol::writepars
     void set_write_close(int state); //update function for write_close
-    void addto_meas_list();
-    void removefr_meas_list();
-    void addto_vars_list();
-    void removefr_vars_list();
+    void addto_meas_list(); //add an item to mvnames
+    void removefr_meas_list(); //remove and item from mvnames
+    void addto_vars_list(); //add an item to mpnames
+    void removefr_vars_list(); //remove and item from mpnames & its mvnames
 
 ;
 };

@@ -234,10 +234,9 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
     proto = initial_proto;
     this->parent = parent;
     write_close = true;
+    vars_list = new QMap<QString,QStringList>();
 //setup useful constants and aliases
     unsigned int row_len = 6;
-    map<string,double*> vars = proto->cell->vars;
-    map<string,double*>::iterator it;
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
@@ -283,11 +282,28 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
 mvarMenu::~mvarMenu(){}
 
 void mvarMenu::update_menu() {
+    unsigned int i,j;
+    for(i = 0; i < proto->mvnames.size(); i++) {
+        QString ith_mvnames = proto->mvnames[i].c_str();
+        if(!vars_list->contains(ith_mvnames)) {
+            vars_list->insert(ith_mvnames,QStringList());
+        }
+        QStringList* next_meas = &((*vars_list)[ith_mvnames]);
+        for(j = 0; j < proto->mpnames[i].size(); j++){
+            if(!next_meas->contains(QString(proto->mpnames[i][j].c_str()))) {
+                next_meas->append(QString(proto->mpnames[i][j].c_str()));
+            }
+        }
+    }
+    vars_view->addItems(QStringList(vars_list->keys()));
+    if(!vars_list->empty()){
+        meas_view->addItems(vars_list->first());
+    }
 }
 
 void mvarMenu::closeEvent(QCloseEvent* event){
     if(write_close) {
-        !(bool)proto->writedvars(proto->datamap, string("dvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
+        !(bool)proto->writemvars( proto->mvnames, proto->mpnames, string("mvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
     }
     event->accept();
 }
@@ -298,7 +314,8 @@ bool mvarMenu::read_mvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->measfile = fileName.toStdString();
-        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));//create measure from mvarfile
+        ret = !(bool)proto->parse2Dmap(proto->cell->vars,measures().varmap, proto->measfile, &proto->mvnames, &proto->mpnames);
+//        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));//create measure from mvarfile
    }
     update_menu();
     return ret;
@@ -309,8 +326,8 @@ bool mvarMenu::write_mvars(){
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
-        proto->dvarfile = fileName.toStdString();
-    ret = !(bool)proto->writedvars(proto->datamap, proto->dvarfile);
+        proto->measfile = fileName.toStdString();
+        ret = !(bool)proto->writemvars(proto->mvnames, proto->mpnames, proto->measfile);
     }
     return ret;
 
@@ -321,4 +338,11 @@ void mvarMenu::set_write_close(int state) {
     set_vars->setChecked(write_close);
 }
 
+void mvarMenu::addto_meas_list(){};
+
+void mvarMenu::removefr_meas_list(){};
+
+void mvarMenu::addto_vars_list(){};
+
+void mvarMenu::removefr_vars_list(){};
 

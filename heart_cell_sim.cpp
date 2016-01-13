@@ -228,7 +228,8 @@ void Simulation::edit_mvars() {
 };
 
 void Simulation::load_mvars() {
-    mvars_read = !(bool)proto->initializeMeasure(int(proto->maxmeassize));
+    mvars_read = proto->readMvars(proto->measfile);
+    mvars_read = mvars_read&&!(bool)proto->initializeMeasure(int(proto->maxmeassize));
     init_douts();
     set_sim_ready();
 };
