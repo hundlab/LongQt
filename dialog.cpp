@@ -1,3 +1,56 @@
+#include "dialog.h"
+#include "ui_dialog.h"
+#include "ioevent.h"
+
+#include <QIODevice>
+#include <QList>
+
+Dialog::Dialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::Dialog)
+{
+    ui->setupUi(this);
+
+    int size = 100;
+    QVector<double> x(size), y(size);
+
+    //importing x files from arbitrary file
+
+    QFile file("C:/Users/bec100/Desktop/dtestdoc.txt");
+    if(!file.open(QIODevice::ReadOnly)){
+        QMessageBox::information(0,"error", file.errorString());
+    }
+    QTextStream in(&file);
+    int ypoints = 0;
+    while(!in.atEnd() && ypoints < 100){
+        QString line = in.readLine();
+        QStringList field = line.split("\n");
+        for(int p = 0; p< field.length(); p++){
+           y[ypoints] = field.at(p).toInt();
+            ypoints++;
+        }
+    }
+    file.close();
+
+    for(int i = 0; i < x.size(); i++){
+        x[i] = 0.1*i; //modified according to precision
+        //y[i] = i;
+    }
+    ui->plot->addGraph();
+    ui->plot->graph(0)->setData(x,y);
+    ui->plot->graph(0)->setScatterStyle(QCPScatterStyle::ssDot);
+    ui->plot->xAxis->setLabel("x axis");
+    ui->plot->yAxis->setLabel("y axis");
+    ui->plot->xAxis->setRange(0, 15);
+    ui->plot->yAxis->setRange(0, 15);
+}
+
+Dialog::~Dialog()
+{
+    delete ui;
+}
+
+/*
 #include "proto.h"
 #include "dialog.h"
 #include "ui_dialog.h"
@@ -110,3 +163,4 @@ void setupSim(Protocol* proto, int simNum) {
    
 }
 
+*/
