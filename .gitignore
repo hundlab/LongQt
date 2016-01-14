@@ -28,3 +28,4 @@ test.pro
 main_test.cpp
 
 #.gitignore
+MyConcurrentModel.pro.user
