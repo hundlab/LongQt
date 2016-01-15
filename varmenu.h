@@ -113,7 +113,7 @@ Q_OBJECT
     void removefr_meas_list(); //remove and item from mvnames
     void addto_vars_list(); //add an item to mpnames
     void removefr_vars_list(); //remove and item from mpnames & its mvnames
-
+    void switch_var(QListWidgetItem* current, QListWidgetItem* prev);
 ;
 };
 #endif // VARMENU_H
