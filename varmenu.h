@@ -86,7 +86,6 @@ Q_OBJECT
     Protocol* proto;
     QWidget* parent;
     bool write_close;
-    QMap<QString,QStringList>* vars_list;
 //Buttons & their labels
     QCheckBox* set_vars;
     QPushButton* get_vars;

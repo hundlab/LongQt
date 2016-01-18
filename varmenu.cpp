@@ -234,7 +234,6 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
     proto = initial_proto;
     this->parent = parent;
     write_close = true;
-    vars_list = new QMap<QString,QStringList>();
 //setup useful constants and aliases
     unsigned int row_len = 6;
 //initialize layouts and signal maps
@@ -285,26 +284,27 @@ mvarMenu::~mvarMenu(){}
 
 void mvarMenu::update_menu() {
     unsigned int i,j;
-    for(i = 0; i < proto->mvnames.size(); i++) {
-        QString ith_mvnames = proto->mvnames[i].c_str();
-        if(!vars_list->contains(ith_mvnames)) {
-            vars_list->insert(ith_mvnames,QStringList());
-        }
-        QStringList* next_meas = &((*vars_list)[ith_mvnames]);
-        for(j = 0; j < proto->mpnames[i].size(); j++){
-            if(!next_meas->contains(QString(proto->mpnames[i][j].c_str()))) {
-                next_meas->append(QString(proto->mpnames[i][j].c_str()));
-            }
-        }
-    }
+    QListWidgetItem* selection = NULL;
+/*    if( !vars_view->selectedItems().empty() ) {
+        selection = new QListWidgetItem(*(vars_view->selectedItems().first()));
+    }*/
     disconnect(vars_view, &QListWidget::currentItemChanged, this, &mvarMenu::switch_var);
     vars_view->clear();
     meas_view->clear();
-    vars_view->addItems(QStringList(vars_list->keys()));
-    if(!vars_list->empty()){
-        meas_view->addItems(vars_list->first());
-    }
     connect(vars_view, &QListWidget::currentItemChanged, this, &mvarMenu::switch_var);
+
+        
+    for(i = 0; i < proto->mvnames.size(); i++) {
+        vars_view->addItem(proto->mvnames[i].c_str());
+    }
+/*    if(selection != NULL) {
+        vars_view->setCurrentItem(selection);
+        for(j = 0; j < proto->mpnames[vars_view->currentRow()].size(); j++){
+            meas_view->addItem(proto->mpnames[i][j].c_str());
+        }
+    }*/
+    
+    
 }
 
 void mvarMenu::closeEvent(QCloseEvent* event){
@@ -348,11 +348,11 @@ void mvarMenu::set_write_close(int state) {
 void mvarMenu::addto_meas_list(){};
 
 void mvarMenu::removefr_meas_list(){
-    QListWidgetItem* var = vars_view->selectedItems().first();
-    QListWidgetItem* meas = meas_view->selectedItems().first();
-    vector<string>* row = &proto->mpnames[vars_view->row(var)];
-    (*vars_list)[var->text()].removeOne(meas->text());
-    row->erase(row->begin() + meas_view->row(meas));
+//    QListWidgetItem* var = vars_view->selectedItems().first();
+//    QListWidgetItem* meas = meas_view->selectedItems().first();
+//    vector<string>* row = &proto->mpnames[vars_view->row(var)];
+//    (*vars_list)[var->text()].removeOne(meas->text());
+//    row->erase(row->begin() + meas_view->row(meas));
     update_menu();
 };
 
@@ -361,6 +361,5 @@ void mvarMenu::addto_vars_list(){};
 void mvarMenu::removefr_vars_list(){};
 
 void mvarMenu::switch_var(QListWidgetItem* current, QListWidgetItem* prev){
-    meas_view->clear();
-    meas_view->addItems((*vars_list)[current->text()]);
+    update_menu();
 };
