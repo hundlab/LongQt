@@ -19,7 +19,7 @@ modellib/modelnew/
 modellib/modelold/
 
 #data files and temp text editor files
-data/
+data*/
 *.txt
 *.swp
 

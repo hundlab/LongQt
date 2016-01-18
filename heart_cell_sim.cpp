@@ -9,6 +9,8 @@
 #include <QProgressDialog>
 #include <QFutureWatcher>
 #include <QtConcurrent>
+#include <QDir>
+#include <QDate>
 
 #include "proto.h"
 #include "heart_cell_sim.h"
@@ -138,16 +140,16 @@ void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
     QVector<Protocol> vector;
+    QDir().mkdir("data" + QDate::currentDate().toString("MMddyy"));
 //    std::vector<Protocol> protos(num_sims); // create vector of Protocols for QtConcurrent
    for( i = 0; i < num_sims; i++) {
         temp = new Protocol(*proto);
-        temp->readfile = "./data/r"+ to_string(i) + ".dat"; // File to read SV ICs
-        temp->savefile = "./data/s"+ to_string(i) + ".dat"; // File to save final SV
-        temp->savefile = proto->savefile + ".dat";
-        temp->propertyoutfile = "./data/dt%d_%s" + to_string(i) + string(".dat");
-        temp->dvarsoutfile = "./data/dt%d_dvars"+ to_string(i) + string(".dat");
-        temp->finalpropertyoutfile = "./data/dss_%s"+ to_string(i) + string(".dat");
-        temp->finaldvarsoutfile = "./data/dss_pvars"+ to_string(i) + string(".dat");
+        temp->readfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
+        temp->savefile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
+        temp->propertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
+        temp->dvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
+        temp->finalpropertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
+        temp->finaldvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
 //        protos[i] = Protocol(*proto);
         vector.append(*temp);
    }
