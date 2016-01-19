@@ -4,7 +4,6 @@
 
 #include <QIODevice>
 #include <QList>
-#include <QGridLayout>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -26,7 +25,7 @@ Dialog::Dialog(QWidget *parent) :
 
 
     /**
-     * Gettiing data from simulation for graphing for 1st Plot
+     * Getting data from simulation for graphing for 1st Plot
      */
     QFile file("./data/dtestdocy.txt");
     if(!file.open(QIODevice::ReadOnly)){
