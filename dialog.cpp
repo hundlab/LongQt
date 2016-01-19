@@ -38,7 +38,7 @@ Dialog::Dialog(QWidget *parent) :
     /**
      *  Getting data from Simvar file for xaxis information
      */
-    QFile simfile("C:/Users/bec100/Desktop/Example_vars/simvars.txt");
+    QFile simfile("./simvars.txt");
     if(!simfile.open(QIODevice::ReadOnly)){
         QMessageBox::information(0,"WE HAVE PROBLEMS 2", simfile.errorString());
     }
@@ -55,7 +55,6 @@ Dialog::Dialog(QWidget *parent) :
     }
     simfile.close();
 
-
     ui->plot->addGraph();
     ui->plot->graph(0)->setData(x,y);
     ui->plot->xAxis->grid()->setVisible(false);
@@ -64,7 +63,7 @@ Dialog::Dialog(QWidget *parent) :
     ui->plot->yAxis->setLabelFont(QFont(font().family(), 16));
     ui->plot->xAxis->setLabel("Time (ms)");
     ui->plot->yAxis->setLabel("Voltage (mv)");
-    ui->plot->xAxis->setRange(low_x_axis, max_x_axis);        //brittle-need to pull in from file
+    ui->plot->xAxis->setRange(low_x_axis, max_x_axis);
     ui->plot->yAxis->setRange(-60, 40);             //brittle-need to pull in details from file
 }
 
