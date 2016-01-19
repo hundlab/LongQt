@@ -26,6 +26,10 @@ Simulation::Simulation(QWidget* parent){
     cell_ready = false;
     sim_ready = false;
     num_sims = 1;
+//change the location of proto readin files
+//    proto->simvarfile = "data/simvars.txt";
+//    proto->dvarfile = "data/dvars.txt";
+//    proto->pvarfile = "data/pvars.txt";
 //local variables
     unsigned int max_height = 8;
     unsigned int max_width = 14;
@@ -58,16 +62,16 @@ Simulation::Simulation(QWidget* parent){
     edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
     cell_type->addItem("Default Cell");
-    cell_type->addItem("Choose Cell");
-    cell_type->addItem("Ventricular");
-    cell_type->addItem("Sinoatrial Node");
-    cell_type->addItem("Atrial");
-    cell_type->addItem("Kurata");
+    //cell_type->addItem("Choose Cell");
+    //cell_type->addItem("Ventricular");
+    //cell_type->addItem("Sinoatrial Node");
+    //cell_type->addItem("Atrial");
+    //cell_type->addItem("Kurata");
     cell_species->addItem("Default Species");
-    cell_species->addItem("Choose Species");
-    cell_species->addItem("Mouse");
-    cell_species->addItem("Rabbit");
-    cell_species->addItem("Human");
+    //cell_species->addItem("Choose Species");
+    //cell_species->addItem("Mouse");
+    //cell_species->addItem("Rabbit");
+    //cell_species->addItem("Human");
 //add buttons to layouts
 //advanced buttons
     advanced->addWidget(edit_sim_button, 0,0);
