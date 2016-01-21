@@ -133,7 +133,7 @@ void Simulation::init_douts() {
 };
 
 void Simulation::doTask(Protocol& toRun) {
-   toRun.runSim(); 
+    toRun.runSim(); 
 };
 
 void Simulation::run_sims() {
@@ -141,7 +141,6 @@ void Simulation::run_sims() {
     Protocol* temp;
     QVector<Protocol> vector;
     QDir().mkdir("data" + QDate::currentDate().toString("MMddyy"));
-//    std::vector<Protocol> protos(num_sims); // create vector of Protocols for QtConcurrent
    for( i = 0; i < num_sims; i++) {
         temp = new Protocol(*proto);
         temp->readfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
@@ -150,11 +149,8 @@ void Simulation::run_sims() {
         temp->dvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
         temp->finalpropertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
         temp->finaldvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
-//        protos[i] = Protocol(*proto);
-        vector.append(*temp);
-   }
-    //very brittle way of chosing cells!! //Dani
-//    if(ui->comboBox->currentText() == "Kurata"){
+      vector.append(*temp);
+  }
 
     QProgressDialog pdialog;
     pdialog.setLabelText("Processing");
