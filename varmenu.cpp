@@ -14,6 +14,7 @@
 #include <limits>
 #include <QHBoxLayout>
 #include <QListWidget>
+#include <QComboBox>
 
 #include "varmenu.h"
 #include "proto.h"
@@ -236,6 +237,8 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
     write_close = true;
 //setup useful constants and aliases
     unsigned int row_len = 6;
+    std::map<string,double*>::iterator it;
+    Measure temp = Measure();
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
@@ -247,6 +250,8 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
     meas_view = new QListWidget(this);
     meas_list_label = new QLabel("Variables to Track",this);
     vars_list_label = new QLabel("Aspects to Measure", this);
+    addto_vars_options = new QComboBox(this);
+    addto_meas_options = new QComboBox(this);
     addto_meas_list_button = new QPushButton("+", this);
     removefr_meas_list_button = new QPushButton("-", this);
     addto_vars_list_button = new QPushButton("+", this);
@@ -254,15 +259,23 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
     set_vars->setChecked(write_close);
+    for(it = proto->cell->vars.begin(); it != proto->cell->vars.end(); it++) {
+        addto_vars_options->addItem(it->first.c_str());
+    }
+    for(it = temp.varmap.begin(); it != temp.varmap.end(); it++) {
+        addto_meas_options->addItem(it->first.c_str());
+    }
 //central_layout
     central_layout->addWidget(vars_list_label, 0,0);
     central_layout->addWidget(meas_list_label, 0,2);
     central_layout->addWidget(vars_view, 1,0,1,2);
     central_layout->addWidget(meas_view, 1,2,1,2);
-    central_layout->addWidget(addto_vars_list_button,2,0);
-    central_layout->addWidget(removefr_vars_list_button,2,1);
-    central_layout->addWidget(addto_meas_list_button,2,2);
-    central_layout->addWidget(removefr_meas_list_button,2,3);
+    central_layout->addWidget(addto_vars_options, 2,0,1,2);
+    central_layout->addWidget(addto_meas_options, 2,2,1,2);
+    central_layout->addWidget(addto_vars_list_button,3,0);
+    central_layout->addWidget(removefr_vars_list_button,3,1);
+    central_layout->addWidget(addto_meas_list_button,3,2);
+    central_layout->addWidget(removefr_meas_list_button,3,3);
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
     main_layout->addWidget(set_vars, 0,1);
@@ -272,37 +285,39 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
     setWindowTitle(tr("Output Variables Menu"));
 //connect buttons   
     connect(get_vars, SIGNAL(clicked()), this, SLOT(read_mvars())); 
-    connect(vars_view, &QListWidget::currentItemChanged, this, &mvarMenu::switch_var);
+    connect(vars_view, &QListWidget::currentRowChanged, this, &mvarMenu::switch_var);
+    connect(addto_vars_list_button, &QPushButton::clicked, this, &mvarMenu::addto_vars_list);
+    connect(removefr_vars_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_vars_list);
+    connect(addto_meas_list_button, &QPushButton::clicked, this, &mvarMenu::addto_meas_list);
     connect(removefr_meas_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_meas_list);
     connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
-    update_menu();
+    update_menu(-1);
 }
 
 mvarMenu::~mvarMenu(){}
 
-void mvarMenu::update_menu() {
+void mvarMenu::update_menu(int row) {
     unsigned int i,j;
-    QListWidgetItem* selection = NULL;
-/*    if( !vars_view->selectedItems().empty() ) {
-        selection = new QListWidgetItem(*(vars_view->selectedItems().first()));
-    }*/
-    disconnect(vars_view, &QListWidget::currentItemChanged, this, &mvarMenu::switch_var);
-    vars_view->clear();
-    meas_view->clear();
-    connect(vars_view, &QListWidget::currentItemChanged, this, &mvarMenu::switch_var);
 
-        
+//    disconnect(vars_view, &QListWidget::currentRowChanged, this, &mvarMenu::switch_var);
+//    vars_view->clear();
+    meas_view->clear();
+//    connect(vars_view, &QListWidget::currentRowChanged, this, &mvarMenu::switch_var);
+
     for(i = 0; i < proto->mvnames.size(); i++) {
-        vars_view->addItem(proto->mvnames[i].c_str());
-    }
-/*    if(selection != NULL) {
-        vars_view->setCurrentItem(selection);
-        for(j = 0; j < proto->mpnames[vars_view->currentRow()].size(); j++){
-            meas_view->addItem(proto->mpnames[i][j].c_str());
+        QList<QListWidgetItem*> vars_item = vars_view->findItems(proto->mvnames[i].c_str(),Qt::MatchExactly);
+        if(vars_item.empty()) {
+            vars_view->addItem(proto->mvnames[i].c_str());
         }
-    }*/
+    }
+    vars_view->setCurrentRow(row);
+    if(vars_view->currentRow() >= 0) {
+        for(j = 0; j < proto->mpnames[vars_view->currentRow()].size(); j++){
+            meas_view->addItem(proto->mpnames[vars_view->currentRow()][j].c_str());
+        }
+    }
     
     
 }
@@ -324,7 +339,7 @@ bool mvarMenu::read_mvars(){
         ret = !(bool)proto->parse2Dmap(proto->cell->vars,Measure().varmap, proto->measfile, &proto->mvnames, &proto->mpnames);
 //        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));//create measure from mvarfile
    }
-    update_menu();
+    update_menu(-1);
     return ret;
 }
 
@@ -345,21 +360,55 @@ void mvarMenu::set_write_close(int state) {
     set_vars->setChecked(write_close);
 }
 
-void mvarMenu::addto_meas_list(){};
+void mvarMenu::addto_meas_list(){
+    int var_row = vars_view->currentRow();
+    QString to_add = addto_meas_options->currentText();
 
-void mvarMenu::removefr_meas_list(){
-//    QListWidgetItem* var = vars_view->selectedItems().first();
-//    QListWidgetItem* meas = meas_view->selectedItems().first();
-//    vector<string>* row = &proto->mpnames[vars_view->row(var)];
-//    (*vars_list)[var->text()].removeOne(meas->text());
-//    row->erase(row->begin() + meas_view->row(meas));
-    update_menu();
+    if(meas_view->findItems(to_add, Qt::MatchExactly).empty()) {
+        proto->mpnames[var_row].push_back(to_add.toStdString());
+    }
+    update_menu(var_row);
 };
 
-void mvarMenu::addto_vars_list(){};
+void mvarMenu::removefr_meas_list(){
+    int meas_row = meas_view->currentRow();
+    int var_row = vars_view->currentRow();
 
-void mvarMenu::removefr_vars_list(){};
+    if(meas_view->takeItem(meas_row) == 0) {
+        return;
+    }
+    if(meas_view->count() == 0) {
+        removefr_vars_list();
+        return;
+    }
+    meas_view->setCurrentRow(meas_row -1);
+    proto->mpnames[var_row].erase(proto->mpnames[var_row].begin() + meas_row);
+    update_menu(vars_view->currentRow());
+};
 
-void mvarMenu::switch_var(QListWidgetItem* current, QListWidgetItem* prev){
-    update_menu();
+void mvarMenu::addto_vars_list(){
+    int var_row = vars_view->currentRow();
+    QString to_add = addto_vars_options->currentText();
+
+    if(vars_view->findItems(to_add, Qt::MatchExactly).empty()) {
+        proto->mvnames.push_back(to_add.toStdString());
+        proto->mpnames.push_back(vector<string>());
+        update_menu(proto->mpnames.size() -1);
+        addto_meas_list();
+    }
+    update_menu(var_row);
+};
+
+void mvarMenu::removefr_vars_list(){
+    int var_row = vars_view->currentRow();
+    if(vars_view->takeItem(var_row) == 0) {
+        return;
+    }
+    proto->mvnames.erase(proto->mvnames.begin() + var_row);
+    proto->mpnames.erase(proto->mpnames.begin() + var_row);
+    update_menu(var_row -1);
+};
+
+void mvarMenu::switch_var(int row){
+    update_menu(row);
 };

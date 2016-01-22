@@ -9,6 +9,7 @@
 #include <QListWidget>
 #include <QVector>
 #include <QStringList>
+#include <QComboBox>
 
 #include "proto.h"
 
@@ -94,12 +95,14 @@ Q_OBJECT
     QListWidget* meas_view;
     QLabel* meas_list_label;
     QLabel* vars_list_label;
+    QComboBox* addto_vars_options;
+    QComboBox* addto_meas_options;
     QPushButton* addto_meas_list_button;
     QPushButton* removefr_meas_list_button;
     QPushButton* addto_vars_list_button;
     QPushButton* removefr_vars_list_button;
 //screen functions
-    void update_menu(); //make menu match pars
+    void update_menu(int row); //make menu match pars
 
   protected:
     void closeEvent(QCloseEvent* event);
@@ -112,7 +115,7 @@ Q_OBJECT
     void removefr_meas_list(); //remove and item from mvnames
     void addto_vars_list(); //add an item to mpnames
     void removefr_vars_list(); //remove and item from mpnames & its mvnames
-    void switch_var(QListWidgetItem* current, QListWidgetItem* prev);
+    void switch_var(int row);
 ;
 };
 #endif // VARMENU_H
