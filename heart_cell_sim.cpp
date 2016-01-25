@@ -9,6 +9,8 @@
 #include <QProgressDialog>
 #include <QFutureWatcher>
 #include <QtConcurrent>
+#include <QDir>
+#include <QDate>
 
 #include "proto.h"
 #include "heart_cell_sim.h"
@@ -42,14 +44,14 @@ Simulation::Simulation(QWidget* parent){
     num_of_sims_label = new QLabel("Number of Simulations:", this);
     run_button = new QPushButton("Run Simulations", this);
     edit_sim_button = new QPushButton("Edit Simulaiton Variables", this);
-    load_sim_button = new QPushButton("Read Simulation Variables", this);
+    load_sim_button = new QPushButton("Read Simulation Variables");
     edit_pvars_button = new QPushButton("Edit Simulation Constants", this);
-    load_pvars_button = new QPushButton("Read Simulaiton Constants", this);
+    load_pvars_button = new QPushButton("Read Simulaiton Constants");
     edit_dvars_button = new QPushButton("Edit Output Variables", this);
-    load_dvars_button = new QPushButton("Read Output Variables", this);
+    load_dvars_button = new QPushButton("Read Output Variables");
     edit_mvars_button = new QPushButton("Edit Measurement Variables", this);
-    load_mvars_button = new QPushButton("Read Measurement Variables", this);
-    load_all_button = new QPushButton("Read Variables and Constants", this);
+    load_mvars_button = new QPushButton("Read Measurement Variables");
+    load_all_button = new QPushButton("Read Variables and Constants");
     init_cell_button = new QPushButton("Use cell preference", this);
     cell_type = new QComboBox(this);
     cell_species = new QComboBox(this);
@@ -79,10 +81,10 @@ Simulation::Simulation(QWidget* parent){
     advanced->addWidget(edit_dvars_button,0,2);
     advanced->addWidget(edit_mvars_button,0,3);
 //load variables buttons
-    file_buttons->addWidget(load_sim_button);
-    file_buttons->addWidget(load_pvars_button);
-    file_buttons->addWidget(load_dvars_button);
-    file_buttons->addWidget(load_mvars_button);
+//    file_buttons->addWidget(load_sim_button);
+//    file_buttons->addWidget(load_pvars_button);
+//    file_buttons->addWidget(load_dvars_button);
+//    file_buttons->addWidget(load_mvars_button);
     file_buttons->addWidget(load_all_button);
 //main_layout
     main_layout->addWidget(cell_type, 0,0,1,1);
@@ -135,28 +137,24 @@ void Simulation::init_douts() {
 };
 
 void Simulation::doTask(Protocol& toRun) {
-   toRun.runSim(); 
+    toRun.runSim(); 
 };
 
 void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
     QVector<Protocol> vector;
-//    std::vector<Protocol> protos(num_sims); // create vector of Protocols for QtConcurrent
+    QDir().mkdir("data" + QDate::currentDate().toString("MMddyy"));
    for( i = 0; i < num_sims; i++) {
         temp = new Protocol(*proto);
-        temp->readfile = "./data/r"+ to_string(i) + ".dat"; // File to read SV ICs
-        temp->savefile = "./data/s"+ to_string(i) + ".dat"; // File to save final SV
-        temp->savefile = proto->savefile + ".dat";
-        temp->propertyoutfile = "./data/dt%d_%s" + to_string(i) + string(".dat");
-        temp->dvarsoutfile = "./data/dt%d_dvars"+ to_string(i) + string(".dat");
-        temp->finalpropertyoutfile = "./data/dss_%s"+ to_string(i) + string(".dat");
-        temp->finaldvarsoutfile = "./data/dss_pvars"+ to_string(i) + string(".dat");
-//        protos[i] = Protocol(*proto);
-        vector.append(*temp);
-   }
-    //very brittle way of chosing cells!! //Dani
-//    if(ui->comboBox->currentText() == "Kurata"){
+        temp->readfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
+        temp->savefile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
+        temp->propertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
+        temp->dvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
+        temp->finalpropertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
+        temp->finaldvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
+      vector.append(*temp);
+  }
 
     QProgressDialog pdialog;
     pdialog.setLabelText("Processing");
