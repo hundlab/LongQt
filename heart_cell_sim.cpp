@@ -199,7 +199,12 @@ void Simulation::load_simvars() {
     set_sim_ready();
 };
 
-void Simulation::edit_pvars() {};
+void Simulation::edit_pvars() {
+    pvarMenu* menu = new pvarMenu(proto, this);
+    menu->show();
+    pvars_read = true;
+    set_sim_ready();
+};
 
 void Simulation::load_pvars() {
     pvars_read = !(bool)proto->readpvars();

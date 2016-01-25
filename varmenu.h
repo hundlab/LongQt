@@ -10,6 +10,7 @@
 #include <QVector>
 #include <QStringList>
 #include <QComboBox>
+#include <QTableWidget>
 
 #include "proto.h"
 
@@ -118,4 +119,34 @@ Q_OBJECT
     void switch_var(int row);
 ;
 };
+
+class pvarMenu :public QWidget {
+Q_OBJECT
+  public:
+    pvarMenu(Protocol* initial_proto, QWidget* parent = 0);
+    ~pvarMenu();
+
+  private:
+    Protocol* proto;
+    QWidget* parent;
+    bool write_close;
+//Buttons & their labels
+    QCheckBox* set_vars;
+    QPushButton* get_vars;
+    QTableWidget* pvar_table;
+    QPushButton* close_button;
+//screen functions
+    void update_menu(); //make menu match pvars
+    void update_menu(unsigned int);
+
+  protected:
+    void closeEvent(QCloseEvent* event);
+
+  private slots:
+    bool read_pvars(); 
+    bool write_pvars(); 
+    void set_write_close(int state); //update function for write_close
+;
+};
+
 #endif // VARMENU_H

@@ -15,6 +15,7 @@
 #include <QHBoxLayout>
 #include <QListWidget>
 #include <QComboBox>
+#include <QTableWidget>
 
 #include "varmenu.h"
 #include "proto.h"
@@ -301,10 +302,7 @@ mvarMenu::~mvarMenu(){}
 void mvarMenu::update_menu(int row) {
     unsigned int i,j;
 
-//    disconnect(vars_view, &QListWidget::currentRowChanged, this, &mvarMenu::switch_var);
-//    vars_view->clear();
     meas_view->clear();
-//    connect(vars_view, &QListWidget::currentRowChanged, this, &mvarMenu::switch_var);
 
     for(i = 0; i < proto->mvnames.size(); i++) {
         QList<QListWidgetItem*> vars_item = vars_view->findItems(proto->mvnames[i].c_str(),Qt::MatchExactly);
@@ -387,7 +385,6 @@ void mvarMenu::removefr_meas_list(){
 };
 
 void mvarMenu::addto_vars_list(){
-    int var_row = vars_view->currentRow();
     QString to_add = addto_vars_options->currentText();
 
     if(vars_view->findItems(to_add, Qt::MatchExactly).empty()) {
@@ -396,7 +393,7 @@ void mvarMenu::addto_vars_list(){
         update_menu(proto->mpnames.size() -1);
         addto_meas_list();
     }
-    update_menu(var_row);
+//    update_menu(proto->mpnames.size() -1);
 };
 
 void mvarMenu::removefr_vars_list(){
@@ -412,3 +409,111 @@ void mvarMenu::removefr_vars_list(){
 void mvarMenu::switch_var(int row){
     update_menu(row);
 };
+
+/*#################################
+    begin pvarMenu class
+###################################*/
+pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
+//setup class variables
+    proto = initial_proto;
+    this->parent = parent;
+    write_close = true;
+//setup useful constants and aliases
+    unsigned int row_len = 5;
+    std::map<string,double*>::iterator it;
+//initialize layouts and signal maps
+    QGridLayout* main_layout = new QGridLayout(this);
+    QGridLayout* central_layout = new QGridLayout;
+//initialize buttons &lables
+    get_vars = new QPushButton(tr("Import settings"), this);
+    set_vars = new QCheckBox(tr("Write File on Exit"), this);
+    pvar_table = new QTableWidget(0,5, this);
+    close_button = new QPushButton(tr("Save and Exit"), this);
+//    QCheckBox readflag = new QCheckBox("Read in variable files", this);
+//set button inital states
+    set_vars->setChecked(write_close);
+//central_layout
+    central_layout->addWidget(pvar_table, 0,0);
+//main_layout
+    main_layout->addWidget(get_vars, 0,0);
+    main_layout->addWidget(set_vars, 0,1);
+    main_layout->addLayout(central_layout, 1,0, row_len, row_len); 
+    main_layout->addWidget(close_button, row_len +1, row_len -1);
+    setLayout(main_layout); 
+    setWindowTitle(tr("Simulation Constants Menu"));
+//connect buttons   
+    connect(get_vars, SIGNAL(clicked()), this, SLOT(read_pvars())); 
+    connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
+    connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
+//make menu match proto
+    update_menu();
+}
+
+pvarMenu::~pvarMenu(){}
+
+void pvarMenu::update_menu() {
+    unsigned int i;
+    vector<string>::iterator it;
+
+    pvar_table->setRowCount(proto->pnames.size());
+    for(i = 0, it = proto->pnames.begin(); it != proto->pnames.end();i++, it++) {
+        if(pvar_table->findItems(it->c_str(), Qt::MatchExactly).empty()) {
+            pvar_table->setVerticalHeaderItem(i, new QTableWidgetItem(it->c_str()));
+            update_menu(i);
+        }
+    }
+}
+
+pvarMenu::update_menu(unsigned int column) {
+    unsigned int i;
+    vector<string>::iterator it;
+
+    for(i = 0, it = proto->pvals[column].begin(); it != proto->pvals[column].end();i++, it++) {
+        switch (i) {
+        case 0:
+            
+        break;
+        }
+        pvar_table->setCellWidget(i, column, );
+    proto->pvals[column]
+    }
+}
+
+void pvarMenu::closeEvent(QCloseEvent* event){
+    proto->parmap = proto->resizemap(proto->cell->pars,proto->pnames);
+    if(write_close) {
+        !(bool)proto->write2Dmap( proto->pnames, proto->pvals, string("pvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
+    }
+    event->accept();
+}
+
+bool pvarMenu::read_pvars(){
+
+    bool ret = false;
+    QString fileName = QFileDialog::getOpenFileName(this);
+    if (!fileName.isEmpty()){
+        proto->measfile = fileName.toStdString();
+        ret = proto->parsemixedmap(proto->cell->pars, proto->pvarfile ,&proto->pnames, &proto->pvals);
+   }
+    update_menu();
+    return ret;
+}
+
+bool pvarMenu::write_pvars(){
+    
+    bool ret = false;
+    QString fileName = QFileDialog::getOpenFileName(this);
+    if (!fileName.isEmpty()){
+        proto->measfile = fileName.toStdString();
+        ret = !(bool)proto->write2Dmap(proto->pnames, proto->pvals, proto->pvarfile);
+    }
+    return ret;
+
+}
+
+void pvarMenu::set_write_close(int state) {
+    write_close = (bool) state;
+    set_vars->setChecked(write_close);
+}
+
+
