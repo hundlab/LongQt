@@ -300,6 +300,10 @@ Dialog::Dialog(QWidget *parent) :
                             }
                         }
                     }
+
+
+
+
                 }
             }
         }
@@ -311,6 +315,42 @@ Dialog::~Dialog()
 }
 void Dialog::on_pushButton_clicked()
 {
+    QString filename = QFileDialog::getOpenFileName(
+                this,
+                tr("Open File"),
+                "C://",
+                "All Files (*.*);;Text File(*.txt)"
+                );
+
+    QVector<double> x(6000), y(6000);
+    QString toGet = ui->plot1->yAxis->label();
+    QString time = "t";
+
+    QFile file1(filename);
+    if(!file1.open(QIODevice::ReadOnly)){
+        QMessageBox::information(0,"error", file1.errorString());
+    }
+    QTextStream in(&file1);
+    int point = 0;
+    //watch problems with first line of labels
+    QString fline = in.readLine();
+    QStringList split_line = fline.split("\t");
+    int varpos = split_line.indexOf(toGet);
+    int timepos = split_line.indexOf(time);
+
+    while(!in.atEnd()){
+        QString line = in.readLine();
+        QStringList split_line = line.split("\t");
+        y[point] = split_line[varpos].toDouble();
+        x[point] = split_line[timepos].toDouble();
+        point++;
+    }
+    file1.close();
+    QMessageBox::information(0,"WE HAVE PROBLEMS 2", "HEY DAN");
+    ui->plot1->addGraph();
+    ui->plot1->graph(1)->setData(x, y);
+    ui->plot1->graph(1)->setPen(QPen(Qt::blue));
+    ui->plot1->yAxis->rescale();
 
 }
 void Dialog::on_pushButton_2_clicked()
