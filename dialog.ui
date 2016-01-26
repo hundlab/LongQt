@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>10</number>
      </property>
      <widget class="QWidget" name="Window">
       <attribute name="title">
@@ -42,7 +42,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Show Control</string>
+         <string>Import Control</string>
         </property>
        </widget>
       </widget>
@@ -63,14 +63,14 @@
        <widget class="QPushButton" name="pushButton_2">
         <property name="geometry">
          <rect>
-          <x>630</x>
+          <x>624</x>
           <y>10</y>
-          <width>75</width>
+          <width>81</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Show Control</string>
+         <string>Import Control</string>
         </property>
        </widget>
       </widget>
@@ -91,14 +91,14 @@
        <widget class="QPushButton" name="pushButton_3">
         <property name="geometry">
          <rect>
-          <x>630</x>
+          <x>614</x>
           <y>10</y>
-          <width>75</width>
+          <width>91</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Show Control</string>
+         <string>Import Control</string>
         </property>
        </widget>
       </widget>
@@ -119,14 +119,14 @@
        <widget class="QPushButton" name="pushButton_4">
         <property name="geometry">
          <rect>
-          <x>630</x>
+          <x>624</x>
           <y>10</y>
-          <width>75</width>
+          <width>81</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Show Control</string>
+         <string>Import Control</string>
         </property>
        </widget>
       </widget>
@@ -147,14 +147,182 @@
        <widget class="QPushButton" name="pushButton_5">
         <property name="geometry">
          <rect>
-          <x>630</x>
+          <x>614</x>
           <y>10</y>
-          <width>75</width>
+          <width>91</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Show Control</string>
+         <string>Import Control</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab6">
+      <attribute name="title">
+       <string>Graph 6</string>
+      </attribute>
+      <widget class="QCustomPlot" name="plot6" native="true">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>721</width>
+         <height>601</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="pushButton_6">
+        <property name="geometry">
+         <rect>
+          <x>604</x>
+          <y>20</y>
+          <width>91</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Import Control</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab7">
+      <attribute name="title">
+       <string>Graph 7</string>
+      </attribute>
+      <widget class="QCustomPlot" name="plot7" native="true">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>721</width>
+         <height>601</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="pushButton_7">
+        <property name="geometry">
+         <rect>
+          <x>594</x>
+          <y>20</y>
+          <width>91</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Import Control</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab8">
+      <attribute name="title">
+       <string>Graph 8</string>
+      </attribute>
+      <widget class="QCustomPlot" name="plot8" native="true">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>721</width>
+         <height>601</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="pushButton_8">
+        <property name="geometry">
+         <rect>
+          <x>594</x>
+          <y>20</y>
+          <width>101</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Import Control</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab9">
+      <attribute name="title">
+       <string>Graph 9</string>
+      </attribute>
+      <widget class="QCustomPlot" name="plot9" native="true">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>721</width>
+         <height>601</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="pushButton_9">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>20</y>
+          <width>91</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Import Control</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab10">
+      <attribute name="title">
+       <string>Graph 10</string>
+      </attribute>
+      <widget class="QCustomPlot" name="plot10" native="true">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>721</width>
+         <height>601</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="pushButton_10">
+        <property name="geometry">
+         <rect>
+          <x>594</x>
+          <y>20</y>
+          <width>101</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Import Control</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab11">
+      <attribute name="title">
+       <string>Graph 11</string>
+      </attribute>
+      <widget class="QCustomPlot" name="plot11" native="true">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>721</width>
+         <height>601</height>
+        </rect>
+       </property>
+       <widget class="QPushButton" name="pushButton_11">
+        <property name="geometry">
+         <rect>
+          <x>594</x>
+          <y>20</y>
+          <width>101</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Import Control</string>
         </property>
        </widget>
       </widget>
