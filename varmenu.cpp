@@ -418,6 +418,10 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
     proto = initial_proto;
     this->parent = parent;
     write_close = true;
+    pvals_options = new QStringList[3]();
+    pvals_options[0] << "random" << "iter" << "#";
+    pvals_options[1] << "lognormal" << "normal";
+    pvals_options[2] << "logdistribution";
 //setup useful constants and aliases
     unsigned int row_len = 5;
     std::map<string,double*>::iterator it;
@@ -464,18 +468,36 @@ void pvarMenu::update_menu() {
     }
 }
 
-pvarMenu::update_menu(unsigned int column) {
+void pvarMenu::update_menu(unsigned int row) {
     unsigned int i;
+    int pos = 0;
     vector<string>::iterator it;
 
-    for(i = 0, it = proto->pvals[column].begin(); it != proto->pvals[column].end();i++, it++) {
-        switch (i) {
-        case 0:
+    for(i = 0, it = proto->pvals[row].begin(); it != proto->pvals[row].end();i++, it++) {
+        if(proto->pvals[row][0] == "random") {
+            QComboBox* options = new QComboBox();
+            options->addItems(pvals_options[i]);
+//            pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
+//            if(pos != -1) {
+//                options->setCurrentIndex(pos);
+//            }
+            pvar_table->setCellWidget(row, i, options);
+            if(i == 2) {
+                break;
+            }
+        } else if(proto->pvals[row][0] == "iter") {
+            pvar_table->setCellWidget(row, i, new QDoubleSpinBox());
+            if(i == 1) {
+                break;
+            }
+        } else {
+            QDoubleSpinBox* init_val = new QDoubleSpinBox();
+            QLabel* init_val_label = new QLabel("init value");
             
-        break;
+            pvar_table->setCellWidget(row, 0, init_val);
+            break;
         }
-        pvar_table->setCellWidget(i, column, );
-    proto->pvals[column]
+        
     }
 }
 

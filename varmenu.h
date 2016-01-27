@@ -46,8 +46,6 @@ Q_OBJECT
     void set_write_close(int state); //update function for write_close
 };
 
-//class pvarMenu :public QWidget {};
-
 class dvarMenu :public QWidget {
 Q_OBJECT
   public:
@@ -135,9 +133,11 @@ Q_OBJECT
     QPushButton* get_vars;
     QTableWidget* pvar_table;
     QPushButton* close_button;
+//Lists for pvals options
+    QStringList* pvals_options;
 //screen functions
     void update_menu(); //make menu match pvars
-    void update_menu(unsigned int);
+    void update_menu(unsigned int row);
 
   protected:
     void closeEvent(QCloseEvent* event);
