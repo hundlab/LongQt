@@ -8,6 +8,7 @@
 #include <QMap>
 
 QString root = "./build-MyConcurrentModel-Desktop_Qt_5_5_1_MinGW_32bit-Debug";
+bool gr;
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog)
@@ -25,8 +26,7 @@ Dialog::Dialog(QWidget *parent) :
     /**
      * Getting data from simulation for graphing
      */
-    //QFile file("C:/Users/bec100/Desktop/Example_vars/dt0_dvars0.dat");
-    //QFile file("C:/Users/bec100/Desktop/build-MyConcurrentModel-Desktop_Qt_5_5_1_MinGW_32bit-Debug/data" +  QDate::currentDate().toString("MMddyy") + "/dt0_dvars0.dat");
+
     QFile file("./data" + QDate::currentDate().toString("MMddyy") + "/dt0_dvars0.dat");
     if(!file.open(QIODevice::ReadOnly)){
         QMessageBox::information(0,"error", file.errorString());
@@ -42,55 +42,55 @@ Dialog::Dialog(QWidget *parent) :
         QString line = in.readLine();
         QStringList split_line = line.split("\t");
         y1[point] = split_line[0].toDouble();
-                y2[point] = split_line[1].toDouble();
-                if(num_vars_graph > 3){
-                    y3[point] = split_line[2].toDouble();
-                    if(num_vars_graph > 4){
-                        y4[point] = split_line[3].toDouble();
-                        if(num_vars_graph > 5){
-                            y5[point] = split_line[4].toDouble();
-                            if(num_vars_graph > 6){
-                                y6[point] = split_line[5].toDouble();
-                                if(num_vars_graph > 7){
-                                    y7[point] = split_line[6].toDouble();
-                                    if(num_vars_graph > 8){
-                                        y8[point] = split_line[7].toDouble();
-                                        if(num_vars_graph > 9){
-                                            y9[point] = split_line[8].toDouble();
-                                            if(num_vars_graph > 10){
-                                                y10[point] = split_line[9].toDouble();
-                                                if(num_vars_graph > 11){
-                                                    y11[point] = split_line[10].toDouble();
-                                                }
-                                            }
+        y2[point] = split_line[1].toDouble();
+        if(num_vars_graph > 3){
+            y3[point] = split_line[2].toDouble();
+            if(num_vars_graph > 4){
+                y4[point] = split_line[3].toDouble();
+                if(num_vars_graph > 5){
+                    y5[point] = split_line[4].toDouble();
+                    if(num_vars_graph > 6){
+                        y6[point] = split_line[5].toDouble();
+                        if(num_vars_graph > 7){
+                            y7[point] = split_line[6].toDouble();
+                            if(num_vars_graph > 8){
+                                y8[point] = split_line[7].toDouble();
+                                if(num_vars_graph > 9){
+                                    y9[point] = split_line[8].toDouble();
+                                    if(num_vars_graph > 10){
+                                        y10[point] = split_line[9].toDouble();
+                                        if(num_vars_graph > 11){
+                                            y11[point] = split_line[10].toDouble();
+                                        }
                                     }
-                                }
                                 }
                             }
                         }
                     }
                 }
+            }
+        }
         point++;
     }
     file.close();
 
- //Need to sort out which variable is time now::
+    //Need to sort out which variable is time now::
     int pos = split_line.indexOf("t");
-      if(pos == -1) {
-          QMessageBox::information(0,"ERROR NO TIME", "Time must be selected as Output Variable!");
-          exit(EXIT_FAILURE);
-      }
-      else if(pos == 0){x = y1;}
-      else if(pos == 1){ x = y2;}
-      else if(pos == 2){ x = y3;}
-      else if(pos == 3){ x = y4;}
-      else if(pos == 4){ x = y5;}
-      else if(pos == 5){ x = y6;}
-      else if(pos == 6){ x = y7;}
-      else if(pos == 7){ x = y8;}
-      else if(pos == 8){ x = y9;}
-      else if(pos == 9){ x = y10;}
-      else if(pos == 10){ x = y11;}
+    if(pos == -1) {
+        QMessageBox::information(0,"ERROR NO TIME", "Time must be selected as Output Variable!");
+        exit(EXIT_FAILURE);
+    }
+    else if(pos == 0){x = y1;}
+    else if(pos == 1){ x = y2;}
+    else if(pos == 2){ x = y3;}
+    else if(pos == 3){ x = y4;}
+    else if(pos == 4){ x = y5;}
+    else if(pos == 5){ x = y6;}
+    else if(pos == 6){ x = y7;}
+    else if(pos == 7){ x = y8;}
+    else if(pos == 8){ x = y9;}
+    else if(pos == 9){ x = y10;}
+    else if(pos == 10){ x = y11;}
     /**
      * Setting  boundaries of y axis
      */
@@ -313,14 +313,16 @@ void Dialog::on_pushButton_clicked()
     QString toGet = ui->plot1->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);
-    ui->plot1->addGraph();
-    ui->plot1->graph(1)->setData(x, y);
-    ui->plot1->graph(1)->setPen(QPen(Qt::red));
-    ui->plot1->graph(1)->setName("Control");
-    ui->plot1->yAxis->rescale();
-    ui->plot1->update();
-    ui->plot1->legend->setVisible(true);
+    gr = control_on_graph(x, y, toGet, time);
+    if (gr){
+        ui->plot1->addGraph();
+        ui->plot1->graph(1)->setData(x, y);
+        ui->plot1->graph(1)->setPen(QPen(Qt::red));
+        ui->plot1->graph(1)->setName("Control");
+        ui->plot1->yAxis->rescale();
+        ui->plot1->replot();
+        ui->plot1->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_2_clicked()
 {
@@ -328,14 +330,16 @@ void Dialog::on_pushButton_2_clicked()
     QString toGet = ui->plot2->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);
-    ui->plot2->addGraph();
-    ui->plot2->graph(1)->setData(x, y);
-    ui->plot2->graph(1)->setPen(QPen(Qt::red));
-    ui->plot2->graph(1)->setName("Control");
-    ui->plot2->yAxis->rescale();
-    ui->plot2->update();
-    ui->plot2->legend->setVisible(true);
+    gr = control_on_graph(x, y, toGet, time);
+    if(gr){
+        ui->plot2->addGraph();
+        ui->plot2->graph(1)->setData(x, y);
+        ui->plot2->graph(1)->setPen(QPen(Qt::red));
+        ui->plot2->graph(1)->setName("Control");
+        ui->plot2->yAxis->rescale();
+        ui->plot2->replot();
+        ui->plot2->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_3_clicked()
 {
@@ -343,14 +347,16 @@ void Dialog::on_pushButton_3_clicked()
     QString toGet = ui->plot3->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);
-    ui->plot3->addGraph();
-    ui->plot3->graph(1)->setData(x, y);
-    ui->plot3->graph(1)->setPen(QPen(Qt::red));
-    ui->plot3->graph(1)->setName("Control");
-    ui->plot3->yAxis->rescale();
-    ui->plot3->update();
-    ui->plot3->legend->setVisible(true);
+    gr = control_on_graph(x, y, toGet, time);
+    if(gr){
+        ui->plot3->addGraph();
+        ui->plot3->graph(1)->setData(x, y);
+        ui->plot3->graph(1)->setPen(QPen(Qt::red));
+        ui->plot3->graph(1)->setName("Control");
+        ui->plot3->yAxis->rescale();
+        ui->plot3->replot();
+        ui->plot3->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_4_clicked()
 {
@@ -358,14 +364,16 @@ void Dialog::on_pushButton_4_clicked()
     QString toGet = ui->plot4->yAxis->label();
     QString time = "t";
 
-   control_on_graph(x, y, toGet, time);
-    ui->plot4->addGraph();
-    ui->plot4->graph(1)->setData(x, y);
-    ui->plot4->graph(1)->setPen(QPen(Qt::red));
-    ui->plot4->graph(1)->setName("Control");
-    ui->plot4->yAxis->rescale();
-    ui->plot4->update();
-    ui->plot4->legend->setVisible(true);
+    gr = control_on_graph(x, y, toGet, time);
+    if(gr){
+        ui->plot4->addGraph();
+        ui->plot4->graph(1)->setData(x, y);
+        ui->plot4->graph(1)->setPen(QPen(Qt::red));
+        ui->plot4->graph(1)->setName("Control");
+        ui->plot4->yAxis->rescale();
+        ui->plot4->replot();
+        ui->plot4->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_5_clicked()
 {
@@ -373,14 +381,16 @@ void Dialog::on_pushButton_5_clicked()
     QString toGet = ui->plot5->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);
-    ui->plot5->addGraph();
-    ui->plot5->graph(1)->setData(x, y);
-    ui->plot5->graph(1)->setPen(QPen(Qt::red));
-    ui->plot5->graph(1)->setName("Control");
-    ui->plot5->yAxis->rescale();
-    ui->plot5->update();
-    ui->plot5->legend->setVisible(true);
+    gr = control_on_graph(x, y, toGet, time);
+    if(gr){
+        ui->plot5->addGraph();
+        ui->plot5->graph(1)->setData(x, y);
+        ui->plot5->graph(1)->setPen(QPen(Qt::red));
+        ui->plot5->graph(1)->setName("Control");
+        ui->plot5->yAxis->rescale();
+        ui->plot5->replot();
+        ui->plot5->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_6_clicked()
 {
@@ -388,14 +398,15 @@ void Dialog::on_pushButton_6_clicked()
     QString toGet = ui->plot6->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);
-    ui->plot6->addGraph();
-    ui->plot6->graph(1)->setData(x, y);
-    ui->plot6->graph(1)->setPen(QPen(Qt::red));
-    ui->plot6->graph(1)->setName("Control");
-    ui->plot6->yAxis->rescale();
-    ui->plot6->update();
-    ui->plot6->legend->setVisible(true);
+    gr= control_on_graph(x, y, toGet, time);
+    if(gr){ui->plot6->addGraph();
+        ui->plot6->graph(1)->setData(x, y);
+        ui->plot6->graph(1)->setPen(QPen(Qt::red));
+        ui->plot6->graph(1)->setName("Control");
+        ui->plot6->yAxis->rescale();
+        ui->plot6->replot();
+        ui->plot6->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_7_clicked()
 {
@@ -403,14 +414,16 @@ void Dialog::on_pushButton_7_clicked()
     QString toGet = ui->plot7->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);
-    ui->plot7->addGraph();
-    ui->plot7->graph(1)->setData(x, y);
-    ui->plot7->graph(1)->setPen(QPen(Qt::red));
-    ui->plot7->graph(1)->setName("Control");
-    ui->plot7->yAxis->rescale();
-    ui->plot7->update();
-    ui->plot7->legend->setVisible(true);
+    gr = control_on_graph(x, y, toGet, time);
+    if(gr){
+        ui->plot7->addGraph();
+        ui->plot7->graph(1)->setData(x, y);
+        ui->plot7->graph(1)->setPen(QPen(Qt::red));
+        ui->plot7->graph(1)->setName("Control");
+        ui->plot7->yAxis->rescale();
+        ui->plot7->replot();
+        ui->plot7->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_8_clicked()
 {
@@ -418,14 +431,15 @@ void Dialog::on_pushButton_8_clicked()
     QString toGet = ui->plot8->yAxis->label();
     QString time = "t";
 
-  control_on_graph(x, y, toGet, time);
-    ui->plot8->addGraph();
-    ui->plot8->graph(1)->setData(x, y);
-    ui->plot8->graph(1)->setPen(QPen(Qt::red));
-    ui->plot8->graph(1)->setName("Control");
-    ui->plot8->yAxis->rescale();
-    ui->plot8->update();
-    ui->plot8->legend->setVisible(true);
+    gr = control_on_graph(x, y, toGet, time);
+    if(gr){ui->plot8->addGraph();
+        ui->plot8->graph(1)->setData(x, y);
+        ui->plot8->graph(1)->setPen(QPen(Qt::red));
+        ui->plot8->graph(1)->setName("Control");
+        ui->plot8->yAxis->rescale();
+        ui->plot8->replot();
+        ui->plot8->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_9_clicked()
 {
@@ -433,14 +447,15 @@ void Dialog::on_pushButton_9_clicked()
     QString toGet = ui->plot9->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);
-    ui->plot9->addGraph();
-    ui->plot9->graph(1)->setData(x, y);
-    ui->plot9->graph(1)->setPen(QPen(Qt::red));
-    ui->plot9->graph(1)->setName("Control");
-    ui->plot9->yAxis->rescale();
-    ui->plot9->update();
-    ui->plot9->legend->setVisible(true);
+    gr = control_on_graph(x, y, toGet, time);
+    if(gr){ui->plot9->addGraph();
+        ui->plot9->graph(1)->setData(x, y);
+        ui->plot9->graph(1)->setPen(QPen(Qt::red));
+        ui->plot9->graph(1)->setName("Control");
+        ui->plot9->yAxis->rescale();
+        ui->plot9->replot();
+        ui->plot9->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_10_clicked()
 {
@@ -448,14 +463,15 @@ void Dialog::on_pushButton_10_clicked()
     QString toGet = ui->plot10->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);;
-    ui->plot10->addGraph();
-    ui->plot10->graph(1)->setData(x, y);
-    ui->plot10->graph(1)->setPen(QPen(Qt::red));
-    ui->plot10->graph(1)->setName("Control");
-    ui->plot10->yAxis->rescale();
-    ui->plot10->update();
-    ui->plot10->legend->setVisible(true);
+    gr =control_on_graph(x, y, toGet, time);;
+    if(gr){ui->plot10->addGraph();
+        ui->plot10->graph(1)->setData(x, y);
+        ui->plot10->graph(1)->setPen(QPen(Qt::red));
+        ui->plot10->graph(1)->setName("Control");
+        ui->plot10->yAxis->rescale();
+        ui->plot10->replot();
+        ui->plot10->legend->setVisible(true);
+    }
 }
 void Dialog::on_pushButton_11_clicked()
 {
@@ -469,24 +485,25 @@ void Dialog::on_pushButton_11_clicked()
     QString toGet = ui->plot11->yAxis->label();
     QString time = "t";
 
-    control_on_graph(x, y, toGet, time);
-    ui->plot11->addGraph();
-    ui->plot11->graph(1)->setData(x, y);
-    ui->plot11->graph(1)->setPen(QPen(Qt::red));
-    ui->plot11->graph(1)->setName("Control");
-    ui->plot11->yAxis->rescale();
-    ui->plot11->update();
-    ui->plot11->legend->setVisible(true);
+    gr= control_on_graph(x, y, toGet, time);
+    if(gr){ui->plot11->addGraph();
+        ui->plot11->graph(1)->setData(x, y);
+        ui->plot11->graph(1)->setPen(QPen(Qt::red));
+        ui->plot11->graph(1)->setName("Control");
+        ui->plot11->yAxis->rescale();
+        ui->plot11->replot();
+        ui->plot11->legend->setVisible(true);
+    }
 }
-void Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString toGet, QString time){
+bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString toGet, QString time){
     QString filename = QFileDialog::getOpenFileName(
-                 this,
-                 tr("Open File"),
-                 root,
-                 "All Files (*.*);;Text File(*.txt)"
-                 );
-     QFile file1(filename);
-     if(!file1.open(QIODevice::ReadOnly)){
+                this,
+                tr("Open File"),
+                root,
+                "All Files (*.*);;Text File(*.txt)"
+                );
+    QFile file1(filename);
+    if(!file1.open(QIODevice::ReadOnly)){
         QMessageBox::information(0,"error", file1.errorString());
     }
     QTextStream in(&file1);
@@ -494,9 +511,9 @@ void Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     QString fline = in.readLine();
     QStringList split_line = fline.split("\t");
     int varpos = split_line.indexOf(toGet);
-    if(varpos == -1){ QMessageBox::information(0,"Error", toGet +" not found!"); QApplication::quit();}
+    if(varpos == -1){ QMessageBox::information(0,"Error", toGet +" not found!"); return false;}
     int timepos = split_line.indexOf(time);
-    if(timepos == -1){ QMessageBox::information(0,"Error", time +" not found!"); QApplication::quit();}
+    if(timepos == -1){ QMessageBox::information(0,"Error", time +" not found!"); return false;}
     while(!in.atEnd()){
         QString line = in.readLine();
         QStringList split_line = line.split("\t");
@@ -505,4 +522,5 @@ void Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
         point++;
     }
     file1.close();
+    return true;
 }
