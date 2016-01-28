@@ -38,6 +38,8 @@ private slots:
 
     void on_pushButton_11_clicked();
 
+    void control_on_graph(QVector<double> &x, QVector<double> &y, QString toGet, QString time);
+
 private:
     Ui::Dialog *ui;
 };

@@ -131,7 +131,7 @@ void Simulation::set_cell_ready() {
 
 void Simulation::init_douts() {
     if(simvars_read&&mvars_read) {
-        proto->douts = new Output[proto->getNeededDOutputSize()];   // Array of i/o data streams
+        proto->douts = new Output[proto->getNeededDOutputSize()]();   // Array of i/o data streams
     douts_ready = true;
     }
 };
