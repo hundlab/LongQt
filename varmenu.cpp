@@ -16,6 +16,9 @@
 #include <QListWidget>
 #include <QComboBox>
 #include <QTableWidget>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QHeaderView>
 
 #include "varmenu.h"
 #include "proto.h"
@@ -421,7 +424,7 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
     pvals_options = new QStringList[3]();
     pvals_options[0] << "random" << "iter" << "#";
     pvals_options[1] << "lognormal" << "normal";
-    pvals_options[2] << "logdistribution";
+    pvals_options[2] << "logdistribution" << "#";
 //setup useful constants and aliases
     unsigned int row_len = 5;
     std::map<string,double*>::iterator it;
@@ -436,6 +439,8 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
     set_vars->setChecked(write_close);
+    pvar_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    pvar_table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 //central_layout
     central_layout->addWidget(pvar_table, 0,0);
 //main_layout
@@ -477,10 +482,10 @@ void pvarMenu::update_menu(unsigned int row) {
         if(proto->pvals[row][0] == "random") {
             QComboBox* options = new QComboBox();
             options->addItems(pvals_options[i]);
-//            pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
-//            if(pos != -1) {
-//                options->setCurrentIndex(pos);
-//            }
+            pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
+            if(pos != -1) {
+                options->setCurrentIndex(pos);
+            }
             pvar_table->setCellWidget(row, i, options);
             if(i == 2) {
                 break;
@@ -493,8 +498,16 @@ void pvarMenu::update_menu(unsigned int row) {
         } else {
             QDoubleSpinBox* init_val = new QDoubleSpinBox();
             QLabel* init_val_label = new QLabel("init value");
+            QGroupBox* cell = new QGroupBox();
+            cell->setStyleSheet("QGroupBox::title { border: 0px ; border-radius: 0px; padding: 0px 0px 0px 0px; margin = 0px 0px 0px 0px } QGroupBox { border: 0px ; border-radius: 0px; padding: 0px 0px 0px 0px;} ");
+            QHBoxLayout* cell_layout = new QHBoxLayout();
+            cell_layout->addWidget(init_val_label);
+            cell_layout->addWidget(init_val);
+            cell_layout->setContentsMargins(0, 0, 0, 0); // remove spaces
+            cell_layout->setSpacing(0);
+            cell->setLayout(cell_layout);
             
-            pvar_table->setCellWidget(row, 0, init_val);
+            pvar_table->setCellWidget(row, 0, cell);
             break;
         }
         
