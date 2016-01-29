@@ -430,11 +430,11 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
     std::map<string,double*>::iterator it;
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
-    QGridLayout* central_layout = new QGridLayout;
+    central_layout = new QGridLayout;
 //initialize buttons &lables
     get_vars = new QPushButton(tr("Import settings"), this);
     set_vars = new QCheckBox(tr("Write File on Exit"), this);
-    pvar_table = new QTableWidget(0,5, this);
+    pvar_table = new QTableWidget(0,5);
     close_button = new QPushButton(tr("Save and Exit"), this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
@@ -442,7 +442,6 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
     pvar_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     pvar_table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 //central_layout
-    central_layout->addWidget(pvar_table, 0,0);
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
     main_layout->addWidget(set_vars, 0,1);
@@ -464,54 +463,72 @@ void pvarMenu::update_menu() {
     unsigned int i;
     vector<string>::iterator it;
 
-    pvar_table->setRowCount(proto->pnames.size());
     for(i = 0, it = proto->pnames.begin(); it != proto->pnames.end();i++, it++) {
-        if(pvar_table->findItems(it->c_str(), Qt::MatchExactly).empty()) {
-            pvar_table->setVerticalHeaderItem(i, new QTableWidgetItem(it->c_str()));
-            update_menu(i);
-        }
+        central_layout->addWidget(new QLabel(it->c_str()), i, 0);
+        update_menu(i);
     }
+    QPushButton* add_button = new QPushButton("+");
+    central_layout->addWidget(add_button, i, 0, 1, 10);
 }
 
 void pvarMenu::update_menu(unsigned int row) {
     unsigned int i;
     int pos = 0;
+    int boxlen = 2;
     vector<string>::iterator it;
 
     for(i = 0, it = proto->pvals[row].begin(); it != proto->pvals[row].end();i++, it++) {
         if(proto->pvals[row][0] == "random") {
-            QComboBox* options = new QComboBox();
-            options->addItems(pvals_options[i]);
-            pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
-            if(pos != -1) {
+            switch(i) {
+            case 0: case 1: case 2: {
+                QComboBox* options = new QComboBox();
+                options->addItems(pvals_options[i]);
+                pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
+                if(pos == -1) {
+                    pos = pvals_options[i].length() -1;
+                    boxlen = 1;
+                    QDoubleSpinBox* logmean = new QDoubleSpinBox();
+                    logmean->setValue(atof(proto->pvals[row][i].c_str()));
+                    central_layout->addWidget(logmean, row, 2*(i+1), 1, boxlen);
+                }
                 options->setCurrentIndex(pos);
-            }
-            pvar_table->setCellWidget(row, i, options);
-            if(i == 2) {
-                break;
+                central_layout->addWidget(options, row, 2*i +1, 1, boxlen);
+                boxlen = 2;
+            break; }
+            case 3:
+                if(proto->pvals[row][2] != "logdistribution") {
+                    QDoubleSpinBox* logstdev = new QDoubleSpinBox();
+                    logstdev->setValue(atof(proto->pvals[row][i].c_str()));
+                    central_layout->addWidget(logstdev, row, 2*i +1, 1, 2);
+                }
+            break;
             }
         } else if(proto->pvals[row][0] == "iter") {
-            pvar_table->setCellWidget(row, i, new QDoubleSpinBox());
-            if(i == 1) {
-                break;
+            if(i == 0) {
+                QComboBox* options = new QComboBox();
+                options->addItems(pvals_options[i]);
+                pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
+                if(pos != -1) {
+                    options->setCurrentIndex(pos);
+                }
+                central_layout->addWidget(options, row, 2*i+1, 1, 2);
+            } else {
+                central_layout->addWidget(new QDoubleSpinBox(), row, 2*i+1, 1, 2);
+                if(i == 2) {
+                    break;
+                }
             }
         } else {
             QDoubleSpinBox* init_val = new QDoubleSpinBox();
             QLabel* init_val_label = new QLabel("init value");
-            QGroupBox* cell = new QGroupBox();
-            cell->setStyleSheet("QGroupBox::title { border: 0px ; border-radius: 0px; padding: 0px 0px 0px 0px; margin = 0px 0px 0px 0px } QGroupBox { border: 0px ; border-radius: 0px; padding: 0px 0px 0px 0px;} ");
-            QHBoxLayout* cell_layout = new QHBoxLayout();
-            cell_layout->addWidget(init_val_label);
-            cell_layout->addWidget(init_val);
-            cell_layout->setContentsMargins(0, 0, 0, 0); // remove spaces
-            cell_layout->setSpacing(0);
-            cell->setLayout(cell_layout);
-            
-            pvar_table->setCellWidget(row, 0, cell);
+            central_layout->addWidget(init_val_label, row, 1, 1, 1);
+            central_layout->addWidget(init_val, row, 2, 1, 1);
             break;
         }
         
     }
+    QPushButton* remove_button = new QPushButton("-");
+    central_layout->addWidget(remove_button, row, 10, 1, 1);
 }
 
 void pvarMenu::closeEvent(QCloseEvent* event){

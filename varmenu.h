@@ -11,6 +11,7 @@
 #include <QStringList>
 #include <QComboBox>
 #include <QTableWidget>
+#include <QGridLayout>
 
 #include "proto.h"
 
@@ -129,6 +130,7 @@ Q_OBJECT
     QWidget* parent;
     bool write_close;
 //Buttons & their labels
+    QGridLayout* central_layout;
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QTableWidget* pvar_table;
