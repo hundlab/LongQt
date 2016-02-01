@@ -16,7 +16,8 @@
 #include "heart_cell_sim.h"
 #include "varmenu.h"
 #include "dialog.h"
-
+QString Dinf;
+QString Tinf;
 Simulation::Simulation(QWidget* parent){
 //setup class variables
     this->parent = parent;
@@ -65,16 +66,7 @@ Simulation::Simulation(QWidget* parent){
     edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
     cell_type->addItem("Default Cell");
-    //cell_type->addItem("Choose Cell");
-    //cell_type->addItem("Ventricular");
-    //cell_type->addItem("Sinoatrial Node");
-    //cell_type->addItem("Atrial");
-    //cell_type->addItem("Kurata");
     cell_species->addItem("Default Species");
-    //cell_species->addItem("Choose Species");
-    //cell_species->addItem("Mouse");
-    //cell_species->addItem("Rabbit");
-    //cell_species->addItem("Human");
 //add buttons to layouts
 //advanced buttons
     advanced->addWidget(edit_sim_button, 0,0);
@@ -145,16 +137,19 @@ void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
     QVector<Protocol> vector;
-    QDir().mkdir("data" + QDate::currentDate().toString("MMddyy"));
+    //QDir().mkdir("data" + QDate::currentDate().toString("MMddyy"));
+     Dinf = "data" +QDate::currentDate().toString("MMddyy");
+     Tinf = QTime::currentTime().toString("hm");
+    QDir().mkdir(Dinf+"-"+Tinf);
    for( i = 0; i < num_sims; i++) {
         temp = new Protocol(*proto);
         temp->readfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
         temp->savefile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
-        temp->propertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
-        temp->dvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
-        temp->finalpropertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
-        temp->finaldvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
-      vector.append(*temp);
+        temp->propertyoutfile = "./" + Dinf.toStdString()+"-" + Tinf.toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
+        temp->dvarsoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
+        temp->finalpropertyoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
+        temp->finaldvarsoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
+        vector.append(*temp);
   }
 
     QProgressDialog pdialog;
@@ -181,15 +176,9 @@ void Simulation::run_sims() {
     {
        qDebug()<<"finished!";
        QMessageBox::information(this,"Finish","Simulation finished!");
-      // Dialog graph;
-       //graph.show();
+        Dialog graph;
+        graph.exec();
     }
-
-//       else{
-//        QMessageBox msgBox;
-//        msgBox.setText("Code Currently Being Modified\n Please choose a different cell.\n (Kurata)");
-//        msgBox.exec();
-//    }
 };
 
 void Simulation::edit_simvars() {
@@ -241,3 +230,7 @@ void Simulation::init_cell() {
 void Simulation::set_num_sims(int value) {
     num_sims = value;
 };
+
+QString Simulation::getDateTimeName(){
+    return Dinf + "-" +Tinf;
+}

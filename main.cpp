@@ -1,5 +1,5 @@
 #include "heart_cell_sim.h"
-#include "dialog.h"
+//#include "dialog.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -8,8 +8,5 @@ int main(int argc, char *argv[])
 
     Simulation window;
     window.show();
-    Dialog graph;
-    graph.show();
-
     return a.exec();
 }

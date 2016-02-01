@@ -13,6 +13,7 @@ class Simulation : public QWidget {
   public:
     Simulation(QWidget* parent = 0);
     ~Simulation();
+    QString getDateTimeName();
 
   private:
     QWidget* parent;

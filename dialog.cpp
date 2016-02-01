@@ -1,6 +1,7 @@
 #include "dialog.h"
 #include "ui_dialog.h"
 #include "ioevent.h"
+#include "heart_cell_sim.h"
 
 #include <QIODevice>
 #include <QList>
@@ -26,8 +27,8 @@ Dialog::Dialog(QWidget *parent) :
     /**
      * Getting data from simulation for graphing
      */
-
-    QFile file("./data" + QDate::currentDate().toString("MMddyy") + "/dt0_dvars0.dat");
+    Simulation t;
+    QFile file(t.getDateTimeName() + "/dt0_dvars0.dat");        //grabbing the first file-why so many
     if(!file.open(QIODevice::ReadOnly)){
         QMessageBox::information(0,"error", file.errorString());
         exit(EXIT_FAILURE);
@@ -118,8 +119,6 @@ Dialog::Dialog(QWidget *parent) :
         QMessageBox::information(0,"Problems", "\"writetime\" variable needs to be set in Simvars file!");
         exit(EXIT_FAILURE);
     }
-
-
     ui->plot1->addGraph();
     ui->plot1->graph(0)->setPen(QPen(Qt::blue));
     ui->plot1->graph(0)->setData(x, y1);
@@ -534,64 +533,56 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     file1.close();
     return true;
 }
-
 void Dialog::on_save1_clicked()
 {
     QString name = ui->plot1->yAxis->label();
-    ui->plot1->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot1->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
 void Dialog::on_save2_clicked()
 {
     QString name = ui->plot2->yAxis->label();
-    ui->plot2->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot2->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
 void Dialog::on_save3_clicked()
 {
     QString name = ui->plot3->yAxis->label();
-    ui->plot3->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot3->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
 void Dialog::on_save4_clicked()
 {
     QString name = ui->plot4->yAxis->label();
-    ui->plot4->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot4->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
-
 void Dialog::on_save5_clicked()
 {
     QString name = ui->plot5->yAxis->label();
-    ui->plot5->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot5->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
-
 void Dialog::on_save6_clicked()
 {
     QString name = ui->plot6->yAxis->label();
-    ui->plot6->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot6->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
-
 void Dialog::on_save7_clicked()
 {
     QString name = ui->plot7->yAxis->label();
-    ui->plot7->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot7->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
-
 void Dialog::on_save8_clicked()
 {
     QString name = ui->plot8->yAxis->label();
-    ui->plot8->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot8->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
-
 void Dialog::on_save9_clicked()
 {
     QString name = ui->plot9->yAxis->label();
-    ui->plot9->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot9->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
-
 void Dialog::on_save10_clicked()
 {
     QString name = ui->plot10->yAxis->label();
-    ui->plot10->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("ms") + ".jpg",0,0,1.0, -1);
+    ui->plot10->saveJpg("./data"+ QDate::currentDate().toString("MMddyy")+"/" + name +"vsTime" +"-"+ QTime::currentTime().toString("hm") + ".jpg",0,0,1.0, -1);
 }
-
 void Dialog::on_save11_clicked()
 {
     QString name = ui->plot11->yAxis->label();
