@@ -15,6 +15,7 @@
 #include "proto.h"
 #include "heart_cell_sim.h"
 #include "varmenu.h"
+#include "dialog.h"
 
 Simulation::Simulation(QWidget* parent){
 //setup class variables
@@ -180,6 +181,8 @@ void Simulation::run_sims() {
     {
        qDebug()<<"finished!";
        QMessageBox::information(this,"Finish","Simulation finished!");
+      // Dialog graph;
+       //graph.show();
     }
 
 //       else{

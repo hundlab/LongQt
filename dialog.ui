@@ -29,22 +29,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton">
-        <property name="geometry">
-         <rect>
-          <x>630</x>
-          <y>10</y>
-          <width>81</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="save1">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab2">
@@ -57,22 +70,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_2">
-        <property name="geometry">
-         <rect>
-          <x>624</x>
-          <y>10</y>
-          <width>81</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="save2">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab3">
@@ -85,22 +111,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_3">
-        <property name="geometry">
-         <rect>
-          <x>614</x>
-          <y>10</y>
-          <width>91</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="save3">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab4">
@@ -113,22 +152,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_4">
-        <property name="geometry">
-         <rect>
-          <x>624</x>
-          <y>10</y>
-          <width>81</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="save4">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab5">
@@ -141,22 +193,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_5">
-        <property name="geometry">
-         <rect>
-          <x>614</x>
-          <y>10</y>
-          <width>91</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="save5">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab6">
@@ -169,22 +234,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_6">
-        <property name="geometry">
-         <rect>
-          <x>604</x>
-          <y>20</y>
-          <width>91</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="save6">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_6">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab7">
@@ -197,22 +275,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_7">
-        <property name="geometry">
-         <rect>
-          <x>594</x>
-          <y>20</y>
-          <width>91</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="save7">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_7">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab8">
@@ -225,22 +316,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_8">
-        <property name="geometry">
-         <rect>
-          <x>594</x>
-          <y>20</y>
-          <width>101</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="pushButton_8">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="save8">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab9">
@@ -253,22 +357,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_9">
-        <property name="geometry">
-         <rect>
-          <x>600</x>
-          <y>20</y>
-          <width>91</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="pushButton_9">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="save9">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab10">
@@ -281,22 +398,35 @@
          <x>0</x>
          <y>0</y>
          <width>721</width>
-         <height>601</height>
+         <height>551</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_10">
-        <property name="geometry">
-         <rect>
-          <x>594</x>
-          <y>20</y>
-          <width>101</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
+      </widget>
+      <widget class="QPushButton" name="save10">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_10">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab11">
@@ -308,24 +438,41 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
-         <height>601</height>
+         <width>711</width>
+         <height>571</height>
         </rect>
        </property>
-       <widget class="QPushButton" name="pushButton_11">
-        <property name="geometry">
-         <rect>
-          <x>594</x>
-          <y>20</y>
-          <width>101</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Import Control</string>
-        </property>
-       </widget>
       </widget>
+      <widget class="QPushButton" name="pushButton_11">
+       <property name="geometry">
+        <rect>
+         <x>530</x>
+         <y>570</y>
+         <width>101</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Control</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="save11">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>570</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <zorder>plot11</zorder>
+      <zorder>pushButton_11</zorder>
+      <zorder>pushButton_11</zorder>
+      <zorder>save11</zorder>
      </widget>
     </widget>
    </item>

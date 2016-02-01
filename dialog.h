@@ -40,6 +40,28 @@ private slots:
 
     bool control_on_graph(QVector<double> &x, QVector<double> &y, QString toGet, QString time);
 
+    void on_save1_clicked();
+
+    void on_save2_clicked();
+
+    void on_save3_clicked();
+
+    void on_save4_clicked();
+
+    void on_save5_clicked();
+
+    void on_save6_clicked();
+
+    void on_save7_clicked();
+
+    void on_save8_clicked();
+
+    void on_save9_clicked();
+
+    void on_save10_clicked();
+
+    void on_save11_clicked();
+
 private:
     Ui::Dialog *ui;
 };
