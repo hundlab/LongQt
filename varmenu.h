@@ -148,6 +148,7 @@ Q_OBJECT
     bool read_pvars(); 
     bool write_pvars(); 
     void set_write_close(int state); //update function for write_close
+    void row_changed(QString value, int row, int column);
 ;
 };
 

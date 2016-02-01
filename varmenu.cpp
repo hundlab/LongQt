@@ -477,10 +477,26 @@ void pvarMenu::update_menu(unsigned int row) {
     int boxlen = 2;
     vector<string>::iterator it;
 
+    for(i = 0; i < 10;i++) {
+        int index = 0;
+        QLayoutItem* current = central_layout->itemAtPosition(row, i+1);
+        if(current != 0) {
+            current->widget()->setVisible(false);
+            index = central_layout->indexOf(current->widget());
+            delete central_layout->takeAt(index);
+        }
+
+    }
+
     for(i = 0, it = proto->pvals[row].begin(); it != proto->pvals[row].end();i++, it++) {
         if(proto->pvals[row][0] == "random") {
             switch(i) {
-            case 0: case 1: case 2: {
+            case 2: {
+                if(proto->pvals[row][1] == "normal") {
+                    break;
+                }
+            }
+            case 0: case 1: {
                 QComboBox* options = new QComboBox();
                 options->addItems(pvals_options[i]);
                 pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
@@ -490,9 +506,17 @@ void pvarMenu::update_menu(unsigned int row) {
                     QDoubleSpinBox* logmean = new QDoubleSpinBox();
                     logmean->setValue(atof(proto->pvals[row][i].c_str()));
                     central_layout->addWidget(logmean, row, 2*(i+1), 1, boxlen);
+                    connect(logmean, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+                        [=](double value){
+                        proto->pvals[row].erase(proto->pvals[row].begin() + i);
+                        proto->pvals[row].insert(proto->pvals[row].begin() +i, to_string(value));
+                        }
+                    );
                 }
                 options->setCurrentIndex(pos);
                 central_layout->addWidget(options, row, 2*i +1, 1, boxlen);
+                connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
+                    [=](QString value){row_changed(value, row, i);});
                 boxlen = 2;
             break; }
             case 3:
@@ -500,6 +524,13 @@ void pvarMenu::update_menu(unsigned int row) {
                     QDoubleSpinBox* logstdev = new QDoubleSpinBox();
                     logstdev->setValue(atof(proto->pvals[row][i].c_str()));
                     central_layout->addWidget(logstdev, row, 2*i +1, 1, 2);
+                    connect(logstdev, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+                    [=](double value){
+                        proto->pvals[row].erase(proto->pvals[row].begin() + i);
+                        proto->pvals[row].insert(proto->pvals[row].begin() +i, to_string(value));
+                    }
+                    );
+
                 }
             break;
             }
@@ -566,6 +597,36 @@ bool pvarMenu::write_pvars(){
 void pvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
+}
+
+void pvarMenu::row_changed(QString value, int row, int column) {
+    vector<string> to_insert;
+    vector<string>::iterator erase_start = proto->pvals[row].begin() +column;
+    vector<string>::iterator erase_end = proto->pvals[row].begin() +column;
+    vector<string>::iterator new_start = to_insert.begin();
+    vector<string>::iterator new_end = to_insert.end();
+
+    if(value == "#") {
+        value = "0.0";
+        if(proto->pvals[row][0] == "random" || proto->pvals[row][0] == "iter") {
+            to_insert.push_back(value.toStdString());
+        }
+        to_insert.push_back(value.toStdString());
+    }
+    if(value == "normal" || value == "logdistribution") {
+        erase_end = proto->pvals[row].end();
+        to_insert.push_back(value.toStdString());
+    }
+    if(value == "iter") {
+        erase_end = proto->pvals[row].end();
+        to_insert.push_back("0.0");
+        to_insert.push_back("0.0");
+    }
+    new_start = to_insert.begin();
+    new_end = to_insert.end();
+    proto->pvals[row].erase(erase_start,erase_end);
+    proto->pvals[row].insert(proto->pvals[row].begin() +column, new_start, new_end);
+    update_menu(row);
 }
 
 
