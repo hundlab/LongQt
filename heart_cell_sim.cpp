@@ -137,7 +137,6 @@ void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
     QVector<Protocol> vector;
-    //QDir().mkdir("data" + QDate::currentDate().toString("MMddyy"));
      Dinf = "data" +QDate::currentDate().toString("MMddyy");
      Tinf = QTime::currentTime().toString("hm");
     QDir().mkdir(Dinf+"-"+Tinf);
@@ -234,3 +233,4 @@ void Simulation::set_num_sims(int value) {
 QString Simulation::getDateTimeName(){
     return Dinf + "-" +Tinf;
 }
+

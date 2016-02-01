@@ -1,5 +1,4 @@
 #include "heart_cell_sim.h"
-//#include "dialog.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
