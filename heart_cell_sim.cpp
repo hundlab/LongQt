@@ -105,14 +105,11 @@ Simulation::Simulation(QWidget* parent){
     connect(init_cell_button, SIGNAL(clicked()), this, SLOT(init_cell()));
     connect(num_of_sims, SIGNAL(valueChanged(int)), this, SLOT(set_num_sims(int)));
 };
-
 Simulation::~Simulation(){};
-
 void Simulation::set_sim_ready() {
     sim_ready = simvars_read && pvars_read && mvars_read && dvars_read && cell_ready && douts_ready;
     run_button->setEnabled(sim_ready);
 };
-
 void Simulation::set_cell_ready() {
     cell_ready = true;
     load_pvars_button->setEnabled(cell_ready);
@@ -121,23 +118,20 @@ void Simulation::set_cell_ready() {
     edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
 };
-
 void Simulation::init_douts() {
     if(simvars_read&&mvars_read) {
         proto->douts = new Output[proto->getNeededDOutputSize()]();   // Array of i/o data streams
     douts_ready = true;
     }
 };
-
 void Simulation::doTask(Protocol& toRun) {
     toRun.runSim(); 
 };
-
 void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
     QVector<Protocol> vector;
-     Dinf = "data" +QDate::currentDate().toString("MMddyy");
+     Dinf = "data" + QDate::currentDate().toString("MMddyy");
      Tinf = QTime::currentTime().toString("hm");
     QDir().mkdir(Dinf+"-"+Tinf);
    for( i = 0; i < num_sims; i++) {
@@ -179,7 +173,6 @@ void Simulation::run_sims() {
         graph.exec();
     }
 };
-
 void Simulation::edit_simvars() {
     simvarMenu* menu = new simvarMenu(proto, this);
     menu->show();
@@ -187,50 +180,39 @@ void Simulation::edit_simvars() {
     init_douts();
     set_sim_ready();
 };
-
 void Simulation::load_simvars() {
     simvars_read = !(bool)proto->readpars(proto->pars, proto->simvarfile);
     init_douts();
     set_sim_ready();
 };
-
 void Simulation::edit_pvars() {};
-
 void Simulation::load_pvars() {
     pvars_read = !(bool)proto->readpvars();
     set_sim_ready();
 };
-
 void Simulation::edit_dvars() {
     dvarMenu* menu = new dvarMenu(proto, this);
     menu->show();
     dvars_read = true;
     set_sim_ready();
 };
-
 void Simulation::load_dvars() {
     dvars_read = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
     set_sim_ready();
 };
-
 void Simulation::edit_mvars() {};
-
 void Simulation::load_mvars() {
     mvars_read = !(bool)proto->initializeMeasure(int(proto->maxmeassize));
     init_douts();
     set_sim_ready();
 };
-
 void Simulation::init_cell() {
     proto->cell = new ControlSa;
     set_cell_ready();
 };
- 
 void Simulation::set_num_sims(int value) {
     num_sims = value;
 };
-
 QString Simulation::getDateTimeName(){
     return Dinf + "-" +Tinf;
 }
-
