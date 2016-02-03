@@ -135,11 +135,16 @@ Q_OBJECT
     QPushButton* get_vars;
     QTableWidget* pvar_table;
     QPushButton* close_button;
+    QPushButton* add_button;
+    QComboBox* new_var_choice;
 //Lists for pvals options
     QStringList* pvals_options;
 //screen functions
     void update_menu(); //make menu match pvars
     void update_menu(unsigned int row);
+    void clear_row(unsigned int row, int offset);
+    void add_doublespinbox_tomenu(unsigned int row, unsigned int column, unsigned int boxlen);
+    void add_comobobox_tomenu(unsigned int menu_box, unsigned int row, unsigned int column, unsigned int boxlen);
 
   protected:
     void closeEvent(QCloseEvent* event);
@@ -149,6 +154,8 @@ Q_OBJECT
     bool write_pvars(); 
     void set_write_close(int state); //update function for write_close
     void row_changed(QString value, int row, int column);
+    void remove_row(unsigned int row);
+    void add_row();
 ;
 };
 

@@ -422,9 +422,9 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
     this->parent = parent;
     write_close = true;
     pvals_options = new QStringList[3]();
-    pvals_options[0] << "random" << "iter" << "#";
+    pvals_options[0] << "random" << "iter" << "init value";
     pvals_options[1] << "lognormal" << "normal";
-    pvals_options[2] << "logdistribution" << "#";
+    pvals_options[2] << "logdistribution" << "logmean";
 //setup useful constants and aliases
     unsigned int row_len = 5;
     std::map<string,double*>::iterator it;
@@ -462,13 +462,24 @@ pvarMenu::~pvarMenu(){}
 void pvarMenu::update_menu() {
     unsigned int i;
     vector<string>::iterator it;
+    map<string, double*>::iterator map_it;
+    add_button = new QPushButton("+");
+    new_var_choice = new QComboBox();
 
     for(i = 0, it = proto->pnames.begin(); it != proto->pnames.end();i++, it++) {
+        clear_row(i,0);
         central_layout->addWidget(new QLabel(it->c_str()), i, 0);
         update_menu(i);
     }
-    QPushButton* add_button = new QPushButton("+");
-    central_layout->addWidget(add_button, i, 0, 1, 10);
+
+    for(map_it = proto->cell->pars.begin(); map_it != proto->cell->pars.end(); map_it++) {
+        new_var_choice->addItem(map_it->first.c_str());
+    }
+
+    central_layout->addWidget(new_var_choice, i, 0, 1, 2);
+    central_layout->addWidget(add_button, i, 2, 1, 2);
+    connect(add_button, SIGNAL(clicked()), this, SLOT(add_row()));
+    clear_row(i+1,0);
 }
 
 void pvarMenu::update_menu(unsigned int row) {
@@ -477,17 +488,7 @@ void pvarMenu::update_menu(unsigned int row) {
     int boxlen = 2;
     vector<string>::iterator it;
 
-    for(i = 0; i < 10;i++) {
-        int index = 0;
-        QLayoutItem* current = central_layout->itemAtPosition(row, i+1);
-        if(current != 0) {
-            current->widget()->setVisible(false);
-            index = central_layout->indexOf(current->widget());
-            delete central_layout->takeAt(index);
-        }
-
-    }
-
+    clear_row(row, 1);
     for(i = 0, it = proto->pvals[row].begin(); it != proto->pvals[row].end();i++, it++) {
         if(proto->pvals[row][0] == "random") {
             switch(i) {
@@ -523,7 +524,8 @@ void pvarMenu::update_menu(unsigned int row) {
                 if(proto->pvals[row][2] != "logdistribution") {
                     QDoubleSpinBox* logstdev = new QDoubleSpinBox();
                     logstdev->setValue(atof(proto->pvals[row][i].c_str()));
-                    central_layout->addWidget(logstdev, row, 2*i +1, 1, 2);
+                    central_layout->addWidget(new QLabel("logstdev"), row, 2*i +1,1,1);
+                    central_layout->addWidget(logstdev, row, 2*i +2, 1, 1);
                     connect(logstdev, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
                     [=](double value){
                         proto->pvals[row].erase(proto->pvals[row].begin() + i);
@@ -543,24 +545,82 @@ void pvarMenu::update_menu(unsigned int row) {
                     options->setCurrentIndex(pos);
                 }
                 central_layout->addWidget(options, row, 2*i+1, 1, 2);
+                connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
+                    [=](QString value){row_changed(value, row, i);});
             } else {
-                central_layout->addWidget(new QDoubleSpinBox(), row, 2*i+1, 1, 2);
+                QDoubleSpinBox* val = new QDoubleSpinBox();
+                val->setValue(atof(proto->pvals[row][i].c_str()));
+                central_layout->addWidget(val, row, 2*i+1, 1, 2);
+                connect(val, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+                    [=](double value){
+                    proto->pvals[row].erase(proto->pvals[row].begin() + i);
+                    proto->pvals[row].insert(proto->pvals[row].begin() +i, to_string(value));});
                 if(i == 2) {
                     break;
                 }
             }
         } else {
             QDoubleSpinBox* init_val = new QDoubleSpinBox();
-            QLabel* init_val_label = new QLabel("init value");
-            central_layout->addWidget(init_val_label, row, 1, 1, 1);
+            QComboBox* options = new QComboBox();
+            options->addItems(pvals_options[i]);
+            pos = pvals_options[0].length() -1;
+            options->setCurrentIndex(pos);
+            central_layout->addWidget(options, row, 1, 1, 1);
             central_layout->addWidget(init_val, row, 2, 1, 1);
+            connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
+                    [=](QString value){row_changed(value, row, i);});
             break;
         }
         
     }
     QPushButton* remove_button = new QPushButton("-");
     central_layout->addWidget(remove_button, row, 10, 1, 1);
+    connect(remove_button, &QPushButton::clicked,
+        [=](){
+        remove_row(row);}
+    );
+} 
+
+void pvarMenu::add_doublespinbox_tomenu(unsigned int row, unsigned int column, unsigned int boxlen) {
+                QDoubleSpinBox* val = new QDoubleSpinBox();
+                val->setValue(atof(proto->pvals[row][column].c_str()));
+                central_layout->addWidget(val, row, 2*column+1, 1, boxlen);
+                connect(val, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+                    [=](double value){
+                    proto->pvals[row].erase(proto->pvals[row].begin() + column);
+                    proto->pvals[row].insert(proto->pvals[row].begin() +column, to_string(value));});
 }
+
+void pvarMenu::add_comobobox_tomenu(unsigned int menu_box, unsigned int row, unsigned int column, unsigned int boxlen) {
+    QComboBox* options = new QComboBox();
+    int pos;
+
+    options->addItems(pvals_options[menu_box]);
+    pos = pvals_options[menu_box].indexOf(proto->pvals[row][column].c_str());
+    if(pos == -1) {
+        pos = pvals_options[menu_box].length() -1;
+    }
+    options->setCurrentIndex(pos);
+    central_layout->addWidget(options, row, column*2 +1, 1, boxlen);
+    connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
+        [=](QString value){row_changed(value, row, column);});
+}
+
+void pvarMenu::clear_row(unsigned int row, int offset) {
+    unsigned int i;
+
+    for(i = offset; i <= 10;i++) {
+        int index = 0;
+        QLayoutItem* current = central_layout->itemAtPosition(row, i);
+        if(current != 0) {
+            current->widget()->setVisible(false);
+            index = central_layout->indexOf(current->widget());
+            delete central_layout->takeAt(index);
+        }
+
+    }
+}
+
 
 void pvarMenu::closeEvent(QCloseEvent* event){
     proto->parmap = proto->resizemap(proto->cell->pars,proto->pnames);
@@ -606,12 +666,17 @@ void pvarMenu::row_changed(QString value, int row, int column) {
     vector<string>::iterator new_start = to_insert.begin();
     vector<string>::iterator new_end = to_insert.end();
 
-    if(value == "#") {
+    if(value == "init value") {
         value = "0.0";
-        if(proto->pvals[row][0] == "random" || proto->pvals[row][0] == "iter") {
-            to_insert.push_back(value.toStdString());
-        }
+        erase_end = proto->pvals[row].end();
         to_insert.push_back(value.toStdString());
+    }
+    if(value == "logmean") {
+        value = "0.0";
+        erase_end = proto->pvals[row].end();
+        to_insert.push_back(value.toStdString());
+        to_insert.push_back(value.toStdString());
+
     }
     if(value == "normal" || value == "logdistribution") {
         erase_end = proto->pvals[row].end();
@@ -619,8 +684,19 @@ void pvarMenu::row_changed(QString value, int row, int column) {
     }
     if(value == "iter") {
         erase_end = proto->pvals[row].end();
+        to_insert.push_back(value.toStdString());
         to_insert.push_back("0.0");
         to_insert.push_back("0.0");
+    }
+    if(value == "random") {
+        erase_end = proto->pvals[row].end();
+        to_insert.push_back(value.toStdString());
+        to_insert.push_back("normal");
+    }
+    if(value == "lognormal") {
+        erase_end = proto->pvals[row].end();
+        to_insert.push_back(value.toStdString());
+        to_insert.push_back("logdistribution");
     }
     new_start = to_insert.begin();
     new_end = to_insert.end();
@@ -629,4 +705,30 @@ void pvarMenu::row_changed(QString value, int row, int column) {
     update_menu(row);
 }
 
+void pvarMenu::remove_row(unsigned int row) {
+    proto->pvals.erase(proto->pvals.begin() + row);
+    proto->pnames.erase(proto->pnames.begin() + row);
+    clear_row(row, 0);
+    update_menu();
+}
 
+void pvarMenu::add_row() {
+    vector<string>* def = new vector<string>();
+    vector<string>::iterator it;
+    bool found = false;
+    string var_name_to_add = new_var_choice->currentText().toStdString();
+
+    for(it = proto->pnames.begin(); it != proto->pnames.end(); it++) {
+        if(*it == var_name_to_add) {
+            found = true;
+        }
+    }
+
+    if(!found) {
+        def->push_back("random");
+        def->push_back("normal");
+        proto->pnames.push_back(var_name_to_add);
+        proto->pvals.push_back(*def);
+        update_menu();
+    }
+}
