@@ -143,8 +143,8 @@ Q_OBJECT
     void update_menu(); //make menu match pvars
     void update_menu(unsigned int row);
     void clear_row(unsigned int row, int offset);
-    void add_doublespinbox_tomenu(unsigned int row, unsigned int column, unsigned int boxlen);
-    void add_comobobox_tomenu(unsigned int menu_box, unsigned int row, unsigned int column, unsigned int boxlen);
+    void add_doublespinbox_tomenu(unsigned int row, unsigned int column, unsigned int boxlen = 1, int column_pos = -1);
+    void add_comobobox_tomenu(unsigned int row, unsigned int column, unsigned int menu_box, unsigned int boxlen = 1, int column_pos = -1);
 
   protected:
     void closeEvent(QCloseEvent* event);
@@ -156,6 +156,7 @@ Q_OBJECT
     void row_changed(QString value, int row, int column);
     void remove_row(unsigned int row);
     void add_row();
+    void checkbox_changed(unsigned int row,unsigned int column,int state);
 ;
 };
 

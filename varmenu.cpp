@@ -461,6 +461,7 @@ pvarMenu::~pvarMenu(){}
 
 void pvarMenu::update_menu() {
     unsigned int i;
+    unsigned int end_row;
     vector<string>::iterator it;
     map<string, double*>::iterator map_it;
     add_button = new QPushButton("+");
@@ -475,104 +476,51 @@ void pvarMenu::update_menu() {
     for(map_it = proto->cell->pars.begin(); map_it != proto->cell->pars.end(); map_it++) {
         new_var_choice->addItem(map_it->first.c_str());
     }
-
-    central_layout->addWidget(new_var_choice, i, 0, 1, 2);
-    central_layout->addWidget(add_button, i, 2, 1, 2);
+    end_row = i;
+    for(; (int) i<= central_layout->rowCount(); i++) {
+        clear_row(i,0);
+    }
+    central_layout->addWidget(new_var_choice, end_row, 0, 1, 2);
+    central_layout->addWidget(add_button, end_row, 2, 1, 2);
     connect(add_button, SIGNAL(clicked()), this, SLOT(add_row()));
-    clear_row(i+1,0);
 }
 
 void pvarMenu::update_menu(unsigned int row) {
-    unsigned int i;
-    int pos = 0;
     int boxlen = 2;
+    int inc_pos = 2;
     vector<string>::iterator it;
 
     clear_row(row, 1);
-    for(i = 0, it = proto->pvals[row].begin(); it != proto->pvals[row].end();i++, it++) {
         if(proto->pvals[row][0] == "random") {
-            switch(i) {
-            case 2: {
-                if(proto->pvals[row][1] == "normal") {
-                    break;
-                }
-            }
-            case 0: case 1: {
-                QComboBox* options = new QComboBox();
-                options->addItems(pvals_options[i]);
-                pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
-                if(pos == -1) {
-                    pos = pvals_options[i].length() -1;
+            add_comobobox_tomenu(row, 0, 0, boxlen);
+            add_comobobox_tomenu(row, 1, 1, boxlen);
+            if((proto->pvals[row][1] == "lognormal") ) {
+                if((proto->pvals[row][2] != "logdistribution")) {
                     boxlen = 1;
-                    QDoubleSpinBox* logmean = new QDoubleSpinBox();
-                    logmean->setValue(atof(proto->pvals[row][i].c_str()));
-                    central_layout->addWidget(logmean, row, 2*(i+1), 1, boxlen);
-                    connect(logmean, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-                        [=](double value){
-                        proto->pvals[row].erase(proto->pvals[row].begin() + i);
-                        proto->pvals[row].insert(proto->pvals[row].begin() +i, to_string(value));
-                        }
-                    );
+                    add_doublespinbox_tomenu(row, 2, boxlen, 6);
+                    central_layout->addWidget(new QLabel("logstdev"), row, 7,1,1);
+                    add_doublespinbox_tomenu(row, 3, boxlen, 8);
                 }
-                options->setCurrentIndex(pos);
-                central_layout->addWidget(options, row, 2*i +1, 1, boxlen);
-                connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
-                    [=](QString value){row_changed(value, row, i);});
-                boxlen = 2;
-            break; }
-            case 3:
-                if(proto->pvals[row][2] != "logdistribution") {
-                    QDoubleSpinBox* logstdev = new QDoubleSpinBox();
-                    logstdev->setValue(atof(proto->pvals[row][i].c_str()));
-                    central_layout->addWidget(new QLabel("logstdev"), row, 2*i +1,1,1);
-                    central_layout->addWidget(logstdev, row, 2*i +2, 1, 1);
-                    connect(logstdev, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-                    [=](double value){
-                        proto->pvals[row].erase(proto->pvals[row].begin() + i);
-                        proto->pvals[row].insert(proto->pvals[row].begin() +i, to_string(value));
-                    }
-                    );
-
-                }
-            break;
+                add_comobobox_tomenu(row, 2, 2, boxlen);
             }
         } else if(proto->pvals[row][0] == "iter") {
-            if(i == 0) {
-                QComboBox* options = new QComboBox();
-                options->addItems(pvals_options[i]);
-                pos = pvals_options[i].indexOf(proto->pvals[row][i].c_str());
-                if(pos != -1) {
-                    options->setCurrentIndex(pos);
-                }
-                central_layout->addWidget(options, row, 2*i+1, 1, 2);
-                connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
-                    [=](QString value){row_changed(value, row, i);});
-            } else {
-                QDoubleSpinBox* val = new QDoubleSpinBox();
-                val->setValue(atof(proto->pvals[row][i].c_str()));
-                central_layout->addWidget(val, row, 2*i+1, 1, 2);
-                connect(val, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
-                    [=](double value){
-                    proto->pvals[row].erase(proto->pvals[row].begin() + i);
-                    proto->pvals[row].insert(proto->pvals[row].begin() +i, to_string(value));});
-                if(i == 2) {
-                    break;
-                }
-            }
+               add_comobobox_tomenu(row, 0, 0, 2);
+               QCheckBox* take_init = new QCheckBox("inital value"); 
+               central_layout->addWidget(take_init, row, 3);
+               if(proto->pvals[row].size() == 3) {
+                    take_init->setChecked(true);
+                    inc_pos = 1;
+                    add_doublespinbox_tomenu(row, 1, 1, 4);
+               }
+               central_layout->addWidget(new QLabel("increment"), row, 5);
+               add_doublespinbox_tomenu(row, inc_pos, 1, 6);
+               connect(take_init, &QCheckBox::stateChanged,
+                    [=](int state){checkbox_changed(row, 1, state);});
         } else {
-            QDoubleSpinBox* init_val = new QDoubleSpinBox();
-            QComboBox* options = new QComboBox();
-            options->addItems(pvals_options[i]);
-            pos = pvals_options[0].length() -1;
-            options->setCurrentIndex(pos);
-            central_layout->addWidget(options, row, 1, 1, 1);
-            central_layout->addWidget(init_val, row, 2, 1, 1);
-            connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
-                    [=](QString value){row_changed(value, row, i);});
-            break;
+            add_comobobox_tomenu(row, 0, 0, 1, 1);
+            add_doublespinbox_tomenu(row, 0, 1, 2);
         }
         
-    }
     QPushButton* remove_button = new QPushButton("-");
     central_layout->addWidget(remove_button, row, 10, 1, 1);
     connect(remove_button, &QPushButton::clicked,
@@ -581,19 +529,27 @@ void pvarMenu::update_menu(unsigned int row) {
     );
 } 
 
-void pvarMenu::add_doublespinbox_tomenu(unsigned int row, unsigned int column, unsigned int boxlen) {
+void pvarMenu::add_doublespinbox_tomenu(unsigned int row, unsigned int column, unsigned int boxlen, int column_pos) {
+    if(column_pos < 0) {
+        column_pos = 2*column+1;
+    }
                 QDoubleSpinBox* val = new QDoubleSpinBox();
+                val->setRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
                 val->setValue(atof(proto->pvals[row][column].c_str()));
-                central_layout->addWidget(val, row, 2*column+1, 1, boxlen);
+                central_layout->addWidget(val, row, column_pos, 1, boxlen);
                 connect(val, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
                     [=](double value){
                     proto->pvals[row].erase(proto->pvals[row].begin() + column);
                     proto->pvals[row].insert(proto->pvals[row].begin() +column, to_string(value));});
 }
 
-void pvarMenu::add_comobobox_tomenu(unsigned int menu_box, unsigned int row, unsigned int column, unsigned int boxlen) {
+void pvarMenu::add_comobobox_tomenu(unsigned int row, unsigned int column, unsigned int menu_box, unsigned int boxlen, int column_pos) {
+    if(column_pos < 0) {
+        column_pos = 2*column+1;
+    }
+
     QComboBox* options = new QComboBox();
-    int pos;
+    int pos =-1;
 
     options->addItems(pvals_options[menu_box]);
     pos = pvals_options[menu_box].indexOf(proto->pvals[row][column].c_str());
@@ -601,7 +557,7 @@ void pvarMenu::add_comobobox_tomenu(unsigned int menu_box, unsigned int row, uns
         pos = pvals_options[menu_box].length() -1;
     }
     options->setCurrentIndex(pos);
-    central_layout->addWidget(options, row, column*2 +1, 1, boxlen);
+    central_layout->addWidget(options, row, column_pos, 1, boxlen);
     connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
         [=](QString value){row_changed(value, row, column);});
 }
@@ -731,4 +687,16 @@ void pvarMenu::add_row() {
         proto->pvals.push_back(*def);
         update_menu();
     }
+}
+
+void pvarMenu::checkbox_changed(unsigned int row,unsigned int column,int state) {
+    switch(state) {
+    case 0:
+        proto->pvals[row].erase(proto->pvals[row].begin() + column);
+    break;
+    case 2:
+        proto->pvals[row].insert(proto->pvals[row].begin() + column, "0.0");
+    break;
+    }
+    update_menu(row);
 }
