@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>743</width>
-    <height>646</height>
+    <height>663</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -57,6 +57,19 @@
        </property>
        <property name="text">
         <string>Import Control</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_12">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>570</y>
+         <width>151</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Import Different Trial</string>
        </property>
       </widget>
      </widget>
@@ -469,10 +482,6 @@
         <string>Save</string>
        </property>
       </widget>
-      <zorder>plot11</zorder>
-      <zorder>pushButton_11</zorder>
-      <zorder>pushButton_11</zorder>
-      <zorder>save11</zorder>
      </widget>
     </widget>
    </item>

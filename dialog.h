@@ -18,6 +18,7 @@ public:
     ~Dialog();
 
 private slots:
+    void passing_to_graph(Protocol* a, QString f);
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();
@@ -41,6 +42,9 @@ private slots:
     void on_save9_clicked();
     void on_save10_clicked();
     void on_save11_clicked();
+
+    void on_pushButton_12_clicked();
+
 private:
     Ui::Dialog *ui;
     Protocol* proto;
