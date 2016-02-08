@@ -23,20 +23,18 @@ SOURCES += main.cpp\
     modellib/proto.cpp \
     varmenu.cpp \
     heart_cell_sim.cpp \
-    myoutput.cpp
+    myoutput.cpp    \
     qcustomplot.cpp
 
-HEADERS  +=  dialog.h \
-modellib/cell.h \
+HEADERS  +=    dialog.h \
     modellib/kurata08.h \
 #    modellib/kurata08mod.h \
+    modellib/cell.h \
     modellib/proto.h \
     varmenu.h \
     heart_cell_sim.h \
-    myoutput.h
+    myoutput.h  \
     qcustomplot.h
-
-
 
 FORMS    += dialog.ui
 

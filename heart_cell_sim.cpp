@@ -185,7 +185,12 @@ void Simulation::load_simvars() {
     init_douts();
     set_sim_ready();
 };
-void Simulation::edit_pvars() {};
+void Simulation::edit_pvars() {
+    pvarMenu* menu = new pvarMenu(proto, this);
+    menu->show();
+    pvars_read = true;
+    set_sim_ready();
+};
 void Simulation::load_pvars() {
     pvars_read = !(bool)proto->readpvars();
     set_sim_ready();
@@ -200,9 +205,14 @@ void Simulation::load_dvars() {
     dvars_read = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
     set_sim_ready();
 };
-void Simulation::edit_mvars() {};
+void Simulation::edit_mvars() {
+    mvarMenu* menu = new mvarMenu(proto, this);
+    menu->show();
+    mvars_read = true;
+    set_sim_ready();
+};
 void Simulation::load_mvars() {
-    mvars_read = !(bool)proto->initializeMeasure(int(proto->maxmeassize));
+    mvars_read = mvars_read&&!(bool)proto->initializeMeasure(int(proto->maxmeassize));
     init_douts();
     set_sim_ready();
 };
