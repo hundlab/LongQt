@@ -6,8 +6,6 @@
 
 QT       += core gui concurrent
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
-
 TARGET = MyConcurrentModel.out
 TEMPLATE = app
 
@@ -25,22 +23,20 @@ SOURCES += main.cpp\
     modellib/proto.cpp \
     varmenu.cpp \
     heart_cell_sim.cpp \
-    myoutput.cpp \
+    myoutput.cpp
     qcustomplot.cpp
 
-HEADERS  += dialog.h \
-    modellib/cell.h \
+HEADERS  +=  dialog.h \
+modellib/cell.h \
     modellib/kurata08.h \
 #    modellib/kurata08mod.h \
     modellib/proto.h \
     varmenu.h \
-    heart_cell_sim.h \ 
-    myoutput.h \
+    heart_cell_sim.h \
+    myoutput.h
     qcustomplot.h
+
+
 
 FORMS    += dialog.ui
 
-DISTFILES += \
-    data/dvars.txt \
-    data/pvars.txt \
-    data/simvars.txt
