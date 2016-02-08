@@ -169,8 +169,8 @@ void Simulation::run_sims() {
     {
        qDebug()<<"finished!";
        QMessageBox::information(this,"Finish","Simulation finished!");
-        Dialog graph;
-        graph.exec();
+        Dialog* graph = new Dialog(proto, 0);
+        graph->exec();
     }
 };
 void Simulation::edit_simvars() {

@@ -10,11 +10,13 @@
 
 QString root = "./build-MyConcurrentModel-Desktop_Qt_5_5_1_MinGW_32bit-Debug";
 bool gr;
-Dialog::Dialog(QWidget *parent) :
+Dialog::Dialog(Protocol* inital_proto ,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog)
 {
     ui->setupUi(this);
+
+    this->proto = inital_proto;
 
     int size = 6000; //may vary- Dani Watch
 
@@ -97,7 +99,10 @@ Dialog::Dialog(QWidget *parent) :
     /**
      * Setting  boundaries of y axis
      */
-    QFile simfile("./simvars.txt");
+    low_x_axis = *proto->pars["writetime"];
+    max_x_axis = *proto->pars["tMax"];
+
+/**    QFile simfile("./simvars.txt");
     if(!simfile.open(QIODevice::ReadOnly)){
         QMessageBox::information(0,"Problems opening Simvars", "Problems opening Simvars");
     }
@@ -113,6 +118,7 @@ Dialog::Dialog(QWidget *parent) :
         }
     }
     simfile.close();
+    */
     if(low_x_axis == NULL){
         QMessageBox::information(0,"Problems", "\"writetime\" variable needs to be set in Simvars file!");
         exit(EXIT_FAILURE);

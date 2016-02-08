@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "proto.h"
+
 namespace Ui {
 class Dialog;
 }
@@ -12,7 +14,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(QWidget *parent = 0);
+    explicit Dialog(Protocol* inital_proto, QWidget *parent = 0);
     ~Dialog();
 
 private slots:
@@ -41,6 +43,7 @@ private slots:
     void on_save11_clicked();
 private:
     Ui::Dialog *ui;
+    Protocol* proto;
 };
 
 #endif // DIALOG_H
