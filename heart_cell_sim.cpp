@@ -15,7 +15,9 @@
 #include "proto.h"
 #include "heart_cell_sim.h"
 #include "varmenu.h"
-
+#include "dialog.h"
+QString Dinf;
+QString Tinf;
 Simulation::Simulation(QWidget* parent){
 //setup class variables
     this->parent = parent;
@@ -28,6 +30,10 @@ Simulation::Simulation(QWidget* parent){
     cell_ready = false;
     sim_ready = false;
     num_sims = 1;
+//change the location of proto readin files
+//    proto->simvarfile = "data/simvars.txt";
+//    proto->dvarfile = "data/dvars.txt";
+//    proto->pvarfile = "data/pvars.txt";
 //local variables
     unsigned int max_height = 8;
     unsigned int max_width = 14;
@@ -60,16 +66,7 @@ Simulation::Simulation(QWidget* parent){
     edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
     cell_type->addItem("Default Cell");
-    cell_type->addItem("Choose Cell");
-    cell_type->addItem("Ventricular");
-    cell_type->addItem("Sinoatrial Node");
-    cell_type->addItem("Atrial");
-    cell_type->addItem("Kurata");
     cell_species->addItem("Default Species");
-    cell_species->addItem("Choose Species");
-    cell_species->addItem("Mouse");
-    cell_species->addItem("Rabbit");
-    cell_species->addItem("Human");
 //add buttons to layouts
 //advanced buttons
     advanced->addWidget(edit_sim_button, 0,0);
@@ -108,14 +105,11 @@ Simulation::Simulation(QWidget* parent){
     connect(init_cell_button, SIGNAL(clicked()), this, SLOT(init_cell()));
     connect(num_of_sims, SIGNAL(valueChanged(int)), this, SLOT(set_num_sims(int)));
 };
-
 Simulation::~Simulation(){};
-
 void Simulation::set_sim_ready() {
     sim_ready = simvars_read && pvars_read && mvars_read && dvars_read && cell_ready && douts_ready;
     run_button->setEnabled(sim_ready);
 };
-
 void Simulation::set_cell_ready() {
     cell_ready = true;
     load_pvars_button->setEnabled(cell_ready);
@@ -124,32 +118,31 @@ void Simulation::set_cell_ready() {
     edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
 };
-
 void Simulation::init_douts() {
     if(simvars_read&&mvars_read) {
-        proto->douts = new Output[proto->getNeededDOutputSize()];   // Array of i/o data streams
+        proto->douts = new Output[proto->getNeededDOutputSize()]();   // Array of i/o data streams
     douts_ready = true;
     }
 };
-
 void Simulation::doTask(Protocol& toRun) {
     toRun.runSim(); 
 };
-
 void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
     QVector<Protocol> vector;
-    QDir().mkdir("data" + QDate::currentDate().toString("MMddyy"));
+     Dinf = "data" + QDate::currentDate().toString("MMddyy");
+     Tinf = QTime::currentTime().toString("hm");
+    QDir().mkdir(Dinf+"-"+Tinf);
    for( i = 0; i < num_sims; i++) {
         temp = new Protocol(*proto);
         temp->readfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
         temp->savefile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
-        temp->propertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
-        temp->dvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
-        temp->finalpropertyoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
-        temp->finaldvarsoutfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
-      vector.append(*temp);
+        temp->propertyoutfile = "./" + Dinf.toStdString()+"-" + Tinf.toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
+        temp->dvarsoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
+        temp->finalpropertyoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
+        temp->finaldvarsoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
+        vector.append(*temp);
   }
 
     QProgressDialog pdialog;
@@ -176,15 +169,10 @@ void Simulation::run_sims() {
     {
        qDebug()<<"finished!";
        QMessageBox::information(this,"Finish","Simulation finished!");
+        Dialog* graph = new Dialog(proto, Dinf + "-" +Tinf, 0);
+        graph->exec();
     }
-
-//       else{
-//        QMessageBox msgBox;
-//        msgBox.setText("Code Currently Being Modified\n Please choose a different cell.\n (Kurata)");
-//        msgBox.exec();
-//    }
 };
-
 void Simulation::edit_simvars() {
     simvarMenu* menu = new simvarMenu(proto, this);
     menu->show();
@@ -192,56 +180,47 @@ void Simulation::edit_simvars() {
     init_douts();
     set_sim_ready();
 };
-
 void Simulation::load_simvars() {
     simvars_read = !(bool)proto->readpars(proto->pars, proto->simvarfile);
     init_douts();
     set_sim_ready();
 };
-
 void Simulation::edit_pvars() {
     pvarMenu* menu = new pvarMenu(proto, this);
     menu->show();
     pvars_read = true;
     set_sim_ready();
 };
-
 void Simulation::load_pvars() {
     pvars_read = !(bool)proto->readpvars();
     set_sim_ready();
 };
-
 void Simulation::edit_dvars() {
     dvarMenu* menu = new dvarMenu(proto, this);
     menu->show();
     dvars_read = true;
     set_sim_ready();
 };
-
 void Simulation::load_dvars() {
     dvars_read = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
     set_sim_ready();
 };
-
 void Simulation::edit_mvars() {
     mvarMenu* menu = new mvarMenu(proto, this);
     menu->show();
     mvars_read = true;
     set_sim_ready();
 };
-
 void Simulation::load_mvars() {
-    mvars_read = proto->readMvars(proto->measfile);
     mvars_read = mvars_read&&!(bool)proto->initializeMeasure(int(proto->maxmeassize));
     init_douts();
     set_sim_ready();
 };
-
 void Simulation::init_cell() {
     proto->cell = new ControlSa;
     set_cell_ready();
 };
- 
 void Simulation::set_num_sims(int value) {
     num_sims = value;
 };
+

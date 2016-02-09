@@ -820,7 +820,7 @@ bool Protocol::writedvars(map<string, double*> varmap, string file)
     for(it = varmap.begin(); it != varmap.end(); it++){
         ofile << it->first << endl;
     }
-    
+
     ofile.close();
     return 0;
 
@@ -838,8 +838,8 @@ Output::Output()
 };
 
 Output::Output(const Output& toCopy) {
-    counter = toCopy.counter;
-    interval = toCopy.interval;
+    counter = 0; //= toCopy.counter;
+    interval = 1; //= toCopy.interval;
 }
 
 Output::~Output()
@@ -957,7 +957,6 @@ int Output::writevals(map<string, double> varmap, string file, char type)
     }
     
     ofile << endl;
-    
     counter++;
     return 1;
 };

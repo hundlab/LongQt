@@ -86,14 +86,13 @@ void simvarMenu::update_menu() {
         simvars[i]->setValue(*(it->second));
     }
 }
-
 void simvarMenu::closeEvent(QCloseEvent* event){
     if(write_close) {
-        !(bool)proto->writepars(proto->pars, string("simvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
+        //This is simvars
+        !(bool)proto->writepars(proto->pars, string("simvars") + QDate::currentDate().toString("MMddyy").toStdString() + "-" + QTime::currentTime().toString("hm").toStdString() + string(".txt"));
     }
     event->accept();
 }
-
 bool simvarMenu::read_simvars(){
 
     bool ret = false;
@@ -105,7 +104,6 @@ bool simvarMenu::read_simvars(){
     update_menu();
     return ret;
 }
-
 bool simvarMenu::write_simvars(){
     
     bool ret = false;
@@ -117,16 +115,13 @@ bool simvarMenu::write_simvars(){
     return ret;
 
 }
-
 void simvarMenu::update_pvars(pair<string,double> p){
     *(proto->pars[p.first]) = p.second;
 }
-
 void simvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
 }
-
 /*#################################
     begin dvarMenu class
 ###################################*/
@@ -172,9 +167,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QWidget *parent)  {
     update_menu();
     
 }
-
 dvarMenu::~dvarMenu(){}
-
 void dvarMenu::update_menu() {
     map<string,double*>::iterator it;
     unsigned int i; 
@@ -186,16 +179,14 @@ void dvarMenu::update_menu() {
         }
     }
 }
-
 void dvarMenu::closeEvent(QCloseEvent* event){
     if(write_close) {
-        !(bool)proto->writedvars(proto->datamap, string("dvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
+        !(bool)proto->writedvars(proto->datamap, string("dvars") + QDate::currentDate().toString("MMddyy").toStdString() + "-" + QTime::currentTime().toString("hm").toStdString() + string(".txt"));
+    //dvars
     }
     event->accept();
 }
-
 bool dvarMenu::read_dvars(){
-
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
@@ -205,9 +196,7 @@ bool dvarMenu::read_dvars(){
     update_menu();
     return ret;
 }
-
 bool dvarMenu::write_dvars(){
-    
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
@@ -215,9 +204,7 @@ bool dvarMenu::write_dvars(){
     ret = !(bool)proto->writedvars(proto->datamap, proto->dvarfile);
     }
     return ret;
-
 }
-
 void dvarMenu::update_datamap(pair<string,double*> p, int state){
     if((state = 0)) {
         proto->datamap.erase(p.first);
@@ -225,7 +212,6 @@ void dvarMenu::update_datamap(pair<string,double*> p, int state){
         proto->datamap.insert(p);
     }
 }
-
 void dvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
