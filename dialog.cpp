@@ -10,14 +10,15 @@
 
 QString root = "./build-MyConcurrentModel-Desktop_Qt_5_5_1_MinGW_32bit-Debug";
 bool gr;
-Dialog::Dialog(Protocol* inital_proto ,QWidget *parent) :
+QString date;
+Dialog::Dialog(Protocol* inital_proto, QString current_time, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog)
 {
     ui->setupUi(this);
     this->proto = inital_proto;
-    Simulation t;
-    passing_to_graph(this->proto, t.getDateTimeName() + "/dt0_dvars0.dat");
+    date = current_time;
+    passing_to_graph(this->proto, date + "/dt0_dvars0.dat");
 }
 Dialog::~Dialog()
 {
@@ -28,8 +29,8 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
     int size = 6000; //may vary- Dani Watch
      QVector<double> x(size),y1(size), y2(size), y3(size),y4(size), y5(size);
      QVector<double> y6(size), y7(size),y8(size), y9(size), y10(size), y11(size);
-     int low_x_axis = NULL;
-     int max_x_axis = NULL;
+     int low_x_axis = 0;
+     int max_x_axis = 0;
      int num_vars_graph = 0;
 
      QFile file(f);
@@ -100,14 +101,8 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
 
      low_x_axis = *a->pars["writetime"];
      max_x_axis = *a->pars["tMax"];
-     if(low_x_axis == NULL){
-         QMessageBox::information(0,"Problems", "\"writetime\" variable needs to be set in Simvars file!");
-         exit(EXIT_FAILURE);
-     }
-     if(max_x_axis == NULL){
-         QMessageBox::information(0,"Problems", "\"writetime\" variable needs to be set in Simvars file!");
-         exit(EXIT_FAILURE);
-     }
+
+
      ui->plot1->addGraph();
      ui->plot1->graph(0)->setPen(QPen(Qt::blue));
      ui->plot1->graph(0)->setData(x, y1);
@@ -121,8 +116,12 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      ui->plot1->yAxis->rescale();
      ui->plot1->graph(0)->setName("Simulation");
      ui->plot1->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-     ui->plot1->plotLayout()->insertRow(0);
-     ui->plot1->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot1, split_line[0] +" vs Time"));
+     if(ui->plot1->plotLayout()->rowCount() < 2){
+        ui->plot1->plotLayout()->insertRow(0);
+     }
+     QCPPlotTitle *title = new QCPPlotTitle(ui->plot1, split_line[0] +" vs Time");
+     ui->plot1->plotLayout()->addElement(0,0, title);
+
 
      //For each variable in D-Var there needs to be a graph added
      if(num_vars_graph > 2){
@@ -140,7 +139,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
          ui->plot2->graph(0)->setName("Simulation");
          ui->plot2->yAxis->rescale();
          ui->plot2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-         ui->plot2->plotLayout()->insertRow(0);
+         if(ui->plot2->plotLayout()->rowCount() < 2){
+            ui->plot2->plotLayout()->insertRow(0);
+         }
          ui->plot2->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot2, split_line[1] +" vs Time"));
          ui->plot2->replot();
 
@@ -159,7 +160,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
              ui->plot3->yAxis->rescale();
              ui->plot3->graph(0)->setName("Simulation");
              ui->plot3->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-             ui->plot3->plotLayout()->insertRow(0);
+             if(ui->plot3->plotLayout()->rowCount() < 2){
+                ui->plot3->plotLayout()->insertRow(0);
+             }
              ui->plot3->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot3, split_line[2] +" vs Time"));
 
              if(num_vars_graph > 4){
@@ -176,7 +179,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                  ui->plot4->yAxis->rescale();
                  ui->plot4->graph(0)->setName("Simulation");
                  ui->plot4->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-                 ui->plot4->plotLayout()->insertRow(0);
+                 if(ui->plot4->plotLayout()->rowCount() < 2){
+                    ui->plot4->plotLayout()->insertRow(0);
+                 }
                  ui->plot4->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot4, split_line[3] +" vs Time"));
 
                  if(num_vars_graph > 5){
@@ -193,7 +198,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                      ui->plot5->yAxis->rescale();
                      ui->plot5->graph(0)->setName("Simulation");
                      ui->plot5->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-                     ui->plot5->plotLayout()->insertRow(0);
+                     if(ui->plot5->plotLayout()->rowCount() < 2){
+                        ui->plot5->plotLayout()->insertRow(0);
+                     }
                      ui->plot5->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot5, split_line[4] +" vs Time"));
 
                      if(num_vars_graph > 6){
@@ -210,7 +217,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                          ui->plot6->yAxis->rescale();
                          ui->plot6->graph(0)->setName("Simulation");
                          ui->plot6->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-                         ui->plot6->plotLayout()->insertRow(0);
+                         if(ui->plot6->plotLayout()->rowCount() < 2){
+                            ui->plot6->plotLayout()->insertRow(0);
+                         }
                          ui->plot6->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot6, split_line[5] +" vs Time"));
 
                          if(num_vars_graph > 7){
@@ -227,7 +236,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                              ui->plot7->yAxis->rescale();
                              ui->plot7->graph(0)->setName("Simulation");
                              ui->plot7->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-                             ui->plot7->plotLayout()->insertRow(0);
+                             if(ui->plot7->plotLayout()->rowCount() < 2){
+                                ui->plot7->plotLayout()->insertRow(0);
+                             }
                              ui->plot7->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot7, split_line[6] +" vs Time"));
 
                              if(num_vars_graph > 8){
@@ -244,7 +255,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                  ui->plot8->yAxis->rescale();
                                  ui->plot8->graph(0)->setName("Simulation");
                                  ui->plot8->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-                                 ui->plot8->plotLayout()->insertRow(0);
+                                 if(ui->plot8->plotLayout()->rowCount() < 2){
+                                    ui->plot8->plotLayout()->insertRow(0);
+                                 }
                                  ui->plot8->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot8, split_line[7] +" vs Time"));
 
                                  if(num_vars_graph > 9){
@@ -261,7 +274,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                      ui->plot9->yAxis->rescale();
                                      ui->plot9->graph(0)->setName("Simulation");
                                      ui->plot9->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-                                     ui->plot9->plotLayout()->insertRow(0);
+                                     if(ui->plot9->plotLayout()->rowCount() < 2){
+                                        ui->plot9->plotLayout()->insertRow(0);
+                                     }
                                      ui->plot9->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot9, split_line[8] +" vs Time"));
 
                                      if(num_vars_graph > 10){
@@ -278,7 +293,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                          ui->plot10->yAxis->rescale();
                                          ui->plot10->graph(0)->setName("Simulation");
                                          ui->plot10->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-                                         ui->plot10->plotLayout()->insertRow(0);
+                                         if(ui->plot10->plotLayout()->rowCount() < 2){
+                                            ui->plot10->plotLayout()->insertRow(0);
+                                         }
                                          ui->plot10->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot10, split_line[9] +" vs Time"));
 
                                          if(num_vars_graph > 11){
@@ -295,7 +312,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                              ui->plot11->yAxis->rescale();
                                              ui->plot11->graph(0)->setName("Simulation");
                                              ui->plot11->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-                                             ui->plot11->plotLayout()->insertRow(0);
+                                             if(ui->plot11->plotLayout()->rowCount() < 2){
+                                                ui->plot11->plotLayout()->insertRow(0);
+                                             }
                                              ui->plot11->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot11, split_line[10] +" vs Time"));
                                          }
                                      }
@@ -309,7 +328,6 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      }
 
  }
-
 void Dialog::on_pushButton_clicked()
 {
     QVector<double> x(6000), y(6000);
@@ -523,59 +541,47 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
 }
 void Dialog::on_save1_clicked()
 {
-    Simulation s;
-    QString name = ui->plot1->yAxis->label();
-    ui->plot1->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot1->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot1->saveJpg("./" + date + "/" + ui->plot1->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save2_clicked()
 {
-    Simulation s;
-    ui->plot2->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot2->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot2->saveJpg("./" +date + "/" + ui->plot2->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save3_clicked()
 {
-    Simulation s;
-    ui->plot3->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot3->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot3->saveJpg("./" +date + "/" + ui->plot3->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save4_clicked()
 {
-    Simulation s;
-    ui->plot4->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot4->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot4->saveJpg("./" +date + "/" + ui->plot4->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save5_clicked()
 {
-    Simulation s;
-    ui->plot5->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot5->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot5->saveJpg("./" +date + "/" + ui->plot5->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save6_clicked()
 {
-    Simulation s;
-    ui->plot6->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot6->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot6->saveJpg("./" +date + "/" + ui->plot6->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save7_clicked()
 {
-    Simulation s;
-    ui->plot7->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot7->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot7->saveJpg("./" +date + "/" + ui->plot7->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save8_clicked()
 {
-    Simulation s;
-    ui->plot8->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot8->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot8->saveJpg("./" +date + "/" + ui->plot8->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save9_clicked()
 {
-    Simulation s;
-    ui->plot9->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot9->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot9->saveJpg("./" +date + "/" + ui->plot9->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save10_clicked()
 {
-    Simulation s;
-    ui->plot10->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot10->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot10->saveJpg("./" +date + "/" + ui->plot10->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save11_clicked()
 {
-    Simulation s;
-    ui->plot11->saveJpg("./" +s.getDateTimeName() + "/" + ui->plot11->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot11->saveJpg("./" +date + "/" + ui->plot11->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_pushButton_12_clicked()
 {
@@ -585,7 +591,6 @@ void Dialog::on_pushButton_12_clicked()
                 root,
                 "All Files (*.*);;Text File(*.txt)"
                 );
-
     ui->plot1->removeGraph(0);
     ui->plot1->removeGraph(1);
     ui->plot2->removeGraph(0);
@@ -631,17 +636,16 @@ void Dialog::on_pushButton_12_clicked()
     ui->plot11->legend->clear();
     ui->plot11->legend->setVisible(false);
 
-     passing_to_graph(this->proto, filename);
-      ui->plot1->replot();
-      ui->plot2->replot();
-      ui->plot3->replot();
-      ui->plot4->replot();
-      ui->plot5->replot();
-      ui->plot6->replot();
-      ui->plot7->replot();
-      ui->plot8->replot();
-      ui->plot9->replot();
-      ui->plot10->replot();
-      ui->plot11->replot();
-
+    passing_to_graph(this->proto, filename);
+    ui->plot1->replot();
+    ui->plot2->replot();
+    ui->plot3->replot();
+    ui->plot4->replot();
+    ui->plot5->replot();
+    ui->plot6->replot();
+    ui->plot7->replot();
+    ui->plot8->replot();
+    ui->plot9->replot();
+    ui->plot10->replot();
+    ui->plot11->replot();
 }

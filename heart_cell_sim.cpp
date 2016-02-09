@@ -169,7 +169,7 @@ void Simulation::run_sims() {
     {
        qDebug()<<"finished!";
        QMessageBox::information(this,"Finish","Simulation finished!");
-        Dialog* graph = new Dialog(proto, 0);
+        Dialog* graph = new Dialog(proto, Dinf + "-" +Tinf, 0);
         graph->exec();
     }
 };
@@ -223,6 +223,4 @@ void Simulation::init_cell() {
 void Simulation::set_num_sims(int value) {
     num_sims = value;
 };
-QString Simulation::getDateTimeName(){
-    return Dinf + "-" +Tinf;
-}
+

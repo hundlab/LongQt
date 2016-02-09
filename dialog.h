@@ -14,7 +14,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(Protocol* inital_proto, QWidget *parent = 0);
+    explicit Dialog(Protocol* inital_proto,QString current_time, QWidget *parent = 0);
     ~Dialog();
 
 private slots:
