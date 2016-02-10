@@ -35,7 +35,6 @@ Simulation::Simulation(QWidget* parent){
     QList<std::tuple<QString,bool,QWidget*>>::iterator it;
 //create layouts
     main_layout = new QGridLayout(this);
-    advanced = new QGridLayout;
     file_buttons = new QHBoxLayout;
     cell_buttons = new QHBoxLayout;
 //organizational widgets
@@ -46,13 +45,9 @@ Simulation::Simulation(QWidget* parent){
     num_of_sims = new QSpinBox();
     num_of_sims_label = new QLabel("Number of Simulations:");
     run_button = new QPushButton("Run Simulations");
-    edit_sim_button = new QPushButton("Edit Simulaiton Variables");
     load_sim_button = new QPushButton("Read Simulation Variables");
-    edit_pvars_button = new QPushButton("Edit Simulation Constants");
     load_pvars_button = new QPushButton("Read Simulaiton Constants");
-    edit_dvars_button = new QPushButton("Edit Output Variables");
     load_dvars_button = new QPushButton("Read Output Variables");
-    edit_mvars_button = new QPushButton("Edit Measurement Variables");
     load_mvars_button = new QPushButton("Read Measurement Variables");
     load_all_button = new QPushButton("Read Variables and Constants");
     init_cell_button = new QPushButton("Use cell preference");
@@ -64,15 +59,13 @@ Simulation::Simulation(QWidget* parent){
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit Simvars",false,NULL));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit DVars",false, NULL));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit MVars",false, NULL));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit, PVars",false, NULL));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit PVars",false, NULL));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Run Simulation",false, run_button));
 //set button/combo box inital values
     num_of_sims->setValue(num_sims);
     run_button->setEnabled(sim_ready);
     load_pvars_button->setEnabled(cell_ready);
-    edit_pvars_button->setEnabled(cell_ready);
     load_dvars_button->setEnabled(cell_ready);
-    edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
     cell_type->addItem("Default Cell");
     cell_type->addItem("Choose Cell");
@@ -86,11 +79,6 @@ Simulation::Simulation(QWidget* parent){
     cell_species->addItem("Rabbit");
     cell_species->addItem("Human");
 //add buttons to layouts
-//advanced buttons
-    advanced->addWidget(edit_sim_button, 0,0);
-    advanced->addWidget(edit_pvars_button,0,1);
-    advanced->addWidget(edit_dvars_button,0,2);
-    advanced->addWidget(edit_mvars_button,0,3);
 //load variables buttons
 //    file_buttons->addWidget(load_sim_button);
 //    file_buttons->addWidget(load_pvars_button);
@@ -119,13 +107,9 @@ Simulation::Simulation(QWidget* parent){
     main_layout->addWidget(next_button, 1, 2);
 //connect buttons
     connect(run_button, SIGNAL(clicked()),this,SLOT(run_sims()));
-    connect(edit_sim_button, SIGNAL(clicked()), this, SLOT(edit_simvars()));
     connect(load_sim_button, SIGNAL(clicked()),this, SLOT(load_simvars()));
-    connect(edit_pvars_button, SIGNAL(clicked()), this, SLOT(edit_pvars()));
     connect(load_pvars_button, SIGNAL(clicked()), this, SLOT(load_pvars()));
-    connect(edit_dvars_button, SIGNAL(clicked()), this, SLOT(edit_dvars()));
     connect(load_dvars_button, SIGNAL(clicked()), this, SLOT(load_dvars()));
-    connect(edit_mvars_button, SIGNAL(clicked()), this, SLOT(edit_mvars()));
     connect(load_mvars_button, SIGNAL(clicked()), this, SLOT(load_mvars()));
     connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_simvars()));
     connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_pvars()));
@@ -159,9 +143,7 @@ void Simulation::set_cell_ready() {
     menu->insertWidget(3, std::get<2>(menu_list->at(3)));
     menu->insertWidget(4, std::get<2>(menu_list->at(4)));
     load_pvars_button->setEnabled(cell_ready);
-    edit_pvars_button->setEnabled(cell_ready);
     load_dvars_button->setEnabled(cell_ready);
-    edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
 };
 
@@ -225,13 +207,6 @@ void Simulation::run_sims() {
 //    }
 };
 
-void Simulation::edit_simvars() {
-    simvarMenu* menu = new simvarMenu(proto, this);
-    menu->show();
-    simvars_read = true;
-    init_douts();
-    set_sim_ready();
-};
 
 void Simulation::load_simvars() {
     simvars_read = !(bool)proto->readpars(proto->pars, proto->simvarfile);
@@ -239,34 +214,14 @@ void Simulation::load_simvars() {
     set_sim_ready();
 };
 
-void Simulation::edit_pvars() {
-    pvarMenu* menu = new pvarMenu(proto, this);
-    menu->show();
-    pvars_read = true;
-    set_sim_ready();
-};
 
 void Simulation::load_pvars() {
     pvars_read = !(bool)proto->readpvars();
     set_sim_ready();
 };
 
-void Simulation::edit_dvars() {
-    dvarMenu* menu = new dvarMenu(proto, this);
-    menu->show();
-    dvars_read = true;
-    set_sim_ready();
-};
-
 void Simulation::load_dvars() {
     dvars_read = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
-    set_sim_ready();
-};
-
-void Simulation::edit_mvars() {
-    mvarMenu* menu = new mvarMenu(proto, this);
-    menu->show();
-    mvars_read = true;
     set_sim_ready();
 };
 

@@ -47,13 +47,9 @@ class Simulation : public QWidget {
     QPushButton* run_button;
     QSpinBox* num_of_sims;
     QLabel* num_of_sims_label;
-    QPushButton* edit_sim_button;
     QPushButton* load_sim_button;
-    QPushButton* edit_pvars_button;
     QPushButton* load_pvars_button;
-    QPushButton* edit_dvars_button;
     QPushButton* load_dvars_button;
-    QPushButton* edit_mvars_button;
     QPushButton* load_mvars_button;
     QPushButton* load_all_button;
     QPushButton* init_cell_button;
@@ -70,19 +66,14 @@ class Simulation : public QWidget {
     pvarMenu* edit_pvars_menu;
 //layouts
     QGridLayout* main_layout;
-    QGridLayout* advanced;
     QHBoxLayout* file_buttons;
     QHBoxLayout* cell_buttons;
 
   private slots:
     void run_sims();//action for running the simulation
-    void edit_simvars();//open simvarMenu
     void load_simvars();//wrapper for proto->readpars
-    void edit_pvars();//open pvarsMenu
     void load_pvars();//wrapper for proto->readpvars
-    void edit_dvars();//open dvarsMenu
     void load_dvars();//wrapper for proto->resizemap
-    void edit_mvars();//open mvarsMenu
     void load_mvars();//wrapper for proto->initializeMeasure
     void init_cell();//initialize proto->cell
     void set_num_sims(int value);//make num_sims match num_of_sims
