@@ -5,7 +5,14 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QStackedWidget>
+#include <QListWidget>
+#include <QList>
+
 #include "proto.h"
+#include "varmenu.h"
 
 class Simulation : public QWidget {
     Q_OBJECT
@@ -17,7 +24,9 @@ class Simulation : public QWidget {
   private:
     QWidget* parent;
     Protocol* proto;
+    QString date_time;
     unsigned int num_sims;
+    QList<std::tuple<QString,bool,QWidget*>>* menu_list;
 //booleans for button availabilites
     bool sim_ready;
     bool cell_ready;
@@ -33,6 +42,7 @@ class Simulation : public QWidget {
     void init_douts();//initialize proto->douts when ready
 //utility functions
     static void doTask(Protocol& toRun);//run the simulaiton
+    void leave_current(int current);
 //buttons
     QPushButton* run_button;
     QSpinBox* num_of_sims;
@@ -49,6 +59,20 @@ class Simulation : public QWidget {
     QPushButton* init_cell_button;
     QComboBox* cell_type;
     QComboBox* cell_species;
+    QPushButton* next_button;
+//organizational widgets
+    QListWidget* menu_options;
+    QStackedWidget* menu;
+//varmenu widgets
+    simvarMenu* edit_simvars_menu;
+    dvarMenu* edit_dvars_menu;
+    mvarMenu* edit_mvars_menu;
+    pvarMenu* edit_pvars_menu;
+//layouts
+    QGridLayout* main_layout;
+    QGridLayout* advanced;
+    QHBoxLayout* file_buttons;
+    QHBoxLayout* cell_buttons;
 
   private slots:
     void run_sims();//action for running the simulation
@@ -62,6 +86,8 @@ class Simulation : public QWidget {
     void load_mvars();//wrapper for proto->initializeMeasure
     void init_cell();//initialize proto->cell
     void set_num_sims(int value);//make num_sims match num_of_sims
+    void next_button_aciton();
+    void list_click_aciton (int next_row);
 };
 
 #endif // HEART_CELL_SIM_H

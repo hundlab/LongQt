@@ -27,15 +27,20 @@
 /*########################
   begin simvarMenu class
 ##########################*/
-simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)  {
+simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
+    date_time = init_time;
     write_close = true;
 //setup useful constants and aliases
     unsigned int i, row_len = 6;
     map<string,double*> pars = proto->pars;
     map<string,double*>::iterator it;
+    QString end_op = "Exit";
+    if(parent != NULL) {
+        end_op = "Next";
+    }
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
@@ -44,10 +49,13 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)  {
     simvars = (QDoubleSpinBox**)malloc(pars.size()*sizeof(QDoubleSpinBox*));
     simvar_names = (QLabel**)malloc(pars.size()*sizeof(QLabel*));
     get_vars = new QPushButton(tr("Import settings"), this);
-    set_vars = new QCheckBox(tr("Write File on Exit"), this);
-    close_button = new QPushButton("Save and Exit", this);
+    set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
+    close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
+    if(this->parent != NULL) {
+        close_button->hide();
+    }
     set_vars->setChecked(write_close);
 //do all the work for simvars setup
     for(it = pars.begin(), i = 0; it!=pars.end(); it++,i++) {
@@ -88,11 +96,16 @@ void simvarMenu::update_menu() {
 }
 
 void simvarMenu::closeEvent(QCloseEvent* event){
-    if(write_close) {
-        !(bool)proto->writepars(proto->pars, string("simvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
-    }
+    write_file();
     event->accept();
 }
+
+void simvarMenu::write_file() {
+    if(write_close) {
+        !(bool)proto->writepars(proto->pars, string("simvars") + date_time.toStdString() + string(".txt"));
+    }
+}
+
 
 bool simvarMenu::read_simvars(){
 
@@ -130,25 +143,33 @@ void simvarMenu::set_write_close(int state) {
 /*#################################
     begin dvarMenu class
 ###################################*/
-dvarMenu::dvarMenu(Protocol* initial_proto, QWidget *parent)  {
+dvarMenu::dvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
+    date_time = init_time;
     write_close = true;
 //setup useful constants and aliases
     unsigned int i, row_len = 6;
     map<string,double*> vars = proto->cell->vars;
     map<string,double*>::iterator it;
+    QString end_op = "Exit";
+    if(parent != NULL) {
+        end_op = "Next";
+    }
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
     dvars = (QCheckBox**)malloc(vars.size()*sizeof(QCheckBox*));
     get_vars = new QPushButton(tr("Import settings"), this);
-    set_vars = new QCheckBox(tr("Write File on Exit"), this);
-    close_button = new QPushButton(tr("Save and Exit"), this);
+    set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
+    close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
+    if(this->parent != NULL) {
+        close_button->hide();
+    }
     set_vars->setChecked(write_close);
 //do all the work for dvars setup
     for(it = vars.begin(), i = 0; it!=vars.end(); it++,i++) {
@@ -188,10 +209,14 @@ void dvarMenu::update_menu() {
 }
 
 void dvarMenu::closeEvent(QCloseEvent* event){
-    if(write_close) {
-        !(bool)proto->writedvars(proto->datamap, string("dvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
-    }
+    write_file();
     event->accept();
+}
+
+void dvarMenu::write_file() {
+    if(write_close) {
+        !(bool)proto->writedvars(proto->datamap, string("dvars") + date_time.toStdString() + string(".txt"));
+    }
 }
 
 bool dvarMenu::read_dvars(){
@@ -234,22 +259,27 @@ void dvarMenu::set_write_close(int state) {
 /*#################################
     begin mvarMenu class
 ###################################*/
-mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
+mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
+    date_time = init_time;
     write_close = true;
 //setup useful constants and aliases
     unsigned int row_len = 6;
     std::map<string,double*>::iterator it;
     Measure temp = Measure();
+    QString end_op = "Exit";
+    if(parent != NULL) {
+        end_op = "Next";
+    }
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
     get_vars = new QPushButton(tr("Import settings"), this);
-    set_vars = new QCheckBox(tr("Write File on Exit"), this);
-    close_button = new QPushButton(tr("Save and Exit"), this);
+    set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
+    close_button = new QPushButton(QString("Save and ") +=end_op, this);
     vars_view = new QListWidget(this);
     meas_view = new QListWidget(this);
     meas_list_label = new QLabel("Variables to Track",this);
@@ -262,6 +292,9 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
     removefr_vars_list_button = new QPushButton("-", this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
+    if(this->parent != NULL) {
+        close_button->hide();
+    }
     set_vars->setChecked(write_close);
     for(it = proto->cell->vars.begin(); it != proto->cell->vars.end(); it++) {
         addto_vars_options->addItem(it->first.c_str());
@@ -324,11 +357,15 @@ void mvarMenu::update_menu(int row) {
 }
 
 void mvarMenu::closeEvent(QCloseEvent* event){
+   write_file();
+   event->accept();
+}
+
+void mvarMenu::write_file () {
     proto->initializeMeasure(proto->maxmeassize);
     if(write_close) {
-        !(bool)proto->write2Dmap( proto->mvnames, proto->mpnames, string("mvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
+        !(bool)proto->write2Dmap( proto->mvnames, proto->mpnames, string("mvars") + date_time.toStdString() + string(".txt"));
     }
-    event->accept();
 }
 
 bool mvarMenu::read_mvars(){
@@ -416,10 +453,11 @@ void mvarMenu::switch_var(int row){
 /*#################################
     begin pvarMenu class
 ###################################*/
-pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
+pvarMenu::pvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
+    date_time = init_time;
     write_close = true;
     pvals_options = new QStringList[3]();
     pvals_options[0] << "random" << "iter" << "init value";
@@ -428,16 +466,23 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QWidget *parent)  {
 //setup useful constants and aliases
     unsigned int row_len = 5;
     std::map<string,double*>::iterator it;
+    QString end_op = "Exit";
+    if(parent != NULL) {
+        end_op = "Next";
+    }
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     central_layout = new QGridLayout;
 //initialize buttons &lables
     get_vars = new QPushButton(tr("Import settings"), this);
-    set_vars = new QCheckBox(tr("Write File on Exit"), this);
     pvar_table = new QTableWidget(0,5);
-    close_button = new QPushButton(tr("Save and Exit"), this);
+    set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
+    close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
+    if(this->parent != NULL) {
+        close_button->hide();
+    }
     set_vars->setChecked(write_close);
     pvar_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     pvar_table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -579,11 +624,16 @@ void pvarMenu::clear_row(unsigned int row, int offset) {
 
 
 void pvarMenu::closeEvent(QCloseEvent* event){
+    write_file();
+    event->accept();
+}
+
+void pvarMenu::write_file() {
     proto->parmap = proto->resizemap(proto->cell->pars,proto->pnames);
     if(write_close) {
-        !(bool)proto->write2Dmap( proto->pnames, proto->pvals, string("pvars") + QDate::currentDate().toString("MMddyy").toStdString() + string(".txt"));
+        !(bool)proto->write2Dmap( proto->pnames, proto->pvals, string("pvars") + date_time.toStdString() + string(".txt"));
     }
-    event->accept();
+ 
 }
 
 bool pvarMenu::read_pvars(){
