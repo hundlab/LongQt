@@ -10,6 +10,7 @@
 #include <QStackedWidget>
 #include <QListWidget>
 #include <QList>
+#include <QProgressBar>
 
 #include "proto.h"
 #include "varmenu.h"
@@ -55,7 +56,9 @@ class Simulation : public QWidget {
     QPushButton* init_cell_button;
     QComboBox* cell_type;
     QComboBox* cell_species;
+    QProgressBar* pdialog;
     QPushButton* next_button;
+    QPushButton* cancel_button;
 //organizational widgets
     QListWidget* menu_options;
     QStackedWidget* menu;
@@ -79,6 +82,8 @@ class Simulation : public QWidget {
     void set_num_sims(int value);//make num_sims match num_of_sims
     void next_button_aciton();
     void list_click_aciton (int next_row);
+    void canceled();
+    void finished();
 };
 
 #endif // HEART_CELL_SIM_H

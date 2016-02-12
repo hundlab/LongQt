@@ -6,20 +6,18 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QLabel>
-#include <QProgressDialog>
 #include <QFutureWatcher>
 #include <QtConcurrent>
 #include <QDir>
 #include <QDate>
 #include <QGroupBox>
 #include <iterator>
+#include <QProgressBar>
 
 #include "proto.h"
 #include "heart_cell_sim.h"
 #include "varmenu.h"
 #include "dialog.h"
-QString Dinf;
-QString Tinf;
 
 Simulation::Simulation(QWidget* parent){
 //setup class variables
@@ -58,13 +56,23 @@ Simulation::Simulation(QWidget* parent){
     cell_type = new QComboBox();
     cell_species = new QComboBox();
     next_button = new QPushButton("Next");
+    cancel_button = new QPushButton("Cancel");
+    pdialog = new QProgressBar();
+//setup run button container
+    QWidget* run_button_container = new QWidget();
+    QGridLayout* run_button_container_layout = new QGridLayout();
+    run_button_container_layout->addWidget(run_button, 0,0,1,2);
+    run_button_container_layout->addWidget(new QLabel("Progress"), 1,0);
+    run_button_container_layout->addWidget(pdialog, 1,1);
+    run_button_container->setLayout(run_button_container_layout);
 //add items menu_list
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Cell Options",true, cell_buttons_container));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit Simvars",false,NULL));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit DVars",false, NULL));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit MVars",false, NULL));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit PVars",false, NULL));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Run Simulation",false, run_button));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Run Simulation",false, run_button_container));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Graph",false, NULL));
 //set button/combo box inital values
     num_of_sims->setValue(num_sims);
     run_button->setEnabled(sim_ready);
@@ -73,6 +81,7 @@ Simulation::Simulation(QWidget* parent){
     load_all_button->setEnabled(cell_ready);
     cell_type->addItem("Default Cell");
     cell_species->addItem("Default Species");
+    cancel_button->hide();
 //add buttons to layouts
 //load variables buttons
 //    file_buttons->addWidget(load_sim_button);
@@ -100,6 +109,7 @@ Simulation::Simulation(QWidget* parent){
     main_layout->addWidget(menu_options, 0,0,-1,1);
     main_layout->addWidget(menu, 0, 1);
     main_layout->addWidget(next_button, 1, 2);
+    main_layout->addWidget(cancel_button, 1, 2);
 //connect buttons
     connect(run_button, SIGNAL(clicked()),this,SLOT(run_sims()));
     connect(load_sim_button, SIGNAL(clicked()),this, SLOT(load_simvars()));
@@ -115,7 +125,9 @@ Simulation::Simulation(QWidget* parent){
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
 };
+
 Simulation::~Simulation(){};
+
 void Simulation::set_sim_ready() {
     QString name = std::get<0>(menu_list->at(5));
     QWidget* old = std::get<2>(menu_list->at(5));
@@ -151,45 +163,35 @@ void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
     QVector<Protocol> vector;
-   QDir().mkdir("data" + date_time);
-   for( i = 0; i < num_sims; i++) {
+    QDir().mkdir("data" + date_time);
+//    next_button->hide();
+//    cancel_button->show();
+//    run_button->setEnabled(false);
+
+    for( i = 0; i < num_sims; i++) {
         temp = new Protocol(*proto);
         temp->readfile = "./data" + date_time.toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
         temp->savefile = "./data" + date_time.toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
-        temp->propertyoutfile = "./" + date_time.toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
-        temp->dvarsoutfile = "./" + date_time.toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
-        temp->finalpropertyoutfile = "./" + date_time.toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
-        temp->finaldvarsoutfile = "./" + date_time.toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
+        temp->propertyoutfile = "./data" + date_time.toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
+        temp->dvarsoutfile = "./data" + date_time.toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
+        temp->finalpropertyoutfile = "./data" + date_time.toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
+        temp->finaldvarsoutfile = "./data" + date_time.toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
         vector.append(*temp);
-  }
+    } 
 
-    QProgressDialog pdialog;
-    pdialog.setLabelText("Processing");
     QFutureWatcher<void> watcher;
-
-    connect(&pdialog,SIGNAL(canceled()),&watcher,SLOT(cancel()));  // connect signals and slots for watcher and dialog
-    connect(&watcher,SIGNAL(finished()),&pdialog,SLOT(reset()));
-    connect(&watcher,SIGNAL(progressRangeChanged(int,int)),&pdialog,SLOT(setRange(int,int)));
-    connect(&watcher,SIGNAL(progressValueChanged(int)),&pdialog,SLOT(setValue(int)));
+ 
+//    connect(cancel_button,SIGNAL(clicked()),&watcher,SLOT(cancel()));  // connect signals and slots for watcher and dialog
+//    connect(cancel_button,SIGNAL(clicked()),this,SLOT(canceled()));
+//    connect(&watcher,SIGNAL(finished()),this,SLOT(finished()));
+//    connect(&watcher,SIGNAL(finished()),pdialog,SLOT(reset()));
+//    connect(&watcher,SIGNAL(progressRangeChanged(int,int)),pdialog,SLOT(setRange(int,int)));
+//    connect(&watcher,SIGNAL(progressValueChanged(int)),pdialog,SLOT(setValue(int)));
     
     QFuture<void> next = QtConcurrent::map(vector,&Simulation::doTask);  // pass vector of protocols to QtConcurrent
 
     watcher.setFuture(next);
-    pdialog.exec();
-    watcher.waitForFinished();       // watch for QtConcurrent to finish
 
-    if(watcher.isCanceled())
-    {
-       qDebug()<<"canceled!";
-       QMessageBox::critical(this,"Cancel","Simulation canceled!");
-    }
-    else
-    {
-       qDebug()<<"finished!";
-       QMessageBox::information(this,"Finish","Simulation finished!");
-        Dialog* graph = new Dialog(proto, date_time, 0);
-        graph->exec();
-    }
 };
 
 void Simulation::load_simvars() {
@@ -236,7 +238,7 @@ void Simulation::list_click_aciton (int next_row) {
 void Simulation::next_button_aciton () {
     int current_row = menu->currentIndex();
     leave_current(current_row);
-    if(std::get<1>(menu_list->at(current_row +1))) {
+    if(std::get<1>(menu_list->value(current_row +1))) {
         menu->setCurrentIndex(current_row +1);
         menu_options->setCurrentRow(current_row +1);
     }
@@ -267,4 +269,23 @@ void Simulation::leave_current(int current) {
         set_sim_ready();
     break;
     }
+}
+
+void Simulation::canceled() {
+    qDebug()<<"canceled!";
+    QMessageBox::critical(this,"Cancel","Simulation canceled!");
+    cancel_button->hide();
+    next_button->show();
+    run_button->setEnabled(false);
+}
+
+void Simulation::finished() {
+    qDebug()<<"finished!";
+    QMessageBox::information(this,"Finish","Simulation finished!");
+    menu_list->replace(6, make_tuple(std::get<0>(menu_list->at(6)), true, new Dialog(proto, date_time, this)));
+    menu->insertWidget(6, std::get<2>(menu_list->at(6)));
+    date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hm");
+    cancel_button->hide();
+    next_button->show();
+    run_button->setEnabled(false);
 }

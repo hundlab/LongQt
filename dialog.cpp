@@ -1,6 +1,6 @@
 #include "dialog.h"
 #include "ui_dialog.h"
-#include "ioevent.h"
+//#include "ioevent.h"
 #include "heart_cell_sim.h"
 
 #include <QIODevice>
@@ -18,7 +18,7 @@ Dialog::Dialog(Protocol* inital_proto, QString current_time, QWidget *parent) :
     ui->setupUi(this);
     this->proto = inital_proto;
     date = current_time;
-    passing_to_graph(this->proto, date + "/dt0_dvars0.dat");
+    passing_to_graph(this->proto,"data" + date + "/dt0_dvars0.dat");
 }
 Dialog::~Dialog()
 {
