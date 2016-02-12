@@ -5,7 +5,14 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QStackedWidget>
+#include <QListWidget>
+#include <QList>
+
 #include "proto.h"
+#include "varmenu.h"
 
 class Simulation : public QWidget {
     Q_OBJECT
@@ -17,7 +24,9 @@ class Simulation : public QWidget {
   private:
     QWidget* parent;
     Protocol* proto;
+    QString date_time;
     unsigned int num_sims;
+    QList<std::tuple<QString,bool,QWidget*>>* menu_list;
 //booleans for button availabilites
     bool sim_ready;
     bool cell_ready;
@@ -33,35 +42,43 @@ class Simulation : public QWidget {
     void init_douts();//initialize proto->douts when ready
 //utility functions
     static void doTask(Protocol& toRun);//run the simulaiton
+    void leave_current(int current);
 //buttons
     QPushButton* run_button;
     QSpinBox* num_of_sims;
     QLabel* num_of_sims_label;
-    QPushButton* edit_sim_button;
     QPushButton* load_sim_button;
-    QPushButton* edit_pvars_button;
     QPushButton* load_pvars_button;
-    QPushButton* edit_dvars_button;
     QPushButton* load_dvars_button;
-    QPushButton* edit_mvars_button;
     QPushButton* load_mvars_button;
     QPushButton* load_all_button;
     QPushButton* init_cell_button;
     QComboBox* cell_type;
     QComboBox* cell_species;
+    QPushButton* next_button;
+//organizational widgets
+    QListWidget* menu_options;
+    QStackedWidget* menu;
+//varmenu widgets
+    simvarMenu* edit_simvars_menu;
+    dvarMenu* edit_dvars_menu;
+    mvarMenu* edit_mvars_menu;
+    pvarMenu* edit_pvars_menu;
+//layouts
+    QGridLayout* main_layout;
+    QHBoxLayout* file_buttons;
+    QHBoxLayout* cell_buttons;
 
   private slots:
     void run_sims();//action for running the simulation
-    void edit_simvars();//open simvarMenu
     void load_simvars();//wrapper for proto->readpars
-    void edit_pvars();//open pvarsMenu
     void load_pvars();//wrapper for proto->readpvars
-    void edit_dvars();//open dvarsMenu
     void load_dvars();//wrapper for proto->resizemap
-    void edit_mvars();//open mvarsMenu
     void load_mvars();//wrapper for proto->initializeMeasure
     void init_cell();//initialize proto->cell
     void set_num_sims(int value);//make num_sims match num_of_sims
+    void next_button_aciton();
+    void list_click_aciton (int next_row);
 };
 
 #endif // HEART_CELL_SIM_H

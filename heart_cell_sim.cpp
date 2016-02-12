@@ -11,6 +11,8 @@
 #include <QtConcurrent>
 #include <QDir>
 #include <QDate>
+#include <QGroupBox>
+#include <iterator>
 
 #include "proto.h"
 #include "heart_cell_sim.h"
@@ -18,10 +20,12 @@
 #include "dialog.h"
 QString Dinf;
 QString Tinf;
+
 Simulation::Simulation(QWidget* parent){
 //setup class variables
     this->parent = parent;
     proto = new Protocol();
+    date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hm");
     simvars_read = false;
     pvars_read = false;
     mvars_read = false;
@@ -30,73 +34,77 @@ Simulation::Simulation(QWidget* parent){
     cell_ready = false;
     sim_ready = false;
     num_sims = 1;
-//change the location of proto readin files
-//    proto->simvarfile = "data/simvars.txt";
-//    proto->dvarfile = "data/dvars.txt";
-//    proto->pvarfile = "data/pvars.txt";
+    menu_list = new QList<tuple<QString,bool,QWidget*>>();
 //local variables
-    unsigned int max_height = 8;
-    unsigned int max_width = 14;
+    QList<std::tuple<QString,bool,QWidget*>>::iterator it;
 //create layouts
-    QGridLayout* main_layout = new QGridLayout(this);
-    QGridLayout* advanced = new QGridLayout;
-    QHBoxLayout* file_buttons = new QHBoxLayout;
+    main_layout = new QGridLayout(this);
+    file_buttons = new QHBoxLayout;
+    cell_buttons = new QHBoxLayout;
+//organizational widgets
+    menu = new QStackedWidget();
+    menu_options = new QListWidget();
+    QWidget* cell_buttons_container = new QWidget();
 //create buttons/combo boxes
-    num_of_sims = new QSpinBox(this);
-    num_of_sims_label = new QLabel("Number of Simulations:", this);
-    run_button = new QPushButton("Run Simulations", this);
-    edit_sim_button = new QPushButton("Edit Simulaiton Variables", this);
+    num_of_sims = new QSpinBox();
+    num_of_sims_label = new QLabel("Number of Simulations:");
+    run_button = new QPushButton("Run Simulations");
     load_sim_button = new QPushButton("Read Simulation Variables");
-    edit_pvars_button = new QPushButton("Edit Simulation Constants", this);
     load_pvars_button = new QPushButton("Read Simulaiton Constants");
-    edit_dvars_button = new QPushButton("Edit Output Variables", this);
     load_dvars_button = new QPushButton("Read Output Variables");
-    edit_mvars_button = new QPushButton("Edit Measurement Variables", this);
     load_mvars_button = new QPushButton("Read Measurement Variables");
     load_all_button = new QPushButton("Read Variables and Constants");
-    init_cell_button = new QPushButton("Use cell preference", this);
-    cell_type = new QComboBox(this);
-    cell_species = new QComboBox(this);
+    init_cell_button = new QPushButton("Use cell preference");
+    cell_type = new QComboBox();
+    cell_species = new QComboBox();
+    next_button = new QPushButton("Next");
+//add items menu_list
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Cell Options",true, cell_buttons_container));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit Simvars",false,NULL));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit DVars",false, NULL));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit MVars",false, NULL));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit PVars",false, NULL));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Run Simulation",false, run_button));
 //set button/combo box inital values
     num_of_sims->setValue(num_sims);
     run_button->setEnabled(sim_ready);
     load_pvars_button->setEnabled(cell_ready);
-    edit_pvars_button->setEnabled(cell_ready);
     load_dvars_button->setEnabled(cell_ready);
-    edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
     cell_type->addItem("Default Cell");
     cell_species->addItem("Default Species");
 //add buttons to layouts
-//advanced buttons
-    advanced->addWidget(edit_sim_button, 0,0);
-    advanced->addWidget(edit_pvars_button,0,1);
-    advanced->addWidget(edit_dvars_button,0,2);
-    advanced->addWidget(edit_mvars_button,0,3);
 //load variables buttons
 //    file_buttons->addWidget(load_sim_button);
 //    file_buttons->addWidget(load_pvars_button);
 //    file_buttons->addWidget(load_dvars_button);
 //    file_buttons->addWidget(load_mvars_button);
     file_buttons->addWidget(load_all_button);
+//cell_buttons
+    cell_buttons->addWidget(cell_type);
+    cell_buttons->addWidget(cell_species);
+    cell_buttons->addWidget(init_cell_button);
+    cell_buttons->addWidget(num_of_sims_label);
+    cell_buttons->addWidget(num_of_sims);
+    cell_buttons_container->setLayout(cell_buttons);
+//menu
+    for(it = menu_list->begin(); it != menu_list->end(); it++) {
+        menu_options->addItem(std::get<0>(*it));
+        if(std::get<1>(*it)) {
+            menu->addWidget(std::get<2>(*it));
+        }
+    }
 //main_layout
-    main_layout->addWidget(cell_type, 0,0,1,1);
-    main_layout->addWidget(cell_species, 0,1,1,1);
-    main_layout->addWidget(init_cell_button,0,2,1,1);
-    main_layout->addWidget(num_of_sims_label, 0,3,1,1);
-    main_layout->addWidget(num_of_sims,0,4,1,1);
-    main_layout->addLayout(file_buttons,1,0,1,5);
-    main_layout->addLayout(advanced, max_height -1, 0,1,4);
-    main_layout->addWidget(run_button, max_height, max_width);
+//    main_layout->addLayout(file_buttons,1,0,1,5);
+//    main_layout->addLayout(advanced, max_height -1, 0,1,4);
+    main_layout->addWidget(menu_options, 0,0,-1,1);
+    main_layout->addWidget(menu, 0, 1);
+    main_layout->addWidget(next_button, 1, 2);
 //connect buttons
     connect(run_button, SIGNAL(clicked()),this,SLOT(run_sims()));
-    connect(edit_sim_button, SIGNAL(clicked()), this, SLOT(edit_simvars()));
     connect(load_sim_button, SIGNAL(clicked()),this, SLOT(load_simvars()));
-    connect(edit_pvars_button, SIGNAL(clicked()), this, SLOT(edit_pvars()));
     connect(load_pvars_button, SIGNAL(clicked()), this, SLOT(load_pvars()));
-    connect(edit_dvars_button, SIGNAL(clicked()), this, SLOT(edit_dvars()));
     connect(load_dvars_button, SIGNAL(clicked()), this, SLOT(load_dvars()));
-    connect(edit_mvars_button, SIGNAL(clicked()), this, SLOT(edit_mvars()));
     connect(load_mvars_button, SIGNAL(clicked()), this, SLOT(load_mvars()));
     connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_simvars()));
     connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_pvars()));
@@ -104,24 +112,36 @@ Simulation::Simulation(QWidget* parent){
     connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_mvars()));
     connect(init_cell_button, SIGNAL(clicked()), this, SLOT(init_cell()));
     connect(num_of_sims, SIGNAL(valueChanged(int)), this, SLOT(set_num_sims(int)));
+    connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
+    connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
 };
 Simulation::~Simulation(){};
 void Simulation::set_sim_ready() {
+    QString name = std::get<0>(menu_list->at(5));
+    QWidget* old = std::get<2>(menu_list->at(5));
     sim_ready = simvars_read && pvars_read && mvars_read && dvars_read && cell_ready && douts_ready;
+    menu_list->replace(5, make_tuple(name, sim_ready, old));
+    menu->insertWidget(5, std::get<2>(menu_list->at(5)));
     run_button->setEnabled(sim_ready);
 };
 void Simulation::set_cell_ready() {
     cell_ready = true;
+    menu_list->replace(1, make_tuple(std::get<0>(menu_list->at(1)), cell_ready, new simvarMenu(proto,date_time, this)));
+    menu_list->replace(2, make_tuple(std::get<0>(menu_list->at(2)), cell_ready, new dvarMenu(proto,date_time, this)));
+    menu_list->replace(3, make_tuple(std::get<0>(menu_list->at(3)), cell_ready, new mvarMenu(proto,date_time, this)));
+    menu_list->replace(4, make_tuple(std::get<0>(menu_list->at(4)), cell_ready, new pvarMenu(proto,date_time, this)));
+    menu->insertWidget(1, std::get<2>(menu_list->at(1)));
+    menu->insertWidget(2, std::get<2>(menu_list->at(2)));
+    menu->insertWidget(3, std::get<2>(menu_list->at(3)));
+    menu->insertWidget(4, std::get<2>(menu_list->at(4)));
     load_pvars_button->setEnabled(cell_ready);
-    edit_pvars_button->setEnabled(cell_ready);
     load_dvars_button->setEnabled(cell_ready);
-    edit_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
 };
 void Simulation::init_douts() {
     if(simvars_read&&mvars_read) {
-        proto->douts = new Output[proto->getNeededDOutputSize()]();   // Array of i/o data streams
-    douts_ready = true;
+       proto->douts = new Output[proto->getNeededDOutputSize()];   // Array of i/o data streams
+       douts_ready = true;
     }
 };
 void Simulation::doTask(Protocol& toRun) {
@@ -131,17 +151,15 @@ void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
     QVector<Protocol> vector;
-     Dinf = "data" + QDate::currentDate().toString("MMddyy");
-     Tinf = QTime::currentTime().toString("hm");
-    QDir().mkdir(Dinf+"-"+Tinf);
+   QDir().mkdir("data" + date_time);
    for( i = 0; i < num_sims; i++) {
         temp = new Protocol(*proto);
-        temp->readfile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
-        temp->savefile = "./data" + QDate::currentDate().toString("MMddyy").toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
-        temp->propertyoutfile = "./" + Dinf.toStdString()+"-" + Tinf.toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
-        temp->dvarsoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
-        temp->finalpropertyoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
-        temp->finaldvarsoutfile = "./" + Dinf.toStdString() + "-" + Tinf.toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
+        temp->readfile = "./data" + date_time.toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
+        temp->savefile = "./data" + date_time.toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
+        temp->propertyoutfile = "./" + date_time.toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
+        temp->dvarsoutfile = "./" + date_time.toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
+        temp->finalpropertyoutfile = "./" + date_time.toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
+        temp->finaldvarsoutfile = "./" + date_time.toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
         vector.append(*temp);
   }
 
@@ -169,48 +187,28 @@ void Simulation::run_sims() {
     {
        qDebug()<<"finished!";
        QMessageBox::information(this,"Finish","Simulation finished!");
-        Dialog* graph = new Dialog(proto, Dinf + "-" +Tinf, 0);
+        Dialog* graph = new Dialog(proto, date_time, 0);
         graph->exec();
     }
 };
-void Simulation::edit_simvars() {
-    simvarMenu* menu = new simvarMenu(proto, this);
-    menu->show();
-    simvars_read = true;
-    init_douts();
-    set_sim_ready();
-};
+
 void Simulation::load_simvars() {
     simvars_read = !(bool)proto->readpars(proto->pars, proto->simvarfile);
     init_douts();
     set_sim_ready();
 };
-void Simulation::edit_pvars() {
-    pvarMenu* menu = new pvarMenu(proto, this);
-    menu->show();
-    pvars_read = true;
-    set_sim_ready();
-};
+
+
 void Simulation::load_pvars() {
     pvars_read = !(bool)proto->readpvars();
     set_sim_ready();
 };
-void Simulation::edit_dvars() {
-    dvarMenu* menu = new dvarMenu(proto, this);
-    menu->show();
-    dvars_read = true;
-    set_sim_ready();
-};
+
 void Simulation::load_dvars() {
     dvars_read = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
     set_sim_ready();
 };
-void Simulation::edit_mvars() {
-    mvarMenu* menu = new mvarMenu(proto, this);
-    menu->show();
-    mvars_read = true;
-    set_sim_ready();
-};
+
 void Simulation::load_mvars() {
     mvars_read = mvars_read&&!(bool)proto->initializeMeasure(int(proto->maxmeassize));
     init_douts();
@@ -224,3 +222,49 @@ void Simulation::set_num_sims(int value) {
     num_sims = value;
 };
 
+void Simulation::list_click_aciton (int next_row) {
+    leave_current(menu->currentIndex());
+    if(std::get<1>(menu_list->at(next_row))) {
+        menu->setCurrentIndex(next_row);
+        menu_options->setCurrentRow(next_row);
+    } else {
+        menu_options->setCurrentRow(menu->currentIndex());
+    }
+
+}
+
+void Simulation::next_button_aciton () {
+    int current_row = menu->currentIndex();
+    leave_current(current_row);
+    if(std::get<1>(menu_list->at(current_row +1))) {
+        menu->setCurrentIndex(current_row +1);
+        menu_options->setCurrentRow(current_row +1);
+    }
+}
+
+void Simulation::leave_current(int current) {
+    switch(current) {
+    case 1:
+        ((simvarMenu*) std::get<2>(menu_list->at(current)))->write_file();
+        simvars_read = true;
+        init_douts();
+        set_sim_ready();
+    break;
+    case 2:
+        ((dvarMenu*) std::get<2>(menu_list->at(current)))->write_file();
+        dvars_read = true;
+        set_sim_ready();
+    break;
+    case 3:
+        ((mvarMenu*) std::get<2>(menu_list->at(current)))->write_file();
+        mvars_read = true;
+        init_douts();
+        set_sim_ready();
+    break;
+    case 4:
+        ((pvarMenu*) std::get<2>(menu_list->at(current)))->write_file();
+        pvars_read = true;
+        set_sim_ready();
+    break;
+    }
+}
