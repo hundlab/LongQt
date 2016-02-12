@@ -162,11 +162,10 @@ void Simulation::doTask(Protocol& toRun) {
 void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
-    QVector<Protocol> vector;
     QDir().mkdir("data" + date_time);
-//    next_button->hide();
-//    cancel_button->show();
-//    run_button->setEnabled(false);
+    next_button->hide();
+    cancel_button->show();
+    run_button->setEnabled(false);
 
     for( i = 0; i < num_sims; i++) {
         temp = new Protocol(*proto);
@@ -179,14 +178,13 @@ void Simulation::run_sims() {
         vector.append(*temp);
     } 
 
-    QFutureWatcher<void> watcher;
  
-//    connect(cancel_button,SIGNAL(clicked()),&watcher,SLOT(cancel()));  // connect signals and slots for watcher and dialog
-//    connect(cancel_button,SIGNAL(clicked()),this,SLOT(canceled()));
-//    connect(&watcher,SIGNAL(finished()),this,SLOT(finished()));
-//    connect(&watcher,SIGNAL(finished()),pdialog,SLOT(reset()));
-//    connect(&watcher,SIGNAL(progressRangeChanged(int,int)),pdialog,SLOT(setRange(int,int)));
-//    connect(&watcher,SIGNAL(progressValueChanged(int)),pdialog,SLOT(setValue(int)));
+    connect(cancel_button,SIGNAL(clicked()),&watcher,SLOT(cancel()));  // connect signals and slots for watcher and dialog
+    connect(cancel_button,SIGNAL(clicked()),this,SLOT(canceled()));
+    connect(&watcher,SIGNAL(finished()),this,SLOT(finished()));
+    connect(&watcher,SIGNAL(finished()),pdialog,SLOT(reset()));
+    connect(&watcher,SIGNAL(progressRangeChanged(int,int)),pdialog,SLOT(setRange(int,int)));
+    connect(&watcher,SIGNAL(progressValueChanged(int)),pdialog,SLOT(setValue(int)));
     
     QFuture<void> next = QtConcurrent::map(vector,&Simulation::doTask);  // pass vector of protocols to QtConcurrent
 

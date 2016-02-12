@@ -11,6 +11,8 @@
 #include <QListWidget>
 #include <QList>
 #include <QProgressBar>
+#include <QFuture>
+#include <QFutureWatcher>
 
 #include "proto.h"
 #include "varmenu.h"
@@ -27,6 +29,9 @@ class Simulation : public QWidget {
     Protocol* proto;
     QString date_time;
     unsigned int num_sims;
+    QFutureWatcher<void> watcher;
+    QFuture<void> next;
+    QVector<Protocol> vector;
     QList<std::tuple<QString,bool,QWidget*>>* menu_list;
 //booleans for button availabilites
     bool sim_ready;
