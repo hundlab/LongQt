@@ -157,7 +157,8 @@ void Simulation::init_douts() {
     }
 };
 void Simulation::doTask(Protocol& toRun) {
-    toRun.runSim(); 
+//    toRun.runSim(); 
+    toRun.runTrial();
 };
 void Simulation::run_sims() {
     unsigned int i = 0;
@@ -167,14 +168,15 @@ void Simulation::run_sims() {
     cancel_button->show();
     run_button->setEnabled(false);
 
-    for( i = 0; i < num_sims; i++) {
+    for( i = 0; i < proto->numtrials; i++) {
         temp = new Protocol(*proto);
         temp->readfile = "./data" + date_time.toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
         temp->savefile = "./data" + date_time.toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
         temp->propertyoutfile = "./data" + date_time.toStdString() + "/dt%d_%s" + to_string(i) + string(".dat");
         temp->dvarsoutfile = "./data" + date_time.toStdString() + "/dt%d_dvars"+ to_string(i) + string(".dat");
-        temp->finalpropertyoutfile = "./data" + date_time.toStdString() + "/dss_%s"+ to_string(i) + string(".dat");
-        temp->finaldvarsoutfile = "./data" + date_time.toStdString() + "/dss_pvars"+ to_string(i) + string(".dat");
+        temp->finalpropertyoutfile = "./data" + date_time.toStdString() + "/dss%d_%s"+ to_string(i) + string(".dat");
+        temp->finaldvarsoutfile = "./data" + date_time.toStdString() + "/dss%d_pvars"+ to_string(i) + string(".dat");
+        temp->setTrial(i);
         vector.append(*temp);
     } 
 
