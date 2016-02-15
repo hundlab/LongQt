@@ -271,7 +271,9 @@ void Simulation::leave_current(int current) {
 
 void Simulation::canceled() {
     qDebug()<<"canceled!";
+    watcher.waitForFinished();
     QMessageBox::critical(this,"Cancel","Simulation canceled!");
+    vector.clear();
     cancel_button->hide();
     next_button->show();
     run_button->setEnabled(false);
