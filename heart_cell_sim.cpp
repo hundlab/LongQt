@@ -14,7 +14,7 @@
 #include <iterator>
 #include <QProgressBar>
 
-#include "proto.h"
+#include "protocol.h"
 #include "heart_cell_sim.h"
 #include "varmenu.h"
 #include "dialog.h"

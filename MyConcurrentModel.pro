@@ -20,8 +20,9 @@ SOURCES += main.cpp\
         dialog.cpp \
     modellib/cell.cpp \
     modellib/kurata08.cpp \
-#    modellib/kurata08mod.cpp \
-    modellib/proto.cpp \
+    modellib/protocol.cpp \
+    modellib/measure.cpp \
+    modellib/output.cpp \
     varmenu.cpp \
     heart_cell_sim.cpp \
     myoutput.cpp    \
@@ -29,9 +30,10 @@ SOURCES += main.cpp\
 
 HEADERS  +=    dialog.h \
     modellib/kurata08.h \
-#    modellib/kurata08mod.h \
     modellib/cell.h \
-    modellib/proto.h \
+    modellib/protocol.h \
+    modellib/measure.h \
+    modellib/output.h \
     varmenu.h \
     heart_cell_sim.h \
     myoutput.h  \

@@ -13,7 +13,7 @@
 #include <QTableWidget>
 #include <QGridLayout>
 
-#include "proto.h"
+#include "protocol.h"
 
 using namespace std;
 

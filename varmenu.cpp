@@ -21,7 +21,8 @@
 #include <QHeaderView>
 
 #include "varmenu.h"
-#include "proto.h"
+#include "protocol.h"
+
 
 
 /*########################

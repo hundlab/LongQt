@@ -14,7 +14,7 @@
 #include <QFuture>
 #include <QFutureWatcher>
 
-#include "proto.h"
+#include "protocol.h"
 #include "varmenu.h"
 
 class Simulation : public QWidget {
