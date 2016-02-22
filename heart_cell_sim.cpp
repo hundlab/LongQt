@@ -110,6 +110,11 @@ Simulation::Simulation(QWidget* parent){
     main_layout->addWidget(menu, 0, 1);
     main_layout->addWidget(next_button, 1, 2);
     main_layout->addWidget(cancel_button, 1, 2);
+    QSizePolicy sPol(QSizePolicy::Minimum, QSizePolicy::Expanding);
+    menu_options->setSizePolicy(sPol);
+
+
+    menu_options->setWindowTitle(date_time);
 //connect buttons
     connect(run_button, SIGNAL(clicked()),this,SLOT(run_sims()));
     connect(load_sim_button, SIGNAL(clicked()),this, SLOT(load_simvars()));

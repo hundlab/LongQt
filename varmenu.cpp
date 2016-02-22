@@ -20,6 +20,7 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 
+
 #include "varmenu.h"
 #include "proto.h"
 
@@ -352,8 +353,6 @@ void mvarMenu::update_menu(int row) {
             meas_view->addItem(proto->mpnames[vars_view->currentRow()][j].c_str());
         }
     }
-    
-    
 }
 
 void mvarMenu::closeEvent(QCloseEvent* event){
@@ -369,7 +368,6 @@ void mvarMenu::write_file () {
 }
 
 bool mvarMenu::read_mvars(){
-
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
