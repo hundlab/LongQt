@@ -19,7 +19,7 @@ Dialog::Dialog(Protocol* inital_proto, QString current_time, QWidget *parent) :
     this->proto = inital_proto;
     date = current_time;
     QMessageBox::information(0,"Folder", "Folder named: data/" + current_time);
-    passing_to_graph(this->proto,"data" + date + "/dt0_dvars0.dat");
+    passing_to_graph(this->proto,"data" + date + "/dt0_dvars.dat");
 }
 Dialog::~Dialog()
 {

@@ -13,7 +13,6 @@
 #include <QGroupBox>
 #include <iterator>
 #include <QProgressBar>
-
 #include "proto.h"
 #include "heart_cell_sim.h"
 #include "varmenu.h"
@@ -130,9 +129,7 @@ Simulation::Simulation(QWidget* parent){
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
 };
-
 Simulation::~Simulation(){};
-
 void Simulation::set_sim_ready() {
     QString name = std::get<0>(menu_list->at(5));
     QWidget* old = std::get<2>(menu_list->at(5));
@@ -198,24 +195,19 @@ void Simulation::run_sims() {
     watcher.setFuture(next);
 
 };
-
 void Simulation::load_simvars() {
     simvars_read = !(bool)proto->readpars(proto->pars, proto->simvarfile);
     init_douts();
     set_sim_ready();
 };
-
-
 void Simulation::load_pvars() {
     pvars_read = !(bool)proto->readpvars();
     set_sim_ready();
 };
-
 void Simulation::load_dvars() {
     dvars_read = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
     set_sim_ready();
 };
-
 void Simulation::load_mvars() {
     mvars_read = mvars_read&&!(bool)proto->initializeMeasure(int(proto->maxmeassize));
     init_douts();
@@ -228,7 +220,6 @@ void Simulation::init_cell() {
 void Simulation::set_num_sims(int value) {
     num_sims = value;
 };
-
 void Simulation::list_click_aciton (int next_row) {
     leave_current(menu->currentIndex());
     if(std::get<1>(menu_list->at(next_row))) {
@@ -239,7 +230,6 @@ void Simulation::list_click_aciton (int next_row) {
     }
 
 }
-
 void Simulation::next_button_aciton () {
     int current_row = menu->currentIndex();
     leave_current(current_row);
@@ -248,7 +238,6 @@ void Simulation::next_button_aciton () {
         menu_options->setCurrentRow(current_row +1);
     }
 }
-
 void Simulation::leave_current(int current) {
     switch(current) {
     case 1:
@@ -275,7 +264,6 @@ void Simulation::leave_current(int current) {
     break;
     }
 }
-
 void Simulation::canceled() {
     qDebug()<<"canceled!";
     watcher.waitForFinished();
@@ -285,7 +273,6 @@ void Simulation::canceled() {
     next_button->show();
     run_button->setEnabled(false);
 }
-
 void Simulation::finished() {
     qDebug()<<"finished!";
     QMessageBox::information(this,"Finish","Simulation finished!");

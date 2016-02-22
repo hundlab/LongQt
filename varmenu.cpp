@@ -19,11 +19,9 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QHeaderView>
-
-
+#include <QToolTip>
 #include "varmenu.h"
 #include "proto.h"
-
 
 /*########################
   begin simvarMenu class
@@ -34,6 +32,23 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     this->parent = parent;
     date_time = init_time;
     write_close = true;
+    QMap<QString, QString> descriptions;
+    descriptions.insert("bcl","");
+    descriptions.insert("meastime", "");
+    descriptions.insert("paceflag","");
+    descriptions.insert("stimdur","");
+    descriptions.insert("tMax","");
+    descriptions.insert("maxdoutsize","");
+    descriptions.insert("numstims","");
+    descriptions.insert("readflag","");
+    descriptions.insert("stimt","");
+    descriptions.insert("writeflag", "1=write, 0=don't write");
+    descriptions.insert("measflag", "");
+    descriptions.insert("numtrials","");
+    descriptions.insert("saveflag","");
+    descriptions.insert("stimval","");
+    descriptions.insert("writetime", "time during simulation that writing will begin");
+
 //setup useful constants and aliases
     unsigned int i, row_len = 6;
     map<string,double*> pars = proto->pars;
@@ -69,6 +84,7 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
         button_group->addWidget(simvars[i]);
         central_layout->addLayout(button_group, (2*i)/row_len+1, (2*i)%row_len, 1, 2);
         connect(simvars[i], static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=] (double value) {update_pvars(pair<string,double>(name, value));});
+        simvar_names[i]->setToolTip(descriptions[it->first.c_str()]);
     }
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
@@ -82,34 +98,26 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
-    update_menu();
-    
+    update_menu();   
 }
-
 simvarMenu::~simvarMenu(){}
-
 void simvarMenu::update_menu() {
     map<string,double*>::iterator it;
     unsigned int i; 
-    for(it = proto->pars.begin(), i = 0; it != proto->pars.end(); it++, i++)     {  
+    for(it = proto->pars.begin(), i = 0; it != proto->pars.end(); it++, i++)     {
         simvars[i]->setValue(*(it->second));
     }
 }
-
 void simvarMenu::closeEvent(QCloseEvent* event){
     write_file();
     event->accept();
 }
-
 void simvarMenu::write_file() {
     if(write_close) {
         !(bool)proto->writepars(proto->pars, string("simvars") + date_time.toStdString() + string(".txt"));
     }
 }
-
-
 bool simvarMenu::read_simvars(){
-
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
@@ -119,7 +127,6 @@ bool simvarMenu::read_simvars(){
     update_menu();
     return ret;
 }
-
 bool simvarMenu::write_simvars(){
     
     bool ret = false;
@@ -131,16 +138,13 @@ bool simvarMenu::write_simvars(){
     return ret;
 
 }
-
 void simvarMenu::update_pvars(pair<string,double> p){
     *(proto->pars[p.first]) = p.second;
 }
-
 void simvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
 }
-
 /*#################################
     begin dvarMenu class
 ###################################*/
@@ -150,6 +154,61 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
     this->parent = parent;
     date_time = init_time;
     write_close = true;
+    QMap<QString, QString> definitions;
+        definitions.insert("Gate.d","");
+        definitions.insert("Gate.paf","");
+        definitions.insert("Gate.r","");
+        definitions.insert("cmdnI","");
+        definitions.insert("iCart","");
+        definitions.insert("iHna","");
+        definitions.insert("iTo","Indium Tin Oxide");
+        definitions.insert("naI", "Sodium Iodide");
+        definitions.insert("Gate.dt","");
+        definitions.insert("Gate.pas","");
+        definitions.insert("Gate.y","");
+        definitions.insert("cmdnR","");
+        definitions.insert("iCat","");
+        definitions.insert("iKach","");
+        definitions.insert("iNak","");
+        definitions.insert("iTot", "");
+        definitions.insert("t", "Time");
+        definitions.insert("Gate.f","");
+        definitions.insert("Gate.pi","");
+        definitions.insert("caI","");
+        definitions.insert("csqn","");
+        definitions.insert("iCatt","");
+        definitions.insert("iKr","");
+        definitions.insert("iNat","");
+        definitions.insert("iTr","");
+        definitions.insert("trpnCa","");
+        definitions.insert("Gate.fca","");
+        definitions.insert("Gate.q","");
+        definitions.insert("caJsr","");
+        definitions.insert("dVdt","");
+        definitions.insert("iDiff","");
+        definitions.insert("iKs","");
+        definitions.insert("iRel","");
+        definitions.insert("iTrek","");
+        definitions.insert("trpnMg","");
+        definitions.insert("Gate.ft","");
+        definitions.insert("Gate.qa","");
+        definitions.insert("caNsr","");
+        definitions.insert("iCait","");
+        definitions.insert("iH","");
+        definitions.insert("iKt","");
+        definitions.insert("iSt","");
+        definitions.insert("iUp","");
+        definitions.insert("trpnMgmg","");
+        definitions.insert("Gate.n","");
+        definitions.insert("Gate.qi","");
+        definitions.insert("caR","");
+        definitions.insert("iCal","");
+        definitions.insert("iHk","");
+        definitions.insert("iNah","");
+        definitions.insert("iSus","");
+        definitions.insert("kI","");
+        definitions.insert("vOld","");
+
 //setup useful constants and aliases
     unsigned int i, row_len = 6;
     map<string,double*> vars = proto->cell->vars;
@@ -178,6 +237,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
         dvars[i] = new QCheckBox(*(new QString((it->first).c_str())), this);
         central_layout->addWidget(dvars[i], i/row_len, i%row_len);
         connect(dvars[i], &QCheckBox::stateChanged, [=] (int state) {update_datamap(p, state);});
+        dvars[i]->setToolTip(definitions[it->first.c_str()]);       //hover attribute
     }
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
@@ -194,9 +254,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
     update_menu();
     
 }
-
 dvarMenu::~dvarMenu(){}
-
 void dvarMenu::update_menu() {
     map<string,double*>::iterator it;
     unsigned int i; 
@@ -208,20 +266,16 @@ void dvarMenu::update_menu() {
         }
     }
 }
-
 void dvarMenu::closeEvent(QCloseEvent* event){
     write_file();
     event->accept();
 }
-
 void dvarMenu::write_file() {
     if(write_close) {
         !(bool)proto->writedvars(proto->datamap, string("dvars") + date_time.toStdString() + string(".txt"));
     }
 }
-
 bool dvarMenu::read_dvars(){
-
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
@@ -231,9 +285,7 @@ bool dvarMenu::read_dvars(){
     update_menu();
     return ret;
 }
-
-bool dvarMenu::write_dvars(){
-    
+bool dvarMenu::write_dvars(){  
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
@@ -243,7 +295,6 @@ bool dvarMenu::write_dvars(){
     return ret;
 
 }
-
 void dvarMenu::update_datamap(pair<string,double*> p, int state){
     if((state = 0)) {
         proto->datamap.erase(p.first);
@@ -251,12 +302,10 @@ void dvarMenu::update_datamap(pair<string,double*> p, int state){
         proto->datamap.insert(p);
     }
 }
-
 void dvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
 }
-
 /*#################################
     begin mvarMenu class
 ###################################*/
@@ -333,9 +382,7 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
 //make menu match proto
     update_menu(-1);
 }
-
 mvarMenu::~mvarMenu(){}
-
 void mvarMenu::update_menu(int row) {
     unsigned int i,j;
 
@@ -345,28 +392,27 @@ void mvarMenu::update_menu(int row) {
         QList<QListWidgetItem*> vars_item = vars_view->findItems(proto->mvnames[i].c_str(),Qt::MatchExactly);
         if(vars_item.empty()) {
             vars_view->addItem(proto->mvnames[i].c_str());
+            vars_view->setToolTip("Details");
         }
     }
     vars_view->setCurrentRow(row);
     if(vars_view->currentRow() >= 0) {
         for(j = 0; j < proto->mpnames[vars_view->currentRow()].size(); j++){
             meas_view->addItem(proto->mpnames[vars_view->currentRow()][j].c_str());
+            meas_view->setToolTip("Measure Details");
         }
     }
 }
-
 void mvarMenu::closeEvent(QCloseEvent* event){
    write_file();
    event->accept();
 }
-
 void mvarMenu::write_file () {
     proto->initializeMeasure(proto->maxmeassize);
     if(write_close) {
         !(bool)proto->write2Dmap( proto->mvnames, proto->mpnames, string("mvars") + date_time.toStdString() + string(".txt"));
     }
 }
-
 bool mvarMenu::read_mvars(){
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
@@ -378,7 +424,6 @@ bool mvarMenu::read_mvars(){
     update_menu(-1);
     return ret;
 }
-
 bool mvarMenu::write_mvars(){
     
     bool ret = false;
@@ -390,12 +435,10 @@ bool mvarMenu::write_mvars(){
     return ret;
 
 }
-
 void mvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
 }
-
 void mvarMenu::addto_meas_list(){
     int var_row = vars_view->currentRow();
     QString to_add = addto_meas_options->currentText();
@@ -405,7 +448,6 @@ void mvarMenu::addto_meas_list(){
     }
     update_menu(var_row);
 };
-
 void mvarMenu::removefr_meas_list(){
     int meas_row = meas_view->currentRow();
     int var_row = vars_view->currentRow();
@@ -421,7 +463,6 @@ void mvarMenu::removefr_meas_list(){
     proto->mpnames[var_row].erase(proto->mpnames[var_row].begin() + meas_row);
     update_menu(vars_view->currentRow());
 };
-
 void mvarMenu::addto_vars_list(){
     QString to_add = addto_vars_options->currentText();
 
@@ -433,7 +474,6 @@ void mvarMenu::addto_vars_list(){
     }
 //    update_menu(proto->mpnames.size() -1);
 };
-
 void mvarMenu::removefr_vars_list(){
     int var_row = vars_view->currentRow();
     if(vars_view->takeItem(var_row) == 0) {
@@ -443,11 +483,9 @@ void mvarMenu::removefr_vars_list(){
     proto->mpnames.erase(proto->mpnames.begin() + var_row);
     update_menu(var_row -1);
 };
-
 void mvarMenu::switch_var(int row){
     update_menu(row);
 };
-
 /*#################################
     begin pvarMenu class
 ###################################*/
@@ -499,9 +537,7 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
 //make menu match proto
     update_menu();
 }
-
 pvarMenu::~pvarMenu(){}
-
 void pvarMenu::update_menu() {
     unsigned int i;
     unsigned int end_row;
@@ -527,7 +563,6 @@ void pvarMenu::update_menu() {
     central_layout->addWidget(add_button, end_row, 2, 1, 2);
     connect(add_button, SIGNAL(clicked()), this, SLOT(add_row()));
 }
-
 void pvarMenu::update_menu(unsigned int row) {
     int boxlen = 2;
     int inc_pos = 2;
@@ -571,7 +606,6 @@ void pvarMenu::update_menu(unsigned int row) {
         remove_row(row);}
     );
 } 
-
 void pvarMenu::add_doublespinbox_tomenu(unsigned int row, unsigned int column, unsigned int boxlen, int column_pos) {
     if(column_pos < 0) {
         column_pos = 2*column+1;
@@ -585,7 +619,6 @@ void pvarMenu::add_doublespinbox_tomenu(unsigned int row, unsigned int column, u
                     proto->pvals[row].erase(proto->pvals[row].begin() + column);
                     proto->pvals[row].insert(proto->pvals[row].begin() +column, to_string(value));});
 }
-
 void pvarMenu::add_comobobox_tomenu(unsigned int row, unsigned int column, unsigned int menu_box, unsigned int boxlen, int column_pos) {
     if(column_pos < 0) {
         column_pos = 2*column+1;
@@ -604,7 +637,6 @@ void pvarMenu::add_comobobox_tomenu(unsigned int row, unsigned int column, unsig
     connect(options, static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
         [=](QString value){row_changed(value, row, column);});
 }
-
 void pvarMenu::clear_row(unsigned int row, int offset) {
     unsigned int i;
 
@@ -619,13 +651,10 @@ void pvarMenu::clear_row(unsigned int row, int offset) {
 
     }
 }
-
-
 void pvarMenu::closeEvent(QCloseEvent* event){
     write_file();
     event->accept();
 }
-
 void pvarMenu::write_file() {
     proto->parmap = proto->resizemap(proto->cell->pars,proto->pnames);
     if(write_close) {
@@ -633,7 +662,6 @@ void pvarMenu::write_file() {
     }
  
 }
-
 bool pvarMenu::read_pvars(){
 
     bool ret = false;
@@ -645,7 +673,6 @@ bool pvarMenu::read_pvars(){
     update_menu();
     return ret;
 }
-
 bool pvarMenu::write_pvars(){
     
     bool ret = false;
@@ -657,12 +684,10 @@ bool pvarMenu::write_pvars(){
     return ret;
 
 }
-
 void pvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
 }
-
 void pvarMenu::row_changed(QString value, int row, int column) {
     vector<string> to_insert;
     vector<string>::iterator erase_start = proto->pvals[row].begin() +column;
@@ -708,14 +733,12 @@ void pvarMenu::row_changed(QString value, int row, int column) {
     proto->pvals[row].insert(proto->pvals[row].begin() +column, new_start, new_end);
     update_menu(row);
 }
-
 void pvarMenu::remove_row(unsigned int row) {
     proto->pvals.erase(proto->pvals.begin() + row);
     proto->pnames.erase(proto->pnames.begin() + row);
     clear_row(row, 0);
     update_menu();
 }
-
 void pvarMenu::add_row() {
     vector<string>* def = new vector<string>();
     vector<string>::iterator it;
@@ -736,7 +759,6 @@ void pvarMenu::add_row() {
         update_menu();
     }
 }
-
 void pvarMenu::checkbox_changed(unsigned int row,unsigned int column,int state) {
     switch(state) {
     case 0:
