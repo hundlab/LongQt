@@ -36,7 +36,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
 
      QFile file(f);
      if(!file.open(QIODevice::ReadOnly)){
-         QMessageBox::information(0,"error", file.errorString());
+         QMessageBox::information(0,"error", "No File Selected!");
          //exit(EXIT_FAILURE);
      }
      QTextStream in(&file);
@@ -327,7 +327,6 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
              }
          }
      }
-
  }
 void Dialog::on_pushButton_clicked()
 {
@@ -521,7 +520,7 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     QFile file1(filename);
     if(!file1.open(QIODevice::ReadOnly)){
         QMessageBox::information(0,"error", file1.errorString());
-    }
+    }else{
     QTextStream in(&file1);
     int point = 0;
     QString fline = in.readLine();
@@ -539,6 +538,8 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     }
     file1.close();
     return true;
+    }
+    return false;
 }
 void Dialog::on_save1_clicked()
 {
@@ -592,6 +593,7 @@ void Dialog::on_pushButton_12_clicked()
                 root,
                 "All Files (*.*);;Text File(*.txt)"
                 );
+    if(!filename.isEmpty()){
     ui->plot1->removeGraph(0);
     ui->plot1->removeGraph(1);
     ui->plot2->removeGraph(0);
@@ -649,4 +651,5 @@ void Dialog::on_pushButton_12_clicked()
     ui->plot9->replot();
     ui->plot10->replot();
     ui->plot11->replot();
+    }
 }
