@@ -274,6 +274,7 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
     if(parent != NULL) {
         end_op = "Next";
     }
+    set<string> measure_options;
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
@@ -300,8 +301,9 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
     for(it = proto->cell->vars.begin(); it != proto->cell->vars.end(); it++) {
         addto_vars_options->addItem(it->first.c_str());
     }
-    for(it = temp.varmap.begin(); it != temp.varmap.end(); it++) {
-        addto_meas_options->addItem(it->first.c_str());
+    measure_options = temp.getVariables();    
+    for(set<string>::iterator set_it = measure_options.begin(); set_it != measure_options.end(); set_it++) {
+        addto_meas_options->addItem(set_it->c_str());
     }
 //central_layout
     central_layout->addWidget(vars_list_label, 0,0);
@@ -375,7 +377,7 @@ bool mvarMenu::read_mvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->measfile = fileName.toStdString();
-        ret = !(bool)proto->parse2Dmap(proto->cell->vars,Measure().varmap, proto->measfile, &proto->mvnames, &proto->mpnames);
+        ret = !(bool)proto->parse2Dmap(proto->cell->vars,Measure().getVariables(), proto->measfile, &proto->mvnames, &proto->mpnames);
 //        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));//create measure from mvarfile
    }
     update_menu(-1);
