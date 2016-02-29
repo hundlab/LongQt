@@ -18,6 +18,7 @@ INCLUDEPATH += ./modellib
 
 SOURCES += main.cpp\
         dialog.cpp \
+    modellib/cell_kernel.cpp \
     modellib/cell.cpp \
     modellib/kurata08.cpp \
     modellib/protocol.cpp \
@@ -32,6 +33,7 @@ SOURCES += main.cpp\
 
 HEADERS  +=    dialog.h \
     modellib/kurata08.h \
+    modellib/cell_kernel.h \
     modellib/cell.h \
     modellib/protocol.h \
     modellib/measure_kernel.h \
