@@ -339,20 +339,19 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
 mvarMenu::~mvarMenu(){}
 
 void mvarMenu::update_menu(int row) {
-    unsigned int i,j;
-
     meas_view->clear();
 
-    for(i = 0; i < proto->mvnames.size(); i++) {
-        QList<QListWidgetItem*> vars_item = vars_view->findItems(proto->mvnames[i].c_str(),Qt::MatchExactly);
+    for(set<Measure>::iterator it = proto->measures.begin(); it != proto->measures.end(); it++) {
+        QList<QListWidgetItem*> vars_item = vars_view->findItems(it->varname.c_str(),Qt::MatchExactly);
         if(vars_item.empty()) {
-            vars_view->addItem(proto->mvnames[i].c_str());
+            vars_view->addItem(it->varname.c_str());
         }
     }
     vars_view->setCurrentRow(row);
     if(vars_view->currentRow() >= 0) {
-        for(j = 0; j < proto->mpnames[vars_view->currentRow()].size(); j++){
-            meas_view->addItem(proto->mpnames[vars_view->currentRow()][j].c_str());
+        set<string> selection = (proto->measures.begin() + row)->getSelection();
+        for(set<string>::iterator it = selection.begin(); it != selection.end(); it++){
+            meas_view->addItem(it->c_str());
         }
     }
     
@@ -367,7 +366,7 @@ void mvarMenu::closeEvent(QCloseEvent* event){
 void mvarMenu::write_file () {
     proto->initializeMeasure(proto->maxmeassize);
     if(write_close) {
-        !(bool)proto->write2Dmap( proto->mvnames, proto->mpnames, string("mvars") + date_time.toStdString() + string(".txt"));
+        proto->writeMvarsFile(string("mvars") + date_time.toStdString() + string(".txt"));
     }
 }
 
@@ -377,7 +376,7 @@ bool mvarMenu::read_mvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->measfile = fileName.toStdString();
-        ret = !(bool)proto->parse2Dmap(proto->cell->vars,Measure().getVariables(), proto->measfile, &proto->mvnames, &proto->mpnames);
+        ret = proto->readMvarsFile(proto->measfile);
 //        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));//create measure from mvarfile
    }
     update_menu(-1);
@@ -390,7 +389,7 @@ bool mvarMenu::write_mvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->measfile = fileName.toStdString();
-        ret = !(bool)proto->write2Dmap(proto->mvnames, proto->mpnames, proto->measfile);
+        ret = proto->writeMvarsFile(proto->measfile);
     }
     return ret;
 
@@ -406,7 +405,7 @@ void mvarMenu::addto_meas_list(){
     QString to_add = addto_meas_options->currentText();
 
     if(meas_view->findItems(to_add, Qt::MatchExactly).empty()) {
-        proto->mpnames[var_row].push_back(to_add.toStdString());
+        proto->measures[var_row].push_back(to_add.toStdString());
     }
     update_menu(var_row);
 };
@@ -431,7 +430,7 @@ void mvarMenu::addto_vars_list(){
     QString to_add = addto_vars_options->currentText();
 
     if(vars_view->findItems(to_add, Qt::MatchExactly).empty()) {
-        proto->mvnames.push_back(to_add.toStdString());
+        proto->measures.push_back(Measure(to_add.toStdString()));
         proto->mpnames.push_back(vector<string>());
         update_menu(proto->mpnames.size() -1);
         addto_meas_list();
@@ -441,10 +440,13 @@ void mvarMenu::addto_vars_list(){
 
 void mvarMenu::removefr_vars_list(){
     int var_row = vars_view->currentRow();
-    if(vars_view->takeItem(var_row) == 0) {
+    Measure temp;
+    QListWidgetItem* item = vars_view->takeItem(var_row);
+    if(item == 0) {
         return;
     }
-    proto->mvnames.erase(proto->mvnames.begin() + var_row);
+    temp.varname = item->text().toStdString();
+    proto->measures.erase(proto->measures.begin() + var_row);
     proto->mpnames.erase(proto->mpnames.begin() + var_row);
     update_menu(var_row -1);
 };
