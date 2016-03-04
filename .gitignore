@@ -36,3 +36,8 @@ MyConcurrentModel.pro.user
 *.user
 MyConcurrentModel.pro.user
 MyConcurrentModelDebug.pro
+
+#kdev files
+.kdev4/
+*.kdev4
+

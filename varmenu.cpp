@@ -341,16 +341,18 @@ mvarMenu::~mvarMenu(){}
 void mvarMenu::update_menu(int row) {
     meas_view->clear();
 
-    for(set<Measure>::iterator it = proto->measures.begin(); it != proto->measures.end(); it++) {
-        QList<QListWidgetItem*> vars_item = vars_view->findItems(it->varname.c_str(),Qt::MatchExactly);
+    for(auto it = proto->Measures.begin(); it != proto->Measures.end(); it++) {
+        QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly);
         if(vars_item.empty()) {
-            vars_view->addItem(it->varname.c_str());
+            vars_view->addItem(it->second.varname.c_str());
         }
     }
     vars_view->setCurrentRow(row);
     if(vars_view->currentRow() >= 0) {
-        set<string> selection = (proto->measures.begin() + row)->getSelection();
-        for(set<string>::iterator it = selection.begin(); it != selection.end(); it++){
+        auto measure = proto->Measures.begin();
+        std::advance(measure, row);
+        const set<string>& selection = measure->second.Selection;
+        for(auto it = selection.begin(); it != selection.end(); it++){
             meas_view->addItem(it->c_str());
         }
     }
@@ -366,7 +368,7 @@ void mvarMenu::closeEvent(QCloseEvent* event){
 void mvarMenu::write_file () {
     proto->initializeMeasure(proto->maxmeassize);
     if(write_close) {
-        proto->writeMvarsFile(string("mvars") + date_time.toStdString() + string(".txt"));
+        proto->writeMVarsFile(string("mvars") + date_time.toStdString() + string(".txt"));
     }
 }
 
@@ -389,7 +391,7 @@ bool mvarMenu::write_mvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->measfile = fileName.toStdString();
-        ret = proto->writeMvarsFile(proto->measfile);
+        ret = proto->writeMVarsFile(proto->measfile.c_str());
     }
     return ret;
 
@@ -403,9 +405,14 @@ void mvarMenu::set_write_close(int state) {
 void mvarMenu::addto_meas_list(){
     int var_row = vars_view->currentRow();
     QString to_add = addto_meas_options->currentText();
+    QString measure_name;
+    if(meas_view->currentItem() == NULL) {
+        return;
+    }
+    measure_name = meas_view->currentItem()->text();
 
     if(meas_view->findItems(to_add, Qt::MatchExactly).empty()) {
-        proto->measures[var_row].push_back(to_add.toStdString());
+        proto->addToMeasreSelection(measure_name.toStdString(), to_add.toStdString());
     }
     update_menu(var_row);
 };
@@ -413,26 +420,29 @@ void mvarMenu::addto_meas_list(){
 void mvarMenu::removefr_meas_list(){
     int meas_row = meas_view->currentRow();
     int var_row = vars_view->currentRow();
+    QListWidgetItem* taken_meas;
 
-    if(meas_view->takeItem(meas_row) == 0) {
+    if((taken_meas = meas_view->takeItem(meas_row)) == 0) {
         return;
     }
     if(meas_view->count() == 0) {
         removefr_vars_list();
         return;
     }
+
     meas_view->setCurrentRow(meas_row -1);
-    proto->mpnames[var_row].erase(proto->mpnames[var_row].begin() + meas_row);
-    update_menu(vars_view->currentRow());
+    if(var_row != -1) {
+        proto->removeFromMeasureSelection(vars_view->currentItem()->text().toStdString(), taken_meas->text().toStdString());
+        update_menu(vars_view->currentRow());
+    }
 };
 
 void mvarMenu::addto_vars_list(){
     QString to_add = addto_vars_options->currentText();
 
     if(vars_view->findItems(to_add, Qt::MatchExactly).empty()) {
-        proto->measures.push_back(Measure(to_add.toStdString()));
-        proto->mpnames.push_back(vector<string>());
-        update_menu(proto->mpnames.size() -1);
+        proto->addMeasure(Measure(to_add.toStdString()));
+        update_menu(proto->Measures.size() -1);
         addto_meas_list();
     }
 //    update_menu(proto->mpnames.size() -1);
@@ -440,14 +450,11 @@ void mvarMenu::addto_vars_list(){
 
 void mvarMenu::removefr_vars_list(){
     int var_row = vars_view->currentRow();
-    Measure temp;
     QListWidgetItem* item = vars_view->takeItem(var_row);
     if(item == 0) {
         return;
     }
-    temp.varname = item->text().toStdString();
-    proto->measures.erase(proto->measures.begin() + var_row);
-    proto->mpnames.erase(proto->mpnames.begin() + var_row);
+    proto->removeMeasure(item->text().toStdString());
     update_menu(var_row -1);
 };
 
