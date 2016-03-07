@@ -99,7 +99,6 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      else if(pos == 9){ x = y10;}
      else if(pos == 10){ x = y11;}
 
-
      low_x_axis = *a->pars["writetime"];
      max_x_axis = *a->pars["tMax"];
 

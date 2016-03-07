@@ -3,7 +3,6 @@ MyOutput::MyOutput(QObject *parent) : QObject(parent)
 {
     counter = 0;
     interval = 1;
-
 }
 //#############################################################
 // Read values of variables in varmap from file.
