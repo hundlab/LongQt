@@ -212,7 +212,7 @@ void Simulation::load_dvars() {
 };
 
 void Simulation::load_mvars() {
-    mvars_read = mvars_read&&!(bool)proto->initializeMeasure(int(proto->maxmeassize));
+    mvars_read = true;//mvars_read&&!(bool)proto->initializeMeasure(int(proto->maxmeassize));
     init_douts();
     set_sim_ready();
 };

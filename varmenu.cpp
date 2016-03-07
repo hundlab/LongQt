@@ -339,19 +339,17 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
 mvarMenu::~mvarMenu(){}
 
 void mvarMenu::update_menu(int row) {
+    vector<string> meas_vector;
+
     meas_view->clear();
 
     for(auto it = proto->Measures.begin(); it != proto->Measures.end(); it++) {
-        QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly);
-        if(vars_item.empty()) {
-            vars_view->addItem(it->second.varname.c_str());
-        }
+        vars_view->addItem(it->second.varname.c_str());
+        meas_vector.push_back(it->second.varname);
     }
     vars_view->setCurrentRow(row);
     if(vars_view->currentRow() >= 0) {
-        auto measure = proto->Measures.begin();
-        std::advance(measure, row);
-        const set<string>& selection = measure->second.Selection;
+        auto selection = proto->Measures.at(meas_vector[row]).Selection;
         for(auto it = selection.begin(); it != selection.end(); it++){
             meas_view->addItem(it->c_str());
         }
@@ -366,7 +364,6 @@ void mvarMenu::closeEvent(QCloseEvent* event){
 }
 
 void mvarMenu::write_file () {
-    proto->initializeMeasure(proto->maxmeassize);
     if(write_close) {
         proto->writeMVarsFile(string("mvars") + date_time.toStdString() + string(".txt"));
     }
