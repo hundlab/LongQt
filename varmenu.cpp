@@ -305,6 +305,8 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
     for(set<string>::iterator set_it = measure_options.begin(); set_it != measure_options.end(); set_it++) {
         addto_meas_options->addItem(set_it->c_str());
     }
+    vars_view->setSortingEnabled(true);
+    meas_view->setSortingEnabled(true);
 //central_layout
     central_layout->addWidget(vars_list_label, 0,0);
     central_layout->addWidget(meas_list_label, 0,2);
@@ -339,19 +341,24 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
 mvarMenu::~mvarMenu(){}
 
 void mvarMenu::update_menu(int row) {
-    vector<string> meas_vector;
-
-    meas_view->clear();
 
     for(auto it = proto->Measures.begin(); it != proto->Measures.end(); it++) {
-        vars_view->addItem(it->second.varname.c_str());
-        meas_vector.push_back(it->second.varname);
+        QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly);
+        if(vars_item.empty()) {
+            vars_view->addItem(it->second.varname.c_str()); 
+            row = vars_view->row(vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly).first());
+        }
     }
+
+    meas_view->clear();
     vars_view->setCurrentRow(row);
     if(vars_view->currentRow() >= 0) {
-        auto selection = proto->Measures.at(meas_vector[row]).Selection;
+        auto selection = proto->Measures.at(vars_view->currentItem()->text().toStdString()).Selection;
         for(auto it = selection.begin(); it != selection.end(); it++){
-            meas_view->addItem(it->c_str());
+            QList<QListWidgetItem*> meas_item = meas_view->findItems(it->c_str(),Qt::MatchExactly);
+            if(meas_item.empty()) {
+                meas_view->addItem(it->c_str());
+            }
         }
     }
     
@@ -403,14 +410,14 @@ void mvarMenu::addto_meas_list(){
     int var_row = vars_view->currentRow();
     QString to_add = addto_meas_options->currentText();
     QString measure_name;
-    if(meas_view->currentItem() == NULL) {
+    if(vars_view->currentItem() == NULL) {
         return;
     }
-    measure_name = meas_view->currentItem()->text();
+    measure_name = vars_view->currentItem()->text();
 
-    if(meas_view->findItems(to_add, Qt::MatchExactly).empty()) {
+//    if(meas_view->findItems(to_add, Qt::MatchExactly).empty()) {
         proto->addToMeasreSelection(measure_name.toStdString(), to_add.toStdString());
-    }
+//    }
     update_menu(var_row);
 };
 
@@ -439,7 +446,7 @@ void mvarMenu::addto_vars_list(){
 
     if(vars_view->findItems(to_add, Qt::MatchExactly).empty()) {
         proto->addMeasure(Measure(to_add.toStdString()));
-        update_menu(proto->Measures.size() -1);
+        update_menu(-1);
         addto_meas_list();
     }
 //    update_menu(proto->mpnames.size() -1);
