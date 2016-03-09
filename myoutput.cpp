@@ -1,16 +1,13 @@
 #include "myoutput.h"
-
 MyOutput::MyOutput(QObject *parent) : QObject(parent)
 {
     counter = 0;
     interval = 1;
-
 }
 //#############################################################
 // Read values of variables in varmap from file.
 // Format of file should be "variable name" tab "value"
 //#############################################################
-
 int MyOutput::readvals(std::map<QString, double*> varmap, QString filename)
 {
    QString name;
@@ -38,7 +35,6 @@ QTextStream in(&ifile);
     return 1;
 
 }
-
 int MyOutput::writevals(std::map<QString, double *> varmap, QString filename, char type)
 {
     std::map<QString, double*>::iterator p;
@@ -66,7 +62,6 @@ int MyOutput::writevals(std::map<QString, double *> varmap, QString filename, ch
     return 1;
 
 }
-
 int MyOutput::writevals(std::map<QString, double *> varmap, QString filename)
 {
     std::map<QString, double*>::iterator p;
@@ -86,7 +81,6 @@ int MyOutput::writevals(std::map<QString, double *> varmap, QString filename)
     ofile.close();
     return 1;
 }
-
 int MyOutput::writevals(std::map<QString, double> varmap, QString filename, char type)
 {
     std::map<QString, double>::iterator p;
@@ -114,7 +108,6 @@ int MyOutput::writevals(std::map<QString, double> varmap, QString filename, char
     counter++;
     return 1;
 }
-
 int MyOutput::writevals(std::map<QString, double> varmap, QString filename)
 {
     std::map<QString, double>::iterator p;
@@ -134,4 +127,3 @@ int MyOutput::writevals(std::map<QString, double> varmap, QString filename)
     ofile.close();
     return 1;
 }
-

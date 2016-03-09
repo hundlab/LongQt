@@ -18,7 +18,8 @@ Dialog::Dialog(Protocol* inital_proto, QString current_time, QWidget *parent) :
     ui->setupUi(this);
     this->proto = inital_proto;
     date = current_time;
-    passing_to_graph(this->proto,"data" + date + "/dt0_dvars0.dat");
+    QMessageBox::information(0,"Folder", "Folder named: data/" + current_time);
+    passing_to_graph(this->proto,"data" + date + "/dt0_dvars.dat");
 }
 Dialog::~Dialog()
 {
@@ -35,7 +36,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
 
      QFile file(f);
      if(!file.open(QIODevice::ReadOnly)){
-         QMessageBox::information(0,"error", file.errorString());
+         QMessageBox::information(0,"error", "No File Selected!");
          //exit(EXIT_FAILURE);
      }
      QTextStream in(&file);
@@ -98,10 +99,8 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      else if(pos == 9){ x = y10;}
      else if(pos == 10){ x = y11;}
 
-
      low_x_axis = *a->pars["writetime"];
      max_x_axis = *a->pars["tMax"];
-
 
      ui->plot1->addGraph();
      ui->plot1->graph(0)->setPen(QPen(Qt::blue));
@@ -326,7 +325,6 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
              }
          }
      }
-
  }
 void Dialog::on_pushButton_clicked()
 {
@@ -520,7 +518,7 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     QFile file1(filename);
     if(!file1.open(QIODevice::ReadOnly)){
         QMessageBox::information(0,"error", file1.errorString());
-    }
+    }else{
     QTextStream in(&file1);
     int point = 0;
     QString fline = in.readLine();
@@ -538,6 +536,8 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     }
     file1.close();
     return true;
+    }
+    return false;
 }
 void Dialog::on_save1_clicked()
 {
@@ -591,61 +591,64 @@ void Dialog::on_pushButton_12_clicked()
                 root,
                 "All Files (*.*);;Text File(*.txt)"
                 );
-    ui->plot1->removeGraph(0);
-    ui->plot1->removeGraph(1);
-    ui->plot2->removeGraph(0);
-    ui->plot2->removeGraph(1);
-    ui->plot3->removeGraph(0);
-    ui->plot3->removeGraph(1);
-    ui->plot4->removeGraph(0);
-    ui->plot4->removeGraph(1);
-    ui->plot5->removeGraph(0);
-    ui->plot5->removeGraph(1);
-    ui->plot6->removeGraph(0);
-    ui->plot6->removeGraph(1);
-    ui->plot7->removeGraph(0);
-    ui->plot7->removeGraph(1);
-    ui->plot8->removeGraph(0);
-    ui->plot8->removeGraph(1);
-    ui->plot9->removeGraph(0);
-    ui->plot9->removeGraph(1);
-    ui->plot10->removeGraph(0);
-    ui->plot10->removeGraph(1);
-    ui->plot11->removeGraph(0);
-    ui->plot11->removeGraph(1);
-    ui->plot1->legend->clear();
-    ui->plot1->legend->setVisible(false);
-    ui->plot2->legend->clear();
-    ui->plot2->legend->setVisible(false);
-    ui->plot3->legend->clear();
-    ui->plot3->legend->setVisible(false);
-    ui->plot4->legend->clear();
-    ui->plot4->legend->setVisible(false);
-    ui->plot5->legend->clear();
-    ui->plot5->legend->setVisible(false);
-    ui->plot6->legend->clear();
-    ui->plot6->legend->setVisible(false);
-    ui->plot7->legend->clear();
-    ui->plot7->legend->setVisible(false);
-    ui->plot8->legend->clear();
-    ui->plot8->legend->setVisible(false);
-    ui->plot9->legend->clear();
-    ui->plot9->legend->setVisible(false);
-    ui->plot10->legend->clear();
-    ui->plot10->legend->setVisible(false);
-    ui->plot11->legend->clear();
-    ui->plot11->legend->setVisible(false);
 
-    passing_to_graph(this->proto, filename);
-    ui->plot1->replot();
-    ui->plot2->replot();
-    ui->plot3->replot();
-    ui->plot4->replot();
-    ui->plot5->replot();
-    ui->plot6->replot();
-    ui->plot7->replot();
-    ui->plot8->replot();
-    ui->plot9->replot();
-    ui->plot10->replot();
-    ui->plot11->replot();
+    if(!filename.isEmpty()){
+        ui->plot1->removeGraph(0);
+        ui->plot1->removeGraph(1);
+        ui->plot2->removeGraph(0);
+        ui->plot2->removeGraph(1);
+        ui->plot3->removeGraph(0);
+        ui->plot3->removeGraph(1);
+        ui->plot4->removeGraph(0);
+        ui->plot4->removeGraph(1);
+        ui->plot5->removeGraph(0);
+        ui->plot5->removeGraph(1);
+        ui->plot6->removeGraph(0);
+        ui->plot6->removeGraph(1);
+        ui->plot7->removeGraph(0);
+        ui->plot7->removeGraph(1);
+        ui->plot8->removeGraph(0);
+        ui->plot8->removeGraph(1);
+        ui->plot9->removeGraph(0);
+        ui->plot9->removeGraph(1);
+        ui->plot10->removeGraph(0);
+        ui->plot10->removeGraph(1);
+        ui->plot11->removeGraph(0);
+        ui->plot11->removeGraph(1);
+        ui->plot1->legend->clear();
+        ui->plot1->legend->setVisible(false);
+        ui->plot2->legend->clear();
+        ui->plot2->legend->setVisible(false);
+        ui->plot3->legend->clear();
+        ui->plot3->legend->setVisible(false);
+        ui->plot4->legend->clear();
+        ui->plot4->legend->setVisible(false);
+        ui->plot5->legend->clear();
+        ui->plot5->legend->setVisible(false);
+        ui->plot6->legend->clear();
+        ui->plot6->legend->setVisible(false);
+        ui->plot7->legend->clear();
+        ui->plot7->legend->setVisible(false);
+        ui->plot8->legend->clear();
+        ui->plot8->legend->setVisible(false);
+        ui->plot9->legend->clear();
+        ui->plot9->legend->setVisible(false);
+        ui->plot10->legend->clear();
+        ui->plot10->legend->setVisible(false);
+        ui->plot11->legend->clear();
+        ui->plot11->legend->setVisible(false);
+
+        passing_to_graph(this->proto, filename);
+        ui->plot1->replot();
+        ui->plot2->replot();
+        ui->plot3->replot();
+        ui->plot4->replot();
+        ui->plot5->replot();
+        ui->plot6->replot();
+        ui->plot7->replot();
+        ui->plot8->replot();
+        ui->plot9->replot();
+        ui->plot10->replot();
+        ui->plot11->replot();
+    }
 }
