@@ -51,8 +51,6 @@ class Simulation : public QWidget {
     void leave_current(int current);
 //buttons
     QPushButton* run_button;
-    QSpinBox* num_of_sims;
-    QLabel* num_of_sims_label;
     QPushButton* load_sim_button;
     QPushButton* load_pvars_button;
     QPushButton* load_dvars_button;
@@ -60,7 +58,6 @@ class Simulation : public QWidget {
     QPushButton* load_all_button;
     QPushButton* init_cell_button;
     QComboBox* cell_type;
-    QComboBox* cell_species;
     QProgressBar* pdialog;
     QPushButton* next_button;
     QPushButton* cancel_button;

@@ -35,6 +35,11 @@ Simulation::Simulation(QWidget* parent){
     menu_list = new QList<tuple<QString,bool,QWidget*>>();
 //local variables
     QList<std::tuple<QString,bool,QWidget*>>::iterator it;
+    QStringList cell_options;
+    auto cell_opitons_stl = proto->cellOptions();
+    for(auto im = cell_opitons_stl.begin(); im != cell_opitons_stl.end(); im++) {
+            cell_options << im->c_str();
+    }
 //create layouts
     main_layout = new QGridLayout(this);
     file_buttons = new QHBoxLayout;
@@ -44,8 +49,6 @@ Simulation::Simulation(QWidget* parent){
     menu_options = new QListWidget();
     QWidget* cell_buttons_container = new QWidget();
 //create buttons/combo boxes
-    num_of_sims = new QSpinBox();
-    num_of_sims_label = new QLabel("Number of Simulations:");
     run_button = new QPushButton("Run Simulations");
     load_sim_button = new QPushButton("Read Simulation Variables");
     load_pvars_button = new QPushButton("Read Simulaiton Constants");
@@ -54,7 +57,6 @@ Simulation::Simulation(QWidget* parent){
     load_all_button = new QPushButton("Read Variables and Constants");
     init_cell_button = new QPushButton("Use cell preference");
     cell_type = new QComboBox();
-    cell_species = new QComboBox();
     next_button = new QPushButton("Next");
     cancel_button = new QPushButton("Cancel");
     pdialog = new QProgressBar();
@@ -74,13 +76,11 @@ Simulation::Simulation(QWidget* parent){
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Run Simulation",false, run_button_container));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Graph",false, NULL));
 //set button/combo box inital values
-    num_of_sims->setValue(num_sims);
     run_button->setEnabled(sim_ready);
     load_pvars_button->setEnabled(cell_ready);
     load_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
-    cell_type->addItem("Default Cell");
-    cell_species->addItem("Default Species");
+    cell_type->addItems(cell_options);
     cancel_button->hide();
 //add buttons to layouts
 //load variables buttons
@@ -91,10 +91,7 @@ Simulation::Simulation(QWidget* parent){
     file_buttons->addWidget(load_all_button);
 //cell_buttons
     cell_buttons->addWidget(cell_type);
-    cell_buttons->addWidget(cell_species);
     cell_buttons->addWidget(init_cell_button);
-    cell_buttons->addWidget(num_of_sims_label);
-    cell_buttons->addWidget(num_of_sims);
     cell_buttons_container->setLayout(cell_buttons);
 //menu
     for(it = menu_list->begin(); it != menu_list->end(); it++) {
@@ -121,7 +118,6 @@ Simulation::Simulation(QWidget* parent){
     connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_dvars()));
     connect(load_all_button, SIGNAL(clicked()), this, SLOT(load_mvars()));
     connect(init_cell_button, SIGNAL(clicked()), this, SLOT(init_cell()));
-    connect(num_of_sims, SIGNAL(valueChanged(int)), this, SLOT(set_num_sims(int)));
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
 };
@@ -217,8 +213,9 @@ void Simulation::load_mvars() {
     set_sim_ready();
 };
 void Simulation::init_cell() {
-    proto->cell = new ControlSa;
-    set_cell_ready();
+    if(proto->setCell(cell_type->currentText().toStdString())) {
+        set_cell_ready();
+    }
 };
 void Simulation::set_num_sims(int value) {
     num_sims = value;
