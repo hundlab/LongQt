@@ -52,8 +52,6 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
 
 //setup useful constants and aliases
     unsigned int i, row_len = 6;
-    map<string,double*> pars = proto->pars;
-    map<string,double*>::iterator it;
     QString end_op = "Exit";
     if(parent != NULL) {
         end_op = "Next";
@@ -63,8 +61,9 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     QGridLayout* central_layout = new QGridLayout;
     QHBoxLayout* button_group;
 //initialize buttons &lables
-    simvars = (QDoubleSpinBox**)malloc(pars.size()*sizeof(QDoubleSpinBox*));
-    simvar_names = (QLabel**)malloc(pars.size()*sizeof(QLabel*));
+    simvars = (QDoubleSpinBox**)malloc(proto->pars.doubles.size()*sizeof(QDoubleSpinBox*));
+    simvarsstrings = (QLineEdit**)malloc(proto->pars.strings.size()*sizeof(QLineEdit*));
+    simvar_names = (QLabel**)malloc(proto->pars.size()*sizeof(QLabel*));
     get_vars = new QPushButton(tr("Import settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
@@ -75,7 +74,8 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     }
     set_vars->setChecked(write_close);
 //do all the work for simvars setup
-    for(it = pars.begin(), i = 0; it!=pars.end(); it++,i++) {
+    i = 0;
+    for(map<string,double*>::iterator it = proto->pars.doubles.begin(); it!=proto->pars.doubles.end(); it++,i++) {
         simvars[i] = new QDoubleSpinBox(this);
         simvar_names[i] = new QLabel(*(new QString((it->first).c_str())),this);
         string name = it->first;
@@ -85,6 +85,18 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
         button_group->addWidget(simvars[i]);
         central_layout->addLayout(button_group, (2*i)/row_len+1, (2*i)%row_len, 1, 2);
         connect(simvars[i], static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=] (double value) {update_pvars(pair<string,double>(name, value));});
+        simvar_names[i]->setToolTip(descriptions[it->first.c_str()]);
+    }
+    unsigned int j = 0;
+    for(map<string, string*>::iterator it = proto->pars.strings.begin(); it!=proto->pars.strings.end(); it++,i++,j++) {
+        simvarsstrings[j] = new QLineEdit(this);
+        simvar_names[i] = new QLabel(*(new QString((it->first).c_str())),this);
+        string name = it->first;
+        button_group = new QHBoxLayout;
+        button_group->addWidget(simvar_names[i]);
+        button_group->addWidget(simvarsstrings[j]);
+        central_layout->addLayout(button_group, (2*i)/row_len+1, (2*i)%row_len, 1, 2);
+        connect(simvarsstrings[j], static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()));});
         simvar_names[i]->setToolTip(descriptions[it->first.c_str()]);
     }
 //main_layout
@@ -103,10 +115,14 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
 }
 simvarMenu::~simvarMenu(){}
 void simvarMenu::update_menu() {
-    map<string,double*>::iterator it;
     unsigned int i; 
-    for(it = proto->pars.begin(), i = 0; it != proto->pars.end(); it++, i++)     {
+    i = 0;
+    for(auto it = proto->pars.doubles.begin(); it != proto->pars.doubles.end(); it++, i++){
         simvars[i]->setValue(*(it->second));
+    }
+    i = 0;
+    for(auto it = proto->pars.strings.begin(); it != proto->pars.strings.end(); it++, i++) {
+        simvarsstrings[i]->setText(it->second->c_str());
     }
 }
 void simvarMenu::closeEvent(QCloseEvent* event){
@@ -115,7 +131,7 @@ void simvarMenu::closeEvent(QCloseEvent* event){
 }
 void simvarMenu::write_file() {
     if(write_close) {
-        !(bool)proto->writepars(proto->pars, string("simvars") + date_time.toStdString() + string(".txt"));
+        !(bool)proto->writepars(string("simvars") + date_time.toStdString() + string(".txt"));
     }
 }
 bool simvarMenu::read_simvars(){
@@ -123,7 +139,7 @@ bool simvarMenu::read_simvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->simvarfile = fileName.toStdString();
-    ret = !(bool)proto->readpars(proto->pars, proto->simvarfile);
+    ret = !(bool)proto->readpars(proto->simvarfile);
     }
     update_menu();
     return ret;
@@ -134,13 +150,16 @@ bool simvarMenu::write_simvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->simvarfile = fileName.toStdString();
-    ret = !(bool)proto->writepars(proto->pars, proto->simvarfile);
+    ret = !(bool)proto->writepars(proto->simvarfile);
     }
     return ret;
 
 }
 void simvarMenu::update_pvars(pair<string,double> p){
-    *(proto->pars[p.first]) = p.second;
+    *(proto->pars.doubles[p.first]) = p.second;
+}
+void simvarMenu::update_pvars(pair<string,string> p){
+     *(proto->pars.strings[p.first]) = p.second;
 }
 void simvarMenu::set_write_close(int state) {
     write_close = (bool) state;

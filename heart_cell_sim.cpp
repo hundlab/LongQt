@@ -193,7 +193,7 @@ void Simulation::run_sims() {
 
 };
 void Simulation::load_simvars() {
-    simvars_read = !(bool)proto->readpars(proto->pars, proto->simvarfile);
+    simvars_read = !(bool)proto->readpars(proto->simvarfile);
     init_douts();
     set_sim_ready();
 };

@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QTableWidget>
 #include <QGridLayout>
+#include <QLineEdit>
 
 #include "protocol.h"
 
@@ -35,6 +36,7 @@ Q_OBJECT
     bool write_close;
 //Buttons & their labels
     QDoubleSpinBox** simvars;
+    QLineEdit** simvarsstrings;
     QLabel** simvar_names;
     QCheckBox* set_vars;
     QPushButton* get_vars;
@@ -46,6 +48,7 @@ Q_OBJECT
     bool read_simvars(); //wrapper for Protocol::readpars with QFileDialog
     bool write_simvars(); //wrapper for Protocol::writepars
     void update_pvars(pair<string, double> p); //make a Protocol::pars entry match the screen
+    void update_pvars(pair<string, string> p);
     void set_write_close(int state); //update function for write_close
 };
 
