@@ -2,6 +2,7 @@
 #define DIALOG_H
 
 #include <QDialog>
+#include <QDir>
 
 #include "protocol.h"
 
@@ -14,9 +15,10 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(Protocol* inital_proto,QString current_time, QWidget *parent = 0);
+    explicit Dialog(Protocol* inital_proto,QDir read_locaiton, QWidget *parent = 0);
     ~Dialog();
-
+private:
+    QDir read_location;
 private slots:
     void passing_to_graph(Protocol* a, QString f);
     void on_pushButton_clicked();

@@ -13,6 +13,7 @@
 #include <QGroupBox>
 #include <iterator>
 #include <QProgressBar>
+#include <QFileDialog>
 
 #include "protocol.h"
 #include "heart_cell_sim.h"
@@ -24,6 +25,7 @@ Simulation::Simulation(QWidget* parent){
     this->parent = parent;
     proto = new Protocol();
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
+    working_dir = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
     simvars_read = false;
     pvars_read = false;
     mvars_read = false;
@@ -57,6 +59,8 @@ Simulation::Simulation(QWidget* parent){
     load_all_button = new QPushButton("Read Variables and Constants");
     init_cell_button = new QPushButton("Use cell preference");
     cell_type = new QComboBox();
+    disp_working_dir = new QLineEdit();
+    set_working_dir = new QPushButton("Change Save Directory");
     next_button = new QPushButton("Next");
     cancel_button = new QPushButton("Cancel");
     pdialog = new QProgressBar();
@@ -81,6 +85,8 @@ Simulation::Simulation(QWidget* parent){
     load_dvars_button->setEnabled(cell_ready);
     load_all_button->setEnabled(cell_ready);
     cell_type->addItems(cell_options);
+    disp_working_dir->setText(working_dir.dirName());
+    disp_working_dir->setReadOnly(true);
     cancel_button->hide();
 //add buttons to layouts
 //load variables buttons
@@ -92,6 +98,8 @@ Simulation::Simulation(QWidget* parent){
 //cell_buttons
     cell_buttons->addWidget(cell_type);
     cell_buttons->addWidget(init_cell_button);
+    cell_buttons->addWidget(disp_working_dir);
+    cell_buttons->addWidget(set_working_dir);
     cell_buttons_container->setLayout(cell_buttons);
 //menu
     for(it = menu_list->begin(); it != menu_list->end(); it++) {
@@ -125,6 +133,7 @@ Simulation::Simulation(QWidget* parent){
     connect(init_cell_button, SIGNAL(clicked()), this, SLOT(init_cell()));
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
+    connect(set_working_dir, SIGNAL(clicked()), this, SLOT(set_working_dir_action()));
 };
 Simulation::~Simulation(){};
 void Simulation::set_sim_ready() {
@@ -137,10 +146,11 @@ void Simulation::set_sim_ready() {
 };
 void Simulation::set_cell_ready() {
     cell_ready = true;
-    menu_list->replace(1, make_tuple(std::get<0>(menu_list->at(1)), cell_ready, new simvarMenu(proto,date_time, this)));
-    menu_list->replace(2, make_tuple(std::get<0>(menu_list->at(2)), cell_ready, new dvarMenu(proto,date_time, this)));
-    menu_list->replace(3, make_tuple(std::get<0>(menu_list->at(3)), cell_ready, new mvarMenu(proto,date_time, this)));
-    menu_list->replace(4, make_tuple(std::get<0>(menu_list->at(4)), cell_ready, new pvarMenu(proto,date_time, this)));
+    working_dir.mkdir("data" + date_time);
+    menu_list->replace(1, make_tuple(std::get<0>(menu_list->at(1)), cell_ready, new simvarMenu(proto,working_dir.absolutePath() + "/data" + date_time, this)));
+    menu_list->replace(2, make_tuple(std::get<0>(menu_list->at(2)), cell_ready, new dvarMenu(proto,working_dir.absolutePath() + "/data" + date_time, this)));
+    menu_list->replace(3, make_tuple(std::get<0>(menu_list->at(3)), cell_ready, new mvarMenu(proto,working_dir.absolutePath() + "/data" + date_time, this)));
+    menu_list->replace(4, make_tuple(std::get<0>(menu_list->at(4)), cell_ready, new pvarMenu(proto,working_dir.absolutePath() + "/data" + date_time, this)));
     menu->insertWidget(1, std::get<2>(menu_list->at(1)));
     menu->insertWidget(2, std::get<2>(menu_list->at(2)));
     menu->insertWidget(3, std::get<2>(menu_list->at(3)));
@@ -162,7 +172,6 @@ void Simulation::doTask(Protocol& toRun) {
 void Simulation::run_sims() {
     unsigned int i = 0;
     Protocol* temp;
-    QDir().mkdir("data" + date_time);
     next_button->hide();
     cancel_button->show();
     run_button->setEnabled(false);
@@ -170,12 +179,12 @@ void Simulation::run_sims() {
     for( i = 0; i < proto->numtrials; i++) {
         proto->setTrial(i);
         temp = new Protocol(*proto);
-        temp->readfile = "./data" + date_time.toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
-        temp->savefile = "./data" + date_time.toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
-        temp->propertyoutfile = "./data" + date_time.toStdString() + "/dt%d_%s" + string(".dat");
-        temp->dvarsoutfile = "./data" + date_time.toStdString() + "/dt%d_dvars" + string(".dat");
-        temp->finalpropertyoutfile = "./data" + date_time.toStdString() + "/dss%d_%s" + string(".dat");
-        temp->finaldvarsoutfile = "./data" + date_time.toStdString() + "/dss%d_pvars" + string(".dat");
+        temp->readfile = working_dir.absolutePath().toStdString() + "/data" + date_time.toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
+        temp->savefile = working_dir.absolutePath().toStdString() + "/data" + date_time.toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
+        temp->propertyoutfile = working_dir.absolutePath().toStdString() + "/data" + date_time.toStdString() + "/dt%d_%s" + string(".dat");
+        temp->dvarsoutfile = working_dir.absolutePath().toStdString() + "/data" + date_time.toStdString() + "/dt%d_dvars" + string(".dat");
+        temp->finalpropertyoutfile = working_dir.absolutePath().toStdString() + "/data" + date_time.toStdString() + "/dss%d_%s" + string(".dat");
+        temp->finaldvarsoutfile = working_dir.absolutePath().toStdString() + "/data" + date_time.toStdString() + "/dss%d_pvars" + string(".dat");
         vector.append(*temp);
     } 
 
@@ -236,6 +245,13 @@ void Simulation::next_button_aciton () {
         menu_options->setCurrentRow(current_row +1);
     }
 }
+void Simulation::set_working_dir_action() {
+    QString path = QFileDialog::getExistingDirectory();
+    if(!path.isEmpty()) {
+        working_dir = path;
+    }
+    disp_working_dir->setText(working_dir.dirName());
+}
 void Simulation::leave_current(int current) {
     switch(current) {
     case 1:
@@ -274,9 +290,9 @@ void Simulation::canceled() {
 void Simulation::finished() {
     qDebug()<<"finished!";
     QMessageBox::information(this,"Finish","Simulation finished!");
-    menu_list->replace(6, make_tuple(std::get<0>(menu_list->at(6)), true, new Dialog(proto, date_time, this)));
+    menu_list->replace(6, make_tuple(std::get<0>(menu_list->at(6)), true, new Dialog(proto, working_dir.absolutePath()+"/data" + date_time, this)));
     menu->insertWidget(6, std::get<2>(menu_list->at(6)));
-    date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hm");
+    date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
     cancel_button->hide();
     next_button->show();
     run_button->setEnabled(false);

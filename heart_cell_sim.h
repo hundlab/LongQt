@@ -13,6 +13,8 @@
 #include <QProgressBar>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QLineEdit>
+#include <QDir>
 
 #include "protocol.h"
 #include "varmenu.h"
@@ -33,6 +35,7 @@ class Simulation : public QWidget {
     QFuture<void> next;
     QVector<Protocol> vector;
     QList<std::tuple<QString,bool,QWidget*>>* menu_list;
+    QDir working_dir;
 //booleans for button availabilites
     bool sim_ready;
     bool cell_ready;
@@ -58,6 +61,8 @@ class Simulation : public QWidget {
     QPushButton* load_all_button;
     QPushButton* init_cell_button;
     QComboBox* cell_type;
+    QLineEdit* disp_working_dir;
+    QPushButton* set_working_dir;
     QProgressBar* pdialog;
     QPushButton* next_button;
     QPushButton* cancel_button;
@@ -83,6 +88,7 @@ class Simulation : public QWidget {
     void init_cell();//initialize proto->cell
     void set_num_sims(int value);//make num_sims match num_of_sims
     void next_button_aciton();
+    void set_working_dir_action();
     void list_click_aciton (int next_row);
     void canceled();
     void finished();

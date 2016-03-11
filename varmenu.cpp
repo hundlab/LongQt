@@ -27,11 +27,11 @@
 /*########################
   begin simvarMenu class
 ##########################*/
-simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent)  {
+simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
-    date_time = init_time;
+    this->working_dir = working_dir;
     write_close = true;
     QMap<QString, QString> descriptions;
     descriptions.insert("bcl","");
@@ -115,7 +115,7 @@ void simvarMenu::closeEvent(QCloseEvent* event){
 }
 void simvarMenu::write_file() {
     if(write_close) {
-        !(bool)proto->writepars(proto->pars, string("simvars") + date_time.toStdString() + string(".txt"));
+        !(bool)proto->writepars(proto->pars,working_dir.absolutePath().toStdString() + string("/simvars.txt"));
     }
 }
 bool simvarMenu::read_simvars(){
@@ -149,11 +149,11 @@ void simvarMenu::set_write_close(int state) {
 /*#################################
     begin dvarMenu class
 ###################################*/
-dvarMenu::dvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent)  {
+dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
-    date_time = init_time;
+    this->working_dir = working_dir;
     write_close = true;
     QMap<QString, QString> definitions;
         definitions.insert("Gate.d","");
@@ -273,7 +273,7 @@ void dvarMenu::closeEvent(QCloseEvent* event){
 }
 void dvarMenu::write_file() {
     if(write_close) {
-        !(bool)proto->writedvars(proto->datamap, string("dvars") + date_time.toStdString() + string(".txt"));
+        !(bool)proto->writedvars(proto->datamap,working_dir.absolutePath().toStdString() + string("/dvars.txt"));
     }
 }
 bool dvarMenu::read_dvars(){
@@ -310,11 +310,11 @@ void dvarMenu::set_write_close(int state) {
 /*#################################
     begin mvarMenu class
 ###################################*/
-mvarMenu::mvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent)  {
+mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
-    date_time = init_time;
+    this->working_dir = working_dir;
     write_close = true;
 //setup useful constants and aliases
     unsigned int row_len = 6;
@@ -418,7 +418,7 @@ void mvarMenu::closeEvent(QCloseEvent* event){
 }
 void mvarMenu::write_file () {
     if(write_close) {
-        proto->writeMVarsFile(string("mvars") + date_time.toStdString() + string(".txt"));
+        proto->writeMVarsFile(working_dir.absolutePath().toStdString() + string("/mvars.txt"));
     }
 }
 bool mvarMenu::read_mvars(){
@@ -505,11 +505,11 @@ void mvarMenu::switch_var(int row){
 /*#################################
     begin pvarMenu class
 ###################################*/
-pvarMenu::pvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent)  {
+pvarMenu::pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
-    date_time = init_time;
+    this->working_dir = working_dir;
     write_close = true;
     pvals_options = new QStringList[3]();
     pvals_options[0] << "random" << "iter" << "init value";
@@ -674,7 +674,7 @@ void pvarMenu::closeEvent(QCloseEvent* event){
 void pvarMenu::write_file() {
     proto->parmap = proto->resizemap(proto->cell->pars,proto->pnames);
     if(write_close) {
-        !(bool)proto->write2Dmap( proto->pnames, proto->pvals, string("pvars") + date_time.toStdString() + string(".txt"));
+        !(bool)proto->write2Dmap( proto->pnames, proto->pvals,working_dir.absolutePath().toStdString() + string("/pvars.txt"));
     }
  
 }
