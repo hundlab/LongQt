@@ -259,8 +259,9 @@ dvarMenu::~dvarMenu(){}
 void dvarMenu::update_menu() {
     map<string,double*>::iterator it;
     unsigned int i; 
+    set<string> selection = proto->cell.getVariableSelection();
     for(it = proto->cell->vars.begin(), i = 0; it != proto->cell->vars.end(); it++, i++)     {  
-        if(proto->datamap.count(it->first) > 0) {
+        if(selection.find(it->first) != selection.end()) {
             dvars[i]->setChecked(true);
         } else {
             dvars[i]->setChecked(false);
@@ -273,7 +274,7 @@ void dvarMenu::closeEvent(QCloseEvent* event){
 }
 void dvarMenu::write_file() {
     if(write_close) {
-        !(bool)proto->writedvars(proto->datamap,working_dir.absolutePath().toStdString() + string("/dvars.txt"));
+        !(bool)proto->writedvars(working_dir.absolutePath().toStdString() + string("/dvars.txt"));
     }
 }
 bool dvarMenu::read_dvars(){
@@ -281,7 +282,7 @@ bool dvarMenu::read_dvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->dvarfile = fileName.toStdString();
-        ret = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
+        ret = !(bool)proto->readdvars(proto->dvarfile);  // use names in dvars.txt to resize datamap
     }
     update_menu();
     return ret;
@@ -291,17 +292,19 @@ bool dvarMenu::write_dvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->dvarfile = fileName.toStdString();
-    ret = !(bool)proto->writedvars(proto->datamap, proto->dvarfile);
+    ret = !(bool)proto->writedvars(proto->dvarfile);
     }
     return ret;
 
 }
 void dvarMenu::update_datamap(pair<string,double*> p, int state){
+    set<string> selection = proto->cell.getVariableSelection();
     if((state = 0)) {
-        proto->datamap.erase(p.first);
+        selection.erase(p.first);
     } else {
-        proto->datamap.insert(p);
+        selection.insert(p);
     }
+    proto->cell.setVariableSelection(selection);
 }
 void dvarMenu::set_write_close(int state) {
     write_close = (bool) state;
