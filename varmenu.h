@@ -35,9 +35,7 @@ Q_OBJECT
     QString date_time;
     bool write_close;
 //Buttons & their labels
-    QDoubleSpinBox** simvars;
-    QLineEdit** simvarsstrings;
-    QLabel** simvar_names;
+    QVector<QWidget*> simvars;
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QPushButton* close_button;

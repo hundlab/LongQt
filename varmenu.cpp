@@ -61,9 +61,6 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     QGridLayout* central_layout = new QGridLayout;
     QHBoxLayout* button_group;
 //initialize buttons &lables
-    simvars = (QDoubleSpinBox**)malloc(proto->pars.doubles.size()*sizeof(QDoubleSpinBox*));
-    simvarsstrings = (QLineEdit**)malloc(proto->pars.strings.size()*sizeof(QLineEdit*));
-    simvar_names = (QLabel**)malloc(proto->pars.size()*sizeof(QLabel*));
     get_vars = new QPushButton(tr("Import settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
@@ -76,17 +73,7 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
 //do all the work for simvars setup
     i = 0;
     for(map<string,double*>::iterator it = proto->pars.doubles.begin(); it!=proto->pars.doubles.end(); it++,i++) {
-        simvars[i] = new QDoubleSpinBox(this);
-        simvar_names[i] = new QLabel(*(new QString((it->first).c_str())),this);
-        string name = it->first;
-        simvars[i]->setMaximum(std::numeric_limits<double>::max());
-        button_group = new QHBoxLayout;
-        button_group->addWidget(simvar_names[i]);
-        button_group->addWidget(simvars[i]);
-        central_layout->addLayout(button_group, (2*i)/row_len+1, (2*i)%row_len, 1, 2);
-        connect(simvars[i], static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=] (double value) {update_pvars(pair<string,double>(name, value));});
-        simvar_names[i]->setToolTip(descriptions[it->first.c_str()]);
-    }
+   }
     unsigned int j = 0;
     for(map<string, string*>::iterator it = proto->pars.strings.begin(); it!=proto->pars.strings.end(); it++,i++,j++) {
         simvarsstrings[j] = new QLineEdit(this);
@@ -112,6 +99,23 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
     update_menu();   
+}
+simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
+    QMap initializers<QString,function<void(const map<string,GetSetRef>::iterator it)>>;
+    initializers["double"] = [this] (const map<string, GetSetRef>::iterator it) {
+        QDoubleSpinBox* new_simvar = new QDoubleSpinBox(this);
+        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())),this);
+        simvars_label->setToolTip(descriptions[(it->first).c_str()]);
+        string name = it->first;
+        new_simvar.setMaximum(std::numeric_limits<double>::max());
+        button_group = new QHBoxLayout;
+        button_group->addWidget(simvars_label);
+        button_group->addWidget(new_simvar);
+        central_layout->addLayout(button_group, (2*i)/row_len+1, (2*i)%row_len, 1, 2);
+        connect(simvars.last(), static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=] (double value) {update_pvars(pair<string,double>(name, value));});
+    };
+
+    initializers[it->first.c_str()]();
 }
 simvarMenu::~simvarMenu(){}
 void simvarMenu::update_menu() {
