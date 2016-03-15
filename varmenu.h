@@ -79,7 +79,7 @@ Q_OBJECT
   private slots:
     bool read_dvars(); //wrapper for Protocol::readpars with QFileDialog
     bool write_dvars(); //wrapper for Protocol::writepars
-    void update_datamap(pair<string,double*> p, int state); //make a Protocol::pars entry match the screen
+    void update_datamap(string p, int state); //make a Protocol::pars entry match the screen
     void set_write_close(int state); //update function for write_close
 
 };

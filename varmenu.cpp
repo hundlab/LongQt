@@ -231,8 +231,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
 
 //setup useful constants and aliases
     unsigned int i, row_len = 6;
-    map<string,double*> vars = proto->cell->vars;
-    map<string,double*>::iterator it;
+    set<string> vars = proto->cell->getVariables();
     QString end_op = "Exit";
     if(parent != NULL) {
         end_op = "Next";
@@ -252,12 +251,15 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
     }
     set_vars->setChecked(write_close);
 //do all the work for dvars setup
-    for(it = vars.begin(), i = 0; it!=vars.end(); it++,i++) {
-        pair<string,double*> p (it->first, it->second);
-        dvars[i] = new QCheckBox(*(new QString((it->first).c_str())), this);
+    {
+    auto it = vars.begin();
+    for(i = 0; it!=vars.end(); it++,i++) {
+        string p =  *it;
+        dvars[i] = new QCheckBox(*(new QString(it->c_str())), this);
         central_layout->addWidget(dvars[i], i/row_len, i%row_len);
         connect(dvars[i], &QCheckBox::stateChanged, [=] (int state) {update_datamap(p, state);});
-        dvars[i]->setToolTip(definitions[it->first.c_str()]);       //hover attribute
+        dvars[i]->setToolTip(definitions[it->c_str()]);       //hover attribute
+    }
     }
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
@@ -276,10 +278,12 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QString init_time, QWidget *parent) 
 }
 dvarMenu::~dvarMenu(){}
 void dvarMenu::update_menu() {
-    map<string,double*>::iterator it;
+    set<string>::iterator it;
     unsigned int i; 
-    for(it = proto->cell->vars.begin(), i = 0; it != proto->cell->vars.end(); it++, i++)     {  
-        if(proto->datamap.count(it->first) > 0) {
+    set<string> selection = proto->cell->getVariableSelection();
+    set<string> variables = proto->cell->getVariables();
+    for(it = variables.begin(), i = 0; it != variables.end(); it++, i++)     {  
+        if(selection.find(*it) != selection.end()) {
             dvars[i]->setChecked(true);
         } else {
             dvars[i]->setChecked(false);
@@ -292,7 +296,7 @@ void dvarMenu::closeEvent(QCloseEvent* event){
 }
 void dvarMenu::write_file() {
     if(write_close) {
-        !(bool)proto->writedvars(proto->datamap, string("dvars") + date_time.toStdString() + string(".txt"));
+        proto->writedvars(string("dvars") + date_time.toStdString() + string(".txt"));
     }
 }
 bool dvarMenu::read_dvars(){
@@ -300,7 +304,7 @@ bool dvarMenu::read_dvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->dvarfile = fileName.toStdString();
-        ret = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
+        ret = proto->readdvars(proto->dvarfile);  // use names in dvars.txt to resize datamap
     }
     update_menu();
     return ret;
@@ -310,17 +314,19 @@ bool dvarMenu::write_dvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->dvarfile = fileName.toStdString();
-    ret = !(bool)proto->writedvars(proto->datamap, proto->dvarfile);
+    ret = !(bool)proto->writedvars(proto->dvarfile);
     }
     return ret;
 
 }
-void dvarMenu::update_datamap(pair<string,double*> p, int state){
-    if((state = 0)) {
-        proto->datamap.erase(p.first);
+void dvarMenu::update_datamap(string p, int state){
+    set<string> selection = proto->cell->getVariableSelection();
+    if((state == 0)) {
+        selection.erase(p);
     } else {
-        proto->datamap.insert(p);
+        selection.insert(p);
     }
+    proto->cell->setVariableSelection(selection);
 }
 void dvarMenu::set_write_close(int state) {
     write_close = (bool) state;
