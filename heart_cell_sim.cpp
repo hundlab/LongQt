@@ -151,7 +151,6 @@ void Simulation::set_cell_ready() {
 };
 void Simulation::init_douts() {
     if(simvars_read&&mvars_read) {
-       proto->douts = new Output[proto->getNeededDOutputSize()];   // Array of i/o data streams
        douts_ready = true;
     }
 };
@@ -160,7 +159,7 @@ void Simulation::doTask(Protocol& toRun) {
     toRun.runTrial();
 };
 void Simulation::run_sims() {
-    unsigned int i = 0;
+    int i = 0;
     Protocol* temp;
     QDir().mkdir("data" + date_time);
     next_button->hide();
@@ -202,7 +201,7 @@ void Simulation::load_pvars() {
     set_sim_ready();
 };
 void Simulation::load_dvars() {
-    dvars_read = !(bool)proto->resizemap(proto->cell->vars, proto->dvarfile, &(proto->datamap));  // use names in dvars.txt to resize datamap
+    dvars_read = proto->readdvars(proto->dvarfile);
     set_sim_ready();
 };
 void Simulation::load_mvars() {

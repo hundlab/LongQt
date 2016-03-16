@@ -54,7 +54,6 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     descriptions.insert("writetime", "time during simulation that writing will begin");
 
 //setup useful constants and aliases
-    unsigned int i, row_len = 6;
     QString end_op = "Exit";
     if(parent != NULL) {
         end_op = "Next";
@@ -177,7 +176,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         string type = it->second.type;
         simvars.insert(it->first.c_str(),cell_type);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, cell_type);
-        connect((QLineEdit*)simvars.last(), static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
+        connect((QComboBox*)simvars.last(), static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
     };
 
     try {
@@ -186,19 +185,18 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
 }
 simvarMenu::~simvarMenu(){}
 void simvarMenu::update_menu() {
-    unsigned int i; 
-    QMap<QString,function<void(const unsigned int, const map<string, GetSetRef>::iterator)>> updaters;
-    updaters["double"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+    QMap<QString,function<void(const map<string, GetSetRef>::iterator)>> updaters;
+    updaters["double"] = [this] (const map<string, GetSetRef>::iterator it)
          {string s =it->second.get() ;((QDoubleSpinBox*)simvars[it->first.c_str()])->setValue(std::stod(s));};
-    updaters["int"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+    updaters["int"] = [this] (const map<string, GetSetRef>::iterator it)
          {((QSpinBox*)simvars[it->first.c_str()])->setValue(std::stoi(it->second.get()));};
-    updaters["bool"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+    updaters["bool"] = [this] (const map<string, GetSetRef>::iterator it)
          {((QCheckBox*)simvars[it->first.c_str()])->setChecked(Protocol::stob(it->second.get()));};
-    updaters["file"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+    updaters["file"] = [this] (const map<string, GetSetRef>::iterator it)
          {((QLineEdit*)simvars[it->first.c_str()])->setText(it->second.get().c_str());};
-    updaters["directory"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+    updaters["directory"] = [this] (const map<string, GetSetRef>::iterator it)
          {((QLineEdit*)simvars[it->first.c_str()])->setText(it->second.get().c_str());};
-    updaters["cell"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+    updaters["cell"] = [this] (const map<string, GetSetRef>::iterator it)
          {  QComboBox* simv = ((QComboBox*)simvars[it->first.c_str()]);
             int index = simv->findText(it->second.get().c_str());
             if(index != -1) {
@@ -206,10 +204,9 @@ void simvarMenu::update_menu() {
             }
          };
 
-    i = 0;
-    for(auto it = proto->pars.begin(); it != proto->pars.end(); it++, i++){
+    for(auto it = proto->pars.begin(); it != proto->pars.end(); it++){
         try {
-            updaters[it->second.type.c_str()](i, it);
+            updaters[it->second.type.c_str()](it);
         } catch(std::bad_function_call e){}
     }
 }
@@ -796,7 +793,6 @@ void pvarMenu::closeEvent(QCloseEvent* event){
     event->accept();
 }
 void pvarMenu::write_file() {
-    proto->parmap = proto->resizemap(proto->cell->pars,proto->pnames);
     if(write_close) {
         !(bool)proto->write2Dmap( proto->pnames, proto->pvals, string("pvars") + date_time.toStdString() + string(".txt"));
     }

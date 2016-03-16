@@ -24,7 +24,6 @@ SOURCES += main.cpp\
     modellib/protocol.cpp \
     modellib/measure_kernel.cpp \
     modellib/measure.cpp \
-    modellib/output.cpp \
     modellib/iobase.cpp \
     varmenu.cpp \
     heart_cell_sim.cpp \
@@ -38,7 +37,6 @@ HEADERS  +=    dialog.h \
     modellib/protocol.h \
     modellib/measure_kernel.h \
     modellib/measure.h \
-    modellib/output.h \
     modellib/iobase.h \
     varmenu.h \
     heart_cell_sim.h \
