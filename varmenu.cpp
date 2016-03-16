@@ -20,6 +20,10 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QToolTip>
+#include <QFormLayout>
+#include <QTabWidget>
+#include <QList>
+
 #include "varmenu.h"
 #include "protocol.h"
 
@@ -33,7 +37,6 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     this->parent = parent;
     date_time = init_time;
     write_close = true;
-    QMap<QString, QString> descriptions;
     descriptions.insert("bcl","");
     descriptions.insert("meastime", "");
     descriptions.insert("paceflag","");
@@ -56,11 +59,11 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
     if(parent != NULL) {
         end_op = "Next";
     }
-//initialize layouts and signal maps
+//initialize layouts
     QGridLayout* main_layout = new QGridLayout(this);
-    QGridLayout* central_layout = new QGridLayout;
-    QHBoxLayout* button_group;
+    QList<QHBoxLayout*> central_layouts;
 //initialize buttons &lables
+    QTabWidget* tabs = new QTabWidget();
     get_vars = new QPushButton(tr("Import settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
@@ -70,27 +73,36 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
         close_button->hide();
     }
     set_vars->setChecked(write_close);
+    
 //do all the work for simvars setup
-    i = 0;
-    for(map<string,double*>::iterator it = proto->pars.doubles.begin(); it!=proto->pars.doubles.end(); it++,i++) {
-   }
-    unsigned int j = 0;
-    for(map<string, string*>::iterator it = proto->pars.strings.begin(); it!=proto->pars.strings.end(); it++,i++,j++) {
-        simvarsstrings[j] = new QLineEdit(this);
-        simvar_names[i] = new QLabel(*(new QString((it->first).c_str())),this);
-        string name = it->first;
-        button_group = new QHBoxLayout;
-        button_group->addWidget(simvar_names[i]);
-        button_group->addWidget(simvarsstrings[j]);
-        central_layout->addLayout(button_group, (2*i)/row_len+1, (2*i)%row_len, 1, 2);
-        connect(simvarsstrings[j], static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()));});
-        simvar_names[i]->setToolTip(descriptions[it->first.c_str()]);
+    for(map<string,GetSetRef>::iterator it = proto->pars.begin(); it!=proto->pars.end(); it++) {
+        if(simvars_layouts.find(it->second.type.c_str()) == simvars_layouts.end()) {
+            simvars_layouts.insert(it->second.type.c_str(), new QFormLayout());
+        }
+        initialize(it);
+    }
+    central_layouts.push_back(new QHBoxLayout());
+    central_layouts.last()->addLayout(simvars_layouts["double"]);
+    central_layouts.last()->addLayout(simvars_layouts["int"]);
+    central_layouts.last()->addLayout(simvars_layouts["bool"]);
+    central_layouts.last()->addLayout(simvars_layouts["cell"]);
+    central_layouts.push_back(new QHBoxLayout());
+    central_layouts.last()->addLayout(simvars_layouts["file"]);
+    central_layouts.last()->addLayout(simvars_layouts["directory"]);
+//tabs settup
+    {
+    QWidget* temp = new QWidget();
+    temp->setLayout(central_layouts.first());
+    tabs->addTab(temp,"Simulation Variables");
+    temp = new QWidget();
+    temp->setLayout(central_layouts.last());
+    tabs->addTab(temp,"Simulation files");
     }
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
     main_layout->addWidget(set_vars, 0,1);
-    main_layout->addLayout(central_layout, 1,0, i/row_len, 2*row_len); 
-    main_layout->addWidget(close_button, (2*i)*row_len, 2*row_len -1);
+    main_layout->addWidget(tabs , 1,0,10 ,19 ); 
+    main_layout->addWidget(close_button, 11, 20);
     setLayout(main_layout); 
     setWindowTitle(tr("Simulation Variables Menu"));
 //connect buttons   
@@ -100,33 +112,105 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QString init_time, QWidget *pare
 //make menu match proto
     update_menu();   
 }
-simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
-    QMap initializers<QString,function<void(const map<string,GetSetRef>::iterator it)>>;
+void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
+    QMap<QString,function<void(const map<string,GetSetRef>::iterator)>> initializers;
     initializers["double"] = [this] (const map<string, GetSetRef>::iterator it) {
-        QDoubleSpinBox* new_simvar = new QDoubleSpinBox(this);
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())),this);
+        QDoubleSpinBox* new_simvar = new QDoubleSpinBox();
+        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
-        new_simvar.setMaximum(std::numeric_limits<double>::max());
-        button_group = new QHBoxLayout;
-        button_group->addWidget(simvars_label);
-        button_group->addWidget(new_simvar);
-        central_layout->addLayout(button_group, (2*i)/row_len+1, (2*i)%row_len, 1, 2);
-        connect(simvars.last(), static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=] (double value) {update_pvars(pair<string,double>(name, value));});
+        new_simvar->setMaximum(std::numeric_limits<double>::max());
+        simvars.insert(it->first.c_str(), new_simvar);
+        simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
+        connect((QDoubleSpinBox*)simvars.last(), static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=] (double value) {update_pvars(pair<string,double>(name, value));});
+    };
+    initializers["int"] = [this] (const map<string, GetSetRef>::iterator it) {
+        QSpinBox* new_simvar = new QSpinBox();
+        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        simvars_label->setToolTip(descriptions[(it->first).c_str()]);
+        string name = it->first;
+        new_simvar->setMaximum(std::numeric_limits<int>::max());
+        simvars.insert(it->first.c_str(),new_simvar);
+        simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
+        connect((QSpinBox*)simvars.last(), static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=] (int value) {update_pvars(pair<string,int>(name, value));});
+    };
+    initializers["bool"] = [this] (const map<string, GetSetRef>::iterator it) {
+        QCheckBox* new_simvar = new QCheckBox();
+        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        simvars_label->setToolTip(descriptions[(it->first).c_str()]);
+        string name = it->first;
+        string type = it->second.type;
+        simvars.insert(it->first.c_str(),new_simvar);
+        simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
+        connect((QCheckBox*)simvars.last(), static_cast<void (QCheckBox::*)(int)>(&QCheckBox::stateChanged), [=] (int value) {update_pvars(pair<string,int>(name, value), type);});
+    };
+    initializers["file"] = [this] (const map<string, GetSetRef>::iterator it) {
+        QLineEdit* new_simvar = new QLineEdit();
+        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        simvars_label->setToolTip(descriptions[(it->first).c_str()]);
+        string name = it->first;
+        string type = it->second.type;
+        simvars.insert(it->first.c_str(),new_simvar);
+        simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
+        connect((QLineEdit*)simvars.last(), static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
+    };   
+    initializers["directory"] = [this] (const map<string, GetSetRef>::iterator it) {
+        QLineEdit* new_simvar = new QLineEdit();
+        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        simvars_label->setToolTip(descriptions[(it->first).c_str()]);
+        string name = it->first;
+        string type = it->second.type;
+        simvars.insert(it->first.c_str(),new_simvar);
+        simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
+        connect((QLineEdit*)simvars.last(), static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
+    };
+    initializers["cell"] = [this]  (const map<string, GetSetRef>::iterator it) {
+        QStringList cell_options;
+        auto cell_type = new QComboBox();
+        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        auto cell_opitons_stl = proto->cellOptions();
+        for(auto im = cell_opitons_stl.begin(); im != cell_opitons_stl.end(); im++) {
+            cell_options << im->c_str();
+        }
+        cell_type->addItems(cell_options);
+        string name = it->first;
+        string type = it->second.type;
+        simvars.insert(it->first.c_str(),cell_type);
+        simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, cell_type);
+        connect((QLineEdit*)simvars.last(), static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
     };
 
-    initializers[it->first.c_str()]();
+    try {
+        initializers[it->second.type.c_str()](it);
+    } catch(std::bad_function_call e){}
 }
 simvarMenu::~simvarMenu(){}
 void simvarMenu::update_menu() {
     unsigned int i; 
+    QMap<QString,function<void(const unsigned int, const map<string, GetSetRef>::iterator)>> updaters;
+    updaters["double"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+         {string s =it->second.get() ;((QDoubleSpinBox*)simvars[it->first.c_str()])->setValue(std::stod(s));};
+    updaters["int"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+         {((QSpinBox*)simvars[it->first.c_str()])->setValue(std::stoi(it->second.get()));};
+    updaters["bool"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+         {((QCheckBox*)simvars[it->first.c_str()])->setChecked(Protocol::stob(it->second.get()));};
+    updaters["file"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+         {((QLineEdit*)simvars[it->first.c_str()])->setText(it->second.get().c_str());};
+    updaters["directory"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+         {((QLineEdit*)simvars[it->first.c_str()])->setText(it->second.get().c_str());};
+    updaters["cell"] = [this] (const unsigned int i, const map<string, GetSetRef>::iterator it)
+         {  QComboBox* simv = ((QComboBox*)simvars[it->first.c_str()]);
+            int index = simv->findText(it->second.get().c_str());
+            if(index != -1) {
+                simv->setCurrentIndex(index);
+            }
+         };
+
     i = 0;
-    for(auto it = proto->pars.doubles.begin(); it != proto->pars.doubles.end(); it++, i++){
-        simvars[i]->setValue(*(it->second));
-    }
-    i = 0;
-    for(auto it = proto->pars.strings.begin(); it != proto->pars.strings.end(); it++, i++) {
-        simvarsstrings[i]->setText(it->second->c_str());
+    for(auto it = proto->pars.begin(); it != proto->pars.end(); it++, i++){
+        try {
+            updaters[it->second.type.c_str()](i, it);
+        } catch(std::bad_function_call e){}
     }
 }
 void simvarMenu::closeEvent(QCloseEvent* event){
@@ -160,10 +244,21 @@ bool simvarMenu::write_simvars(){
 
 }
 void simvarMenu::update_pvars(pair<string,double> p){
-    *(proto->pars.doubles[p.first]) = p.second;
+    proto->pars[p.first].set(to_string(p.second));
 }
-void simvarMenu::update_pvars(pair<string,string> p){
-     *(proto->pars.strings[p.first]) = p.second;
+void simvarMenu::update_pvars(pair<string,string> p, string type){
+     if(type == "cell") {
+        proto->pars[p.first].set(p.second);
+     } else {
+        proto->pars[p.first].set(p.second);
+     }
+}
+void simvarMenu::update_pvars(pair<string,int> p, string type) {
+    if(type == "bool") {
+        proto->pars[p.first].set(Protocol::to_string(p.second));
+    } else {
+        proto->pars[p.first].set(to_string(p.second));
+    }
 }
 void simvarMenu::set_write_close(int state) {
     write_close = (bool) state;

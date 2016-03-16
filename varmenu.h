@@ -13,6 +13,8 @@
 #include <QTableWidget>
 #include <QGridLayout>
 #include <QLineEdit>
+#include <QFormLayout>
+#include <QMap>
 
 #include "protocol.h"
 
@@ -35,10 +37,14 @@ Q_OBJECT
     QString date_time;
     bool write_close;
 //Buttons & their labels
-    QVector<QWidget*> simvars;
+    QMap<QString, QString> descriptions;
+    QMap<QString, QWidget*> simvars;
+    QMap<QString,QFormLayout*> simvars_layouts;
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QPushButton* close_button;
+//initalizer
+    void initialize(const map<string,GetSetRef>::iterator it);
 //screen functions
     void update_menu(); //make menu match pars
 
@@ -46,7 +52,8 @@ Q_OBJECT
     bool read_simvars(); //wrapper for Protocol::readpars with QFileDialog
     bool write_simvars(); //wrapper for Protocol::writepars
     void update_pvars(pair<string, double> p); //make a Protocol::pars entry match the screen
-    void update_pvars(pair<string, string> p);
+    void update_pvars(pair<string, string> p, string type);
+    void update_pvars(pair<string, int> p, string type = "int");
     void set_write_close(int state); //update function for write_close
 };
 
