@@ -246,6 +246,7 @@ void simvarMenu::update_pvars(pair<string,double> p){
 void simvarMenu::update_pvars(pair<string,string> p, string type){
      if(type == "cell") {
         proto->pars[p.first].set(p.second);
+        emit cell_type_changed();
      } else {
         proto->pars[p.first].set(p.second);
      }

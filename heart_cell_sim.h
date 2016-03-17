@@ -28,36 +28,14 @@ class Simulation : public QWidget {
     QWidget* parent;
     Protocol* proto;
     QString date_time;
-    unsigned int num_sims;
     QFutureWatcher<void> watcher;
     QFuture<void> next;
     QVector<Protocol> vector;
     QList<std::tuple<QString,bool,QWidget*>>* menu_list;
-//booleans for button availabilites
-    bool sim_ready;
-    bool cell_ready;
-    bool simvars_read;
-    bool pvars_read;
-    bool mvars_read;
-    bool dvars_read;
-    bool douts_ready;
-//boolean manipulation functions
-//also set buttons to match booleans
-    void set_sim_ready();
-    void set_cell_ready();
-    void init_douts();//initialize proto->douts when ready
 //utility functions
-    static void doTask(Protocol& toRun);//run the simulaiton
     void leave_current(int current);
 //buttons
     QPushButton* run_button;
-    QPushButton* load_sim_button;
-    QPushButton* load_pvars_button;
-    QPushButton* load_dvars_button;
-    QPushButton* load_mvars_button;
-    QPushButton* load_all_button;
-    QPushButton* init_cell_button;
-    QComboBox* cell_type;
     QProgressBar* pdialog;
     QPushButton* next_button;
     QPushButton* cancel_button;
@@ -71,17 +49,10 @@ class Simulation : public QWidget {
     pvarMenu* edit_pvars_menu;
 //layouts
     QGridLayout* main_layout;
-    QHBoxLayout* file_buttons;
-    QHBoxLayout* cell_buttons;
 
   private slots:
+    void cell_changed();
     void run_sims();//action for running the simulation
-    void load_simvars();//wrapper for proto->readpars
-    void load_pvars();//wrapper for proto->readpvars
-    void load_dvars();//wrapper for proto->resizemap
-    void load_mvars();//wrapper for proto->initializeMeasure
-    void init_cell();//initialize proto->cell
-    void set_num_sims(int value);//make num_sims match num_of_sims
     void next_button_aciton();
     void list_click_aciton (int next_row);
     void canceled();

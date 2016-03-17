@@ -55,6 +55,8 @@ Q_OBJECT
     void update_pvars(pair<string, string> p, string type);
     void update_pvars(pair<string, int> p, string type = "int");
     void set_write_close(int state); //update function for write_close
+  signals:
+    void cell_type_changed();
 };
 
 class dvarMenu :public QWidget {
