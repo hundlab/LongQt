@@ -15,6 +15,7 @@
 #include <QLineEdit>
 #include <QFormLayout>
 #include <QMap>
+#include <QDir>
 
 #include "protocol.h"
 
@@ -24,7 +25,7 @@ using namespace std;
 class simvarMenu :public QWidget {
 Q_OBJECT
   public:
-    simvarMenu(Protocol* initial_proto, QString init_time, QWidget* parent = 0);
+    simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~simvarMenu();
     void write_file();
 
@@ -34,7 +35,7 @@ Q_OBJECT
   private:
     Protocol* proto;
     QWidget* parent;
-    QString date_time;
+    QDir working_dir;
     bool write_close;
 //Buttons & their labels
     QMap<QString, QString> descriptions;
@@ -62,14 +63,14 @@ Q_OBJECT
 class dvarMenu :public QWidget {
 Q_OBJECT
   public:
-    dvarMenu(Protocol* initial_proto, QString init_time, QWidget* parent = 0);
+    dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~dvarMenu();
     void write_file();
 
   private:
     Protocol* proto;
     QWidget* parent;
-    QString date_time;
+    QDir working_dir;
 
     bool write_close;
 //Buttons & their labels
@@ -94,14 +95,14 @@ Q_OBJECT
 class mvarMenu :public QWidget {
 Q_OBJECT
   public:
-    mvarMenu(Protocol* initial_proto, QString init_time, QWidget* parent = 0);
+    mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~mvarMenu();
     void write_file();
 
   private:
     Protocol* proto;
     QWidget* parent;
-    QString date_time;
+    QDir working_dir;
     bool write_close;
 //Buttons & their labels
     QCheckBox* set_vars;
@@ -138,14 +139,14 @@ Q_OBJECT
 class pvarMenu :public QWidget {
 Q_OBJECT
   public:
-    pvarMenu(Protocol* initial_proto, QString init_time, QWidget* parent = 0);
+    pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~pvarMenu();
     void write_file();
 
   private:
     Protocol* proto;
     QWidget* parent;
-    QString date_time;
+    QDir working_dir;
     bool write_close;
 //Buttons & their labels
     QGridLayout* central_layout;

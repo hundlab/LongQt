@@ -13,6 +13,8 @@
 #include <QProgressBar>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QLineEdit>
+#include <QDir>
 
 #include "protocol.h"
 #include "varmenu.h"

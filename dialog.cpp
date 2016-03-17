@@ -10,16 +10,15 @@
 
 QString root = "./build-MyConcurrentModel-Desktop_Qt_5_5_1_MinGW_32bit-Debug";
 bool gr;
-QString date;
-Dialog::Dialog(Protocol* inital_proto, QString current_time, QWidget *parent) :
+Dialog::Dialog(Protocol* inital_proto, QDir read_location, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog)
 {
     ui->setupUi(this);
     this->proto = inital_proto;
-    date = current_time;
-    QMessageBox::information(0,"Folder", "Folder named: data/" + current_time);
-    passing_to_graph(this->proto,"data" + date + "/dt0_dvars.dat");
+    this->read_location = read_location;
+    QMessageBox::information(0,"Folder", "Folder named: " + read_location.absolutePath());
+    passing_to_graph(this->proto,read_location.absolutePath() + "/dt0_dvars.dat");
 }
 Dialog::~Dialog()
 {
@@ -541,47 +540,47 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
 }
 void Dialog::on_save1_clicked()
 {
-    ui->plot1->saveJpg("./" + date + "/" + ui->plot1->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot1->saveJpg(read_location.absolutePath() + ui->plot1->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save2_clicked()
 {
-    ui->plot2->saveJpg("./" +date + "/" + ui->plot2->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot2->saveJpg(read_location.absolutePath() + ui->plot2->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save3_clicked()
 {
-    ui->plot3->saveJpg("./" +date + "/" + ui->plot3->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot3->saveJpg(read_location.absolutePath() + ui->plot3->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save4_clicked()
 {
-    ui->plot4->saveJpg("./" +date + "/" + ui->plot4->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot4->saveJpg(read_location.absolutePath() + ui->plot4->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save5_clicked()
 {
-    ui->plot5->saveJpg("./" +date + "/" + ui->plot5->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot5->saveJpg(read_location.absolutePath() + ui->plot5->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save6_clicked()
 {
-    ui->plot6->saveJpg("./" +date + "/" + ui->plot6->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot6->saveJpg(read_location.absolutePath() + ui->plot6->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save7_clicked()
 {
-    ui->plot7->saveJpg("./" +date + "/" + ui->plot7->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot7->saveJpg(read_location.absolutePath() + ui->plot7->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save8_clicked()
 {
-    ui->plot8->saveJpg("./" +date + "/" + ui->plot8->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot8->saveJpg(read_location.absolutePath() + ui->plot8->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save9_clicked()
 {
-    ui->plot9->saveJpg("./" +date + "/" + ui->plot9->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot9->saveJpg(read_location.absolutePath() + ui->plot9->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save10_clicked()
 {
-    ui->plot10->saveJpg("./" +date + "/" + ui->plot10->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot10->saveJpg(read_location.absolutePath() + ui->plot10->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save11_clicked()
 {
-    ui->plot11->saveJpg("./" +date + "/" + ui->plot11->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    ui->plot11->saveJpg(read_location.absolutePath() + ui->plot11->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_pushButton_12_clicked()
 {

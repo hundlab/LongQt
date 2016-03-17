@@ -13,6 +13,7 @@
 #include <QGroupBox>
 #include <iterator>
 #include <QProgressBar>
+#include <QFileDialog>
 
 #include "protocol.h"
 #include "heart_cell_sim.h"
@@ -25,6 +26,7 @@ Simulation::Simulation(QWidget* parent){
     proto = new Protocol();
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
     proto->datadir = "./data" + date_time.toStdString();
+    
     menu_list = new QList<tuple<QString,bool,QWidget*>>();
 //create layouts
     main_layout = new QGridLayout(this);
@@ -44,10 +46,10 @@ Simulation::Simulation(QWidget* parent){
     run_button_container_layout->addWidget(pdialog, 1,1);
     run_button_container->setLayout(run_button_container_layout);
 //add items menu_list
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit Simvars",true,new simvarMenu(proto,date_time, this)));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit DVars",true, new dvarMenu(proto,date_time)));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit MVars",true, new mvarMenu(proto,date_time)));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit PVars",true, new pvarMenu(proto,date_time)));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit Simvars",true,new simvarMenu(proto,QString(proto->datadir.c_str()), this)));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit DVars",true, new dvarMenu(proto,QString(proto->datadir.c_str()))));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit MVars",true, new mvarMenu(proto,QString(proto->datadir.c_str()))));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit PVars",true, new pvarMenu(proto,QString(proto->datadir.c_str()))));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Run Simulation",true, run_button_container));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Graph",false, NULL));
 //set button/combo box inital values
@@ -78,9 +80,9 @@ void Simulation::cell_changed() {
     menu->removeWidget(std::get<2>(menu_list->at(1)));
     menu->removeWidget(std::get<2>(menu_list->at(2)));
     menu->removeWidget(std::get<2>(menu_list->at(3)));
-    menu_list->replace(1, make_tuple(std::get<0>(menu_list->at(1)), true, new dvarMenu(proto,date_time, this)));
-    menu_list->replace(2, make_tuple(std::get<0>(menu_list->at(2)), true, new mvarMenu(proto,date_time, this)));
-    menu_list->replace(3, make_tuple(std::get<0>(menu_list->at(3)), true, new pvarMenu(proto,date_time, this)));
+    menu_list->replace(1, make_tuple(std::get<0>(menu_list->at(1)), true, new dvarMenu(proto,QString(proto->datadir.c_str()), this)));
+    menu_list->replace(2, make_tuple(std::get<0>(menu_list->at(2)), true, new mvarMenu(proto,QString(proto->datadir.c_str()), this)));
+    menu_list->replace(3, make_tuple(std::get<0>(menu_list->at(3)), true, new pvarMenu(proto,QString(proto->datadir.c_str()), this)));
     menu->insertWidget(1, std::get<2>(menu_list->at(1)));
     menu->insertWidget(2, std::get<2>(menu_list->at(2)));
     menu->insertWidget(3, std::get<2>(menu_list->at(3)));
@@ -88,7 +90,6 @@ void Simulation::cell_changed() {
 void Simulation::run_sims() {
     int i = 0;
     Protocol* temp;
-    QDir().mkdir("data" + date_time);
     next_button->hide();
     cancel_button->show();
     run_button->setEnabled(false);
@@ -164,9 +165,10 @@ void Simulation::canceled() {
 void Simulation::finished() {
     qDebug()<<"finished!";
     QMessageBox::information(this,"Finish","Simulation finished!");
-    menu_list->replace(5, make_tuple(std::get<0>(menu_list->at(5)), true, new Dialog(proto, date_time, this)));
+    menu_list->replace(5, make_tuple(std::get<0>(menu_list->at(5)), true, new Dialog(proto, QString(proto->datadir.c_str()), this)));
     menu->insertWidget(5, std::get<2>(menu_list->at(5)));
-    date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hm");
+    date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
+    proto->datadir = "./data" + date_time.toStdString();
     cancel_button->hide();
     next_button->show();
     run_button->setEnabled(false);
