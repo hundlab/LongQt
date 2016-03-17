@@ -169,12 +169,13 @@ void Simulation::run_sims() {
     for( i = 0; i < proto->numtrials; i++) {
         proto->setTrial(i);
         temp = new Protocol(*proto);
-        temp->readfile = "./data" + date_time.toStdString() + "/r"+ to_string(i) + ".dat"; // File to read SV ICs
-        temp->savefile = "./data" + date_time.toStdString() + "/s"+ to_string(i) + ".dat"; // File to save final SV
-        temp->propertyoutfile = "./data" + date_time.toStdString() + "/dt%d_%s" + string(".dat");
-        temp->dvarsoutfile = "./data" + date_time.toStdString() + "/dt%d_dvars" + string(".dat");
-        temp->finalpropertyoutfile = "./data" + date_time.toStdString() + "/dss%d_%s" + string(".dat");
-        temp->finaldvarsoutfile = "./data" + date_time.toStdString() + "/dss%d_pvars" + string(".dat");
+        temp->datadir = "./data" + date_time.toStdString();
+        temp->readfile = "/r"+ to_string(i) + ".dat"; // File to read SV ICs
+        temp->savefile = "/s"+ to_string(i) + ".dat"; // File to save final SV
+        temp->propertyoutfile = "/dt%d_%s" + string(".dat");
+        temp->dvarsoutfile = "/dt%d_dvars" + string(".dat");
+        temp->finalpropertyoutfile = "/dss%d_%s" + string(".dat");
+        temp->finaldvarsoutfile = "/dss%d_pvars" + string(".dat");
         vector.append(*temp);
     } 
 
