@@ -30,6 +30,7 @@ class Simulation : public QWidget {
     QWidget* parent;
     Protocol* proto;
     QString date_time;
+    QDir working_dir;
     QFutureWatcher<void> watcher;
     QFuture<void> next;
     QVector<Protocol> vector;
@@ -55,6 +56,7 @@ class Simulation : public QWidget {
   private slots:
     void cell_changed();
     void run_sims();//action for running the simulation
+    void change_working_dir(QDir dir);
     void next_button_aciton();
     void list_click_aciton (int next_row);
     void canceled();

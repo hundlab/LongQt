@@ -28,6 +28,7 @@ Q_OBJECT
     simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~simvarMenu();
     void write_file();
+    void setWorkingDir(QDir& dir);
 
   protected:
     void closeEvent(QCloseEvent* event);
@@ -58,6 +59,7 @@ Q_OBJECT
     void set_write_close(int state); //update function for write_close
   signals:
     void cell_type_changed();
+    void working_dir_changed(QDir);
 };
 
 class dvarMenu :public QWidget {
@@ -66,6 +68,7 @@ Q_OBJECT
     dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~dvarMenu();
     void write_file();
+    void setWorkingDir(QDir& dir);
 
   private:
     Protocol* proto;
@@ -98,6 +101,7 @@ Q_OBJECT
     mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~mvarMenu();
     void write_file();
+    void setWorkingDir(QDir& dir);
 
   private:
     Protocol* proto;
@@ -142,6 +146,7 @@ Q_OBJECT
     pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~pvarMenu();
     void write_file();
+    void setWorkingDir(QDir& dir);
 
   private:
     Protocol* proto;

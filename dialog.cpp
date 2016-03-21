@@ -26,9 +26,8 @@ Dialog::~Dialog()
 }
 void Dialog::passing_to_graph(Protocol* a, QString f){
 
-    int size = 6000; //may vary- Dani Watch
-     QVector<double> x(size),y1(size), y2(size), y3(size),y4(size), y5(size);
-     QVector<double> y6(size), y7(size),y8(size), y9(size), y10(size), y11(size);
+     QVector<double> x,y1, y2, y3,y4, y5;
+     QVector<double> y6, y7,y8, y9, y10, y11;
      int low_x_axis = 0;
      int max_x_axis = 0;
      int num_vars_graph = 0;
@@ -39,7 +38,6 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
          //exit(EXIT_FAILURE);
      }
      QTextStream in(&file);
-     int point = 0;
      //watch problems with first line of labels
      QString fline = in.readLine();
      QStringList split_line = fline.split("\t");
@@ -47,26 +45,26 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      while(!in.atEnd()){
          QString line = in.readLine();
          QStringList split_line = line.split("\t");
-         y1[point] = split_line[0].toDouble();
-         y2[point] = split_line[1].toDouble();
+         y1.push_back(split_line[0].toDouble());
+         y2.push_back(split_line[1].toDouble());
          if(num_vars_graph > 3){
-             y3[point] = split_line[2].toDouble();
+             y3.push_back(split_line[2].toDouble());
              if(num_vars_graph > 4){
-                 y4[point] = split_line[3].toDouble();
+                 y4.push_back(split_line[3].toDouble());
                  if(num_vars_graph > 5){
-                     y5[point] = split_line[4].toDouble();
+                     y5.push_back(split_line[4].toDouble());
                      if(num_vars_graph > 6){
-                         y6[point] = split_line[5].toDouble();
+                         y6.push_back(split_line[5].toDouble());
                          if(num_vars_graph > 7){
-                             y7[point] = split_line[6].toDouble();
+                             y7.push_back(split_line[6].toDouble());
                              if(num_vars_graph > 8){
-                                 y8[point] = split_line[7].toDouble();
+                                 y8.push_back(split_line[7].toDouble());
                                  if(num_vars_graph > 9){
-                                     y9[point] = split_line[8].toDouble();
+                                     y9.push_back(split_line[8].toDouble());
                                      if(num_vars_graph > 10){
-                                         y10[point] = split_line[9].toDouble();
+                                         y10.push_back(split_line[9].toDouble());
                                          if(num_vars_graph > 11){
-                                             y11[point] = split_line[10].toDouble();
+                                             y11.push_back(split_line[10].toDouble());
                                          }
                                      }
                                  }
@@ -76,7 +74,6 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                  }
              }
          }
-         point++;
      }
      file.close();
 

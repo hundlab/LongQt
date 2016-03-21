@@ -216,8 +216,13 @@ void simvarMenu::closeEvent(QCloseEvent* event){
 }
 void simvarMenu::write_file() {
     if(write_close) {
+        working_dir.mkpath(working_dir.absolutePath());
+        proto->simvarfile = working_dir.absolutePath().toStdString();
         proto->writepars(working_dir.absolutePath().toStdString() + string("/simvars.txt"));
     }
+}
+void simvarMenu::setWorkingDir(QDir& dir) {
+    working_dir = dir;
 }
 bool simvarMenu::read_simvars(){
     bool ret = false;
@@ -249,6 +254,10 @@ void simvarMenu::update_pvars(pair<string,string> p, string type){
         emit cell_type_changed();
      } else {
         proto->pars[p.first].set(p.second);
+     }
+     if(p.first == "datadir") {
+        working_dir = QString(p.second.c_str());
+        emit working_dir_changed(working_dir);
      }
 }
 void simvarMenu::update_pvars(pair<string,int> p, string type) {
@@ -393,8 +402,13 @@ void dvarMenu::closeEvent(QCloseEvent* event){
 }
 void dvarMenu::write_file() {
     if(write_close) {
+        working_dir.mkpath(working_dir.absolutePath());
+        proto->dvarfile = working_dir.absolutePath().toStdString() + string("/dvars.txt");
         !(bool)proto->writedvars(working_dir.absolutePath().toStdString() + string("/dvars.txt"));
     }
+}
+void dvarMenu::setWorkingDir(QDir& dir) {
+    working_dir = dir;
 }
 bool dvarMenu::read_dvars(){
     bool ret = false;
@@ -540,8 +554,13 @@ void mvarMenu::closeEvent(QCloseEvent* event){
 }
 void mvarMenu::write_file () {
     if(write_close) {
+        working_dir.mkpath(working_dir.absolutePath());
+        proto->measfile = working_dir.absolutePath().toStdString() + string("/mvars.txt");
         proto->writeMVarsFile(working_dir.absolutePath().toStdString() + string("/mvars.txt"));
     }
+}
+void mvarMenu::setWorkingDir(QDir& dir) {
+    working_dir = dir;
 }
 bool mvarMenu::read_mvars(){
     bool ret = false;
@@ -795,16 +814,21 @@ void pvarMenu::closeEvent(QCloseEvent* event){
 }
 void pvarMenu::write_file() {
     if(write_close) {
+        working_dir.mkpath(working_dir.absolutePath());
+        proto->pvarfile = working_dir.absolutePath().toStdString() + string("/pvars.txt");
         !(bool)proto->write2Dmap( proto->pnames, proto->pvals,working_dir.absolutePath().toStdString() + string("/pvars.txt"));
     }
  
+}
+void pvarMenu::setWorkingDir(QDir& dir) {
+    working_dir = dir;
 }
 bool pvarMenu::read_pvars(){
 
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
-        proto->measfile = fileName.toStdString();
+        proto->pvarfile = fileName.toStdString();
         ret = proto->parsemixedmap(proto->cell->pars, proto->pvarfile ,&proto->pnames, &proto->pvals);
    }
     update_menu();

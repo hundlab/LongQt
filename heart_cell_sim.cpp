@@ -14,6 +14,7 @@
 #include <iterator>
 #include <QProgressBar>
 #include <QFileDialog>
+#include <QStandardPaths>
 
 #include "protocol.h"
 #include "heart_cell_sim.h"
@@ -25,8 +26,8 @@ Simulation::Simulation(QWidget* parent){
     this->parent = parent;
     proto = new Protocol();
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
-    proto->datadir = "./data" + date_time.toStdString();
-    
+    working_dir = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time;
+    proto->datadir = working_dir.absolutePath().toStdString();
     menu_list = new QList<tuple<QString,bool,QWidget*>>();
 //create layouts
     main_layout = new QGridLayout(this);
@@ -46,10 +47,10 @@ Simulation::Simulation(QWidget* parent){
     run_button_container_layout->addWidget(pdialog, 1,1);
     run_button_container->setLayout(run_button_container_layout);
 //add items menu_list
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit Simvars",true,new simvarMenu(proto,QString(proto->datadir.c_str()), this)));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit DVars",true, new dvarMenu(proto,QString(proto->datadir.c_str()))));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit MVars",true, new mvarMenu(proto,QString(proto->datadir.c_str()))));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit PVars",true, new pvarMenu(proto,QString(proto->datadir.c_str()))));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit Simvars",true,new simvarMenu(proto,working_dir, this)));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit DVars",true, new dvarMenu(proto,working_dir)));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit MVars",true, new mvarMenu(proto,working_dir)));
+    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit PVars",true, new pvarMenu(proto,working_dir)));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Run Simulation",true, run_button_container));
     menu_list->append(std::tuple<QString,bool,QWidget*> ("Graph",false, NULL));
 //set button/combo box inital values
@@ -74,18 +75,25 @@ Simulation::Simulation(QWidget* parent){
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
     connect(std::get<2>(menu_list->first()), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
+    connect(std::get<2>(menu_list->first()), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
 };
 Simulation::~Simulation(){};
 void Simulation::cell_changed() {
     menu->removeWidget(std::get<2>(menu_list->at(1)));
     menu->removeWidget(std::get<2>(menu_list->at(2)));
     menu->removeWidget(std::get<2>(menu_list->at(3)));
-    menu_list->replace(1, make_tuple(std::get<0>(menu_list->at(1)), true, new dvarMenu(proto,QString(proto->datadir.c_str()), this)));
-    menu_list->replace(2, make_tuple(std::get<0>(menu_list->at(2)), true, new mvarMenu(proto,QString(proto->datadir.c_str()), this)));
-    menu_list->replace(3, make_tuple(std::get<0>(menu_list->at(3)), true, new pvarMenu(proto,QString(proto->datadir.c_str()), this)));
+    menu_list->replace(1, make_tuple(std::get<0>(menu_list->at(1)), true, new dvarMenu(proto,working_dir, this)));
+    menu_list->replace(2, make_tuple(std::get<0>(menu_list->at(2)), true, new mvarMenu(proto,working_dir, this)));
+    menu_list->replace(3, make_tuple(std::get<0>(menu_list->at(3)), true, new pvarMenu(proto,working_dir, this)));
     menu->insertWidget(1, std::get<2>(menu_list->at(1)));
     menu->insertWidget(2, std::get<2>(menu_list->at(2)));
     menu->insertWidget(3, std::get<2>(menu_list->at(3)));
+};
+void Simulation::change_working_dir(QDir dir) {
+    this->working_dir = dir;
+    ((dvarMenu*)std::get<2>(menu_list->at(1)))->setWorkingDir(dir);
+    ((mvarMenu*)std::get<2>(menu_list->at(2)))->setWorkingDir(dir);
+    ((pvarMenu*)std::get<2>(menu_list->at(3)))->setWorkingDir(dir);
 };
 void Simulation::run_sims() {
     int i = 0;
@@ -93,6 +101,7 @@ void Simulation::run_sims() {
     next_button->hide();
     cancel_button->show();
     run_button->setEnabled(false);
+    working_dir.mkpath(working_dir.absolutePath());
 
     for( i = 0; i < proto->numtrials; i++) {
         proto->setTrial(i);
@@ -165,10 +174,13 @@ void Simulation::canceled() {
 void Simulation::finished() {
     qDebug()<<"finished!";
     QMessageBox::information(this,"Finish","Simulation finished!");
-    menu_list->replace(5, make_tuple(std::get<0>(menu_list->at(5)), true, new Dialog(proto, QString(proto->datadir.c_str()), this)));
+    menu_list->replace(5, make_tuple(std::get<0>(menu_list->at(5)), true, new Dialog(proto, working_dir, this)));
     menu->insertWidget(5, std::get<2>(menu_list->at(5)));
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
-    proto->datadir = "./data" + date_time.toStdString();
+    working_dir.cdUp();
+//    working_dir.mkdir("./data" + date_time);
+    working_dir.cd("./data" + date_time);
+    change_working_dir(working_dir);
     cancel_button->hide();
     next_button->show();
     run_button->setEnabled(false);
