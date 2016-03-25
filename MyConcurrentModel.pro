@@ -10,9 +10,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = MyConcurrentModel.out
 TEMPLATE = app
 
-#QMAKE_MAC_SDK = macosx10.11
+QMAKE_MAC_SDK = macosx10.11
 
-QMAKE_CXXFLAGS += -std=c++11 -g -O0
+QMAKE_CXXFLAGS += -std=c++11
 CONFIG += c++11
 INCLUDEPATH += ./modellib
 
