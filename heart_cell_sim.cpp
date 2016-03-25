@@ -20,6 +20,12 @@
 #include "heart_cell_sim.h"
 #include "varmenu.h"
 #include "dialog.h"
+#include "dvars_menu_object.cpp"
+#include "pvars_menu_object.cpp"
+#include "simvars_menu_object.cpp"
+#include "mvars_menu_object.cpp"
+#include "graph_menu_object.cpp"
+#include "run_menu_object.cpp"
 
 Simulation::Simulation(QWidget* parent){
 //setup class variables
@@ -28,7 +34,7 @@ Simulation::Simulation(QWidget* parent){
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
     working_dir = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time;
     proto->datadir = working_dir.absolutePath().toStdString();
-    menu_list = new QList<tuple<QString,bool,QWidget*>>();
+    menu_list = new QList<menu_object*>();
 //create layouts
     main_layout = new QGridLayout(this);
 //organizational widgets
@@ -38,29 +44,18 @@ Simulation::Simulation(QWidget* parent){
     run_button = new QPushButton("Run Simulations");
     next_button = new QPushButton("Next");
     cancel_button = new QPushButton("Cancel");
-    pdialog = new QProgressBar();
-//setup run button container
-    QWidget* run_button_container = new QWidget();
-    QGridLayout* run_button_container_layout = new QGridLayout();
-    run_button_container_layout->addWidget(run_button, 0,0,1,2);
-    run_button_container_layout->addWidget(new QLabel("Progress"), 1,0);
-    run_button_container_layout->addWidget(pdialog, 1,1);
-    run_button_container->setLayout(run_button_container_layout);
 //add items menu_list
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit Simvars",true,new simvarMenu(proto,working_dir, this)));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit DVars",true, new dvarMenu(proto,working_dir)));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit MVars",true, new mvarMenu(proto,working_dir)));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Edit PVars",true, new pvarMenu(proto,working_dir)));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Run Simulation",true, run_button_container));
-    menu_list->append(std::tuple<QString,bool,QWidget*> ("Graph",false, NULL));
+    menu_list->append(new simvars_menu_object("Edit Simvars",proto,working_dir, this));
+    menu_list->append(new dvars_menu_object("Edit DVars", proto,working_dir));
+    menu_list->append(new mvars_menu_object("Edit MVars", proto,working_dir));
+    menu_list->append(new pvars_menu_object("Edit PVars", proto,working_dir));
+    menu_list->append(run_menu_object("Run Simulation"));
 //set button/combo box inital values
     cancel_button->hide();
 //menu
     for(auto it = menu_list->begin(); it != menu_list->end(); it++) {
-        menu_options->addItem(std::get<0>(*it));
-        if(std::get<1>(*it)) {
-            menu->addWidget(std::get<2>(*it));
-        }
+        menu_options->addItem((*it)->name);
+        menu->addWidget((*it)->getWidget());
     }
 //main_layout
     main_layout->addWidget(menu_options, 0,0,-1,1);
@@ -74,26 +69,19 @@ Simulation::Simulation(QWidget* parent){
     connect(run_button, SIGNAL(clicked()),this,SLOT(run_sims()));
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
-    connect(std::get<2>(menu_list->first()), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
-    connect(std::get<2>(menu_list->first()), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
+    connect((simvarMenu*)menu_list->first()->getWidget(), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
+    connect((simvarMenu*)menu_list->first()->getWidget(), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
 };
 Simulation::~Simulation(){};
 void Simulation::cell_changed() {
-    menu->removeWidget(std::get<2>(menu_list->at(1)));
-    menu->removeWidget(std::get<2>(menu_list->at(2)));
-    menu->removeWidget(std::get<2>(menu_list->at(3)));
-    menu_list->replace(1, make_tuple(std::get<0>(menu_list->at(1)), true, new dvarMenu(proto,working_dir, this)));
-    menu_list->replace(2, make_tuple(std::get<0>(menu_list->at(2)), true, new mvarMenu(proto,working_dir, this)));
-    menu_list->replace(3, make_tuple(std::get<0>(menu_list->at(3)), true, new pvarMenu(proto,working_dir, this)));
-    menu->insertWidget(1, std::get<2>(menu_list->at(1)));
-    menu->insertWidget(2, std::get<2>(menu_list->at(2)));
-    menu->insertWidget(3, std::get<2>(menu_list->at(3)));
-};
+    menu_list[1]->reset();
+    menu_list[2]->reset();
+    menu_list[3]->reset();
 void Simulation::change_working_dir(QDir dir) {
     this->working_dir = dir;
-    ((dvarMenu*)std::get<2>(menu_list->at(1)))->setWorkingDir(dir);
-    ((mvarMenu*)std::get<2>(menu_list->at(2)))->setWorkingDir(dir);
-    ((pvarMenu*)std::get<2>(menu_list->at(3)))->setWorkingDir(dir);
+    menu_list[1]->setWorkingDir();
+    menu_list[2]->setWorkingDir();
+    menu_list[3]->setWorkingDir();
 };
 void Simulation::run_sims() {
     int i = 0;
@@ -129,37 +117,16 @@ void Simulation::run_sims() {
 
 };
 void Simulation::list_click_aciton (int next_row) {
-    leave_current(menu->currentIndex());
-    if(std::get<1>(menu_list->at(next_row))) {
-        menu->setCurrentIndex(next_row);
-        menu_options->setCurrentRow(next_row);
-    } else {
-        menu_options->setCurrentRow(menu->currentIndex());
-    }
-
+    menu_list[menu->currentIndex()]->leave();
+    menu->setCurrentIndex(next_row);
+    menu_options->setCurrentRow(next_row);
 }
 void Simulation::next_button_aciton () {
     int current_row = menu->currentIndex();
     leave_current(current_row);
-    if(std::get<1>(menu_list->value(current_row +1))) {
+    if(menu->count() > current_row +1) {
         menu->setCurrentIndex(current_row +1);
         menu_options->setCurrentRow(current_row +1);
-    }
-}
-void Simulation::leave_current(int current) {
-    switch(current) {
-    case 0:
-        ((simvarMenu*) std::get<2>(menu_list->at(current)))->write_file();
-    break;
-    case 1:
-        ((dvarMenu*) std::get<2>(menu_list->at(current)))->write_file();
-    break;
-    case 2:
-        ((mvarMenu*) std::get<2>(menu_list->at(current)))->write_file();
-    break;
-    case 3:
-        ((pvarMenu*) std::get<2>(menu_list->at(current)))->write_file();
-    break;
     }
 }
 void Simulation::canceled() {
@@ -174,8 +141,8 @@ void Simulation::canceled() {
 void Simulation::finished() {
     qDebug()<<"finished!";
     QMessageBox::information(this,"Finish","Simulation finished!");
-    menu_list->replace(5, make_tuple(std::get<0>(menu_list->at(5)), true, new Dialog(proto, working_dir, this)));
-    menu->insertWidget(5, std::get<2>(menu_list->at(5)));
+    menu_list->append(new graph_menu_object(proto, working_dir, this));
+    menu->addWidget(menu_list->last()->getWidget());
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
     working_dir.cdUp();
 //    working_dir.mkdir("./data" + date_time);

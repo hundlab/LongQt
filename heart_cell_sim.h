@@ -18,6 +18,7 @@
 
 #include "protocol.h"
 #include "varmenu.h"
+#include "menu_object.h"
 
 class Simulation : public QWidget {
     Q_OBJECT
@@ -34,12 +35,10 @@ class Simulation : public QWidget {
     QFutureWatcher<void> watcher;
     QFuture<void> next;
     QVector<Protocol> vector;
-    QList<std::tuple<QString,bool,QWidget*>>* menu_list;
+    QList<menu_object*>* menu_list;
 //utility functions
     void leave_current(int current);
 //buttons
-    QPushButton* run_button;
-    QProgressBar* pdialog;
     QPushButton* next_button;
     QPushButton* cancel_button;
 //organizational widgets
