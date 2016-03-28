@@ -21,20 +21,20 @@
 #include "varmenu.h"
 #include "dialog.h"
 #include "runWidget.h"
+#include "chooseProtoWidget.h"
 #include "dvars_menu_object.cpp"
 #include "pvars_menu_object.cpp"
 #include "simvars_menu_object.cpp"
 #include "mvars_menu_object.cpp"
 #include "graph_menu_object.cpp"
 #include "run_menu_object.cpp"
+#include "choose_proto_menu_object.cpp"
 
 Simulation::Simulation(QWidget* parent){
 //setup class variables
     this->parent = parent;
-    proto = new Protocol();
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
     working_dir = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time;
-    proto->datadir = working_dir.absolutePath().toStdString();
     menu_list = new QList<menu_object*>();
 //create layouts
     main_layout = new QGridLayout(this);
@@ -45,11 +45,21 @@ Simulation::Simulation(QWidget* parent){
     next_button = new QPushButton("Next");
     cancel_button = new QPushButton("Cancel");
 //add items menu_list
+    menu_list->append(new choose_proto_menu_object("Simulation type"));
+    this->proto = ((chooseProtoWidget*)menu_list->last()->getWidget())->getCurrentProto();
+    proto->datadir = working_dir.absolutePath().toStdString();
+    connect((chooseProtoWidget*)menu_list->last()->getWidget(), SIGNAL(protocolChanged()), this, SLOT(cell_changed()));
     menu_list->append(new simvars_menu_object("Edit Simvars",proto,working_dir, this));
+    connect((simvarMenu*)menu_list->last()->getWidget(), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
+    connect((simvarMenu*)menu_list->last()->getWidget(), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
     menu_list->append(new dvars_menu_object("Edit DVars", proto,working_dir));
     menu_list->append(new mvars_menu_object("Edit MVars", proto,working_dir));
     menu_list->append(new pvars_menu_object("Edit PVars", proto,working_dir));
     menu_list->append(new run_menu_object("Run Simulation", proto, working_dir));
+    connect((runWidget*)menu_list->last()->getWidget(), SIGNAL(canceled()), this, SLOT(canceled()));
+    connect((runWidget*)menu_list->last()->getWidget(), SIGNAL(finished()), this, SLOT(finished()));
+    connect((runWidget*)menu_list->last()->getWidget(), SIGNAL(running()), this, SLOT(running()));
+    connect(cancel_button, SIGNAL(clicked()),(runWidget*)menu_list->last()->getWidget(), SLOT(cancel()));
 //set button/combo box inital values
     cancel_button->hide();
 //menu
@@ -68,16 +78,12 @@ Simulation::Simulation(QWidget* parent){
 //connect buttons
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
-    connect((simvarMenu*)menu_list->first()->getWidget(), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
-    connect((simvarMenu*)menu_list->first()->getWidget(), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
-    connect((runWidget*)menu_list->last()->getWidget(), SIGNAL(canceled()), this, SLOT(canceled()));
-    connect((runWidget*)menu_list->last()->getWidget(), SIGNAL(finished()), this, SLOT(finished()));
-    connect((runWidget*)menu_list->last()->getWidget(), SIGNAL(running()), this, SLOT(running()));
-    connect(cancel_button, SIGNAL(clicked()),(runWidget*)menu_list->last()->getWidget(), SLOT(cancel()));
 };
 Simulation::~Simulation(){};
 void Simulation::cell_changed() {
-    for(auto it = menu_list->begin(); it != menu_list->end(); it++) {
+    auto it = menu_list->begin();
+    it++; it++;
+    for(; it != menu_list->end(); it++) {
         (*it)->reset();
     }
 }
