@@ -1,38 +1,32 @@
 #include "menu_object.h"
+#include "runWidget.h"
+#include "protocol.h"
 
 class run_menu_object : public menu_object {
   public:
-    run_menu_object(string name, QWidget* parent = 0) {
+    run_menu_object(string name, Protocol* proto,QDir working_dir, QWidget* parent = 0) {
         this->name = name;
         this->parent = parent;
-        this->menu = new_widget();
+        this->proto = proto;
+        this->working_dir = working_dir;
+        this->menu = new runWidget(proto, working_dir);
     }
     QWidget* getWidget() {
         return menu;
     }
     void reset() {
-       this->menu = new_widget();
+       this->menu = new runWidget(proto, working_dir);
     }
-    void setWorkingDir(QDir dir) {}
+    void setWorkingDir(QDir dir) {
+        working_dir = dir;
+        menu->setWorkingDir(dir);
+    }
     void leave() {
-        menu->write_file();
     }
 
   private:
-    QWidget* menu;
+    runWidget* menu;
     QWidget* parent;
-    QPushButton* run_button;
-    QProgressBar* pdialog;
-    QWidget* new_widget() {
-        QWidget* run_button_container = new QWidget(parent);
-        QGridLayout* run_button_container_layout = new QGridLayout();
-        QPushButton* run_button = new QPushButton("Run Simulations");
-        run_button_container_layout->addWidget(run_button, 0,0,1,2);
-        run_button_container_layout->addWidget(new QLabel("Progress"), 1,0);
-        run_button_container_layout->addWidget(pdialog, 1,1);
-        run_button_container->setLayout(run_button_container_layout);
-
-        connect(run_button, SIGNAL(clicked()),this,SLOT(run_sims()));
-        return run_button_container;
-    }
+    Protocol* proto;
+    QDir working_dir;
 };

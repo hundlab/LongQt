@@ -26,6 +26,7 @@ SOURCES += main.cpp\
     modellib/measure.cpp \
     modellib/iobase.cpp \
     menu_object/menu_object.h \
+    runWidget.cpp \
     varmenu.cpp \
     heart_cell_sim.cpp \
     myoutput.cpp    \
@@ -45,6 +46,7 @@ HEADERS  +=    dialog.h \
     menu_object/simvars_menu_object.cpp \
     menu_object/mvars_menu_object.cpp \
     menu_object/graph_menu_object.cpp \
+    runWidget.h \
     varmenu.h \
     heart_cell_sim.h \
     myoutput.h  \

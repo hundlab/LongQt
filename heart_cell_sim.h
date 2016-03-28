@@ -32,9 +32,6 @@ class Simulation : public QWidget {
     Protocol* proto;
     QString date_time;
     QDir working_dir;
-    QFutureWatcher<void> watcher;
-    QFuture<void> next;
-    QVector<Protocol> vector;
     QList<menu_object*>* menu_list;
 //utility functions
     void leave_current(int current);
@@ -54,12 +51,12 @@ class Simulation : public QWidget {
 
   private slots:
     void cell_changed();
-    void run_sims();//action for running the simulation
     void change_working_dir(QDir dir);
     void next_button_aciton();
     void list_click_aciton (int next_row);
     void canceled();
     void finished();
+    void running();
 };
 
 #endif // HEART_CELL_SIM_H
