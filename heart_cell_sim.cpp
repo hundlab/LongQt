@@ -172,8 +172,8 @@ void Simulation::canceled() {
     run_button->setEnabled(false);
 }
 void Simulation::finished() {
-    qDebug()<<"finished!";
-    QMessageBox::information(this,"Finish","Simulation finished!");
+    //qDebug()<<"finished!";
+    //QMessageBox::information(this,"Finish","Simulation finished!");
     menu_list->replace(5, make_tuple(std::get<0>(menu_list->at(5)), true, new Dialog(proto, working_dir, this)));
     menu->insertWidget(5, std::get<2>(menu_list->at(5)));
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
