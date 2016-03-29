@@ -347,7 +347,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
  }
 void Dialog::on_pushButton_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot1->yAxis->label();
     QString time = "t";
 
@@ -364,7 +364,7 @@ void Dialog::on_pushButton_clicked()
 }
 void Dialog::on_pushButton_2_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot2->yAxis->label();
     QString time = "t";
 
@@ -381,7 +381,7 @@ void Dialog::on_pushButton_2_clicked()
 }
 void Dialog::on_pushButton_3_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot3->yAxis->label();
     QString time = "t";
 
@@ -398,7 +398,7 @@ void Dialog::on_pushButton_3_clicked()
 }
 void Dialog::on_pushButton_4_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot4->yAxis->label();
     QString time = "t";
 
@@ -415,7 +415,7 @@ void Dialog::on_pushButton_4_clicked()
 }
 void Dialog::on_pushButton_5_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot5->yAxis->label();
     QString time = "t";
 
@@ -432,7 +432,7 @@ void Dialog::on_pushButton_5_clicked()
 }
 void Dialog::on_pushButton_6_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot6->yAxis->label();
     QString time = "t";
 
@@ -448,7 +448,7 @@ void Dialog::on_pushButton_6_clicked()
 }
 void Dialog::on_pushButton_7_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot7->yAxis->label();
     QString time = "t";
 
@@ -465,7 +465,7 @@ void Dialog::on_pushButton_7_clicked()
 }
 void Dialog::on_pushButton_8_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot8->yAxis->label();
     QString time = "t";
 
@@ -481,7 +481,7 @@ void Dialog::on_pushButton_8_clicked()
 }
 void Dialog::on_pushButton_9_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot9->yAxis->label();
     QString time = "t";
 
@@ -497,7 +497,7 @@ void Dialog::on_pushButton_9_clicked()
 }
 void Dialog::on_pushButton_10_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x,y;
     QString toGet = ui->plot10->yAxis->label();
     QString time = "t";
 
@@ -513,7 +513,7 @@ void Dialog::on_pushButton_10_clicked()
 }
 void Dialog::on_pushButton_11_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot11->yAxis->label();
     QString time = "t";
 
@@ -549,8 +549,8 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     while(!in.atEnd()){
         QString line = in.readLine();
         QStringList split_line = line.split("\t");
-        y[point] = split_line[varpos].toDouble();
-        x[point] = split_line[timepos].toDouble();
+        y.push_back(split_line[varpos].toDouble());
+        x.push_back(split_line[timepos].toDouble());
         point++;
     }
     file1.close();
