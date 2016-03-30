@@ -48,13 +48,13 @@ Simulation::Simulation(QWidget* parent){
     menu_list->append(new choose_proto_menu_object("Simulation type"));
     this->proto = ((chooseProtoWidget*)menu_list->last()->getWidget())->getCurrentProto();
     proto->datadir = working_dir.absolutePath().toStdString();
-    connect((chooseProtoWidget*)menu_list->last()->getWidget(), SIGNAL(protocolChanged()), this, SLOT(cell_changed()));
+    connect((chooseProtoWidget*)menu_list->last()->getWidget(), SIGNAL(protocolChanged()), this, SLOT(proto_changed()));
     menu_list->append(new simvars_menu_object("Edit Simvars",proto,working_dir, this));
     connect((simvarMenu*)menu_list->last()->getWidget(), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
     connect((simvarMenu*)menu_list->last()->getWidget(), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
-    menu_list->append(new dvars_menu_object("Edit DVars", proto,working_dir));
-    menu_list->append(new mvars_menu_object("Edit MVars", proto,working_dir));
-    menu_list->append(new pvars_menu_object("Edit PVars", proto,working_dir));
+    menu_list->append(new dvars_menu_object("Edit DVars", proto,working_dir, this));
+    menu_list->append(new mvars_menu_object("Edit MVars", proto,working_dir, this));
+    menu_list->append(new pvars_menu_object("Edit PVars", proto,working_dir, this));
     menu_list->append(new run_menu_object("Run Simulation", proto, working_dir));
     connect((runWidget*)menu_list->last()->getWidget(), SIGNAL(canceled()), this, SLOT(canceled()));
     connect((runWidget*)menu_list->last()->getWidget(), SIGNAL(finished()), this, SLOT(finished()));
@@ -84,8 +84,31 @@ void Simulation::cell_changed() {
     auto it = menu_list->begin();
     it++; it++;
     for(; it != menu_list->end(); it++) {
+        int index = menu->indexOf((*it)->getWidget());
+        menu->removeWidget((*it)->getWidget());
         (*it)->reset();
+        menu->insertWidget(index, (*it)->getWidget());
     }
+}
+void Simulation::proto_changed() {
+    this->proto = ((chooseProtoWidget*)menu_list->first()->getWidget())->getCurrentProto();
+    proto->datadir = working_dir.absolutePath().toStdString();
+    auto it = menu_list->begin();
+    for(; it != menu_list->end(); it++) {
+        (*it)->changeProto(proto);
+    }
+    it = menu_list->begin();
+    it++;
+    disconnect((simvarMenu*)(*it)->getWidget(), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
+    disconnect((simvarMenu*)(*it)->getWidget(), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
+    int index = menu->indexOf((*it)->getWidget());
+    menu->removeWidget((*it)->getWidget());
+    (*it)->reset();
+    menu->insertWidget(index, (*it)->getWidget());
+    connect((simvarMenu*)(*it)->getWidget(), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
+    connect((simvarMenu*)(*it)->getWidget(), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
+
+    cell_changed();
 }
 void Simulation::change_working_dir(QDir dir) {
     this->working_dir = dir;

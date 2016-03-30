@@ -23,7 +23,9 @@ class pvars_menu_object : public menu_object {
     void leave() {
         menu->write_file();
     }
-
+    void changeProto(Protocol* proto) {
+        this->proto = proto;
+    }
   private:
     pvarMenu* menu;
     Protocol* proto;

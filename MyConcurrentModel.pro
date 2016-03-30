@@ -22,6 +22,7 @@ SOURCES += main.cpp\
     modellib/cell.cpp \
     modellib/kurata08.cpp \
     modellib/protocol.cpp \
+    modellib/CurrentClampProtocol.cpp \
     modellib/measure_kernel.cpp \
     modellib/measure.cpp \
     modellib/iobase.cpp \
@@ -38,6 +39,7 @@ HEADERS  +=    dialog.h \
     modellib/cell_kernel.h \
     modellib/cell.h \
     modellib/protocol.h \
+    modellib/CurrentClampProtocol.h \
     modellib/measure_kernel.h \
     modellib/measure.h \
     modellib/iobase.h \

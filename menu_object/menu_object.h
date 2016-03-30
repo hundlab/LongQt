@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QWidget>
 
+#include "protocol.h"
+
 class menu_object {
   public:
     string name;
@@ -11,6 +13,7 @@ class menu_object {
     virtual void reset() = 0;
     virtual void setWorkingDir(QDir dir) = 0;
     virtual void leave() = 0;
+    virtual void changeProto(Protocol* proto) = 0;
 };
 
 #endif

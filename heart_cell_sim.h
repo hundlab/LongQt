@@ -51,6 +51,7 @@ class Simulation : public QWidget {
 
   private slots:
     void cell_changed();
+    void proto_changed();
     void change_working_dir(QDir dir);
     void next_button_aciton();
     void list_click_aciton (int next_row);
