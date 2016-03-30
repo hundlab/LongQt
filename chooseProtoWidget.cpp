@@ -3,6 +3,7 @@
 
 #include "chooseProtoWidget.h"
 #include "CurrentClampProtocol.h"
+#include "voltageClampProtocol.h"
 
 chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
     this->parent = parent;
@@ -29,7 +30,7 @@ void chooseProtoWidget::setCurrentProto(Protocol* proto) {
 void chooseProtoWidget::changeProto(int value) {
     switch(value) {
     case 0:
-        this->proto = new Protocol();
+        this->proto = new VoltageClamp();
     break;
     case 1:
         this->proto = new CurrentClamp();
