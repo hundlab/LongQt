@@ -146,7 +146,7 @@ void Simulation::finished() {
     change_working_dir(working_dir);
     cancel_button->hide();
     next_button->show();
-    cell_changed();
+    proto_changed();
 }
 void Simulation::running() {
     next_button->hide();
