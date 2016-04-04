@@ -13,15 +13,15 @@ class graph_menu_object : public menu_object {
         return menu;
     }
     void reset() {
-       this->menu = new Dialog(proto, working_dir, parent);
+//       this->menu = new Dialog(proto, working_dir, parent);
     }
     void setWorkingDir(QDir dir) {
-        working_dir = dir;
+//        working_dir = dir;
     }
     void leave() {
     }
     void changeProto(Protocol* proto) {
-        this->proto = proto;
+//        this->proto = proto;
     }
   private:
     Dialog* menu;

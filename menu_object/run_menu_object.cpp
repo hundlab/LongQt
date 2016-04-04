@@ -15,7 +15,7 @@ class run_menu_object : public menu_object {
         return menu;
     }
     void reset() {
-       this->menu = new runWidget(proto, working_dir);
+//       this->menu = new (this->menu)  runWidget(proto, working_dir);
     }
     void setWorkingDir(QDir dir) {
         working_dir = dir;
@@ -25,6 +25,7 @@ class run_menu_object : public menu_object {
     }
     void changeProto(Protocol* proto) {
         this->proto = proto;
+        this->menu->setProto(proto);
     }
   private:
     runWidget* menu;

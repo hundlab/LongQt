@@ -7,7 +7,7 @@
 
 chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
     this->parent = parent;
-    this->proto = new Protocol();
+    this->proto = new voltageClamp();
     clampType = new QSlider();
     clampType->setMaximum(1);
     clampType->setMinimum(0);
@@ -30,7 +30,7 @@ void chooseProtoWidget::setCurrentProto(Protocol* proto) {
 void chooseProtoWidget::changeProto(int value) {
     switch(value) {
     case 0:
-        this->proto = new VoltageClamp();
+        this->proto = new voltageClamp();
     break;
     case 1:
         this->proto = new CurrentClamp();

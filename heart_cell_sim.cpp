@@ -123,6 +123,7 @@ void Simulation::list_click_aciton (int next_row) {
 }
 void Simulation::next_button_aciton () {
     int current_row = menu->currentIndex();
+    menu_list->value(current_row)->leave();
     if(menu->count() > current_row +1) {
         menu->setCurrentIndex(current_row +1);
         menu_options->setCurrentRow(current_row +1);
@@ -145,6 +146,7 @@ void Simulation::finished() {
     change_working_dir(working_dir);
     cancel_button->hide();
     next_button->show();
+    cell_changed();
 }
 void Simulation::running() {
     next_button->hide();
