@@ -18,6 +18,7 @@
 
 #include "protocol.h"
 #include "varmenu.h"
+#include "menu_object.h"
 
 class Simulation : public QWidget {
     Q_OBJECT
@@ -31,15 +32,10 @@ class Simulation : public QWidget {
     Protocol* proto;
     QString date_time;
     QDir working_dir;
-    QFutureWatcher<void> watcher;
-    QFuture<void> next;
-    QVector<Protocol> vector;
-    QList<std::tuple<QString,bool,QWidget*>>* menu_list;
+    QList<menu_object*>* menu_list;
 //utility functions
     void leave_current(int current);
 //buttons
-    QPushButton* run_button;
-    QProgressBar* pdialog;
     QPushButton* next_button;
     QPushButton* cancel_button;
 //organizational widgets
@@ -55,12 +51,13 @@ class Simulation : public QWidget {
 
   private slots:
     void cell_changed();
-    void run_sims();//action for running the simulation
+    void proto_changed();
     void change_working_dir(QDir dir);
     void next_button_aciton();
     void list_click_aciton (int next_row);
     void canceled();
     void finished();
+    void running();
 };
 
 #endif // HEART_CELL_SIM_H

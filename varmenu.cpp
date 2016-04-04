@@ -81,8 +81,12 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *paren
         initialize(it);
     }
     central_layouts.push_back(new QHBoxLayout());
-    central_layouts.last()->addLayout(simvars_layouts["double"]);
-    central_layouts.last()->addLayout(simvars_layouts["int"]);
+    if(simvars_layouts["double"] != NULL) {
+        central_layouts.last()->addLayout(simvars_layouts["double"]);
+    }
+    if(simvars_layouts["int"] != NULL) {
+        central_layouts.last()->addLayout(simvars_layouts["int"]);
+    }
     central_layouts.last()->addLayout(simvars_layouts["bool"]);
     central_layouts.last()->addLayout(simvars_layouts["cell"]);
     central_layouts.push_back(new QHBoxLayout());
@@ -118,7 +122,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
-        new_simvar->setMaximum(std::numeric_limits<double>::max());
+        new_simvar->setRange(/*std::numeric_limits<double>::min()*/ -100000,std::numeric_limits<double>::max());
         simvars.insert(it->first.c_str(), new_simvar);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
         connect((QDoubleSpinBox*)simvars.last(), static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), [=] (double value) {update_pvars(pair<string,double>(name, value));});
@@ -128,7 +132,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
-        new_simvar->setMaximum(std::numeric_limits<int>::max());
+        new_simvar->setRange(/*std::numeric_limits<int>::min()*/-100000, std::numeric_limits<int>::max());
         simvars.insert(it->first.c_str(),new_simvar);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
         connect((QSpinBox*)simvars.last(), static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=] (int value) {update_pvars(pair<string,int>(name, value));});
@@ -229,8 +233,9 @@ bool simvarMenu::read_simvars(){
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()){
         proto->simvarfile = fileName.toStdString();
-    ret = !(bool)proto->readpars(proto->simvarfile);
+        ret = !(bool)proto->readpars(proto->simvarfile);
     }
+    proto->datadir = working_dir.absolutePath().toStdString();
     update_menu();
     return ret;
 }
