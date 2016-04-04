@@ -136,8 +136,8 @@ void Simulation::canceled() {
     next_button->show();
 }
 void Simulation::finished() {
-    qDebug()<<"finished!";
-    QMessageBox::information(this,"Finish","Simulation finished!");
+//    qDebug()<<"finished!";
+//    QMessageBox::information(this,"Finish","Simulation finished!");
     menu_list->append(new graph_menu_object("Graph", proto, working_dir, this));
     menu->addWidget(menu_list->last()->getWidget());
     menu_options->addItem(menu_list->last()->name.c_str());

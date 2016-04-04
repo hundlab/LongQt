@@ -17,7 +17,7 @@ Dialog::Dialog(Protocol* inital_proto, QDir read_location, QWidget *parent) :
     ui->setupUi(this);
     this->proto = inital_proto;
     this->read_location = read_location;
-    QMessageBox::information(0,"Folder", "Folder named: " + read_location.absolutePath());
+    QMessageBox::information(0,"Folder", "Simulation is finished!\n The folder is named: " + read_location.absolutePath());
     passing_to_graph(this->proto,read_location.absolutePath() + "/dt0_dvars.dat");
 }
 Dialog::~Dialog()
@@ -108,14 +108,16 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      ui->plot1->xAxis->setLabel("Time (ms)");
      ui->plot1->yAxis->setLabel(split_line[0]);
      ui->plot1->xAxis->setRange(low_x_axis, max_x_axis);
-     ui->plot1->yAxis->rescale();
      ui->plot1->graph(0)->setName("Simulation");
-     ui->plot1->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+     ui->plot1->yAxis->rescale();
+     ui->plot1->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+     ui->plot1->axisRect()->setRangeZoom(ui->plot1->xAxis->orientation());
+     ui->plot1->axisRect()->setRangeDrag(ui->plot1->xAxis->orientation());
+
      if(ui->plot1->plotLayout()->rowCount() < 2){
         ui->plot1->plotLayout()->insertRow(0);
      }
-     QCPPlotTitle *title = new QCPPlotTitle(ui->plot1, split_line[0] +" vs Time");
-     ui->plot1->plotLayout()->addElement(0,0, title);
+     ui->plot1->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot1, split_line[0] +" vs Time"));
 
 
      //For each variable in D-Var there needs to be a graph added
@@ -133,7 +135,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
          ui->plot2->xAxis->setRange(low_x_axis, max_x_axis);
          ui->plot2->graph(0)->setName("Simulation");
          ui->plot2->yAxis->rescale();
-         ui->plot2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+         ui->plot2->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+         ui->plot2->axisRect()->setRangeZoom(ui->plot2->xAxis->orientation());
+         ui->plot2->axisRect()->setRangeDrag(ui->plot2->xAxis->orientation());
          if(ui->plot2->plotLayout()->rowCount() < 2){
             ui->plot2->plotLayout()->insertRow(0);
          }
@@ -154,7 +158,10 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
              ui->plot3->xAxis->setRange(low_x_axis, max_x_axis);
              ui->plot3->yAxis->rescale();
              ui->plot3->graph(0)->setName("Simulation");
-             ui->plot3->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+             ui->plot3->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+             ui->plot3->axisRect()->setRangeZoom(ui->plot3->xAxis->orientation());
+             ui->plot3->axisRect()->setRangeDrag(ui->plot3->xAxis->orientation());
+
              if(ui->plot3->plotLayout()->rowCount() < 2){
                 ui->plot3->plotLayout()->insertRow(0);
              }
@@ -173,7 +180,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                  ui->plot4->xAxis->setRange(low_x_axis, max_x_axis);
                  ui->plot4->yAxis->rescale();
                  ui->plot4->graph(0)->setName("Simulation");
-                 ui->plot4->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+                 ui->plot4->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+                 ui->plot4->axisRect()->setRangeZoom(ui->plot4->xAxis->orientation());
+                 ui->plot4->axisRect()->setRangeDrag(ui->plot4->xAxis->orientation());
                  if(ui->plot4->plotLayout()->rowCount() < 2){
                     ui->plot4->plotLayout()->insertRow(0);
                  }
@@ -192,7 +201,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                      ui->plot5->xAxis->setRange(low_x_axis, max_x_axis);
                      ui->plot5->yAxis->rescale();
                      ui->plot5->graph(0)->setName("Simulation");
-                     ui->plot5->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+                     ui->plot5->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+                     ui->plot5->axisRect()->setRangeZoom(ui->plot5->xAxis->orientation());
+                     ui->plot5->axisRect()->setRangeDrag(ui->plot5->xAxis->orientation());
                      if(ui->plot5->plotLayout()->rowCount() < 2){
                         ui->plot5->plotLayout()->insertRow(0);
                      }
@@ -211,7 +222,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                          ui->plot6->xAxis->setRange(low_x_axis, max_x_axis);
                          ui->plot6->yAxis->rescale();
                          ui->plot6->graph(0)->setName("Simulation");
-                         ui->plot6->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+                         ui->plot6->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+                         ui->plot6->axisRect()->setRangeZoom(ui->plot6->xAxis->orientation());
+                         ui->plot6->axisRect()->setRangeDrag(ui->plot6->xAxis->orientation());
                          if(ui->plot6->plotLayout()->rowCount() < 2){
                             ui->plot6->plotLayout()->insertRow(0);
                          }
@@ -230,7 +243,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                              ui->plot7->xAxis->setRange(low_x_axis, max_x_axis);
                              ui->plot7->yAxis->rescale();
                              ui->plot7->graph(0)->setName("Simulation");
-                             ui->plot7->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+                             ui->plot7->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+                             ui->plot7->axisRect()->setRangeZoom(ui->plot7->xAxis->orientation());
+                             ui->plot7->axisRect()->setRangeDrag(ui->plot7->xAxis->orientation());
                              if(ui->plot7->plotLayout()->rowCount() < 2){
                                 ui->plot7->plotLayout()->insertRow(0);
                              }
@@ -249,7 +264,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                  ui->plot8->xAxis->setRange(low_x_axis, max_x_axis);
                                  ui->plot8->yAxis->rescale();
                                  ui->plot8->graph(0)->setName("Simulation");
-                                 ui->plot8->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+                                 ui->plot8->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+                                 ui->plot8->axisRect()->setRangeZoom(ui->plot8->xAxis->orientation());
+                                 ui->plot8->axisRect()->setRangeDrag(ui->plot8->xAxis->orientation());
                                  if(ui->plot8->plotLayout()->rowCount() < 2){
                                     ui->plot8->plotLayout()->insertRow(0);
                                  }
@@ -268,7 +285,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                      ui->plot9->xAxis->setRange(low_x_axis, max_x_axis);
                                      ui->plot9->yAxis->rescale();
                                      ui->plot9->graph(0)->setName("Simulation");
-                                     ui->plot9->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+                                     ui->plot9->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+                                     ui->plot9->axisRect()->setRangeZoom(ui->plot9->xAxis->orientation());
+                                     ui->plot9->axisRect()->setRangeDrag(ui->plot9->xAxis->orientation());
                                      if(ui->plot9->plotLayout()->rowCount() < 2){
                                         ui->plot9->plotLayout()->insertRow(0);
                                      }
@@ -287,7 +306,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                          ui->plot10->xAxis->setRange(low_x_axis, max_x_axis);
                                          ui->plot10->yAxis->rescale();
                                          ui->plot10->graph(0)->setName("Simulation");
-                                         ui->plot10->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+                                         ui->plot10->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+                                         ui->plot10->axisRect()->setRangeZoom(ui->plot10->xAxis->orientation());
+                                         ui->plot10->axisRect()->setRangeDrag(ui->plot10->xAxis->orientation());
                                          if(ui->plot10->plotLayout()->rowCount() < 2){
                                             ui->plot10->plotLayout()->insertRow(0);
                                          }
@@ -306,7 +327,9 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                              ui->plot11->xAxis->setRange(low_x_axis, max_x_axis);
                                              ui->plot11->yAxis->rescale();
                                              ui->plot11->graph(0)->setName("Simulation");
-                                             ui->plot11->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+                                             ui->plot11->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+                                             ui->plot11->axisRect()->setRangeZoom(ui->plot11->xAxis->orientation());
+                                             ui->plot11->axisRect()->setRangeDrag(ui->plot11->xAxis->orientation());
                                              if(ui->plot11->plotLayout()->rowCount() < 2){
                                                 ui->plot11->plotLayout()->insertRow(0);
                                              }
@@ -324,7 +347,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
  }
 void Dialog::on_pushButton_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot1->yAxis->label();
     QString time = "t";
 
@@ -341,7 +364,7 @@ void Dialog::on_pushButton_clicked()
 }
 void Dialog::on_pushButton_2_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot2->yAxis->label();
     QString time = "t";
 
@@ -358,7 +381,7 @@ void Dialog::on_pushButton_2_clicked()
 }
 void Dialog::on_pushButton_3_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot3->yAxis->label();
     QString time = "t";
 
@@ -375,7 +398,7 @@ void Dialog::on_pushButton_3_clicked()
 }
 void Dialog::on_pushButton_4_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot4->yAxis->label();
     QString time = "t";
 
@@ -392,7 +415,7 @@ void Dialog::on_pushButton_4_clicked()
 }
 void Dialog::on_pushButton_5_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot5->yAxis->label();
     QString time = "t";
 
@@ -409,7 +432,7 @@ void Dialog::on_pushButton_5_clicked()
 }
 void Dialog::on_pushButton_6_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot6->yAxis->label();
     QString time = "t";
 
@@ -425,7 +448,7 @@ void Dialog::on_pushButton_6_clicked()
 }
 void Dialog::on_pushButton_7_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot7->yAxis->label();
     QString time = "t";
 
@@ -442,7 +465,7 @@ void Dialog::on_pushButton_7_clicked()
 }
 void Dialog::on_pushButton_8_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot8->yAxis->label();
     QString time = "t";
 
@@ -458,7 +481,7 @@ void Dialog::on_pushButton_8_clicked()
 }
 void Dialog::on_pushButton_9_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot9->yAxis->label();
     QString time = "t";
 
@@ -474,7 +497,7 @@ void Dialog::on_pushButton_9_clicked()
 }
 void Dialog::on_pushButton_10_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x,y;
     QString toGet = ui->plot10->yAxis->label();
     QString time = "t";
 
@@ -490,7 +513,7 @@ void Dialog::on_pushButton_10_clicked()
 }
 void Dialog::on_pushButton_11_clicked()
 {
-    QVector<double> x(6000), y(6000);
+    QVector<double> x, y;
     QString toGet = ui->plot11->yAxis->label();
     QString time = "t";
 
@@ -526,8 +549,8 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     while(!in.atEnd()){
         QString line = in.readLine();
         QStringList split_line = line.split("\t");
-        y[point] = split_line[varpos].toDouble();
-        x[point] = split_line[timepos].toDouble();
+        y.push_back(split_line[varpos].toDouble());
+        x.push_back(split_line[timepos].toDouble());
         point++;
     }
     file1.close();
@@ -611,6 +634,7 @@ void Dialog::on_pushButton_12_clicked()
         ui->plot10->removeGraph(1);
         ui->plot11->removeGraph(0);
         ui->plot11->removeGraph(1);
+
         ui->plot1->legend->clear();
         ui->plot1->legend->setVisible(false);
         ui->plot2->legend->clear();
@@ -633,8 +657,8 @@ void Dialog::on_pushButton_12_clicked()
         ui->plot10->legend->setVisible(false);
         ui->plot11->legend->clear();
         ui->plot11->legend->setVisible(false);
-
         passing_to_graph(this->proto, filename);
+
         ui->plot1->replot();
         ui->plot2->replot();
         ui->plot3->replot();

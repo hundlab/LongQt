@@ -23,7 +23,7 @@ SOURCES += main.cpp\
     modellib/kurata08.cpp \
     modellib/protocol.cpp \
     modellib/voltageClampProtocol.cpp \
-    modellib/CurrentClampProtocol.cpp \
+    modellib/currentClampProtocol.cpp \
     modellib/measure_kernel.cpp \
     modellib/measure.cpp \
     modellib/iobase.cpp \
@@ -41,7 +41,7 @@ HEADERS  +=    dialog.h \
     modellib/cell.h \
     modellib/protocol.h \
     modellib/voltageClampProtocol.h \
-    modellib/CurrentClampProtocol.h \
+    modellib/currentClampProtocol.h \
     modellib/measure_kernel.h \
     modellib/measure.h \
     modellib/iobase.h \
