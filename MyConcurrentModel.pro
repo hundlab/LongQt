@@ -12,7 +12,7 @@ TEMPLATE = app
 
 QMAKE_MAC_SDK = macosx10.11
 
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11 -g
 CONFIG += c++11
 INCLUDEPATH += ./modellib ./menu_object
 
