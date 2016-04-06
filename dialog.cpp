@@ -560,47 +560,47 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
 }
 void Dialog::on_save1_clicked()
 {
-    ui->plot1->saveJpg(read_location.absolutePath() + ui->plot1->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot1->saveJpg(read_location.absolutePath() + "/" + ui->plot1->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save2_clicked()
 {
-    ui->plot2->saveJpg(read_location.absolutePath() + ui->plot2->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot2->saveJpg(read_location.absolutePath() + "/" + ui->plot2->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save3_clicked()
 {
-    ui->plot3->saveJpg(read_location.absolutePath() + ui->plot3->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot3->saveJpg(read_location.absolutePath() + "/" + ui->plot3->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save4_clicked()
 {
-    ui->plot4->saveJpg(read_location.absolutePath() + ui->plot4->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot4->saveJpg(read_location.absolutePath() + "/" + ui->plot4->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save5_clicked()
 {
-    ui->plot5->saveJpg(read_location.absolutePath() + ui->plot5->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot5->saveJpg(read_location.absolutePath() + "/" + ui->plot5->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save6_clicked()
 {
-    ui->plot6->saveJpg(read_location.absolutePath() + ui->plot6->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot6->saveJpg(read_location.absolutePath() + "/" + ui->plot6->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save7_clicked()
 {
-    ui->plot7->saveJpg(read_location.absolutePath() + ui->plot7->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot7->saveJpg(read_location.absolutePath() + "/" + ui->plot7->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save8_clicked()
 {
-    ui->plot8->saveJpg(read_location.absolutePath() + ui->plot8->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot8->saveJpg(read_location.absolutePath() + "/" + ui->plot8->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save9_clicked()
 {
-    ui->plot9->saveJpg(read_location.absolutePath() + ui->plot9->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot9->saveJpg(read_location.absolutePath() + "/" + ui->plot9->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save10_clicked()
 {
-    ui->plot10->saveJpg(read_location.absolutePath() + ui->plot10->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot10->saveJpg(read_location.absolutePath() + "/" + ui->plot10->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_save11_clicked()
 {
-    ui->plot11->saveJpg(read_location.absolutePath() + ui->plot11->yAxis->label() + "/vsTime.jpg", 0,0,1.0, -1);
+    ui->plot11->saveJpg(read_location.absolutePath() + "/" + ui->plot11->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
 }
 void Dialog::on_pushButton_12_clicked()
 {
