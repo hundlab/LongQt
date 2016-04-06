@@ -369,6 +369,9 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
         dvars[i] = new QCheckBox(*(new QString(it->c_str())), this);
         central_layout->addWidget(dvars[i], i/row_len, i%row_len);
         connect(dvars[i], &QCheckBox::stateChanged, [=] (int state) {update_datamap(p, state);});
+        if(*it == "t") {
+            dvars[i]->setEnabled(false);
+        }
         dvars[i]->setToolTip(definitions[it->c_str()]);       //hover attribute
     }
     }
