@@ -49,6 +49,7 @@ Simulation::Simulation(QWidget* parent){
     this->proto = ((chooseProtoWidget*)menu_list->last()->getWidget())->getCurrentProto();
     proto->datadir = working_dir.absolutePath().toStdString();
     connect((chooseProtoWidget*)menu_list->last()->getWidget(), SIGNAL(protocolChanged()), this, SLOT(proto_changed()));
+    connect((chooseProtoWidget*)menu_list->last()->getWidget(), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
     menu_list->append(new simvars_menu_object("Edit Simvars",proto,working_dir, this));
     connect((simvarMenu*)menu_list->last()->getWidget(), SIGNAL(cell_type_changed()), this, SLOT(cell_changed()));
     connect((simvarMenu*)menu_list->last()->getWidget(), SIGNAL(working_dir_changed(QDir)), this, SLOT(change_working_dir(QDir)));
@@ -82,7 +83,8 @@ Simulation::Simulation(QWidget* parent){
 Simulation::~Simulation(){};
 void Simulation::cell_changed() {
     auto it = menu_list->begin();
-    it++; it++;
+    (*it)->reset();
+    it++;// it++;
     for(; it != menu_list->end(); it++) {
         int index = menu->indexOf((*it)->getWidget());
         menu->removeWidget((*it)->getWidget());

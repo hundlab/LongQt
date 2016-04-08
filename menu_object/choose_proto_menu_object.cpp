@@ -13,7 +13,8 @@ class choose_proto_menu_object : public menu_object {
         return this->menu;
     }
     void reset() { 
-        this->menu = new chooseProtoWidget();
+//        this->menu = new chooseProtoWidget();
+        this->menu->cellChangedSlot(); 
     }
     void setWorkingDir(QDir dir) { }
     void leave() { }

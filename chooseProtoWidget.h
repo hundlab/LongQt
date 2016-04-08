@@ -2,6 +2,7 @@
 #define chooseProtoWidget_H
 
 #include <QWidget>
+#include <QComboBox>
 #include <QSlider>
 #include <QLabel>
 
@@ -17,14 +18,19 @@ Q_OBJECT
     void setCurrentProto(Protocol* proto);
   signals:
     void protocolChanged();
+    void cell_type_changed();
   private:
     Protocol* proto;
     QWidget* parent;
     QSlider* clampType;
     QLabel* voltage;
     QLabel* current;
+    QComboBox* cell_type;
   private slots:
     void changeProto(int value);
+    void changeCell(QString name);
+  public slots:
+    void cellChangedSlot();
 };
 
 #endif

@@ -8,6 +8,15 @@
 chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
     this->parent = parent;
     this->proto = new voltageClamp();
+    QStringList cell_options;
+    cell_type = new QComboBox();
+    QLabel* simvars_label = new QLabel("celltype");
+    auto cell_opitons_stl = proto->cellOptions();
+    for(auto im = cell_opitons_stl.begin(); im != cell_opitons_stl.end(); im++) {
+        cell_options << im->c_str();
+    }
+    cell_type->addItems(cell_options);
+
     clampType = new QSlider();
     clampType->setMaximum(1);
     clampType->setMinimum(0);
@@ -15,11 +24,14 @@ chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
     voltage = new QLabel("Voltage Clamp");
     current = new QLabel("Current Clamp");
     QHBoxLayout* centralLayout = new QHBoxLayout();
+    centralLayout->addWidget(simvars_label);
+    centralLayout->addWidget(cell_type);
     centralLayout->addWidget(voltage);
     centralLayout->addWidget(clampType);
     centralLayout->addWidget(current);
     this->setLayout(centralLayout);
     connect(clampType, SIGNAL(valueChanged(int)), this, SLOT(changeProto(int)));
+    connect(cell_type, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeCell(QString)));
 }
 Protocol* chooseProtoWidget::getCurrentProto() {
     return proto;
@@ -28,13 +40,28 @@ void chooseProtoWidget::setCurrentProto(Protocol* proto) {
     this->proto = proto;
 }
 void chooseProtoWidget::changeProto(int value) {
+    Cell* old_cell = this->proto->cell->clone();
     switch(value) {
     case 0:
         this->proto = new voltageClamp();
+        this->proto->cell = old_cell;
     break;
     case 1:
         this->proto = new CurrentClamp();
+        this->proto->cell = old_cell;
     break;
     }
     emit protocolChanged();
+}
+
+void chooseProtoWidget::changeCell(QString name) {
+    this->proto->pars["celltype"].set(name.toStdString());
+    emit cell_type_changed();
+}
+
+void chooseProtoWidget::cellChangedSlot() {
+    int index = cell_type->findText(this->proto->pars["celltype"].get().c_str());
+    if(index != -1) {
+        cell_type->setCurrentIndex(index);
+    }
 }
