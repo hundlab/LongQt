@@ -338,9 +338,21 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
         definitions.insert("iNah","");
         definitions.insert("iSus","");
         definitions.insert("kI","");
-        definitions.insert("vOld","");
-
-//setup useful constants and aliases
+       definitions.insert("vOld","");
+    QMap<QString,QSet<QString>> dvars_groups;
+        QSet<QString> gates = QSet();
+        gates.insert("Gate.d");
+        gates.insert("Gate.paf");
+        gates.insert("Gate.fca");
+        gates.insert("Gate.q");
+        gates.insert("Gate.r");
+        gates.insert("Gate.ft");
+        gates.insert("Gate.qa");
+        gates.insert("Gate.n");
+        gates.insert("Gate.qi");
+        dvars_groups("Gates",gates);
+ 
+ //setup useful constants and aliases
     unsigned int i, row_len = 6;
     set<string> vars = proto->cell->getVariables();
     QString end_op = "Exit";
@@ -362,12 +374,28 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     }
     set_vars->setChecked(write_close);
 //do all the work for dvars setup
+    QMap<QString,QSet<QWidget*>> widgets;
+    for(auto it = dvars_groups.begin(); it != dvars_groups.end(); it++) {
+        widgets.insert(it.key(), QSet<QWidget*>());
+    }
+    widgets.insert("Other", QSet<QWidget*>());
     {
     auto it = vars.begin();
     for(i = 0; it!=vars.end(); it++,i++) {
+        bool found = false;
         string p =  *it;
         dvars[i] = new QCheckBox(*(new QString(it->c_str())), this);
-        central_layout->addWidget(dvars[i], i/row_len, i%row_len);
+        for(auto im = dvars_groups.begin(); im != dvars_groups.end(); im++) {
+            if(im->contains(p.c_str())) {
+                found = true;
+                widgets[im.key()].insert(dvars[i]);
+                break;
+            }
+        }
+        if(!found) {
+            widgets["Other"].insert(dvars[i]);
+        }
+//        central_layout->addWidget(dvars[i], i/row_len, i%row_len);
         connect(dvars[i], &QCheckBox::stateChanged, [=] (int state) {update_datamap(p, state);});
         if(*it == "t") {
             dvars[i]->setEnabled(false);
@@ -375,10 +403,23 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
         dvars[i]->setToolTip(definitions[it->c_str()]);       //hover attribute
     }
     }
+    {
+    int j = 0;
+    for(auto it = widgets.begin(); it != widgets.end(); it++) {
+        QGridLayout* layout = new QGridLayout();
+        QGroupBox* box = new QGroupBox(it.key());
+        for(auto im = it.value().begin(); im != it.value().end(); im++) {
+            layout->addWidget(*im, j/row_len, j%row_len);
+            j++;
+        }
+        box->setLayout(layout);
+        central_layout->addWidget(box, j/row_len, j%row_len, layout->rowCount(),  layout->columnCount());
+    }
+    }
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
     main_layout->addWidget(set_vars, 0,1);
-    main_layout->addLayout(central_layout, 1,0, i/row_len, row_len); 
+    main_layout->addLayout(central_layout, 1,0, central_layout->rowCount(), central_layout->columnCount()); 
     main_layout->addWidget(close_button, (2*i)*row_len, 2*row_len -1);
     setLayout(main_layout); 
     setWindowTitle(tr("Output Variables Menu"));
