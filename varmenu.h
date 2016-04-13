@@ -26,6 +26,7 @@ class simvarMenu :public QWidget {
 Q_OBJECT
   public:
     simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+    void Initialize(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~simvarMenu();
     void write_file();
     void setWorkingDir(QDir& dir);
@@ -66,6 +67,7 @@ class dvarMenu :public QWidget {
 Q_OBJECT
   public:
     dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+    void Initialize(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~dvarMenu();
     void write_file();
     void setWorkingDir(QDir& dir);
@@ -99,7 +101,8 @@ class mvarMenu :public QWidget {
 Q_OBJECT
   public:
     mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
-    ~mvarMenu();
+    void Initialize(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+   ~mvarMenu();
     void write_file();
     void setWorkingDir(QDir& dir);
 
@@ -144,6 +147,7 @@ class pvarMenu :public QWidget {
 Q_OBJECT
   public:
     pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+    void Initialize(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
     ~pvarMenu();
     void write_file();
     void setWorkingDir(QDir& dir);

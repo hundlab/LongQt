@@ -32,6 +32,10 @@
   begin simvarMenu class
 ##########################*/
 simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
+    this->Initialize(initial_proto, working_dir, parent);
+}
+
+void simvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
@@ -280,6 +284,10 @@ void simvarMenu::set_write_close(int state) {
     begin dvarMenu class
 ###################################*/
 dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
+    this->Initialize(initial_proto, working_dir, parent);
+}
+
+void dvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
@@ -339,18 +347,10 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
         definitions.insert("iSus","");
         definitions.insert("kI","");
        definitions.insert("vOld","");
-    QMap<QString,QSet<QString>> dvars_groups;
-        QSet<QString> gates = QSet();
-        gates.insert("Gate.d");
-        gates.insert("Gate.paf");
-        gates.insert("Gate.fca");
-        gates.insert("Gate.q");
-        gates.insert("Gate.r");
-        gates.insert("Gate.ft");
-        gates.insert("Gate.qa");
-        gates.insert("Gate.n");
-        gates.insert("Gate.qi");
-        dvars_groups("Gates",gates);
+    QMap<QString,QRegExp> dvars_groups;
+        dvars_groups.insert("Gates",QRegExp("^Gate.",Qt::CaseInsensitive));
+        dvars_groups.insert("Currents",QRegExp("^i"));
+        dvars_groups.insert("Calcium Concentrations", QRegExp("^ca"));
  
  //setup useful constants and aliases
     unsigned int i, row_len = 6;
@@ -386,7 +386,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
         string p =  *it;
         dvars[i] = new QCheckBox(*(new QString(it->c_str())), this);
         for(auto im = dvars_groups.begin(); im != dvars_groups.end(); im++) {
-            if(im->contains(p.c_str())) {
+            if(im->indexIn(p.c_str()) != -1) {
                 found = true;
                 widgets[im.key()].insert(dvars[i]);
                 break;
@@ -404,6 +404,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     }
     }
     {
+    int currRow = 1;
     int j = 0;
     for(auto it = widgets.begin(); it != widgets.end(); it++) {
         QGridLayout* layout = new QGridLayout();
@@ -413,7 +414,11 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
             j++;
         }
         box->setLayout(layout);
-        central_layout->addWidget(box, j/row_len, j%row_len, layout->rowCount(),  layout->columnCount());
+        if(!it.value().isEmpty()) {
+            central_layout->addWidget(box, currRow, 0, layout->rowCount(),  layout->columnCount());
+        }
+        currRow += layout->rowCount()+1;
+        j = 0;
     }
     }
 //main_layout
@@ -496,6 +501,10 @@ void dvarMenu::set_write_close(int state) {
     begin mvarMenu class
 ###################################*/
 mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
+    this->Initialize(initial_proto, working_dir, parent);
+}
+
+void mvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
@@ -696,6 +705,10 @@ void mvarMenu::switch_var(int row){
     begin pvarMenu class
 ###################################*/
 pvarMenu::pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
+    this->Initialize(initial_proto, working_dir, parent);
+}
+
+void pvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;

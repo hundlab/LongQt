@@ -14,7 +14,7 @@ class simvars_menu_object : public menu_object {
         return menu;
     }
     void reset() {
-       this->menu = new simvarMenu(proto, working_dir, parent);
+       this->menu->Initialize(proto, working_dir, parent)// = new simvarMenu(proto, working_dir, parent);
     }
     void setWorkingDir(QDir dir) {
         working_dir = dir;
