@@ -14,7 +14,7 @@ class simvars_menu_object : public menu_object {
         return menu;
     }
     void reset() {
-       this->menu->Initialize(proto, working_dir, parent)// = new simvarMenu(proto, working_dir, parent);
+        this->menu->reset();
     }
     void setWorkingDir(QDir dir) {
         working_dir = dir;
@@ -23,7 +23,7 @@ class simvars_menu_object : public menu_object {
         menu->write_file();
     }
     void changeProto(Protocol* proto) {
-        this->proto = proto;
+        this->menu->changeProto(proto);
     }
   private:
     simvarMenu* menu;

@@ -6,6 +6,10 @@
 #include "voltageClampProtocol.h"
 
 chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
+    this->Initialize(parent);
+}
+
+void chooseProtoWidget::Initialize(QWidget* parent) {
     this->parent = parent;
     this->proto = new voltageClamp();
     QStringList cell_options;

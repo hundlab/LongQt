@@ -32,10 +32,6 @@
   begin simvarMenu class
 ##########################*/
 simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
-    this->Initialize(initial_proto, working_dir, parent);
-}
-
-void simvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
@@ -57,13 +53,17 @@ void simvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *
     descriptions.insert("stimval","");
     descriptions.insert("writetime", "time during simulation that writing will begin");
 
+    this->createMenu();
+}
+
+void simvarMenu::createMenu()  {
 //setup useful constants and aliases
     QString end_op = "Exit";
     if(parent != NULL) {
         end_op = "Next";
     }
 //initialize layouts
-    QGridLayout* main_layout = new QGridLayout(this);
+    main_layout = new QGridLayout(this);
     QList<QHBoxLayout*> central_layouts;
 //initialize buttons &lables
     QTabWidget* tabs = new QTabWidget();
@@ -110,14 +110,14 @@ void simvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *
     main_layout->addWidget(set_vars, 0,1);
     main_layout->addWidget(tabs , 1,0,10 ,19 ); 
     main_layout->addWidget(close_button, 11, 20);
-    setLayout(main_layout); 
     setWindowTitle(tr("Simulation Variables Menu"));
+    setLayout(main_layout);
 //connect buttons   
     connect(get_vars, SIGNAL(clicked()), this, SLOT(read_simvars())); 
     connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
-    update_menu();   
+    update_menu();
 }
 void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     QMap<QString,function<void(const map<string,GetSetRef>::iterator)>> initializers;
@@ -218,6 +218,16 @@ void simvarMenu::update_menu() {
         } catch(std::bad_function_call e){}
     }
 }
+void simvarMenu::reset() {
+    simvars.clear();
+    simvars_layouts.clear();
+    qDeleteAll(this->children());
+    createMenu();
+}
+void simvarMenu::changeProto(Protocol* proto) {
+    this->proto = proto;
+    this->reset();
+}
 void simvarMenu::closeEvent(QCloseEvent* event){
     write_file();
     event->accept();
@@ -284,16 +294,17 @@ void simvarMenu::set_write_close(int state) {
     begin dvarMenu class
 ###################################*/
 dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
-    this->Initialize(initial_proto, working_dir, parent);
-}
-
-void dvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
     this->working_dir = working_dir;
     write_close = true;
-    QMap<QString, QString> definitions;
+ 
+    this->createMenu();
+}
+
+void dvarMenu::createMenu()  {
+   QMap<QString, QString> definitions;
         definitions.insert("Gate.d","");
         definitions.insert("Gate.paf","");
         definitions.insert("Gate.r","");
@@ -434,7 +445,6 @@ void dvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *pa
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
     update_menu();
-    
 }
 dvarMenu::~dvarMenu(){}
 void dvarMenu::update_menu() {
@@ -449,6 +459,15 @@ void dvarMenu::update_menu() {
             dvars[i]->setChecked(false);
         }
     }
+}
+void dvarMenu::reset() {
+    free(dvars);
+    qDeleteAll(this->children());
+    createMenu();
+}
+void dvarMenu::changeProto(Protocol* proto) {
+    this->proto = proto;
+    this->reset();
 }
 void dvarMenu::closeEvent(QCloseEvent* event){
     write_file();
@@ -501,15 +520,16 @@ void dvarMenu::set_write_close(int state) {
     begin mvarMenu class
 ###################################*/
 mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
-    this->Initialize(initial_proto, working_dir, parent);
-}
-
-void mvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
     this->working_dir = working_dir;
     write_close = true;
+
+    this->createMenu();
+}
+
+void mvarMenu::createMenu()  {
 //setup useful constants and aliases
     unsigned int row_len = 6;
     std::map<string,double*>::iterator it;
@@ -605,6 +625,14 @@ void mvarMenu::update_menu(int row) {
             }
         }
     }
+}
+void mvarMenu::reset() {
+    qDeleteAll(this->children());
+    createMenu();
+}
+void mvarMenu::changeProto(Protocol* proto) {
+    this->proto = proto;
+    this->reset();
 }
 void mvarMenu::closeEvent(QCloseEvent* event){
    write_file();
@@ -705,10 +733,6 @@ void mvarMenu::switch_var(int row){
     begin pvarMenu class
 ###################################*/
 pvarMenu::pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
-    this->Initialize(initial_proto, working_dir, parent);
-}
-
-void pvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
@@ -718,6 +742,11 @@ void pvarMenu::Initialize(Protocol* initial_proto, QDir working_dir, QWidget *pa
     pvals_options[0] << "random" << "iter" << "init value";
     pvals_options[1] << "lognormal" << "normal";
     pvals_options[2] << "logdistribution" << "logmean";
+
+    this->createMenu();
+}
+
+void pvarMenu::createMenu()  {
 //setup useful constants and aliases
     unsigned int row_len = 5;
     std::map<string,double*>::iterator it;
@@ -829,6 +858,14 @@ void pvarMenu::update_menu(unsigned int row) {
         remove_row(row);}
     );
 } 
+void pvarMenu::reset() {
+    qDeleteAll(this->children());
+    createMenu();
+}
+void pvarMenu::changeProto(Protocol* proto) {
+    this->proto = proto;
+    this->reset();
+}
 void pvarMenu::add_doublespinbox_tomenu(unsigned int row, unsigned int column, unsigned int boxlen, int column_pos) {
     if(column_pos < 0) {
         column_pos = 2*column+1;

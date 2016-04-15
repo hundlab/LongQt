@@ -14,7 +14,7 @@ class pvars_menu_object : public menu_object {
         return menu;
     }
     void reset() {
-       this->menu = new pvarMenu(proto, working_dir, parent);
+        menu->reset();
     }
     void setWorkingDir(QDir dir) {
         working_dir = dir;
@@ -24,7 +24,7 @@ class pvars_menu_object : public menu_object {
         menu->write_file();
     }
     void changeProto(Protocol* proto) {
-        this->proto = proto;
+        menu->changeProto(proto);
     }
   private:
     pvarMenu* menu;

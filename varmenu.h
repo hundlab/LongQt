@@ -26,10 +26,11 @@ class simvarMenu :public QWidget {
 Q_OBJECT
   public:
     simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
-    void Initialize(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+    void createMenu();
     ~simvarMenu();
     void write_file();
     void setWorkingDir(QDir& dir);
+    void reset();
 
   protected:
     void closeEvent(QCloseEvent* event);
@@ -40,6 +41,7 @@ Q_OBJECT
     QDir working_dir;
     bool write_close;
 //Buttons & their labels
+    QGridLayout* main_layout;
     QMap<QString, QString> descriptions;
     QMap<QString, QWidget*> simvars;
     QMap<QString,QFormLayout*> simvars_layouts;
@@ -58,6 +60,8 @@ Q_OBJECT
     void update_pvars(pair<string, string> p, string type);
     void update_pvars(pair<string, int> p, string type = "int");
     void set_write_close(int state); //update function for write_close
+  public slots:
+    void changeProto(Protocol* proto);
   signals:
     void cell_type_changed();
     void working_dir_changed(QDir);
@@ -67,10 +71,11 @@ class dvarMenu :public QWidget {
 Q_OBJECT
   public:
     dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
-    void Initialize(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+    void createMenu();
     ~dvarMenu();
     void write_file();
     void setWorkingDir(QDir& dir);
+    void reset();
 
   private:
     Protocol* proto;
@@ -94,6 +99,8 @@ Q_OBJECT
     bool write_dvars(); //wrapper for Protocol::writepars
     void update_datamap(string p, int state); //make a Protocol::pars entry match the screen
     void set_write_close(int state); //update function for write_close
+  public slots:
+    void changeProto(Protocol* proto);
 
 };
 
@@ -101,10 +108,11 @@ class mvarMenu :public QWidget {
 Q_OBJECT
   public:
     mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
-    void Initialize(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+    void createMenu();
    ~mvarMenu();
     void write_file();
     void setWorkingDir(QDir& dir);
+    void reset();
 
   private:
     Protocol* proto;
@@ -140,6 +148,8 @@ Q_OBJECT
     void addto_vars_list(); //add an item to mpnames
     void removefr_vars_list(); //remove and item from mpnames & its mvnames
     void switch_var(int row);
+  public slots:
+    void changeProto(Protocol* proto);
 ;
 };
 
@@ -147,10 +157,11 @@ class pvarMenu :public QWidget {
 Q_OBJECT
   public:
     pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
-    void Initialize(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+    void createMenu();
     ~pvarMenu();
     void write_file();
     void setWorkingDir(QDir& dir);
+    void reset();
 
   private:
     Protocol* proto;
@@ -185,6 +196,8 @@ Q_OBJECT
     void remove_row(unsigned int row);
     void add_row();
     void checkbox_changed(unsigned int row,unsigned int column,int state);
+  public slots:
+    void changeProto(Protocol* proto);
 ;
 };
 

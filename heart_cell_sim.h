@@ -32,7 +32,7 @@ class Simulation : public QWidget {
     Protocol* proto;
     QString date_time;
     QDir working_dir;
-    QList<menu_object*>* menu_list;
+    QList<QWidget*> menu_list;
 //utility functions
     void leave_current(int current);
 //buttons

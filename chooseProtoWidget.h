@@ -15,6 +15,7 @@ Q_OBJECT
   public:
     chooseProtoWidget(QWidget* parent = 0);
     Protocol* getCurrentProto();
+    void Initialize(QWidget* parent = 0);
     void setCurrentProto(Protocol* proto);
   signals:
     void protocolChanged();
