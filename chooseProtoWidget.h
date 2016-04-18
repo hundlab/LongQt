@@ -18,7 +18,7 @@ Q_OBJECT
     void Initialize(QWidget* parent = 0);
     void setCurrentProto(Protocol* proto);
   signals:
-    void protocolChanged();
+    void protocolChanged(Protocol*);
     void cell_type_changed();
   private:
     Protocol* proto;

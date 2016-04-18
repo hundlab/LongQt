@@ -50,7 +50,7 @@ void runWidget::run_sims() {
     watcher.setFuture(next);
     emit running();
 }
-void runWidget::setWorkingDir(QDir dir) {
+void runWidget::setWorkingDir(QDir& dir) {
         working_dir = dir;
 }
 void runWidget::cancel() {

@@ -18,9 +18,9 @@ class runWidget : public QWidget {
 Q_OBJECT
   public:
     runWidget(Protocol* proto, QDir working_dir, QWidget* parent = 0);
-    void setWorkingDir(QDir dir);
-    void setProto(Protocol* proto);
   public slots:
+    void setWorkingDir(QDir& dir);
+    void setProto(Protocol* proto);
     void cancel();
   signals:
     void canceled();

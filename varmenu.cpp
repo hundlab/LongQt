@@ -290,6 +290,9 @@ void simvarMenu::set_write_close(int state) {
     write_close = (bool) state;
     set_vars->setChecked(write_close);
 }
+void simvarMenu::changeCellType() {
+   update_menu(); 
+}
 /*#################################
     begin dvarMenu class
 ###################################*/
@@ -793,7 +796,7 @@ void pvarMenu::update_menu() {
     map<string, double*>::iterator map_it;
     add_button = new QPushButton("+");
     new_var_choice = new QComboBox();
-    QRegExp* allowed_vars = new QRegExp("Factor|O$");
+    QRegExp* allowed_vars = new QRegExp("Factor");
 
     for(i = 0, it = proto->pnames.begin(); it != proto->pnames.end();i++, it++) {
         clear_row(i,0);

@@ -45,17 +45,19 @@ void chooseProtoWidget::setCurrentProto(Protocol* proto) {
 }
 void chooseProtoWidget::changeProto(int value) {
     Cell* old_cell = this->proto->cell->clone();
+    string datadir = this->proto->datadir;
     switch(value) {
     case 0:
         this->proto = new voltageClamp();
-        this->proto->cell = old_cell;
     break;
     case 1:
         this->proto = new CurrentClamp();
-        this->proto->cell = old_cell;
     break;
     }
-    emit protocolChanged();
+
+    this->proto->cell = old_cell;
+    this->proto->datadir = datadir;
+    emit protocolChanged(this->proto);
 }
 
 void chooseProtoWidget::changeCell(QString name) {

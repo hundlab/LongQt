@@ -50,14 +50,15 @@ class Simulation : public QWidget {
     QGridLayout* main_layout;
 
   private slots:
-    void cell_changed();
-    void proto_changed();
-    void change_working_dir(QDir dir);
     void next_button_aciton();
     void list_click_aciton (int next_row);
     void canceled();
     void finished();
     void running();
+    void changeProto(Protocol* proto);
+  signals:
+    void cell_type_changed();
+    void working_dir_changed(QDir& dir);
 };
 
 #endif // HEART_CELL_SIM_H

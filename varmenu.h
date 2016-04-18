@@ -29,8 +29,6 @@ Q_OBJECT
     void createMenu();
     ~simvarMenu();
     void write_file();
-    void setWorkingDir(QDir& dir);
-    void reset();
 
   protected:
     void closeEvent(QCloseEvent* event);
@@ -62,9 +60,12 @@ Q_OBJECT
     void set_write_close(int state); //update function for write_close
   public slots:
     void changeProto(Protocol* proto);
+    void changeCellType();
+    void reset();
+    void setWorkingDir(QDir& dir);
   signals:
     void cell_type_changed();
-    void working_dir_changed(QDir);
+    void working_dir_changed(QDir&);
 };
 
 class dvarMenu :public QWidget {
@@ -74,8 +75,6 @@ Q_OBJECT
     void createMenu();
     ~dvarMenu();
     void write_file();
-    void setWorkingDir(QDir& dir);
-    void reset();
 
   private:
     Protocol* proto;
@@ -101,6 +100,8 @@ Q_OBJECT
     void set_write_close(int state); //update function for write_close
   public slots:
     void changeProto(Protocol* proto);
+    void reset();
+    void setWorkingDir(QDir& dir);
 
 };
 
@@ -111,8 +112,6 @@ Q_OBJECT
     void createMenu();
    ~mvarMenu();
     void write_file();
-    void setWorkingDir(QDir& dir);
-    void reset();
 
   private:
     Protocol* proto;
@@ -150,7 +149,8 @@ Q_OBJECT
     void switch_var(int row);
   public slots:
     void changeProto(Protocol* proto);
-;
+    void reset();
+    void setWorkingDir(QDir& dir);
 };
 
 class pvarMenu :public QWidget {
@@ -160,8 +160,6 @@ Q_OBJECT
     void createMenu();
     ~pvarMenu();
     void write_file();
-    void setWorkingDir(QDir& dir);
-    void reset();
 
   private:
     Protocol* proto;
@@ -198,7 +196,8 @@ Q_OBJECT
     void checkbox_changed(unsigned int row,unsigned int column,int state);
   public slots:
     void changeProto(Protocol* proto);
-;
+    void reset();
+    void setWorkingDir(QDir& dir);
 };
 
 #endif // VARMENU_H
