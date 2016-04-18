@@ -55,6 +55,7 @@ Simulation::Simulation(QWidget* parent){
     connect(choose, SIGNAL(protocolChanged(Protocol*)), dvars, SLOT(changeProto(Protocol*)));
     connect(choose, SIGNAL(protocolChanged(Protocol*)), pvars, SLOT(changeProto(Protocol*)));
     connect(choose, SIGNAL(protocolChanged(Protocol*)), mvars, SLOT(changeProto(Protocol*)));
+    connect(choose, SIGNAL(protocolChanged(Protocol*)), run, SLOT(setProto(Protocol*)));
     connect(choose, SIGNAL(protocolChanged(Protocol*)), this, SLOT(changeProto(Protocol*)));
     connect(choose, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
     connect(this, SIGNAL(cell_type_changed()), choose, SLOT(cellChangedSlot()));
