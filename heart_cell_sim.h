@@ -18,7 +18,6 @@
 
 #include "protocol.h"
 #include "varmenu.h"
-#include "menu_object.h"
 
 class Simulation : public QWidget {
     Q_OBJECT

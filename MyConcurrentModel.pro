@@ -28,7 +28,6 @@ SOURCES += main.cpp\
     modellib/measure_kernel.cpp \
     modellib/measure.cpp \
     modellib/iobase.cpp \
-    menu_object/menu_object.h \
     chooseProtoWidget.cpp \
     runWidget.cpp \
     varmenu.cpp \
@@ -47,13 +46,6 @@ HEADERS  +=    dialog.h \
     modellib/measure_kernel.h \
     modellib/measure.h \
     modellib/iobase.h \
-    menu_object/run_menu_object.cpp \
-    menu_object/dvars_menu_object.cpp \
-    menu_object/pvars_menu_object.cpp \
-    menu_object/simvars_menu_object.cpp \
-    menu_object/mvars_menu_object.cpp \
-    menu_object/graph_menu_object.cpp \
-    menu_object/choose_proto_menu_object.cpp \
     chooseProtoWidget.h \
     runWidget.h \
     varmenu.h \

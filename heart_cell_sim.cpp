@@ -22,13 +22,6 @@
 #include "dialog.h"
 #include "runWidget.h"
 #include "chooseProtoWidget.h"
-#include "dvars_menu_object.cpp"
-#include "pvars_menu_object.cpp"
-#include "simvars_menu_object.cpp"
-#include "mvars_menu_object.cpp"
-#include "graph_menu_object.cpp"
-#include "run_menu_object.cpp"
-#include "choose_proto_menu_object.cpp"
 
 Simulation::Simulation(QWidget* parent){
 //setup class variables

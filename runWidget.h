@@ -10,7 +10,6 @@
 #include <QFuture>
 
 #include "protocol.h"
-#include "menu_object.h"
 
 using namespace std;
 
