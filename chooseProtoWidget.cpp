@@ -1,40 +1,52 @@
 #include <QSlider>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QRadioButton>
+#include <QGroupBox>
 
 #include "chooseProtoWidget.h"
 #include "currentClampProtocol.h"
 #include "voltageClampProtocol.h"
 
 chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
-    this->Initialize(parent);
+    this->parent = parent;
+    this->Initialize();
 }
 
-void chooseProtoWidget::Initialize(QWidget* parent) {
-    this->parent = parent;
+void chooseProtoWidget::Initialize() {
     this->proto = new voltageClamp();
     QStringList cell_options;
     cell_type = new QComboBox();
-    QLabel* simvars_label = new QLabel("celltype");
+    QHBoxLayout* cellLayout = new QHBoxLayout();
+    QLabel* simvars_label = new QLabel("Cell Type");
     auto cell_opitons_stl = proto->cellOptions();
     for(auto im = cell_opitons_stl.begin(); im != cell_opitons_stl.end(); im++) {
         cell_options << im->c_str();
     }
     cell_type->addItems(cell_options);
+    cellLayout->addWidget(simvars_label);
+    cellLayout->addWidget(cell_type);
 
-    clampType = new QSlider();
-    clampType->setMaximum(1);
-    clampType->setMinimum(0);
-    clampType->setOrientation(Qt::Horizontal);
-    voltage = new QLabel("Voltage Clamp");
-    current = new QLabel("Current Clamp");
-    QHBoxLayout* centralLayout = new QHBoxLayout();
-    centralLayout->addWidget(simvars_label);
-    centralLayout->addWidget(cell_type);
-    centralLayout->addWidget(voltage);
-    centralLayout->addWidget(clampType);
-    centralLayout->addWidget(current);
+    clampType = new QButtonGroup();
+    QGroupBox* clampTypeBox = new QGroupBox("Clamp Type");
+    auto startingButton = new QRadioButton("Voltage Clamp");
+    startingButton->setChecked(true);
+    clampType->addButton(startingButton, 0);
+    clampType->addButton(new QRadioButton("Current Clamp"), 1);
+    QVBoxLayout* clampLayout = new QVBoxLayout();
+    {    
+    auto list = clampType->buttons();
+    for(auto it = list.begin(); it != list.end(); it++) {
+        clampLayout->addWidget(*it);
+    }
+    }
+    clampTypeBox->setLayout(clampLayout);
+
+    QVBoxLayout* centralLayout = new QVBoxLayout();
+    centralLayout->addLayout(cellLayout);
+    centralLayout->addWidget(clampTypeBox);
     this->setLayout(centralLayout);
-    connect(clampType, SIGNAL(valueChanged(int)), this, SLOT(changeProto(int)));
+    connect(clampType, SIGNAL(buttonPressed(int)), this, SLOT(changeProto(int)));
     connect(cell_type, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeCell(QString)));
 }
 Protocol* chooseProtoWidget::getCurrentProto() {

@@ -67,7 +67,7 @@ void simvarMenu::createMenu()  {
     QList<QHBoxLayout*> central_layouts;
 //initialize buttons &lables
     QTabWidget* tabs = new QTabWidget();
-    get_vars = new QPushButton(tr("Import settings"), this);
+    get_vars = new QPushButton(tr("Import Simulation settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
@@ -91,7 +91,9 @@ void simvarMenu::createMenu()  {
     if(simvars_layouts["int"] != NULL) {
         central_layouts.last()->addLayout(simvars_layouts["int"]);
     }
-    central_layouts.last()->addLayout(simvars_layouts["bool"]);
+    if(simvars_layouts["bool"] != NULL) {
+        central_layouts.last()->addLayout(simvars_layouts["bool"]);
+    }
     central_layouts.last()->addLayout(simvars_layouts["cell"]);
     central_layouts.push_back(new QHBoxLayout());
     central_layouts.last()->addLayout(simvars_layouts["file"]);
@@ -157,6 +159,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         string type = it->second.type;
+        new_simvar->setReadOnly(true);
         simvars.insert(it->first.c_str(),new_simvar);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
         connect((QLineEdit*)simvars.last(), static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
@@ -378,7 +381,7 @@ void dvarMenu::createMenu()  {
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
     dvars = (QCheckBox**)malloc(vars.size()*sizeof(QCheckBox*));
-    get_vars = new QPushButton(tr("Import settings"), this);
+    get_vars = new QPushButton(tr("Import Tracked Variable  settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
@@ -411,7 +414,7 @@ void dvarMenu::createMenu()  {
         }
 //        central_layout->addWidget(dvars[i], i/row_len, i%row_len);
         connect(dvars[i], &QCheckBox::stateChanged, [=] (int state) {update_datamap(p, state);});
-        if(*it == "t") {
+        if(*it == "t" || *it == "vOld") {
             dvars[i]->setEnabled(false);
         }
         dvars[i]->setToolTip(definitions[it->c_str()]);       //hover attribute
@@ -546,7 +549,7 @@ void mvarMenu::createMenu()  {
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
-    get_vars = new QPushButton(tr("Import settings"), this);
+    get_vars = new QPushButton(tr("Import Mesurement settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
     vars_view = new QListWidget(this);
@@ -761,7 +764,7 @@ void pvarMenu::createMenu()  {
     QGridLayout* main_layout = new QGridLayout(this);
     central_layout = new QGridLayout;
 //initialize buttons &lables
-    get_vars = new QPushButton(tr("Import settings"), this);
+    get_vars = new QPushButton(tr("Import Initializer settings"), this);
     pvar_table = new QTableWidget(0,5);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);

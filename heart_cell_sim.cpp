@@ -15,6 +15,7 @@
 #include <QProgressBar>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QSplitter>
 
 #include "protocol.h"
 #include "heart_cell_sim.h"
@@ -33,6 +34,7 @@ Simulation::Simulation(QWidget* parent){
     menu = new QStackedWidget();
     menu_options = new QListWidget();
 //create Widgets 
+    QSplitter* main_splitter = new QSplitter();
     next_button = new QPushButton("Next");
     cancel_button = new QPushButton("Cancel");
     chooseProtoWidget* choose = new chooseProtoWidget(this);
@@ -72,6 +74,10 @@ Simulation::Simulation(QWidget* parent){
     connect(run, SIGNAL(canceled()), this, SLOT(canceled()));
     connect(run, SIGNAL(finished()), this, SLOT(finished()));
     connect(run, SIGNAL(running()), this, SLOT(running()));
+    connect(run, static_cast<void(runWidget::*)()>(&runWidget::running), sims ,static_cast<void(simvarMenu::*)()>(&simvarMenu::write_file));
+    connect(run, static_cast<void(runWidget::*)()>(&runWidget::running), dvars ,static_cast<void(dvarMenu::*)()>(&dvarMenu::write_file));
+    connect(run, static_cast<void(runWidget::*)()>(&runWidget::running), mvars ,static_cast<void(mvarMenu::*)()>(&mvarMenu::write_file));
+    connect(run, static_cast<void(runWidget::*)()>(&runWidget::running), pvars ,static_cast<void(pvarMenu::*)()>(&pvarMenu::write_file));
     connect(cancel_button, SIGNAL(clicked()),run, SLOT(cancel()));
 //set button/combo box inital values
     cancel_button->hide();
@@ -85,14 +91,16 @@ Simulation::Simulation(QWidget* parent){
     for(auto it = menu_list.begin(); it != menu_list.end(); it++) {
         menu->addWidget(*it);
     }
+//main_splitter
+    main_splitter->addWidget(menu_options);
+    main_splitter->addWidget(menu);
+    main_splitter->setSizes({10,400});
 //main_layout
-    main_layout->addWidget(menu_options, 0,0,-1,1);
-    main_layout->addWidget(menu, 0, 1);
+    main_layout->addWidget(main_splitter, 0,0,-1,1);
     main_layout->addWidget(next_button, 1, 2);
     main_layout->addWidget(cancel_button, 1, 2);
-    QSizePolicy sPol(QSizePolicy::Minimum, QSizePolicy::Expanding);
-    menu_options->setSizePolicy(sPol);
-    menu_options->setWindowTitle(date_time);
+    
+    this->setWindowTitle("Cell Simulation");
     showMaximized();
 //connect buttons
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));

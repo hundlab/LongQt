@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QComboBox>
-#include <QSlider>
+#include <QButtonGroup>
 #include <QLabel>
 
 #include "protocol.h"
@@ -15,7 +15,7 @@ Q_OBJECT
   public:
     chooseProtoWidget(QWidget* parent = 0);
     Protocol* getCurrentProto();
-    void Initialize(QWidget* parent = 0);
+    void Initialize();
     void setCurrentProto(Protocol* proto);
   signals:
     void protocolChanged(Protocol*);
@@ -23,9 +23,7 @@ Q_OBJECT
   private:
     Protocol* proto;
     QWidget* parent;
-    QSlider* clampType;
-    QLabel* voltage;
-    QLabel* current;
+    QButtonGroup* clampType;
     QComboBox* cell_type;
   private slots:
     void changeProto(int value);

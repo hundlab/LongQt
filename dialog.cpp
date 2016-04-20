@@ -95,9 +95,14 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      else if(pos == 9){ x = y10;}
      else if(pos == 10){ x = y11;}
 
+     for(int i = 11; i >= num_vars_graph -1 ; i--) {
+         ui->tabWidget->removeTab(i);
+     }
+
      low_x_axis = std::stoi(a->pars["writetime"].get());
      max_x_axis = std::stoi(a->pars["tMax"].get());
 
+     ui->tabWidget->setTabText(0, split_line[0]);
      ui->plot1->addGraph();
      ui->plot1->graph(0)->setPen(QPen(Qt::blue));
      ui->plot1->graph(0)->setData(x, y1);
@@ -123,6 +128,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      //For each variable in D-Var there needs to be a graph added
      if(num_vars_graph > 2){
 
+         ui->tabWidget->setTabText(1, split_line[1]);
          ui->plot2->addGraph(0);
          ui->plot2->graph(0)->setPen(QPen(Qt::blue));
          ui->plot2->graph(0)->setData(x, y2);
@@ -146,6 +152,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
 
          if(num_vars_graph > 3){
 
+             ui->tabWidget->setTabText(2, split_line[2]);
              ui->plot3->addGraph(0);
              ui->plot3->graph(0)->setPen(QPen(Qt::blue));
              ui->plot3->graph(0)->setData(x, y3);
@@ -168,6 +175,8 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
              ui->plot3->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot3, split_line[2] +" vs Time"));
 
              if(num_vars_graph > 4){
+
+                 ui->tabWidget->setTabText(3, split_line[3]);
                  ui->plot4->addGraph(0);
                  ui->plot4->graph(0)->setPen(QPen(Qt::blue));
                  ui->plot4->graph(0)->setData(x, y4);
@@ -189,6 +198,8 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                  ui->plot4->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot4, split_line[3] +" vs Time"));
 
                  if(num_vars_graph > 5){
+
+                     ui->tabWidget->setTabText(4, split_line[4]);
                      ui->plot5->addGraph(0);
                      ui->plot5->graph(0)->setPen(QPen(Qt::blue));
                      ui->plot5->graph(0)->setData(x,y5);
@@ -210,6 +221,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                      ui->plot5->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot5, split_line[4] +" vs Time"));
 
                      if(num_vars_graph > 6){
+                         ui->tabWidget->setTabText(5, split_line[5]);
                          ui->plot6->addGraph(0);
                          ui->plot6->graph(0)->setPen(QPen(Qt::blue));
                          ui->plot6->graph(0)->setData(x,y6);
@@ -231,6 +243,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                          ui->plot6->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot6, split_line[5] +" vs Time"));
 
                          if(num_vars_graph > 7){
+                             ui->tabWidget->setTabText(6, split_line[6]);
                              ui->plot7->addGraph(0);
                              ui->plot7->graph(0)->setPen(QPen(Qt::blue));
                              ui->plot7->graph(0)->setData(x,y7);
@@ -252,6 +265,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                              ui->plot7->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot7, split_line[6] +" vs Time"));
 
                              if(num_vars_graph > 8){
+                                 ui->tabWidget->setTabText(3, split_line[3]);
                                  ui->plot8->addGraph(0);
                                  ui->plot8->graph(0)->setPen(QPen(Qt::blue));
                                  ui->plot8->graph(0)->setData(x,y8);
@@ -273,6 +287,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                  ui->plot8->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot8, split_line[7] +" vs Time"));
 
                                  if(num_vars_graph > 9){
+                                     ui->tabWidget->setTabText(8, split_line[8]);
                                      ui->plot9->addGraph(0);
                                      ui->plot9->graph(0)->setPen(QPen(Qt::blue));
                                      ui->plot9->graph(0)->setData(x,y9);
@@ -294,6 +309,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                      ui->plot9->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot9, split_line[8] +" vs Time"));
 
                                      if(num_vars_graph > 10){
+                                         ui->tabWidget->setTabText(9, split_line[9]);
                                          ui->plot10->addGraph(0);
                                          ui->plot10->graph(0)->setPen(QPen(Qt::blue));
                                          ui->plot10->graph(0)->setData(x,y10);
@@ -315,6 +331,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                          ui->plot10->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot10, split_line[9] +" vs Time"));
 
                                          if(num_vars_graph > 11){
+                                             ui->tabWidget->setTabText(10, split_line[10]);
                                              ui->plot11->addGraph(0);
                                              ui->plot11->graph(0)->setPen(QPen(Qt::blue));
                                              ui->plot11->graph(0)->setData(x,y11);
