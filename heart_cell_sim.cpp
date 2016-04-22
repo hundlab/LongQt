@@ -94,7 +94,9 @@ Simulation::Simulation(QWidget* parent){
 //main_splitter
     main_splitter->addWidget(menu_options);
     main_splitter->addWidget(menu);
-    main_splitter->setSizes({10,400});
+    QList<int> tempList = QList<int>();
+    tempList << 10 << 200;
+    main_splitter->setSizes(tempList);
 //main_layout
     main_layout->addWidget(main_splitter, 0,0,-1,1);
     main_layout->addWidget(next_button, 1, 2);
