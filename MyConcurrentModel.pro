@@ -28,6 +28,7 @@ SOURCES += main.cpp\
     modellib/measure.cpp \
     modellib/iobase.cpp \
     modellib/hrd09.cpp \
+    modellib/hrd09_bz.cpp \
     chooseProtoWidget.cpp \
     runWidget.cpp \
     varmenu.cpp \
