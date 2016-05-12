@@ -29,6 +29,7 @@ SOURCES += main.cpp\
     modellib/iobase.cpp \
     modellib/hrd09.cpp \
     modellib/hrd09_bz.cpp \
+    modellib/tnnp04.cpp \
     chooseProtoWidget.cpp \
     runWidget.cpp \
     varmenu.cpp \
@@ -48,6 +49,7 @@ HEADERS  +=    dialog.h \
     modellib/measure.h \
     modellib/iobase.h \
     modellib/hrd09.h \
+    modellib/tnnp04.h \
     chooseProtoWidget.h \
     runWidget.h \
     varmenu.h \
