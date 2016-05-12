@@ -27,6 +27,7 @@ SOURCES += main.cpp\
     modellib/measure_kernel.cpp \
     modellib/measure.cpp \
     modellib/iobase.cpp \
+    modellib/hrd09.cpp \
     chooseProtoWidget.cpp \
     runWidget.cpp \
     varmenu.cpp \
@@ -45,6 +46,7 @@ HEADERS  +=    dialog.h \
     modellib/measure_kernel.h \
     modellib/measure.h \
     modellib/iobase.h \
+    modellib/hrd09.h \
     chooseProtoWidget.h \
     runWidget.h \
     varmenu.h \
