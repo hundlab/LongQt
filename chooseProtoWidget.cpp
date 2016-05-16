@@ -7,6 +7,7 @@
 #include "chooseProtoWidget.h"
 #include "currentClampProtocol.h"
 #include "voltageClampProtocol.h"
+#include "gridProtocol.h"
 
 chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
     this->parent = parent;
@@ -33,6 +34,7 @@ void chooseProtoWidget::Initialize() {
     startingButton->setChecked(true);
     clampType->addButton(startingButton, 0);
     clampType->addButton(new QRadioButton("Current Clamp"), 1);
+    clampType->addButton(new QRadioButton("Grid of Cells"), 2);
     QVBoxLayout* clampLayout = new QVBoxLayout();
     {    
     auto list = clampType->buttons();
@@ -58,16 +60,28 @@ void chooseProtoWidget::setCurrentProto(Protocol* proto) {
 void chooseProtoWidget::changeProto(int value) {
     Cell* old_cell = this->proto->cell->clone();
     string datadir = this->proto->datadir;
+    if(old_cell->type == string("gridCell")) {
+        cell_type->setEnabled(true);
+        cell_type->removeItem(cell_type->count() -1);
+        changeCell("Cell");
+    }
     switch(value) {
     case 0:
         this->proto = new voltageClamp();
+        this->proto->cell = old_cell;
     break;
     case 1:
         this->proto = new CurrentClamp();
+        this->proto->cell = old_cell;
+    break;
+    case 2:
+        this->proto = new gridProtocol();
+        cell_type->addItem("gridCell");
+        cell_type->setEnabled(false);
+        emit cell_type_changed();
     break;
     }
 
-    this->proto->cell = old_cell;
     this->proto->datadir = datadir;
     emit protocolChanged(this->proto);
 }
