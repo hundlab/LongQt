@@ -46,7 +46,6 @@ SOURCES += main.cpp\
     runWidget.cpp \
     varmenu.cpp \
     heart_cell_sim.cpp \
-    myoutput.cpp    \
     qcustomplot.cpp
 
 HEADERS  +=    dialog.h \
@@ -70,7 +69,6 @@ HEADERS  +=    dialog.h \
     runWidget.h \
     varmenu.h \
     heart_cell_sim.h \
-    myoutput.h  \
     qcustomplot.h
 
 FORMS    += dialog.ui
