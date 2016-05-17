@@ -28,6 +28,7 @@ Simulation::Simulation(QWidget* parent){
 //setup class variables
     this->parent = parent;
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
+//    bool was_grid = false;
 //create layouts
     main_layout = new QGridLayout(this);
 //organizational widgets
@@ -71,6 +72,21 @@ Simulation::Simulation(QWidget* parent){
     connect(this, SIGNAL(cell_type_changed()), dvars, SLOT(reset()));
     connect(this, SIGNAL(cell_type_changed()), mvars, SLOT(reset()));
     connect(this, SIGNAL(cell_type_changed()), pvars, SLOT(reset()));
+/*    connect(this, static_cast<void(Simulation::*)()>(&Simulation::cell_type_changed), [this,&was_grid,pvars,run] () {
+        if((proto->cell->type == string("gridCell"))&&(!was_grid)) {
+            int pvarsPos = menu_list.indexOf(pvars);
+            menu_list.removeAt(pvarsPos);
+            menu->removeWidget(pvars);
+            menu_options->takeItem(pvarsPos);
+            was_grid = true;
+        } else if((proto->cell->type != string("gridCell"))&&was_grid) {
+            int pvarsPos = menu_list.indexOf(run)-1;
+            menu_list.insert(pvarsPos,pvars);
+            menu->insertWidget(pvarsPos,pvars);
+            menu_options->insertItem(pvarsPos,"Cell Initializers");
+            was_grid = false;
+        }
+    });*/
     connect(run, SIGNAL(canceled()), this, SLOT(canceled()));
     connect(run, SIGNAL(finished()), this, SLOT(finished()));
     connect(run, SIGNAL(running()), this, SLOT(running()));

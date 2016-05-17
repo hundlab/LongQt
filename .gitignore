@@ -13,6 +13,8 @@ moc_dialog.cpp
 moc_myoutput.cpp
 ui_dialog.h
 Makefile
+MyConcurrentModel
+build/*
 
 #temporary modellib folers for merging
 modellib/modelnew/
@@ -32,9 +34,8 @@ MyConcurrentModel.pro.user
 
 #.gitignore
 MyConcurrentModel.pro.user
-MyConcurrentModel.pro.user
 *.user
-MyConcurrentModel.pro.user
+MyConcurrentModel.pro.user*
 MyConcurrentModelDebug.pro
 
 #kdev files

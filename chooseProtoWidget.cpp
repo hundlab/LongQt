@@ -63,7 +63,6 @@ void chooseProtoWidget::changeProto(int value) {
     if(old_cell->type == string("gridCell")) {
         cell_type->setEnabled(true);
         cell_type->removeItem(cell_type->count() -1);
-        changeCell("Cell");
     }
     switch(value) {
     case 0:
@@ -82,6 +81,9 @@ void chooseProtoWidget::changeProto(int value) {
     break;
     }
 
+    if(old_cell->type == string("gridCell")) {
+        changeCell("Cell");
+    }
     this->proto->datadir = datadir;
     emit protocolChanged(this->proto);
 }

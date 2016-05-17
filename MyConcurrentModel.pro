@@ -18,7 +18,7 @@ INCLUDEPATH += ./modellib ./menu_object
 linux {
     TARGET = MyConcurrentModel.out
 
-    CXXFLAGS += -g
+    QMAKE_CXXFLAGS += -g
     DESTDIR = ./build 
     OBJECTS_DIR = ./build/obj
     MOC_DIR = ./build/obj
