@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QSpinBox>
+#include <QScrollArea>
 #include <QLabel>
 #include <QFutureWatcher>
 #include <QtConcurrent>
@@ -105,7 +106,10 @@ Simulation::Simulation(QWidget* parent){
     menu_options->addItem("Cell Initializers");
     menu_options->addItem("Run Simulation");
     for(auto it = menu_list.begin(); it != menu_list.end(); it++) {
-        menu->addWidget(*it);
+        QScrollArea* scrollWraper = new QScrollArea();
+        scrollWraper->setWidget(*it);
+        scrollWraper->setWidgetResizable(true);
+        menu->addWidget(scrollWraper);
     }
 //main_splitter
     main_splitter->addWidget(menu_options);

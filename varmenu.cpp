@@ -26,6 +26,7 @@
 
 #include "varmenu.h"
 #include "protocol.h"
+#include "gridSettup.h"
 
 
 /*########################
@@ -106,6 +107,11 @@ void simvarMenu::createMenu()  {
     temp = new QWidget();
     temp->setLayout(central_layouts.last());
     tabs->addTab(temp,"Simulation files");
+    if(proto->pars["celltype"].get() == "gridCell") {
+        gridSetupWidget* grid = new gridSetupWidget((gridProtocol*)this->proto,working_dir);
+        tabs->addTab(grid, "Grid Settup");
+        connect(grid, &gridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
+    }
     }
 //main_layout
     main_layout->addWidget(get_vars, 0,0);

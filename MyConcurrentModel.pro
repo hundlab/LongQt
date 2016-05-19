@@ -42,6 +42,7 @@ SOURCES += main.cpp\
     modellib/measure_kernel.cpp \
     modellib/measure.cpp \
     modellib/iobase.cpp \
+    gridSettup.cpp \
     chooseProtoWidget.cpp \
     runWidget.cpp \
     varmenu.cpp \
@@ -65,6 +66,7 @@ HEADERS  +=    dialog.h \
     modellib/measure_kernel.h \
     modellib/measure.h \
     modellib/iobase.h \
+    gridSettup.h \
     chooseProtoWidget.h \
     runWidget.h \
     varmenu.h \

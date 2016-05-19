@@ -8,7 +8,7 @@
 #include <QComboBox>
 #include <QCheckBox>
 
-#include "protocol.h"
+#include "gridProtocol.h"
 #include "node.h"
 #include "grid.h"
 
@@ -17,27 +17,28 @@ using namespace std;
 class gridNode : public QWidget {
 Q_OBJECT
   public:
-    gridNode(Node* node);
-    ~gridNode() {}
-    Node* node();
+    gridNode(Node* node, map<string, CellInitializer> cellMap);
+    ~gridNode();
+    Node* getNode();
+    void update(bool stim, bool meas);
   private:
     QComboBox* cellType;
     QCheckBox* stimNode;
     QCheckBox* measNode;
     Node* node;
     map<string, CellInitializer> cellMap;
-  private slots:
+  public slots:
     void changeCell(QString);
   signals:
-    void stimNodeChanged(int status);
-    void measNodeChanged(int status);
+    void stimNodeChanged(int);
+    void measNodeChanged(int);
     void cell_type_changed();
-}
+};
 
 class gridSetupWidget : public QWidget {
 Q_OBJECT
   public:
-    gridSettupWidget(Protocol* initial_proto, QDir workingDir, QWidget* parent = 0);
+    gridSetupWidget(gridProtocol* initial_proto, QDir workingDir, QWidget* parent = 0);
     ~gridSetupWidget() {}
     void setGrid(Grid* grid);
     Grid* getGrid();
@@ -47,7 +48,7 @@ Q_OBJECT
     void createMenu();
     void updateMenu();
     
-    Protocol* proto;
+    gridProtocol* proto;
     QDir workingDir;
     QWidget* parent;
     Grid* grid;
@@ -60,5 +61,5 @@ Q_OBJECT
     void changeMeasNodeList(int status, Node* node);
     void addRow();
     void addColumn();
-}
-#define
+};
+#endif
