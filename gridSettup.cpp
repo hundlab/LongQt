@@ -1,5 +1,4 @@
 #include "gridSettup.h"
-#include "gridCell.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -7,10 +6,14 @@
 //###########################
 //gridNode
 //###########################
-gridNode::gridNode(Node* node, map<string, CellInitializer> cellMap) {
+gridNode::gridNode(Node* node, int X, int Y, gridCell* parentCell,  map<string, CellInitializer> cellMap) {
 //class variabels
     this->node = node;
     this->cellMap = cellMap;
+    this->info = new cellInfo;
+    this->info->X = X;
+    this->info->Y = Y;
+    this->parentCell = parentCell;
     cellType = new QComboBox();
     stimNode = new QCheckBox("Stimulate");
     measNode = new QCheckBox("Measure");
@@ -35,7 +38,11 @@ Node* gridNode::getNode() {
 void gridNode::changeCell(QString type) {
     try {
         if(node->cell->type != type.toStdString()) {
-            node->cell = cellMap.at(type.toStdString())();
+            info->cell = cellMap.at(type.toStdString())();
+            info->dx = *parentCell->vars["dx"];
+            info->dy = *parentCell->vars["dy"];
+            info->np = *parentCell->vars["np"];
+            parentCell->getGrid()->setCellTypes(*info);
             emit cell_type_changed();
         }
     } catch(const std::out_of_range& oor) {
@@ -68,7 +75,7 @@ void gridSetupWidget::createMenu() {
     for(auto it = grid->fiber.begin();it != grid->fiber.end();it++,i++) {
         int j = 0;
         for(auto iv = it->nodes.begin();iv != it->nodes.end(); iv++,j++) {
-            gridNode* cellWidget = new gridNode(*iv, proto->getCellMap());
+            gridNode* cellWidget = new gridNode(*iv,i,j,((gridCell*)proto->cell), proto->getCellMap());
             cellGrid->setCellWidget(i,j,cellWidget);
             connect(cellWidget, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
             connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
@@ -133,7 +140,7 @@ void gridSetupWidget::addRow() {
     int j = 0;
     auto newRow = grid->fiber[i];
     for(auto iv = newRow.nodes.begin(); iv!= newRow.nodes.end(); iv++,j++) {
-        gridNode* cellWidget = new gridNode(*iv, proto->getCellMap());
+        gridNode* cellWidget = new gridNode(*iv, i,j,((gridCell*)proto->cell),proto->getCellMap());
         cellGrid->setCellWidget(i,j,cellWidget);
         connect(cellWidget, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
         connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
@@ -152,7 +159,7 @@ void gridSetupWidget::addColumn() {
     int j = 0;
     auto newRow = grid->fibery[i];
     for(auto iv = newRow.nodes.begin(); iv != newRow.nodes.end(); iv++,j++) {
-        gridNode* cellWidget = new gridNode(*iv, proto->getCellMap());
+        gridNode* cellWidget = new gridNode(*iv,j,i,((gridCell*)proto->cell), proto->getCellMap());
         cellGrid->setCellWidget(j,i,cellWidget);
         connect(cellWidget, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
         connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {

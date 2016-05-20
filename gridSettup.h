@@ -11,13 +11,14 @@
 #include "gridProtocol.h"
 #include "node.h"
 #include "grid.h"
+#include "gridCell.h"
 
 using namespace std;
 
 class gridNode : public QWidget {
 Q_OBJECT
   public:
-    gridNode(Node* node, map<string, CellInitializer> cellMap);
+    gridNode(Node* node, int X, int Y, gridCell* parentCell,  map<string, CellInitializer> cellMap);
     ~gridNode();
     Node* getNode();
     void update(bool stim, bool meas);
@@ -26,6 +27,8 @@ Q_OBJECT
     QCheckBox* stimNode;
     QCheckBox* measNode;
     Node* node;
+    cellInfo* info;
+    gridCell* parentCell;
     map<string, CellInitializer> cellMap;
   public slots:
     void changeCell(QString);
