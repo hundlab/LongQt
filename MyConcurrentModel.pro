@@ -74,4 +74,3 @@ HEADERS  +=    dialog.h \
     qcustomplot.h
 
 FORMS    += dialog.ui
-
