@@ -35,7 +35,8 @@ SOURCES += main.cpp\
     varmenu.cpp \
     heart_cell_sim.cpp \
     myoutput.cpp    \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    modellib/gpbatrialRyr.cpp
 
 HEADERS  +=    dialog.h \
     modellib/kurata08.h \
