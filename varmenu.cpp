@@ -397,11 +397,11 @@ void dvarMenu::createMenu()  {
     }
     set_vars->setChecked(write_close);
 //do all the work for dvars setup
-    QMap<QString,QSet<QWidget*>> widgets;
+    QMap<QString,QList<QCheckBox*>> widgets;
     for(auto it = dvars_groups.begin(); it != dvars_groups.end(); it++) {
-        widgets.insert(it.key(), QSet<QWidget*>());
+        widgets.insert(it.key(), QList<QCheckBox*>());
     }
-    widgets.insert("Other", QSet<QWidget*>());
+    widgets.insert("Other", QList<QCheckBox*>());
     {
     auto it = vars.begin();
     for(i = 0; it!=vars.end(); it++,i++) {
@@ -411,12 +411,12 @@ void dvarMenu::createMenu()  {
         for(auto im = dvars_groups.begin(); im != dvars_groups.end(); im++) {
             if(im->indexIn(p.c_str()) != -1) {
                 found = true;
-                widgets[im.key()].insert(dvars[i]);
+                widgets[im.key()].append(dvars[i]);
                 break;
             }
         }
         if(!found) {
-            widgets["Other"].insert(dvars[i]);
+            widgets["Other"].append(dvars[i]);
         }
 //        central_layout->addWidget(dvars[i], i/row_len, i%row_len);
         connect(dvars[i], &QCheckBox::stateChanged, [=] (int state) {update_datamap(p, state);});
@@ -432,6 +432,9 @@ void dvarMenu::createMenu()  {
     for(auto it = widgets.begin(); it != widgets.end(); it++) {
         QGridLayout* layout = new QGridLayout();
         QGroupBox* box = new QGroupBox(it.key());
+        std::sort(it.value().begin(), it.value().end(), [] (QCheckBox* a, QCheckBox* b) {
+            return a->text() <= b->text();
+        });
         for(auto im = it.value().begin(); im != it.value().end(); im++) {
             layout->addWidget(*im, j/row_len, j%row_len);
             j++;

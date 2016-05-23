@@ -39,9 +39,18 @@ void gridNode::changeCell(QString type) {
     try {
         if(node->cell->type != type.toStdString()) {
             info->cell = cellMap.at(type.toStdString())();
-            info->dx = *parentCell->vars["dx"];
-            info->dy = *parentCell->vars["dy"];
-            info->np = *parentCell->vars["np"];
+            info->dx = *parentCell->pars["dx"];
+            info->dy = *parentCell->pars["dy"];
+            info->np = *parentCell->pars["np"];
+            if(*info->cell->pars["dtmin"] < *parentCell->pars["dtmin"]) {
+                *parentCell->pars["dtmin"] = *info->cell->pars["dtmin"];
+            }
+            if(*info->cell->pars["dtmed"] < *parentCell->pars["dtmed"]) {
+                *parentCell->pars["dtmed"] = *info->cell->pars["dtmed"];
+            }
+            if(*info->cell->pars["dtmax"] < *parentCell->pars["dtmax"]) {
+                *parentCell->pars["dtmax"] = *info->cell->pars["dtmax"];
+            }
             parentCell->getGrid()->setCellTypes(*info);
             emit cell_type_changed();
         }
