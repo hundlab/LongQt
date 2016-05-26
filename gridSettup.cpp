@@ -52,7 +52,8 @@ void gridNode::changeCell(QString type) {
                 *parentCell->pars["dtmax"] = *info->cell->pars["dtmax"];
             }
             parentCell->getGrid()->setCellTypes(*info);
-            emit cell_type_changed();
+            cellType->setCurrentText(type);
+            emit cell_type_changed(type);
         }
     } catch(const std::out_of_range& oor) {
         return;
@@ -77,7 +78,9 @@ gridSetupWidget::gridSetupWidget(gridProtocol* initial_proto, QDir workingDir, Q
 void gridSetupWidget::createMenu() {
 //initialize widgets
     addRowButton = new QPushButton(tr("+ Row"));
+    removeRowButton = new QPushButton(tr("- Row"));
     addColumnButton = new QPushButton(tr("+ Column"));
+    removeColumnButton = new QPushButton(tr("- Column"));
     cellGrid = new QTableWidget(grid->rowCount(),grid->columnCount());
 //setup nodes already present in grid
     {int i = 0;
@@ -86,23 +89,26 @@ void gridSetupWidget::createMenu() {
         for(auto iv = it->nodes.begin();iv != it->nodes.end(); iv++,j++) {
             gridNode* cellWidget = new gridNode(*iv,i,j,((gridCell*)proto->cell), proto->getCellMap());
             cellGrid->setCellWidget(i,j,cellWidget);
-            connect(cellWidget, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
+            connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
             connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
                 changeStimNodeList(status, cellWidget->getNode());
             });
             connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
                 changeMeasNodeList(status, cellWidget->getNode());
             });
-
         }
     }
     }
     connect(addColumnButton, &QPushButton::clicked, this, &gridSetupWidget::addColumn);
+    connect(removeColumnButton, &QPushButton::clicked, this, &gridSetupWidget::removeColumn);
     connect(addRowButton, &QPushButton::clicked, this, &gridSetupWidget::addRow);
+    connect(removeRowButton, &QPushButton::clicked, this, &gridSetupWidget::removeRow);
 //setup layout
     QGridLayout* main_layout = new QGridLayout(this);
     main_layout->addWidget(addRowButton,0,0);
-    main_layout->addWidget(addColumnButton,0,1);
+    main_layout->addWidget(removeRowButton,0,1);
+    main_layout->addWidget(addColumnButton,0,2);
+    main_layout->addWidget(removeColumnButton,0,3);
     main_layout->addWidget(cellGrid,1,0,10,10);
     this->setLayout(main_layout);
     updateMenu();
@@ -151,7 +157,7 @@ void gridSetupWidget::addRow() {
     for(auto iv = newRow.nodes.begin(); iv!= newRow.nodes.end(); iv++,j++) {
         gridNode* cellWidget = new gridNode(*iv, i,j,((gridCell*)proto->cell),proto->getCellMap());
         cellGrid->setCellWidget(i,j,cellWidget);
-        connect(cellWidget, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
+        connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
         connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
             changeStimNodeList(status, cellWidget->getNode());
         });
@@ -170,7 +176,7 @@ void gridSetupWidget::addColumn() {
     for(auto iv = newRow.nodes.begin(); iv != newRow.nodes.end(); iv++,j++) {
         gridNode* cellWidget = new gridNode(*iv,j,i,((gridCell*)proto->cell), proto->getCellMap());
         cellGrid->setCellWidget(j,i,cellWidget);
-        connect(cellWidget, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
+        connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
         connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
             changeStimNodeList(status, cellWidget->getNode());
         });
@@ -180,9 +186,35 @@ void gridSetupWidget::addColumn() {
     }
     updateMenu();
 }
+void gridSetupWidget::removeRow() {
+    if(grid->rowCount() <= 0) {return;}
+    grid->removeRow(grid->rowCount()-1);
+    cellGrid->setRowCount(cellGrid->rowCount()-1);
+    updateMenu();  
+}
+void gridSetupWidget::removeColumn() {
+    if(grid->columnCount() <= 0) {return;}
+    grid->removeColumn(grid->columnCount()-1);
+    cellGrid->setColumnCount(cellGrid->columnCount()-1);
+    updateMenu();
+}
 void gridSetupWidget::setGrid(Grid* grid) {
     this->grid = grid;
 }
 Grid* gridSetupWidget::getGrid() {
     return this->grid;
+}
+void gridSetupWidget::changeCellGroup(QString type) {
+    QList<QTableWidgetSelectionRange> selected = cellGrid->selectedRanges();
+    for(auto it : selected) {
+        for(int i = it.topRow(); i <= it.bottomRow(); i++) {
+            for(int j = it.leftColumn(); j <= it.rightColumn(); j++) {
+                ((gridNode*)cellGrid->cellWidget(i,j))->changeCell(type);
+            }
+        }
+    }
+    if(!selected.empty()) {
+        emit cell_type_changed();
+    }
+    updateMenu();
 }

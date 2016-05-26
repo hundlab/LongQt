@@ -35,7 +35,7 @@ Q_OBJECT
   signals:
     void stimNodeChanged(int);
     void measNodeChanged(int);
-    void cell_type_changed();
+    void cell_type_changed(QString);
 };
 
 class gridSetupWidget : public QWidget {
@@ -58,11 +58,16 @@ Q_OBJECT
 
     QTableWidget* cellGrid;
     QPushButton* addColumnButton;
+    QPushButton* removeColumnButton;
     QPushButton* addRowButton;
+    QPushButton* removeRowButton;
   private slots:
     void changeStimNodeList(int status, Node* node);
     void changeMeasNodeList(int status, Node* node);
     void addRow();
     void addColumn();
+    void removeRow();
+    void removeColumn();
+    void changeCellGroup(QString type);
 };
 #endif
