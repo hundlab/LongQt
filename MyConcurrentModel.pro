@@ -77,6 +77,7 @@ HEADERS  +=    dialog.h \
     runWidget.h \
     varmenu.h \
     heart_cell_sim.h \
-    qcustomplot.h
+    qcustomplot.h \
+    modellib/cellUtils.h
 
 FORMS    += dialog.ui

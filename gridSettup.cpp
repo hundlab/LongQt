@@ -1,4 +1,5 @@
 #include "gridSettup.h"
+#include "cellUtils.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -6,10 +7,9 @@
 //###########################
 //gridNode
 //###########################
-gridNode::gridNode(Node* node, int X, int Y, gridCell* parentCell,  map<string, CellInitializer> cellMap) {
+gridNode::gridNode(Node* node, int X, int Y, gridCell* parentCell) {
 //class variabels
     this->node = node;
-    this->cellMap = cellMap;
     this->info = new cellInfo;
     this->info->X = X;
     this->info->Y = Y;
@@ -18,8 +18,8 @@ gridNode::gridNode(Node* node, int X, int Y, gridCell* parentCell,  map<string, 
     stimNode = new QCheckBox("Stimulate");
     measNode = new QCheckBox("Measure");
 //setup variables
-    for(auto it = cellMap.begin(); it != cellMap.end(); it++) {
-        cellType->addItem(it->first.c_str());
+    for(auto it : cellUtils().cellMap) {
+        cellType->addItem(it.first.c_str());
     }
 //layout management
     this->setLayout(new QHBoxLayout(this));
@@ -38,7 +38,7 @@ Node* gridNode::getNode() {
 void gridNode::changeCell(QString type) {
     try {
         if(node->cell->type != type.toStdString()) {
-            info->cell = cellMap.at(type.toStdString())();
+            info->cell = cellUtils().cellMap.at(type.toStdString())();
             info->dx = *parentCell->pars["dx"];
             info->dy = *parentCell->pars["dy"];
             info->np = *parentCell->pars["np"];
@@ -52,9 +52,9 @@ void gridNode::changeCell(QString type) {
                 *parentCell->pars["dtmax"] = *info->cell->pars["dtmax"];
             }
             parentCell->getGrid()->setCellTypes(*info);
-            cellType->setCurrentText(type);
             emit cell_type_changed(type);
         }
+        cellType->setCurrentText(type);
     } catch(const std::out_of_range& oor) {
         return;
     }
@@ -87,8 +87,8 @@ void gridSetupWidget::createMenu() {
     for(auto it = grid->fiber.begin();it != grid->fiber.end();it++,i++) {
         int j = 0;
         for(auto iv = it->nodes.begin();iv != it->nodes.end(); iv++,j++) {
-            gridNode* cellWidget = new gridNode(*iv,i,j,((gridCell*)proto->cell), proto->getCellMap());
-            cellGrid->setCellWidget(i,j,cellWidget);
+            gridNode* cellWidget = new gridNode(*iv,i,j,((gridCell*)proto->cell));
+            cellGrid->setCellWidget(j,i,cellWidget);
             connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
             connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
                 changeStimNodeList(status, cellWidget->getNode());
@@ -119,6 +119,11 @@ void gridSetupWidget::updateMenu() {
         int j = 0;
         for(auto iv = it->nodes.begin();iv != it->nodes.end(); iv++,j++) {
             gridNode* n = (gridNode*)cellGrid->cellWidget(i,j);
+            if(n == NULL) {
+                qDeleteAll(this->children());
+                this->createMenu();
+                return;
+            }
             bool stim = proto->getStimNodes().end() != proto->getStimNodes().find(n->getNode());
             bool meas = proto->getDataNodes().end() != proto->getDataNodes().find(n->getNode());
             n->update(stim,meas);
@@ -155,7 +160,7 @@ void gridSetupWidget::addRow() {
     int j = 0;
     auto newRow = grid->fiber[i];
     for(auto iv = newRow.nodes.begin(); iv!= newRow.nodes.end(); iv++,j++) {
-        gridNode* cellWidget = new gridNode(*iv, i,j,((gridCell*)proto->cell),proto->getCellMap());
+        gridNode* cellWidget = new gridNode(*iv, i,j,((gridCell*)proto->cell));
         cellGrid->setCellWidget(i,j,cellWidget);
         connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
         connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
@@ -174,7 +179,7 @@ void gridSetupWidget::addColumn() {
     int j = 0;
     auto newRow = grid->fibery[i];
     for(auto iv = newRow.nodes.begin(); iv != newRow.nodes.end(); iv++,j++) {
-        gridNode* cellWidget = new gridNode(*iv,j,i,((gridCell*)proto->cell), proto->getCellMap());
+        gridNode* cellWidget = new gridNode(*iv,j,i,((gridCell*)proto->cell));
         cellGrid->setCellWidget(j,i,cellWidget);
         connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
         connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {

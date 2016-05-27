@@ -66,6 +66,7 @@ Q_OBJECT
   signals:
     void cell_type_changed();
     void working_dir_changed(QDir&);
+    void updated();
 };
 
 class dvarMenu :public QWidget {

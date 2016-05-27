@@ -111,6 +111,7 @@ void simvarMenu::createMenu()  {
         gridSetupWidget* grid = new gridSetupWidget((gridProtocol*)this->proto,working_dir);
         tabs->addTab(grid, "Grid Settup");
         connect(grid, &gridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
+        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
     }
     }
 //main_layout
@@ -226,6 +227,7 @@ void simvarMenu::update_menu() {
             updaters[it->second.type.c_str()](it);
         } catch(std::bad_function_call e){}
     }
+    emit updated();
 }
 void simvarMenu::reset() {
     simvars.clear();

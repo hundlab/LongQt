@@ -18,7 +18,7 @@ using namespace std;
 class gridNode : public QWidget {
 Q_OBJECT
   public:
-    gridNode(Node* node, int X, int Y, gridCell* parentCell,  map<string, CellInitializer> cellMap);
+    gridNode(Node* node, int X, int Y, gridCell* parentCell);
     ~gridNode();
     Node* getNode();
     void update(bool stim, bool meas);
@@ -29,7 +29,6 @@ Q_OBJECT
     Node* node;
     cellInfo* info;
     gridCell* parentCell;
-    map<string, CellInitializer> cellMap;
   public slots:
     void changeCell(QString);
   signals:
@@ -49,7 +48,6 @@ Q_OBJECT
     void cell_type_changed();
   private:
     void createMenu();
-    void updateMenu();
     
     gridProtocol* proto;
     QDir workingDir;
@@ -69,5 +67,7 @@ Q_OBJECT
     void removeRow();
     void removeColumn();
     void changeCellGroup(QString type);
+  public slots:
+    void updateMenu();
 };
 #endif
