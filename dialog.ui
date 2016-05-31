@@ -28,7 +28,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -72,6 +72,22 @@
         <string>Import Different Trial</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="movement">
+        <enum>QListView::Static</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab2">
       <attribute name="title">
@@ -82,7 +98,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -113,6 +129,19 @@
         <string>Save</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab3">
       <attribute name="title">
@@ -123,7 +152,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -154,6 +183,19 @@
         <string>Import Control</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab4">
       <attribute name="title">
@@ -164,7 +206,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -195,6 +237,19 @@
         <string>Import Control</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab5">
       <attribute name="title">
@@ -205,7 +260,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -236,6 +291,19 @@
         <string>Import Control</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab6">
       <attribute name="title">
@@ -246,7 +314,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -277,6 +345,19 @@
         <string>Import Control</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_6">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab7">
       <attribute name="title">
@@ -287,7 +368,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -318,6 +399,19 @@
         <string>Import Control</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_25">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab8">
       <attribute name="title">
@@ -328,7 +422,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -359,6 +453,19 @@
         <string>Save</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_26">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab9">
       <attribute name="title">
@@ -369,7 +476,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -400,6 +507,19 @@
         <string>Save</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_27">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab10">
       <attribute name="title">
@@ -410,7 +530,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>721</width>
+         <width>601</width>
          <height>551</height>
         </rect>
        </property>
@@ -441,6 +561,19 @@
         <string>Import Control</string>
        </property>
       </widget>
+      <widget class="QListWidget" name="listWidget_28">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab11">
       <attribute name="title">
@@ -451,7 +584,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>711</width>
+         <width>601</width>
          <height>571</height>
         </rect>
        </property>
@@ -480,6 +613,19 @@
        </property>
        <property name="text">
         <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="listWidget_29">
+       <property name="geometry">
+        <rect>
+         <x>600</x>
+         <y>0</y>
+         <width>121</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
       </widget>
      </widget>

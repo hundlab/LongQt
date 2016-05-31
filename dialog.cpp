@@ -7,6 +7,7 @@
 #include <QList>
 #include <QGridLayout>
 #include <QMap>
+#include <exception>
 
 QString root = "./build-MyConcurrentModel-Desktop_Qt_5_5_1_MinGW_32bit-Debug";
 bool gr;
@@ -34,8 +35,8 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
 
      QFile file(f);
      if(!file.open(QIODevice::ReadOnly)){
-         QMessageBox::information(0,"error", "No File Selected!");
-         //exit(EXIT_FAILURE);
+        QMessageBox::information(0,"error", "No File Selected!");
+        throw badFile();
      }
      QTextStream in(&file);
      //watch problems with first line of labels
@@ -95,13 +96,14 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      else if(pos == 9){ x = y10;}
      else if(pos == 10){ x = y11;}
 
-     for(int i = 11; i >= num_vars_graph -1 ; i--) {
-         ui->tabWidget->removeTab(i);
-     }
+//     for(int i = 11; i >= num_vars_graph -1 ; i--) {
+//         ui->tabWidget->removeTab(i);
+//     }
 
      low_x_axis = std::stoi(a->pars["writetime"].get());
      max_x_axis = std::stoi(a->pars["tMax"].get());
 
+     populateList(split_line[0], 0, ui->listWidget);
      ui->tabWidget->setTabText(0, split_line[0]);
      ui->plot1->addGraph();
      ui->plot1->graph(0)->setPen(QPen(Qt::blue));
@@ -124,10 +126,10 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      }
      ui->plot1->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot1, split_line[0] +" vs Time"));
 
-
      //For each variable in D-Var there needs to be a graph added
      if(num_vars_graph > 2){
 
+         populateList(split_line[1], 0, ui->listWidget_2);
          ui->tabWidget->setTabText(1, split_line[1]);
          ui->plot2->addGraph(0);
          ui->plot2->graph(0)->setPen(QPen(Qt::blue));
@@ -152,6 +154,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
 
          if(num_vars_graph > 3){
 
+             populateList(split_line[2], 0, ui->listWidget_3);
              ui->tabWidget->setTabText(2, split_line[2]);
              ui->plot3->addGraph(0);
              ui->plot3->graph(0)->setPen(QPen(Qt::blue));
@@ -176,6 +179,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
 
              if(num_vars_graph > 4){
 
+                 populateList(split_line[3], 0, ui->listWidget_4);
                  ui->tabWidget->setTabText(3, split_line[3]);
                  ui->plot4->addGraph(0);
                  ui->plot4->graph(0)->setPen(QPen(Qt::blue));
@@ -199,6 +203,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
 
                  if(num_vars_graph > 5){
 
+                     populateList(split_line[4], 0, ui->listWidget_5);
                      ui->tabWidget->setTabText(4, split_line[4]);
                      ui->plot5->addGraph(0);
                      ui->plot5->graph(0)->setPen(QPen(Qt::blue));
@@ -221,6 +226,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                      ui->plot5->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot5, split_line[4] +" vs Time"));
 
                      if(num_vars_graph > 6){
+                         populateList(split_line[5], 0, ui->listWidget_6);
                          ui->tabWidget->setTabText(5, split_line[5]);
                          ui->plot6->addGraph(0);
                          ui->plot6->graph(0)->setPen(QPen(Qt::blue));
@@ -243,6 +249,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                          ui->plot6->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot6, split_line[5] +" vs Time"));
 
                          if(num_vars_graph > 7){
+                             populateList(split_line[6], 0, ui->listWidget_25);
                              ui->tabWidget->setTabText(6, split_line[6]);
                              ui->plot7->addGraph(0);
                              ui->plot7->graph(0)->setPen(QPen(Qt::blue));
@@ -265,7 +272,8 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                              ui->plot7->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot7, split_line[6] +" vs Time"));
 
                              if(num_vars_graph > 8){
-                                 ui->tabWidget->setTabText(3, split_line[3]);
+                                 populateList(split_line[7], 0, ui->listWidget_26);
+                                 ui->tabWidget->setTabText(7, split_line[7]);
                                  ui->plot8->addGraph(0);
                                  ui->plot8->graph(0)->setPen(QPen(Qt::blue));
                                  ui->plot8->graph(0)->setData(x,y8);
@@ -287,6 +295,8 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                  ui->plot8->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot8, split_line[7] +" vs Time"));
 
                                  if(num_vars_graph > 9){
+                                    
+                                     populateList(split_line[8], 0, ui->listWidget_27);
                                      ui->tabWidget->setTabText(8, split_line[8]);
                                      ui->plot9->addGraph(0);
                                      ui->plot9->graph(0)->setPen(QPen(Qt::blue));
@@ -309,6 +319,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                      ui->plot9->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot9, split_line[8] +" vs Time"));
 
                                      if(num_vars_graph > 10){
+                                         populateList(split_line[9], 0, ui->listWidget_28);
                                          ui->tabWidget->setTabText(9, split_line[9]);
                                          ui->plot10->addGraph(0);
                                          ui->plot10->graph(0)->setPen(QPen(Qt::blue));
@@ -331,6 +342,7 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
                                          ui->plot10->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot10, split_line[9] +" vs Time"));
 
                                          if(num_vars_graph > 11){
+                                             populateList(split_line[10], 0, ui->listWidget_29);
                                              ui->tabWidget->setTabText(10, split_line[10]);
                                              ui->plot11->addGraph(0);
                                              ui->plot11->graph(0)->setPen(QPen(Qt::blue));
@@ -629,6 +641,7 @@ void Dialog::on_pushButton_12_clicked()
                 );
 
     if(!filename.isEmpty()){
+
         ui->plot1->removeGraph(0);
         ui->plot1->removeGraph(1);
         ui->plot2->removeGraph(0);
@@ -687,5 +700,21 @@ void Dialog::on_pushButton_12_clicked()
         ui->plot9->replot();
         ui->plot10->replot();
         ui->plot11->replot();
+    }
+}
+void Dialog::populateList(QString varname, int trial, QListWidget* list) {
+    char filename[1500];
+    sprintf(filename, proto->finalpropertyoutfile.c_str(), trial, varname.toStdString().c_str());
+    QFile file(read_location.absolutePath() +"/"+ QString(filename));
+    if(!file.open(QIODevice::ReadOnly)){
+        return;
+    }
+    QTextStream in(&file);
+    QStringList names = in.readLine().split("\t");
+    QStringList values = in.readLine().split("\t");
+    auto it = names.begin();
+    auto iv = values.begin();
+    for(;it != names.end()&& iv != values.end(); it++,iv++) {
+        list->insertItem(list->count(),*it+"\t"+*iv);
     }
 }

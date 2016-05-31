@@ -2,9 +2,18 @@
 #define DIALOG_H
 
 #include <QDialog>
+#include <QListWidget>
 #include <QDir>
 
 #include "protocol.h"
+class badFile: public exception
+{
+  virtual const char* what() const throw()
+  {
+    return "File could not be opened";
+  }
+};
+
 
 namespace Ui {
 class Dialog;
@@ -19,6 +28,7 @@ public:
     ~Dialog();
 private:
     QDir read_location;
+    void populateList(QString varname, int trial, QListWidget* list);
 private slots:
     void passing_to_graph(Protocol* a, QString f);
     void on_pushButton_clicked();
