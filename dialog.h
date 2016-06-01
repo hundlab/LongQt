@@ -6,6 +6,7 @@
 #include <QDir>
 
 #include "protocol.h"
+#include "qcustomplot.h"
 class badFile: public exception
 {
   virtual const char* what() const throw()
@@ -30,7 +31,7 @@ private:
     QDir read_location;
     void populateList(QString varname, int trial, QListWidget* list);
 private slots:
-    void passing_to_graph(Protocol* a, QString f);
+    void passing_to_graph(QString f);
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();
@@ -58,8 +59,15 @@ private slots:
     void on_pushButton_12_clicked();
 
 private:
+    void save(int num);
+    void loadControl(int num);
+    void InitializeTab(int num);
+    QVector<QCustomPlot*> plots;
     Ui::Dialog *ui;
     Protocol* proto;
+    QStringList split_line;
+    int xIndex;
+    QVector<QVector<double>> y;
 };
 
 #endif // DIALOG_H

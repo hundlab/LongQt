@@ -18,20 +18,27 @@ Dialog::Dialog(Protocol* inital_proto, QDir read_location, QWidget *parent) :
     ui->setupUi(this);
     this->proto = inital_proto;
     this->read_location = read_location;
+    this->plots.push_back(ui->plot1);
+    this->plots.push_back(ui->plot2);
+    this->plots.push_back(ui->plot3);
+    this->plots.push_back(ui->plot4);
+    this->plots.push_back(ui->plot5);
+    this->plots.push_back(ui->plot6);
+    this->plots.push_back(ui->plot7);
+    this->plots.push_back(ui->plot8);
+    this->plots.push_back(ui->plot9);
+    this->plots.push_back(ui->plot10);
+    this->plots.push_back(ui->plot11);
     QMessageBox::information(0,"Folder", "Simulation is finished!\n The folder is named: " + read_location.absolutePath());
-    passing_to_graph(this->proto,read_location.absolutePath() + "/dt0_dvars.dat");
+    passing_to_graph(read_location.absolutePath() + "/dt0_dvars.dat");
 }
 Dialog::~Dialog()
 {
     delete ui;
 }
-void Dialog::passing_to_graph(Protocol* a, QString f){
+void Dialog::passing_to_graph(QString f){
 
-     QVector<double> x,y1, y2, y3,y4, y5;
-     QVector<double> y6, y7,y8, y9, y10, y11;
-     int low_x_axis = 0;
-     int max_x_axis = 0;
-     int num_vars_graph = 0;
+     y = QVector<QVector<double>>(10);
 
      QFile file(f);
      if(!file.open(QIODevice::ReadOnly)){
@@ -41,520 +48,90 @@ void Dialog::passing_to_graph(Protocol* a, QString f){
      QTextStream in(&file);
      //watch problems with first line of labels
      QString fline = in.readLine();
-     QStringList split_line = fline.split("\t");
-     num_vars_graph = split_line.length();
+     split_line = fline.split("\t",QString::SkipEmptyParts);
      while(!in.atEnd()){
-         QString line = in.readLine();
-         QStringList split_line = line.split("\t");
-         y1.push_back(split_line[0].toDouble());
-         y2.push_back(split_line[1].toDouble());
-         if(num_vars_graph > 3){
-             y3.push_back(split_line[2].toDouble());
-             if(num_vars_graph > 4){
-                 y4.push_back(split_line[3].toDouble());
-                 if(num_vars_graph > 5){
-                     y5.push_back(split_line[4].toDouble());
-                     if(num_vars_graph > 6){
-                         y6.push_back(split_line[5].toDouble());
-                         if(num_vars_graph > 7){
-                             y7.push_back(split_line[6].toDouble());
-                             if(num_vars_graph > 8){
-                                 y8.push_back(split_line[7].toDouble());
-                                 if(num_vars_graph > 9){
-                                     y9.push_back(split_line[8].toDouble());
-                                     if(num_vars_graph > 10){
-                                         y10.push_back(split_line[9].toDouble());
-                                         if(num_vars_graph > 11){
-                                             y11.push_back(split_line[10].toDouble());
-                                         }
-                                     }
-                                 }
-                             }
-                         }
-                     }
-                 }
-             }
+         QStringList values = in.readLine().split("\t", QString::SkipEmptyParts);
+         for(int i = 0; i < values.length() && i < split_line.length() && i < 11; i++) {
+             y[i].push_back(values[i].toDouble());
          }
      }
      file.close();
 
      //Need to sort out which variable is time now::
-     int pos = split_line.indexOf("t");
-     if(pos == -1) {
+     xIndex = split_line.indexOf("t");
+     if(xIndex == -1) {
          QMessageBox::information(0,"ERROR NO TIME", "Time must be selected as Output Variable!");
-         exit(EXIT_FAILURE);
+         throw badFile();
      }
-     else if(pos == 0){x = y1;}
-     else if(pos == 1){ x = y2;}
-     else if(pos == 2){ x = y3;}
-     else if(pos == 3){ x = y4;}
-     else if(pos == 4){ x = y5;}
-     else if(pos == 5){ x = y6;}
-     else if(pos == 6){ x = y7;}
-     else if(pos == 7){ x = y8;}
-     else if(pos == 8){ x = y9;}
-     else if(pos == 9){ x = y10;}
-     else if(pos == 10){ x = y11;}
 
-//     for(int i = 11; i >= num_vars_graph -1 ; i--) {
-//         ui->tabWidget->removeTab(i);
-//     }
-
-     low_x_axis = std::stoi(a->pars["writetime"].get());
-     max_x_axis = std::stoi(a->pars["tMax"].get());
-
-     populateList(split_line[0], 0, ui->listWidget);
-     ui->tabWidget->setTabText(0, split_line[0]);
-     ui->plot1->addGraph();
-     ui->plot1->graph(0)->setPen(QPen(Qt::blue));
-     ui->plot1->graph(0)->setData(x, y1);
-     ui->plot1->xAxis->grid()->setVisible(false);
-     ui->plot1->yAxis->grid()->setVisible(false);
-     ui->plot1->xAxis->setLabelFont(QFont(font().family(), 16));
-     ui->plot1->yAxis->setLabelFont(QFont(font().family(), 16));
-     ui->plot1->xAxis->setLabel("Time (ms)");
-     ui->plot1->yAxis->setLabel(split_line[0]);
-     ui->plot1->xAxis->setRange(low_x_axis, max_x_axis);
-     ui->plot1->graph(0)->setName("Simulation");
-     ui->plot1->yAxis->rescale();
-     ui->plot1->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-     ui->plot1->axisRect()->setRangeZoom(ui->plot1->xAxis->orientation());
-     ui->plot1->axisRect()->setRangeDrag(ui->plot1->xAxis->orientation());
-
-     if(ui->plot1->plotLayout()->rowCount() < 2){
-        ui->plot1->plotLayout()->insertRow(0);
+    for(int i = 0; i < split_line.length() && i < 11; i++) {
+/*        if(i == xIndex) {
+            continue;
+        }*/
+        this->InitializeTab(i);
      }
-     ui->plot1->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot1, split_line[0] +" vs Time"));
-
-     //For each variable in D-Var there needs to be a graph added
-     if(num_vars_graph > 2){
-
-         populateList(split_line[1], 0, ui->listWidget_2);
-         ui->tabWidget->setTabText(1, split_line[1]);
-         ui->plot2->addGraph(0);
-         ui->plot2->graph(0)->setPen(QPen(Qt::blue));
-         ui->plot2->graph(0)->setData(x, y2);
-         ui->plot2->xAxis->grid()->setVisible(false);
-         ui->plot2->yAxis->grid()->setVisible(false);
-         ui->plot2->xAxis->setLabelFont(QFont(font().family(), 16));
-         ui->plot2->yAxis->setLabelFont(QFont(font().family(), 16));
-         ui->plot2->xAxis->setLabel("Time (ms)");
-         ui->plot2->yAxis->setLabel(split_line[1]);
-         ui->plot2->xAxis->setRange(low_x_axis, max_x_axis);
-         ui->plot2->graph(0)->setName("Simulation");
-         ui->plot2->yAxis->rescale();
-         ui->plot2->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-         ui->plot2->axisRect()->setRangeZoom(ui->plot2->xAxis->orientation());
-         ui->plot2->axisRect()->setRangeDrag(ui->plot2->xAxis->orientation());
-         if(ui->plot2->plotLayout()->rowCount() < 2){
-            ui->plot2->plotLayout()->insertRow(0);
-         }
-         ui->plot2->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot2, split_line[1] +" vs Time"));
-         ui->plot2->replot();
-
-         if(num_vars_graph > 3){
-
-             populateList(split_line[2], 0, ui->listWidget_3);
-             ui->tabWidget->setTabText(2, split_line[2]);
-             ui->plot3->addGraph(0);
-             ui->plot3->graph(0)->setPen(QPen(Qt::blue));
-             ui->plot3->graph(0)->setData(x, y3);
-             ui->plot3->xAxis->grid()->setVisible(false);
-             ui->plot3->yAxis->grid()->setVisible(false);
-             ui->plot3->xAxis->setLabelFont(QFont(font().family(), 16));
-             ui->plot3->yAxis->setLabelFont(QFont(font().family(), 16));
-             ui->plot3->xAxis->setLabel("Time (ms)");
-             ui->plot3->yAxis->setLabel(split_line[2]);
-             ui->plot3->xAxis->setRange(low_x_axis, max_x_axis);
-             ui->plot3->yAxis->rescale();
-             ui->plot3->graph(0)->setName("Simulation");
-             ui->plot3->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-             ui->plot3->axisRect()->setRangeZoom(ui->plot3->xAxis->orientation());
-             ui->plot3->axisRect()->setRangeDrag(ui->plot3->xAxis->orientation());
-
-             if(ui->plot3->plotLayout()->rowCount() < 2){
-                ui->plot3->plotLayout()->insertRow(0);
-             }
-             ui->plot3->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot3, split_line[2] +" vs Time"));
-
-             if(num_vars_graph > 4){
-
-                 populateList(split_line[3], 0, ui->listWidget_4);
-                 ui->tabWidget->setTabText(3, split_line[3]);
-                 ui->plot4->addGraph(0);
-                 ui->plot4->graph(0)->setPen(QPen(Qt::blue));
-                 ui->plot4->graph(0)->setData(x, y4);
-                 ui->plot4->xAxis->grid()->setVisible(false);
-                 ui->plot4->yAxis->grid()->setVisible(false);
-                 ui->plot4->xAxis->setLabelFont(QFont(font().family(), 16));
-                 ui->plot4->yAxis->setLabelFont(QFont(font().family(), 16));
-                 ui->plot4->xAxis->setLabel("Time (ms)");
-                 ui->plot4->yAxis->setLabel(split_line[3]);
-                 ui->plot4->xAxis->setRange(low_x_axis, max_x_axis);
-                 ui->plot4->yAxis->rescale();
-                 ui->plot4->graph(0)->setName("Simulation");
-                 ui->plot4->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-                 ui->plot4->axisRect()->setRangeZoom(ui->plot4->xAxis->orientation());
-                 ui->plot4->axisRect()->setRangeDrag(ui->plot4->xAxis->orientation());
-                 if(ui->plot4->plotLayout()->rowCount() < 2){
-                    ui->plot4->plotLayout()->insertRow(0);
-                 }
-                 ui->plot4->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot4, split_line[3] +" vs Time"));
-
-                 if(num_vars_graph > 5){
-
-                     populateList(split_line[4], 0, ui->listWidget_5);
-                     ui->tabWidget->setTabText(4, split_line[4]);
-                     ui->plot5->addGraph(0);
-                     ui->plot5->graph(0)->setPen(QPen(Qt::blue));
-                     ui->plot5->graph(0)->setData(x,y5);
-                     ui->plot5->xAxis->grid()->setVisible(false);
-                     ui->plot5->yAxis->grid()->setVisible(false);
-                     ui->plot5->xAxis->setLabelFont(QFont(font().family(), 16));
-                     ui->plot5->yAxis->setLabelFont(QFont(font().family(), 16));
-                     ui->plot5->xAxis->setLabel("Time (ms)");
-                     ui->plot5->yAxis->setLabel(split_line[4]);
-                     ui->plot5->xAxis->setRange(low_x_axis, max_x_axis);
-                     ui->plot5->yAxis->rescale();
-                     ui->plot5->graph(0)->setName("Simulation");
-                     ui->plot5->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-                     ui->plot5->axisRect()->setRangeZoom(ui->plot5->xAxis->orientation());
-                     ui->plot5->axisRect()->setRangeDrag(ui->plot5->xAxis->orientation());
-                     if(ui->plot5->plotLayout()->rowCount() < 2){
-                        ui->plot5->plotLayout()->insertRow(0);
-                     }
-                     ui->plot5->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot5, split_line[4] +" vs Time"));
-
-                     if(num_vars_graph > 6){
-                         populateList(split_line[5], 0, ui->listWidget_6);
-                         ui->tabWidget->setTabText(5, split_line[5]);
-                         ui->plot6->addGraph(0);
-                         ui->plot6->graph(0)->setPen(QPen(Qt::blue));
-                         ui->plot6->graph(0)->setData(x,y6);
-                         ui->plot6->xAxis->grid()->setVisible(false);
-                         ui->plot6->yAxis->grid()->setVisible(false);
-                         ui->plot6->xAxis->setLabelFont(QFont(font().family(), 16));
-                         ui->plot6->yAxis->setLabelFont(QFont(font().family(), 16));
-                         ui->plot6->xAxis->setLabel("Time (ms)");
-                         ui->plot6->yAxis->setLabel(split_line[5]);
-                         ui->plot6->xAxis->setRange(low_x_axis, max_x_axis);
-                         ui->plot6->yAxis->rescale();
-                         ui->plot6->graph(0)->setName("Simulation");
-                         ui->plot6->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-                         ui->plot6->axisRect()->setRangeZoom(ui->plot6->xAxis->orientation());
-                         ui->plot6->axisRect()->setRangeDrag(ui->plot6->xAxis->orientation());
-                         if(ui->plot6->plotLayout()->rowCount() < 2){
-                            ui->plot6->plotLayout()->insertRow(0);
-                         }
-                         ui->plot6->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot6, split_line[5] +" vs Time"));
-
-                         if(num_vars_graph > 7){
-                             populateList(split_line[6], 0, ui->listWidget_25);
-                             ui->tabWidget->setTabText(6, split_line[6]);
-                             ui->plot7->addGraph(0);
-                             ui->plot7->graph(0)->setPen(QPen(Qt::blue));
-                             ui->plot7->graph(0)->setData(x,y7);
-                             ui->plot7->xAxis->grid()->setVisible(false);
-                             ui->plot7->yAxis->grid()->setVisible(false);
-                             ui->plot7->xAxis->setLabelFont(QFont(font().family(), 16));
-                             ui->plot7->yAxis->setLabelFont(QFont(font().family(), 16));
-                             ui->plot7->xAxis->setLabel("Time (ms)");
-                             ui->plot7->yAxis->setLabel(split_line[6]);
-                             ui->plot7->xAxis->setRange(low_x_axis, max_x_axis);
-                             ui->plot7->yAxis->rescale();
-                             ui->plot7->graph(0)->setName("Simulation");
-                             ui->plot7->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-                             ui->plot7->axisRect()->setRangeZoom(ui->plot7->xAxis->orientation());
-                             ui->plot7->axisRect()->setRangeDrag(ui->plot7->xAxis->orientation());
-                             if(ui->plot7->plotLayout()->rowCount() < 2){
-                                ui->plot7->plotLayout()->insertRow(0);
-                             }
-                             ui->plot7->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot7, split_line[6] +" vs Time"));
-
-                             if(num_vars_graph > 8){
-                                 populateList(split_line[7], 0, ui->listWidget_26);
-                                 ui->tabWidget->setTabText(7, split_line[7]);
-                                 ui->plot8->addGraph(0);
-                                 ui->plot8->graph(0)->setPen(QPen(Qt::blue));
-                                 ui->plot8->graph(0)->setData(x,y8);
-                                 ui->plot8->xAxis->grid()->setVisible(false);
-                                 ui->plot8->yAxis->grid()->setVisible(false);
-                                 ui->plot8->xAxis->setLabelFont(QFont(font().family(), 16));
-                                 ui->plot8->yAxis->setLabelFont(QFont(font().family(), 16));
-                                 ui->plot8->xAxis->setLabel("Time (ms)");
-                                 ui->plot8->yAxis->setLabel(split_line[7]);
-                                 ui->plot8->xAxis->setRange(low_x_axis, max_x_axis);
-                                 ui->plot8->yAxis->rescale();
-                                 ui->plot8->graph(0)->setName("Simulation");
-                                 ui->plot8->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-                                 ui->plot8->axisRect()->setRangeZoom(ui->plot8->xAxis->orientation());
-                                 ui->plot8->axisRect()->setRangeDrag(ui->plot8->xAxis->orientation());
-                                 if(ui->plot8->plotLayout()->rowCount() < 2){
-                                    ui->plot8->plotLayout()->insertRow(0);
-                                 }
-                                 ui->plot8->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot8, split_line[7] +" vs Time"));
-
-                                 if(num_vars_graph > 9){
-                                    
-                                     populateList(split_line[8], 0, ui->listWidget_27);
-                                     ui->tabWidget->setTabText(8, split_line[8]);
-                                     ui->plot9->addGraph(0);
-                                     ui->plot9->graph(0)->setPen(QPen(Qt::blue));
-                                     ui->plot9->graph(0)->setData(x,y9);
-                                     ui->plot9->xAxis->grid()->setVisible(false);
-                                     ui->plot9->yAxis->grid()->setVisible(false);
-                                     ui->plot9->xAxis->setLabelFont(QFont(font().family(), 16));
-                                     ui->plot9->yAxis->setLabelFont(QFont(font().family(), 16));
-                                     ui->plot9->xAxis->setLabel("Time (ms)");
-                                     ui->plot9->yAxis->setLabel(split_line[8]);
-                                     ui->plot9->xAxis->setRange(low_x_axis, max_x_axis);
-                                     ui->plot9->yAxis->rescale();
-                                     ui->plot9->graph(0)->setName("Simulation");
-                                     ui->plot9->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-                                     ui->plot9->axisRect()->setRangeZoom(ui->plot9->xAxis->orientation());
-                                     ui->plot9->axisRect()->setRangeDrag(ui->plot9->xAxis->orientation());
-                                     if(ui->plot9->plotLayout()->rowCount() < 2){
-                                        ui->plot9->plotLayout()->insertRow(0);
-                                     }
-                                     ui->plot9->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot9, split_line[8] +" vs Time"));
-
-                                     if(num_vars_graph > 10){
-                                         populateList(split_line[9], 0, ui->listWidget_28);
-                                         ui->tabWidget->setTabText(9, split_line[9]);
-                                         ui->plot10->addGraph(0);
-                                         ui->plot10->graph(0)->setPen(QPen(Qt::blue));
-                                         ui->plot10->graph(0)->setData(x,y10);
-                                         ui->plot10->xAxis->grid()->setVisible(false);
-                                         ui->plot10->yAxis->grid()->setVisible(false);
-                                         ui->plot10->xAxis->setLabelFont(QFont(font().family(), 16));
-                                         ui->plot10->yAxis->setLabelFont(QFont(font().family(), 16));
-                                         ui->plot10->xAxis->setLabel("Time (ms)");
-                                         ui->plot10->yAxis->setLabel(split_line[9]);
-                                         ui->plot10->xAxis->setRange(low_x_axis, max_x_axis);
-                                         ui->plot10->yAxis->rescale();
-                                         ui->plot10->graph(0)->setName("Simulation");
-                                         ui->plot10->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-                                         ui->plot10->axisRect()->setRangeZoom(ui->plot10->xAxis->orientation());
-                                         ui->plot10->axisRect()->setRangeDrag(ui->plot10->xAxis->orientation());
-                                         if(ui->plot10->plotLayout()->rowCount() < 2){
-                                            ui->plot10->plotLayout()->insertRow(0);
-                                         }
-                                         ui->plot10->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot10, split_line[9] +" vs Time"));
-
-                                         if(num_vars_graph > 11){
-                                             populateList(split_line[10], 0, ui->listWidget_29);
-                                             ui->tabWidget->setTabText(10, split_line[10]);
-                                             ui->plot11->addGraph(0);
-                                             ui->plot11->graph(0)->setPen(QPen(Qt::blue));
-                                             ui->plot11->graph(0)->setData(x,y11);
-                                             ui->plot11->xAxis->grid()->setVisible(false);
-                                             ui->plot11->yAxis->grid()->setVisible(false);
-                                             ui->plot11->xAxis->setLabelFont(QFont(font().family(), 16));
-                                             ui->plot11->yAxis->setLabelFont(QFont(font().family(), 16));
-                                             ui->plot11->xAxis->setLabel("Time (ms)");
-                                             ui->plot11->yAxis->setLabel(split_line[10]);
-                                             ui->plot11->xAxis->setRange(low_x_axis, max_x_axis);
-                                             ui->plot11->yAxis->rescale();
-                                             ui->plot11->graph(0)->setName("Simulation");
-                                             ui->plot11->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
-                                             ui->plot11->axisRect()->setRangeZoom(ui->plot11->xAxis->orientation());
-                                             ui->plot11->axisRect()->setRangeDrag(ui->plot11->xAxis->orientation());
-                                             if(ui->plot11->plotLayout()->rowCount() < 2){
-                                                ui->plot11->plotLayout()->insertRow(0);
-                                             }
-                                             ui->plot11->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot11, split_line[10] +" vs Time"));
-                                         }
-                                     }
-                                 }
-                             }
-                         }
-                     }
-                 }
-             }
-         }
-     }
- }
-void Dialog::on_pushButton_clicked()
-{
+}
+void Dialog::loadControl(int num) {
     QVector<double> x, y;
-    QString toGet = ui->plot1->yAxis->label();
+    QString toGet = plots[num]->yAxis->label();
     QString time = "t";
+    auto plot = plots[num];
 
     gr = control_on_graph(x, y, toGet, time);
     if (gr){
-        ui->plot1->addGraph();
-        ui->plot1->graph(1)->setData(x, y);
-        ui->plot1->graph(1)->setPen(QPen(Qt::red));
-        ui->plot1->graph(1)->setName("Control");
-        ui->plot1->yAxis->rescale();
-        ui->plot1->legend->setVisible(true);
-        ui->plot1->replot();
+        plot->addGraph();
+        plot->graph(1)->setData(x, y);
+        plot->graph(1)->setPen(QPen(Qt::red));
+        plot->graph(1)->setName("Control");
+        plot->yAxis->rescale();
+        plot->legend->setVisible(true);
+        plot->replot();
     }
+   
+}
+void Dialog::on_pushButton_clicked()
+{
+    loadControl(0);
 }
 void Dialog::on_pushButton_2_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot2->yAxis->label();
-    QString time = "t";
-
-    gr = control_on_graph(x, y, toGet, time);
-    if(gr){
-        ui->plot2->addGraph();
-        ui->plot2->graph(1)->setData(x, y);
-        ui->plot2->graph(1)->setPen(QPen(Qt::red));
-        ui->plot2->graph(1)->setName("Control");
-        ui->plot2->yAxis->rescale();
-        ui->plot2->legend->setVisible(true);
-          ui->plot2->replot();
-    }
+    loadControl(1);
 }
 void Dialog::on_pushButton_3_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot3->yAxis->label();
-    QString time = "t";
-
-    gr = control_on_graph(x, y, toGet, time);
-    if(gr){
-        ui->plot3->addGraph();
-        ui->plot3->graph(1)->setData(x, y);
-        ui->plot3->graph(1)->setPen(QPen(Qt::red));
-        ui->plot3->graph(1)->setName("Control");
-        ui->plot3->yAxis->rescale();
-        ui->plot3->legend->setVisible(true);
-        ui->plot3->replot();
-    }
+    loadControl(2);
 }
 void Dialog::on_pushButton_4_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot4->yAxis->label();
-    QString time = "t";
-
-    gr = control_on_graph(x, y, toGet, time);
-    if(gr){
-        ui->plot4->addGraph();
-        ui->plot4->graph(1)->setData(x, y);
-        ui->plot4->graph(1)->setPen(QPen(Qt::red));
-        ui->plot4->graph(1)->setName("Control");
-        ui->plot4->yAxis->rescale();
-        ui->plot4->legend->setVisible(true);
-        ui->plot4->replot();
-    }
+    loadControl(3);
 }
 void Dialog::on_pushButton_5_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot5->yAxis->label();
-    QString time = "t";
-
-    gr = control_on_graph(x, y, toGet, time);
-    if(gr){
-        ui->plot5->addGraph();
-        ui->plot5->graph(1)->setData(x, y);
-        ui->plot5->graph(1)->setPen(QPen(Qt::red));
-        ui->plot5->graph(1)->setName("Control");
-        ui->plot5->yAxis->rescale();
-        ui->plot5->legend->setVisible(true);
-        ui->plot5->replot();
-    }
+    loadControl(4);
 }
 void Dialog::on_pushButton_6_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot6->yAxis->label();
-    QString time = "t";
-
-    gr= control_on_graph(x, y, toGet, time);
-    if(gr){ui->plot6->addGraph();
-        ui->plot6->graph(1)->setData(x, y);
-        ui->plot6->graph(1)->setPen(QPen(Qt::red));
-        ui->plot6->graph(1)->setName("Control");
-        ui->plot6->yAxis->rescale();
-        ui->plot6->legend->setVisible(true);
-        ui->plot6->replot();
-    }
+    loadControl(5);
 }
 void Dialog::on_pushButton_7_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot7->yAxis->label();
-    QString time = "t";
-
-    gr = control_on_graph(x, y, toGet, time);
-    if(gr){
-        ui->plot7->addGraph();
-        ui->plot7->graph(1)->setData(x, y);
-        ui->plot7->graph(1)->setPen(QPen(Qt::red));
-        ui->plot7->graph(1)->setName("Control");
-        ui->plot7->yAxis->rescale();
-        ui->plot7->legend->setVisible(true);
-        ui->plot7->replot();
-    }
+    loadControl(6);
 }
 void Dialog::on_pushButton_8_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot8->yAxis->label();
-    QString time = "t";
-
-    gr = control_on_graph(x, y, toGet, time);
-    if(gr){ui->plot8->addGraph();
-        ui->plot8->graph(1)->setData(x, y);
-        ui->plot8->graph(1)->setPen(QPen(Qt::red));
-        ui->plot8->graph(1)->setName("Control");
-        ui->plot8->yAxis->rescale();
-        ui->plot8->legend->setVisible(true);
-        ui->plot8->replot();
-    }
+    loadControl(7);
 }
 void Dialog::on_pushButton_9_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot9->yAxis->label();
-    QString time = "t";
-
-    gr = control_on_graph(x, y, toGet, time);
-    if(gr){ui->plot9->addGraph();
-        ui->plot9->graph(1)->setData(x, y);
-        ui->plot9->graph(1)->setPen(QPen(Qt::red));
-        ui->plot9->graph(1)->setName("Control");
-        ui->plot9->yAxis->rescale();
-        ui->plot9->legend->setVisible(true);
-        ui->plot9->replot();
-    }
+    loadControl(8);
 }
 void Dialog::on_pushButton_10_clicked()
 {
-    QVector<double> x,y;
-    QString toGet = ui->plot10->yAxis->label();
-    QString time = "t";
-
-    gr =control_on_graph(x, y, toGet, time);;
-    if(gr){ui->plot10->addGraph();
-        ui->plot10->graph(1)->setData(x, y);
-        ui->plot10->graph(1)->setPen(QPen(Qt::red));
-        ui->plot10->graph(1)->setName("Control");
-        ui->plot10->yAxis->rescale();
-        ui->plot10->legend->setVisible(true);
-        ui->plot10->replot();
-    }
+    loadControl(9);
 }
 void Dialog::on_pushButton_11_clicked()
 {
-    QVector<double> x, y;
-    QString toGet = ui->plot11->yAxis->label();
-    QString time = "t";
-
-    gr= control_on_graph(x, y, toGet, time);
-    if(gr){ui->plot11->addGraph();
-        ui->plot11->graph(1)->setData(x, y);
-        ui->plot11->graph(1)->setPen(QPen(Qt::red));
-        ui->plot11->graph(1)->setName("Control");
-        ui->plot11->yAxis->rescale();
-        ui->plot11->legend->setVisible(true);
-        ui->plot11->replot();
-    }
+    loadControl(10);
 }
 bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString toGet, QString time){
     QString filename = QFileDialog::getOpenFileName(
@@ -587,49 +164,52 @@ bool Dialog::control_on_graph(QVector<double> &x, QVector<double> &y, QString to
     }
     return false;
 }
+void Dialog::save(int num) {
+    plots[num]->saveJpg(read_location.absolutePath() + "/" + plots[num]->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+}
 void Dialog::on_save1_clicked()
 {
-    ui->plot1->saveJpg(read_location.absolutePath() + "/" + ui->plot1->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(0);
 }
 void Dialog::on_save2_clicked()
 {
-    ui->plot2->saveJpg(read_location.absolutePath() + "/" + ui->plot2->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(1);
 }
 void Dialog::on_save3_clicked()
 {
-    ui->plot3->saveJpg(read_location.absolutePath() + "/" + ui->plot3->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(2);
 }
 void Dialog::on_save4_clicked()
 {
-    ui->plot4->saveJpg(read_location.absolutePath() + "/" + ui->plot4->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(3);
 }
 void Dialog::on_save5_clicked()
 {
-    ui->plot5->saveJpg(read_location.absolutePath() + "/" + ui->plot5->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(4);
 }
 void Dialog::on_save6_clicked()
 {
-    ui->plot6->saveJpg(read_location.absolutePath() + "/" + ui->plot6->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(5);
 }
 void Dialog::on_save7_clicked()
 {
-    ui->plot7->saveJpg(read_location.absolutePath() + "/" + ui->plot7->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(6);
 }
 void Dialog::on_save8_clicked()
 {
-    ui->plot8->saveJpg(read_location.absolutePath() + "/" + ui->plot8->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(7);
 }
 void Dialog::on_save9_clicked()
 {
-    ui->plot9->saveJpg(read_location.absolutePath() + "/" + ui->plot9->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(8);
 }
 void Dialog::on_save10_clicked()
 {
-    ui->plot10->saveJpg(read_location.absolutePath() + "/" + ui->plot10->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(9);
 }
 void Dialog::on_save11_clicked()
 {
-    ui->plot11->saveJpg(read_location.absolutePath() + "/" + ui->plot11->yAxis->label() + "vsTime.jpg", 0,0,1.0, -1);
+    save(10);
 }
 void Dialog::on_pushButton_12_clicked()
 {
@@ -687,7 +267,7 @@ void Dialog::on_pushButton_12_clicked()
         ui->plot10->legend->setVisible(false);
         ui->plot11->legend->clear();
         ui->plot11->legend->setVisible(false);
-        passing_to_graph(this->proto, filename);
+        passing_to_graph(filename);
 
         ui->plot1->replot();
         ui->plot2->replot();
@@ -717,4 +297,32 @@ void Dialog::populateList(QString varname, int trial, QListWidget* list) {
     for(;it != names.end()&& iv != values.end(); it++,iv++) {
         list->insertItem(list->count(),*it+"\t"+*iv);
     }
+}
+void Dialog::InitializeTab(int num) {
+     auto plot = plots[num];
+     populateList(split_line[num], 0, ui->listWidget);
+     ui->tabWidget->setTabText(num, split_line[num]);
+     plot->addGraph();
+     plot->graph(0)->setPen(QPen(Qt::blue));
+     plot->graph(0)->setData(y[xIndex], y[num]);
+     plot->xAxis->grid()->setVisible(false);
+     plot->yAxis->grid()->setVisible(false);
+     plot->xAxis->setLabelFont(QFont(font().family(), 16));
+     plot->yAxis->setLabelFont(QFont(font().family(), 16));
+     plot->xAxis->setLabel("Time (ms)");
+     plot->yAxis->setLabel(split_line[num]);
+     plot->xAxis->setRange(y[xIndex].first(), y[xIndex].last());
+     plot->graph(0)->setName("Simulation");
+     plot->yAxis->rescale();
+     plot->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+     plot->axisRect()->setRangeZoom(plot->xAxis->orientation());
+     plot->axisRect()->setRangeDrag(plot->xAxis->orientation());
+
+     if(plot->plotLayout()->rowCount() < 2){
+        plot->plotLayout()->insertRow(0);
+     }
+     if(plot->plotLayout()->elementAt(0) != 0) {
+        plot->plotLayout()->removeAt(0);
+     }
+     plot->plotLayout()->addElement(0,0, new QCPPlotTitle(plot, split_line[num] +" vs Time"));
 }
