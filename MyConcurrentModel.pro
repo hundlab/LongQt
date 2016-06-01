@@ -51,7 +51,9 @@ SOURCES += main.cpp\
     varmenu.cpp \
     heart_cell_sim.cpp \
     qcustomplot.cpp \
-    modellib/gpbatrialRyr.cpp
+    modellib/gpbatrialRyr.cpp \
+    linegraph.cpp \
+    bargraph.cpp
 
 HEADERS  +=    dialog.h \
     modellib/kurata08.h \
@@ -78,6 +80,10 @@ HEADERS  +=    dialog.h \
     varmenu.h \
     heart_cell_sim.h \
     qcustomplot.h \
-    modellib/cellUtils.h
+    modellib/cellUtils.h \
+    linegraph.h \
+    bargraph.h
 
-FORMS    += dialog.ui
+FORMS    += dialog.ui \
+    linegraph.ui \
+    bargraph.ui
