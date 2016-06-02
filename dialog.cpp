@@ -1,8 +1,9 @@
 #include "dialog.h"
 #include "linegraph.h"
+#include "bargraph.h"
 #include "ui_dialog.h"
-//#include "ioevent.h"
 #include "heart_cell_sim.h"
+#include "measure.h"
 
 #include <QIODevice>
 #include <QList>
@@ -17,13 +18,17 @@ Dialog::Dialog(Protocol* inital_proto, QDir read_location, QWidget *parent) :
     ui->setupUi(this);
     this->proto = inital_proto;
     this->read_location = read_location;
-    passing_to_graph(read_location.absolutePath() + "/dt0_dvars.dat");
+    this->Initialize();
+}
+void Dialog::Initialize() {
+    buildLineGraphs(read_location.absolutePath() + "/dt0_dvars.dat");
+    buildBarGraphs(0);
 }
 Dialog::~Dialog()
 {
     delete ui;
 }
-void Dialog::passing_to_graph(QString f){
+void Dialog::buildLineGraphs(QString f){
      QVector<QVector<double>> y;
      QFile file(f);
      int xIndex;
@@ -60,6 +65,25 @@ void Dialog::passing_to_graph(QString f){
         ui->tabWidget->addTab(new lineGraph(this->proto,qMakePair(split_line[xIndex],&y[xIndex]),qMakePair(split_line[i],&y[i]),this->read_location),split_line[i]);        
      }
 }
+void Dialog::buildBarGraphs(int trial) {
+    char filename[1500];
+    set<string> vars = proto->cell->getVariables();
+    for(auto var : vars) {
+        sprintf(filename, proto->finalpropertyoutfile.c_str(), trial, var.c_str());
+        QFile file(read_location.absolutePath() +"/"+ QString(filename));
+        if(!file.open(QIODevice::ReadOnly)){
+            continue;
+        }
+        QTextStream in(&file);
+        QStringList names = in.readLine().split("\t", QString::SkipEmptyParts);
+        QStringList values = in.readLine().split("\t", QString::SkipEmptyParts);
+        auto name = names.begin();
+        auto value = values.begin();
+        for(;name != names.end()&& value != values.end(); name++,value++) {
+            ui->tabWidget->addTab(new barGraph(*name, value->toDouble(), var.c_str(), read_location), QString(var.c_str()) +":"+QString(*name));
+        }
+    }
+}
 void Dialog::on_loadNew_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(
@@ -74,7 +98,7 @@ void Dialog::on_loadNew_clicked()
         while(ui->tabWidget->count() > 0) {
             ui->tabWidget->removeTab(0);
         }
-        passing_to_graph(filename);
+        buildLineGraphs(filename);
    }
 }
 

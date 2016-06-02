@@ -27,9 +27,11 @@ public:
     explicit Dialog(Protocol* inital_proto,QDir read_locaiton, QWidget *parent = 0);
     ~Dialog();
 private:
+    void Initialize();
     QDir read_location;
 private slots:
-    void passing_to_graph(QString f);
+    void buildLineGraphs(QString f);
+    void buildBarGraphs(int trial);
     void on_loadNew_clicked();
 
 private:
