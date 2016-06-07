@@ -99,11 +99,11 @@ Simulation::Simulation(QWidget* parent){
 //set button/combo box inital values
     cancel_button->hide();
 //menu
-    menu_options->addItem("Simulation Protocol");
-    menu_options->addItem("Simulation Varibales");
-    menu_options->addItem("Tracked Cell Values");
-    menu_options->addItem("Measured Cell Values");
-    menu_options->addItem("Cell Initializers");
+    menu_options->addItem("Choose Protocol");
+    menu_options->addItem("Choose Variables");
+    menu_options->addItem("Track Cell Values");
+    menu_options->addItem("Measure Cell Values");
+    menu_options->addItem("Perform Sensitivity Analysis");
     menu_options->addItem("Run Simulation");
     for(auto it = menu_list.begin(); it != menu_list.end(); it++) {
         QScrollArea* scrollWraper = new QScrollArea();
