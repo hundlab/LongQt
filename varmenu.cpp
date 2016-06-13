@@ -560,7 +560,7 @@ void mvarMenu::createMenu()  {
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
-    get_vars = new QPushButton(tr("Import Mesurement settings"), this);
+    get_vars = new QPushButton(tr("Import Measurement settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
     vars_view = new QListWidget(this);
