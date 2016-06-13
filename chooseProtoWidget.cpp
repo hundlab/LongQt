@@ -27,6 +27,7 @@ void chooseProtoWidget::Initialize() {
     cell_type->addItems(cell_options);
     cellLayout->addWidget(simvars_label);
     cellLayout->addWidget(cell_type);
+    this->cellChangedSlot();
 
     clampType = new QButtonGroup();
     QGroupBox* clampTypeBox = new QGroupBox("Clamp Type");
