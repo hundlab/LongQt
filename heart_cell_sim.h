@@ -30,7 +30,6 @@ class Simulation : public QWidget {
     QWidget* parent;
     Protocol* proto;
     QString date_time;
-    QDir working_dir;
     QList<QWidget*> menu_list;
 //utility functions
     void leave_current(int current);

@@ -150,7 +150,7 @@ void Simulation::canceled() {
     next_button->show();
 }
 void Simulation::finished() {
-    QMessageBox::information(0,"Folder", "Simulation is finished!\n The folder is named: " + working_dir.absolutePath());
+    QMessageBox::information(0,"Folder", "Simulation is finished!\n The folder is named: " + QString(proto->datadir.c_str()));
     try {
         menu_list.append(new Dialog(proto,QDir(proto->datadir.c_str()), this));
         menu->addWidget(menu_list.last());
