@@ -26,6 +26,7 @@ Q_OBJECT
     QComboBox* cellType;
     QCheckBox* stimNode;
     QCheckBox* measNode;
+    map<string, CellInitializer> cellMap;
     Node* node;
     cellInfo* info;
     gridCell* parentCell;

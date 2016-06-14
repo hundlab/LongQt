@@ -36,6 +36,7 @@ class Simulation : public QWidget {
 //buttons
     QPushButton* next_button;
     QPushButton* cancel_button;
+    QPushButton* about_button;
 //organizational widgets
     QListWidget* menu_options;
     QStackedWidget* menu;

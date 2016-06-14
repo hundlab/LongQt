@@ -37,6 +37,7 @@ Simulation::Simulation(QWidget* parent){
     menu_options = new QListWidget();
 //create Widgets 
     QSplitter* main_splitter = new QSplitter();
+    about_button = new QPushButton(QIcon::fromTheme("help-about"),"About");
     next_button = new QPushButton("Next");
     cancel_button = new QPushButton("Cancel");
     chooseProtoWidget* choose = new chooseProtoWidget(this);
@@ -119,12 +120,16 @@ Simulation::Simulation(QWidget* parent){
     main_splitter->setSizes(tempList);
 //main_layout
     main_layout->addWidget(main_splitter, 0,0,-1,1);
-    main_layout->addWidget(next_button, 1, 2);
-    main_layout->addWidget(cancel_button, 1, 2);
+    main_layout->addWidget(about_button, 0, 2);
+    main_layout->addWidget(next_button, 2, 2);
+    main_layout->addWidget(cancel_button, 2, 2);
     
     this->setWindowTitle("Cell Simulation");
     showMaximized();
 //connect buttons
+    connect(about_button, &QPushButton::clicked, [] () {
+        QMessageBox::information(NULL, tr("Hund MyConcurrent Model Information"),tr("Copyright© 2016 Thomas J. Hund\nEmail: thomas.hund@osumc.edu\nVersion 0.1\nContributers:\n\tThomas Hund\n\tBirce Ela Onal\n\tDanielle Beckley\n\tDaniel Gratz\n"),QMessageBox::Close);
+    });
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
 };

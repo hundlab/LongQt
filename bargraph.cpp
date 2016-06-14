@@ -1,5 +1,6 @@
 #include "bargraph.h"
 #include "ui_bargraph.h"
+#include <QInputDialog>
 
 barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidget *parent) :
     QWidget(parent),
@@ -7,19 +8,25 @@ barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidge
 {
     ui->setupUi(this);
     this->saveDir = saveDir;
-    this->data.append(value);
-    this->labels.append(name);
+    bar newBar;
+    newBar.data.append(value);
+    labels.append(name);
+    aspect = name;
     this->var = var;
     this->Initialize();
+    this->newBar(newBar);
 }
 void barGraph::Initialize() {
     ui->plot->plotLayout()->addElement(1,0, new QCPPlotTitle(ui->plot, var));
-    valueBar = new QCPBars(ui->plot->xAxis, ui->plot->yAxis);
-    ui->plot->addPlottable(valueBar);
 //    valueBar->setName(name);
     ui->plot->xAxis->setAutoTicks(false);
     ui->plot->xAxis->setAutoTickLabels(false);
-    this->newBar();
+//    QPen gridPen;
+//    gridPen.setStyle(Qt::SolidLine);
+//    gridPen.setColor(QColor(0, 0, 0, 25));
+//    ui->plot->yAxis->grid()->setPen(gridPen);
+//    gridPen.setStyle(Qt::DotLine);
+//    ui->plot->yAxis->grid()->setSubGridPen(gridPen); 
 }
 barGraph::~barGraph()
 {
@@ -36,48 +43,55 @@ void barGraph::on_loadOtherTrial_clicked() {
     if(!file.open(QIODevice::ReadOnly)){
         return;
     }
+    bar newBar;
     QTextStream in(&file);
     QStringList names = in.readLine().split("\t", QString::SkipEmptyParts);
     QStringList values = in.readLine().split("\t", QString::SkipEmptyParts);
     auto it = names.begin();
     auto iv = values.begin();
-    for(;it != names.end()&& iv != values.end(); it++,iv++) {
-        if(labels.first() == *it) {
-            labels.append(*it);
-            data.append(iv->toDouble());
+   for(;it != names.end()&& iv != values.end(); it++,iv++) {
+        if(aspect == *it) {
+            bool ok;
+            QString name = QInputDialog::getText(this, tr("Other Simulation Name"), tr("Name:"), QLineEdit::Normal, *it, &ok);
+            if(!ok) {
+                name = *it;
+            }
+            labels.append(name);
+            newBar.data.append(iv->toDouble());
         }
     }
 
-    this->newBar();    
+    this->newBar(newBar);    
 }
-void barGraph::newBar() {
-    double max = data.first();
+void barGraph::newBar(bar& newBar) {
+    if(labels.empty() || newBar.data.empty()) return;
+    newBar.valueBar = new QCPBars(ui->plot->xAxis, ui->plot->yAxis);
+    QColor barColor = genColor(ticks.size());
+    newBar.valueBar->setPen(QPen(barColor));
+    barColor.setAlpha(150);
+    newBar.valueBar->setBrush(barColor);
+    ui->plot->addPlottable(newBar.valueBar);
     ticks << ticks.size()+1;
     ui->plot->xAxis->setTickVector(ticks);
     ui->plot->xAxis->setTickVectorLabels(labels);
     ui->plot->xAxis->setTickLabelRotation(60);
     ui->plot->xAxis->setSubTickCount(0);
     ui->plot->xAxis->setTickLength(0, 4);
-    ui->plot->xAxis->grid()->setVisible(true);
+//    ui->plot->xAxis->grid()->setVisible(true);
     ui->plot->xAxis->setRange(0, ticks.size()+1);
-    for(double d : data) {
-        if(max < d) {
-            max = d;
-        }
+    if(ui->plot->yAxis->range().upper < newBar.data.first()) {
+        ui->plot->yAxis->setRange(0, newBar.data.first()*1.2);
     }
-    ui->plot->yAxis->setRange(0, max*1.2);
     ui->plot->yAxis->setPadding(5); // a bit more space to the left border
 //    ui->plot->yAxis->setLabel("Power Consumption in\nKilowatts per Capita (2007)");
-    ui->plot->yAxis->grid()->setSubGridVisible(true);
-    QPen gridPen;
-    gridPen.setStyle(Qt::SolidLine);
-    gridPen.setColor(QColor(0, 0, 0, 25));
-    ui->plot->yAxis->grid()->setPen(gridPen);
-    gridPen.setStyle(Qt::DotLine);
-    ui->plot->yAxis->grid()->setSubGridPen(gridPen); 
-    valueBar->setData(ticks, data);
+//    ui->plot->yAxis->grid()->setSubGridVisible(true);
+    
+    newBar.valueBar->addData(ticks.size(), newBar.data.at(0));
     ui->plot->replot();
 }
 void barGraph::on_save_clicked() {
     ui->plot->saveJpg(saveDir.absolutePath() + "/" + var + ".jpg", 0,0,1.0, -1);
+}
+QColor barGraph::genColor(int numBars) {
+    return QColor::fromHsv((numBars*4*17)%360,200,200);
 }

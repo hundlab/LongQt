@@ -3,11 +3,18 @@
 
 #include <QWidget>
 #include <QDir>
+#include <QColor>
 #include "qcustomplot.h"
 
 namespace Ui {
 class barGraph;
 }
+
+struct bar
+{
+    QCPBars* valueBar;
+    QVector<double> data;
+};
 
 class barGraph : public QWidget
 {
@@ -17,14 +24,14 @@ public:
     ~barGraph();
 private:
     void Initialize();
-    void newBar();
+    void newBar(bar& newBar);
+    QColor genColor(int numBars);
     Ui::barGraph *ui;
     QDir saveDir;
-    QVector<double> data;
     QVector<QString> labels;
     QVector<double> ticks;
     QString var;
-    QCPBars* valueBar;
+    QString aspect;
 private slots:
     void on_loadOtherTrial_clicked();
     void on_save_clicked();

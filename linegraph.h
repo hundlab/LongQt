@@ -17,10 +17,11 @@ class lineGraph : public QWidget
 {
     Q_OBJECT
 public:
-    explicit lineGraph(Protocol* proto, QPair<QString,QVector<double>*> x, QPair<QString,QVector<double>*> y, QDir saveDir, QWidget *parent = 0);
+    explicit lineGraph(Protocol* proto, QString xLabel, QString yLabel, QDir saveDir, QWidget *parent = 0);
     ~lineGraph();
+    void addData(QVector<double>& x, QVector<double>& y, QString name);
 private:
-    void Initialize(QVector<double>& x, QVector<double>& y);
+    void Initialize();
     void populateList(int trial);
 
     Ui::lineGraph *ui;
@@ -30,6 +31,7 @@ private:
     QString xLabel;
     QString yLabel;
     QDir saveDir;
+    int controlLocation;
 private slots:
     bool control_on_graph(QVector<double> &x, QVector<double> &y);
     void on_save_clicked();

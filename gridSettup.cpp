@@ -17,8 +17,10 @@ gridNode::gridNode(Node* node, int X, int Y, gridCell* parentCell) {
     cellType = new QComboBox();
     stimNode = new QCheckBox("Stimulate");
     measNode = new QCheckBox("Measure");
+    cellMap = cellUtils().cellMap;
+    cellMap["Inexcitable Cell"] = [] () {return new Cell;};
 //setup variables
-    for(auto it : cellUtils().cellMap) {
+    for(auto it : cellMap) {
         cellType->addItem(it.first.c_str());
     }
 //layout management
@@ -38,7 +40,7 @@ Node* gridNode::getNode() {
 void gridNode::changeCell(QString type) {
     try {
         if(node->cell->type != type.toStdString()) {
-            info->cell = cellUtils().cellMap.at(type.toStdString())();
+            info->cell = cellMap.at(type.toStdString())();
             info->dx = *parentCell->pars["dx"];
             info->dy = *parentCell->pars["dy"];
             info->np = *parentCell->pars["np"];

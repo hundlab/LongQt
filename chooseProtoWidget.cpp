@@ -15,7 +15,8 @@ chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
 }
 
 void chooseProtoWidget::Initialize() {
-    this->proto = new voltageClamp();
+    this->proto = new CurrentClamp();
+    this->defaultCell = this->proto->cell->type;
     QStringList cell_options;
     cell_type = new QComboBox();
     QHBoxLayout* cellLayout = new QHBoxLayout();
@@ -30,12 +31,12 @@ void chooseProtoWidget::Initialize() {
     this->cellChangedSlot();
 
     clampType = new QButtonGroup();
-    QGroupBox* clampTypeBox = new QGroupBox("Clamp Type");
-    auto startingButton = new QRadioButton("Voltage Clamp");
+    QGroupBox* clampTypeBox = new QGroupBox("Simulation Protocol Type");
+    auto startingButton = new QRadioButton("Current Clamp - Single Cell");
     startingButton->setChecked(true);
     clampType->addButton(startingButton, 0);
-    clampType->addButton(new QRadioButton("Current Clamp"), 1);
-    clampType->addButton(new QRadioButton("Grid of Cells"), 2);
+    clampType->addButton(new QRadioButton("Voltage Clamp - Single Cell"), 1);
+    clampType->addButton(new QRadioButton("2D Grid Protocol"), 2);
     QVBoxLayout* clampLayout = new QVBoxLayout();
     {    
     auto list = clampType->buttons();
@@ -67,11 +68,11 @@ void chooseProtoWidget::changeProto(int value) {
     }
     switch(value) {
     case 0:
-        this->proto = new voltageClamp();
+        this->proto = new CurrentClamp();
         this->proto->cell = old_cell;
     break;
     case 1:
-        this->proto = new CurrentClamp();
+        this->proto = new voltageClamp();
         this->proto->cell = old_cell;
     break;
     case 2:
@@ -83,7 +84,7 @@ void chooseProtoWidget::changeProto(int value) {
     }
 
     if(old_cell->type == string("gridCell")) {
-        changeCell("Cell");
+        changeCell(defaultCell);
     }
     this->proto->datadir = datadir;
     emit protocolChanged(this->proto);

@@ -28,9 +28,11 @@ public:
     ~Dialog();
 private:
     void Initialize();
+    QFileInfoList getFileNames();
+    QString getName(QFileInfo file);
     QDir read_location;
 private slots:
-    void buildLineGraphs(QString f);
+    void buildLineGraphs(QFileInfoList files);
     void buildBarGraphs(int trial);
     void on_loadNew_clicked();
 

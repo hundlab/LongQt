@@ -25,6 +25,7 @@ Q_OBJECT
     QWidget* parent;
     QButtonGroup* clampType;
     QComboBox* cell_type;
+    QString defaultCell;
   private slots:
     void changeProto(int value);
     void changeCell(QString name);

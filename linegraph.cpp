@@ -1,34 +1,27 @@
 #include "linegraph.h"
 #include "ui_linegraph.h"
 
-lineGraph::lineGraph(Protocol* proto, QPair<QString,QVector<double>*> x, QPair<QString,QVector<double>*> y, QDir saveDir, QWidget *parent) :
+lineGraph::lineGraph(Protocol* proto, QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
     QWidget(parent),
     ui(new Ui::lineGraph)
 {
     ui->setupUi(this);
-    this->x.append(*x.second);
-    this->y.append(*y.second);
-    this->xLabel = x.first;
-    this->yLabel = y.first;
+    this->controlLocation = -1;
+    this->xLabel = xLabel;
+    this->yLabel = yLabel;
     this->proto = proto;
     this->saveDir = saveDir;
-    this->Initialize(this->x.first(), this->y.first());
+    this->Initialize();
 }
-void lineGraph::Initialize(QVector<double>& x, QVector<double>& y) {
+void lineGraph::Initialize() {
 //should not just be 0!!
      populateList(0);
-     ui->plot->addGraph();
-     ui->plot->graph(0)->setPen(QPen(Qt::blue));
-     ui->plot->graph(0)->setData(x, y);
      ui->plot->xAxis->grid()->setVisible(false);
      ui->plot->yAxis->grid()->setVisible(false);
      ui->plot->xAxis->setLabelFont(QFont(font().family(), 16));
      ui->plot->yAxis->setLabelFont(QFont(font().family(), 16));
      ui->plot->xAxis->setLabel("Time (ms)");
      ui->plot->yAxis->setLabel(this->yLabel);
-     ui->plot->xAxis->setRange(x.first(), x.last());
-     ui->plot->graph(0)->setName("Simulation");
-     ui->plot->yAxis->rescale();
      ui->plot->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
      ui->plot->axisRect()->setRangeZoom(ui->plot->xAxis->orientation());
      ui->plot->axisRect()->setRangeDrag(ui->plot->xAxis->orientation());
@@ -39,12 +32,27 @@ void lineGraph::Initialize(QVector<double>& x, QVector<double>& y) {
      if(ui->plot->plotLayout()->elementAt(0) != 0) {
         ui->plot->plotLayout()->removeAt(0);
      }
-     ui->plot->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot, yLabel +" vs "+ xLabel));
+     ui->plot->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot, this->yLabel +" vs "+ this->xLabel));
 }
 
 lineGraph::~lineGraph()
 {
     delete ui;
+}
+QColor genColor(int num) {
+    return QColor::fromHsv((num*4*17)%360,200,200);
+}
+void lineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
+        this->x.append(x);
+        this->y.append(y);
+        ui->plot->addGraph();
+        ui->plot->graph()->setData(x, y);
+        ui->plot->graph()->setPen(QPen(genColor(this->x.size())));
+        ui->plot->graph()->setName(name);
+        ui->plot->yAxis->rescale();
+        ui->plot->xAxis->setRange(x.first(), x.last());
+        ui->plot->legend->setVisible(true);
+        ui->plot->replot();
 }
 void lineGraph::on_save_clicked() {
     ui->plot->saveJpg(saveDir.absolutePath() + "/" + yLabel + "vs" + xLabel + ".jpg", 0,0,1.0, -1);
@@ -53,15 +61,15 @@ void lineGraph::on_loadControl_clicked() {
     QVector<double> x, y;
 
     if (control_on_graph(x, y)){
-        this->x.append(x);
-        this->y.append(y);
-        ui->plot->addGraph();
-        ui->plot->graph(1)->setData(x, y);
-        ui->plot->graph(1)->setPen(QPen(Qt::red));
-        ui->plot->graph(1)->setName("Control");
-        ui->plot->yAxis->rescale();
-        ui->plot->legend->setVisible(true);
-        ui->plot->replot();
+        if(controlLocation >= 0 && controlLocation < x.size()) {
+            if(ui->plot->graph(controlLocation) != 0) {
+                ui->plot->removeGraph(controlLocation);
+            }
+            this->x.removeAt(controlLocation);
+            this->y.removeAt(controlLocation);
+        }
+        this->addData(x,y,"Control");
+        controlLocation = this->x.size()-1;
     }
 }
 bool lineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
