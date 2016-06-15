@@ -311,9 +311,7 @@ void simvarMenu::set_default_vals(string name) {
     for(auto val : cellDefaultsList) {
         try {
             proto->pars[val.first].set(val.second);
-        } catch(bad_function_call e) {
-qDebug() << val.first.c_str();
-}
+        } catch(bad_function_call e) {}
     }
 }
 /*#################################

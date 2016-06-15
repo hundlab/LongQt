@@ -159,10 +159,13 @@ void Simulation::finished() {
     try {
         menu_list.append(new Dialog(proto,QDir(proto->datadir.c_str()), this));
         menu->addWidget(menu_list.last());
-        menu_options->addItem("Graph " + date_time);
+        menu_options->addItem("Graph " + QFileInfo(proto->datadir.c_str()).baseName());
     } catch(badFile& e) {}
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
-    QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time); 
+    QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
+    for(int i = 1; working_dir.exists(); i++) {
+        working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time + "_" + QString::number(i));
+    }
     proto->datadir = working_dir.absolutePath().toStdString();
     emit working_dir_changed(working_dir);
     cancel_button->hide();

@@ -46,7 +46,7 @@ Q_OBJECT
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QPushButton* close_button;
-    void set_default_vals(string name)
+    void set_default_vals(string name);
 //initalizer
     void initialize(const map<string,GetSetRef>::iterator it);
 //screen functions
