@@ -28,6 +28,7 @@ public:
     ~Dialog();
 private:
     void Initialize();
+    QFileInfoList getFileNames(QDir location);
     QFileInfoList getFileNames();
     QString getName(QFileInfo file);
     QDir read_location;

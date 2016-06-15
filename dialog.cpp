@@ -25,8 +25,11 @@ void Dialog::Initialize() {
     this->buildBarGraphs(0);
 }
 QFileInfoList Dialog::getFileNames() {
+    return this->getFileNames(this->read_location);
+}
+QFileInfoList Dialog::getFileNames(QDir location) {
     QFileInfoList toReturn;
-    for(QFileInfo file : this->read_location.entryInfoList()) {
+    for(QFileInfo file : location.entryInfoList()) {
         if(QRegExp("cell_\\d+_\\d+_dt\\d+_dvars|dt\\d+_dvars").exactMatch(file.baseName())) {
             toReturn << file;
         }
@@ -49,12 +52,17 @@ Dialog::~Dialog()
     delete ui;
 }
 void Dialog::buildLineGraphs(QFileInfoList files){
+    QString xName = "t";
+    if(files.isEmpty()) {
+        QMessageBox::warning(0,"error", "No Files Found");
+        throw badFile();
+    }
     QMap<QString, lineGraph*> graphMap;
     for(QFileInfo fileInfo : files) {
         QFile file(fileInfo.absoluteFilePath());
         if(!file.open(QIODevice::ReadOnly)){
-            QMessageBox::information(0,"error", "No File Selected!");
-            throw badFile();
+            QMessageBox::warning(0,"error", "File " +fileInfo.fileName() + " Could not be Opened");
+            continue;
         }
         QTextStream in(&file);
         QVector<QVector<double>> y;
@@ -73,10 +81,10 @@ void Dialog::buildLineGraphs(QFileInfoList files){
         file.close();
 
         //Need to sort out which variable is time now::
-        xIndex = split_line.indexOf("t");
+        xIndex = split_line.indexOf(xName);
         if(xIndex == -1) {
-            QMessageBox::information(0,"ERROR NO TIME", "Time must be selected as Output Variable!");
-            throw badFile();
+            QMessageBox::warning(0,"ERROR NO TIME", "File "+fileInfo.fileName()+" had no variable for "+ xName+" which is the selected x variable");
+            continue;
         }
         for(int i = 0; i < split_line.length();i++) {
             if(i == xIndex) {
@@ -112,21 +120,33 @@ void Dialog::buildBarGraphs(int trial) {
 }
 void Dialog::on_loadNew_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(
-                this,
-                tr("Open File"),
-                read_location.absolutePath(),
-                "All Files (*.*);;Text File(*.txt)"
-                );
-
-    if(!filename.isEmpty()){
-
-        while(ui->tabWidget->count() > 0) {
-            ui->tabWidget->removeTab(0);
+    QFileDialog getDirOrFile(0,tr("Open File"));
+    getDirOrFile.setFileMode(QFileDialog::Directory);
+    QDir loc = this->read_location;
+    loc.cdUp();
+    getDirOrFile.setDirectory(loc);
+    getDirOrFile.setNameFilter("Directories");//;; All Files (*.*);;Data File (*.txt *.dat)");
+    QStringList filenames;
+    if(getDirOrFile.exec()) {
+        filenames = getDirOrFile.selectedFiles();
+    }
+    if(filenames.isEmpty()) return;
+    while(ui->tabWidget->count() > 0) {
+        ui->tabWidget->removeTab(0);
+    }
+    QFileInfoList fileInfos;
+    for(auto filename : filenames) {
+        QFileInfo file(filename);
+        if(file.isDir()) {
+            fileInfos.append(this->getFileNames(QDir(file.absoluteFilePath())));
+        } else {
+            fileInfos.append(file);
         }
-        QFileInfoList filenames;
-        filenames << QFileInfo(filename);
-        buildLineGraphs(filenames);
-   }
+    }
+    try {
+        buildLineGraphs(fileInfos);
+    } catch(badFile e) {
+        QMessageBox::warning(0,tr("Error"),tr("Selected files could not be used"));
+    }
 }
 
