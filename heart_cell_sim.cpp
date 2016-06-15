@@ -128,7 +128,7 @@ Simulation::Simulation(QWidget* parent){
     showMaximized();
 //connect buttons
     connect(about_button, &QPushButton::clicked, [] () {
-        QMessageBox::information(NULL, tr("Hund MyConcurrent Model Information"),tr("Copyright© 2016 Thomas J. Hund\nEmail: thomas.hund@osumc.edu\nVersion 0.1\nContributers:\n\tThomas Hund\n\tBirce Ela Onal\n\tDanielle Beckley\n\tDaniel Gratz\n"),QMessageBox::Close);
+        QMessageBox::information(NULL, tr("Hund MyConcurrent Model Information"),tr("Copyright© 2016 Thomas J. Hund\nLicense: Revised BSD License\nEmail: thomas.hund@osumc.edu\nVersion 0.1\nContributers:\n\tThomas Hund\n\tBirce Ela Onal\n\tDanielle Beckley\n\tDaniel Gratz\n"),QMessageBox::Close);
     });
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));

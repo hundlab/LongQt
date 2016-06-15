@@ -192,6 +192,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         cell_type->addItems(cell_options);
         string name = it->first;
         string type = it->second.type;
+        set_default_vals(proto->pars[it->first].get());
         simvars.insert(it->first.c_str(),cell_type);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, cell_type);
         connect((QComboBox*)simvars.last(), static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
@@ -281,6 +282,7 @@ void simvarMenu::update_pvars(pair<string,double> p){
 void simvarMenu::update_pvars(pair<string,string> p, string type){
      if(type == "cell") {
         proto->pars[p.first].set(p.second);
+        set_default_vals(p.second);
         emit cell_type_changed();
      } else {
         proto->pars[p.first].set(p.second);
@@ -302,7 +304,17 @@ void simvarMenu::set_write_close(int state) {
     set_vars->setChecked(write_close);
 }
 void simvarMenu::changeCellType() {
-   update_menu(); 
+    update_menu(); 
+}
+void simvarMenu::set_default_vals(string name) {
+    auto cellDefaultsList = cellUtils().protocolCellDefaults[name];
+    for(auto val : cellDefaultsList) {
+        try {
+            proto->pars[val.first].set(val.second);
+        } catch(bad_function_call e) {
+qDebug() << val.first.c_str();
+}
+    }
 }
 /*#################################
     begin dvarMenu class

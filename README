@@ -1,0 +1,8 @@
+Requirements:
+    Qt version 5+:   https://www.qt.io/
+    c++11 or greater compliant compiler
+Build:
+    qmake MyConcurrentModel.pro
+    make
+Install:
+    copy the execuatable from ./build/ to whereever is convenient to run it
