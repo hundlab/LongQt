@@ -159,8 +159,10 @@ void Simulation::finished() {
     try {
         menu_list.append(new Dialog(proto,QDir(proto->datadir.c_str()), this));
         menu->addWidget(menu_list.last());
+    } catch(badFile& e) {
         menu_options->addItem("Graph " + QFileInfo(proto->datadir.c_str()).baseName());
-    } catch(badFile& e) {}
+        cerr << e.what() << ": " << "data files not readable" << endl;
+    }
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
     QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
     for(int i = 1; working_dir.exists(); i++) {

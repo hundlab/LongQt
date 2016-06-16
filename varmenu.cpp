@@ -504,7 +504,7 @@ void dvarMenu::write_file() {
     if(write_close) {
         working_dir.mkpath(working_dir.absolutePath());
         proto->dvarfile = working_dir.absolutePath().toStdString() + string("/dvars.txt");
-        !(bool)proto->writedvars(working_dir.absolutePath().toStdString() + string("/dvars.txt"));
+        proto->writedvars(working_dir.absolutePath().toStdString() + string("/dvars.txt"));
     }
 }
 void dvarMenu::setWorkingDir(QDir& dir) {
@@ -946,7 +946,7 @@ void pvarMenu::write_file() {
     if(write_close) {
         working_dir.mkpath(working_dir.absolutePath());
         proto->pvarfile = working_dir.absolutePath().toStdString() + string("/pvars.txt");
-        !(bool)proto->write2Dmap( proto->pnames, proto->pvals,working_dir.absolutePath().toStdString() + string("/pvars.txt"));
+        proto->write2Dmap( proto->pnames, proto->pvals,working_dir.absolutePath().toStdString() + string("/pvars.txt"));
     }
  
 }

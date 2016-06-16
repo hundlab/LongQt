@@ -57,7 +57,7 @@ void gridNode::changeCell(QString type) {
             emit cell_type_changed(type);
         }
         cellType->setCurrentText(type);
-    } catch(const std::out_of_range& oor) {
+    } catch(const std::out_of_range&) {
         return;
     }
 }
@@ -158,7 +158,7 @@ void gridSetupWidget::changeMeasNodeList(int status, Node* node) {
 void gridSetupWidget::addRow() {
     grid->addRow(grid->rowCount());
     cellGrid->setRowCount(cellGrid->rowCount()+1);
-    int i = grid->fiber.size()-1;
+    int i = static_cast<int>(grid->fiber.size())-1;
     int j = 0;
     auto newRow = grid->fiber[i];
     for(auto iv = newRow.nodes.begin(); iv!= newRow.nodes.end(); iv++,j++) {
@@ -177,7 +177,7 @@ void gridSetupWidget::addRow() {
 void gridSetupWidget::addColumn() {
     grid->addColumn(grid->columnCount());
     cellGrid->setColumnCount(cellGrid->columnCount()+1);
-    int i = grid->fibery.size()-1;
+    int i = static_cast<int>(grid->fibery.size())-1;
     int j = 0;
     auto newRow = grid->fibery[i];
     for(auto iv = newRow.nodes.begin(); iv != newRow.nodes.end(); iv++,j++) {
