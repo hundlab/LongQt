@@ -9,7 +9,6 @@ ChooseGraphs::ChooseGraphs(QCustomPlot* plot, QWidget *parent) :
     ui->setupUi(this);
     this->plot = plot;
     int numCollums = 5;
-    ui->toggleButtonArea->setLayout(ui->toggleButtonLayout);
     for(int i = 0;i<plot->graphCount(); i++) {
         QCPGraph* graph = plot->graph(i);
         if(graph == NULL) { continue;}
