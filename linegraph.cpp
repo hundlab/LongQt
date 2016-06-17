@@ -1,5 +1,6 @@
 #include "linegraph.h"
 #include "ui_linegraph.h"
+#include "choosegraphs.h"
 
 lineGraph::lineGraph(Protocol* proto, QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
     QWidget(parent),
@@ -119,4 +120,8 @@ void lineGraph::populateList(int trial) {
         ui->listWidget->insertItem(ui->listWidget->count(),*it+"\t"+*iv);
     }
 }
-
+void lineGraph::on_chooseGraphs_clicked() {
+    ChooseGraphs* choose = new ChooseGraphs(ui->plot, this);
+    choose->setWindowTitle(this->yLabel);
+    choose->exec();
+}

@@ -36,6 +36,7 @@ private slots:
     bool control_on_graph(QVector<double> &x, QVector<double> &y);
     void on_save_clicked();
     void on_loadControl_clicked();
+    void on_chooseGraphs_clicked();
 };
 
 #endif // LINEGRAPH_H

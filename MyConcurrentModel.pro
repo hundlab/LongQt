@@ -54,7 +54,9 @@ SOURCES += main.cpp\
     qcustomplot.cpp \
     modellib/gpbatrialRyr.cpp \
     linegraph.cpp \
-    bargraph.cpp
+    bargraph.cpp \
+    choosegraphs.cpp \
+    choosegraphstoggle.cpp
 
 HEADERS  +=    dialog.h \
     modellib/kurata08.h \
@@ -83,8 +85,12 @@ HEADERS  +=    dialog.h \
     qcustomplot.h \
     modellib/cellUtils.h \
     linegraph.h \
-    bargraph.h
+    bargraph.h \
+    choosegraphs.h \
+    choosegraphstoggle.h
 
 FORMS    += dialog.ui \
     linegraph.ui \
-    bargraph.ui
+    bargraph.ui \
+    choosegraphs.ui \
+    choosegraphstoggle.ui
