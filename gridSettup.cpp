@@ -37,6 +37,9 @@ gridNode::~gridNode() {}
 Node* gridNode::getNode() {
     return node;
 }
+pair<int,int> gridNode::getNodePair() {
+    return make_pair(this->info->X,this->info->Y);
+}
 void gridNode::changeCell(QString type) {
     try {
         if(node->cell->type != type.toStdString()) {
@@ -93,10 +96,10 @@ void gridSetupWidget::createMenu() {
             cellGrid->setCellWidget(j,i,cellWidget);
             connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
             connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
-                changeStimNodeList(status, cellWidget->getNode());
+                changeStimNodeList(status, cellWidget->getNodePair());
             });
             connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
-                changeMeasNodeList(status, cellWidget->getNode());
+                changeMeasNodeList(status, cellWidget->getNodePair());
             });
         }
     }
@@ -126,8 +129,8 @@ void gridSetupWidget::updateMenu() {
                 this->createMenu();
                 return;
             }
-            bool stim = proto->getStimNodes().end() != proto->getStimNodes().find(n->getNode());
-            bool meas = proto->getDataNodes().end() != proto->getDataNodes().find(n->getNode());
+            bool stim = proto->getStimNodes().end() != proto->getStimNodes().find(n->getNodePair());
+            bool meas = proto->getDataNodes().end() != proto->getDataNodes().find(n->getNodePair());
             n->update(stim,meas);
         }
     }
@@ -135,7 +138,7 @@ void gridSetupWidget::updateMenu() {
     this->cellGrid->resizeRowsToContents();
     this->cellGrid->resizeColumnsToContents();
 }
-void gridSetupWidget::changeStimNodeList(int status, Node* node) {
+void gridSetupWidget::changeStimNodeList(int status, pair<int,int> node) {
     switch(status) {
     case 2:
         proto->getStimNodes().insert(node);
@@ -145,7 +148,7 @@ void gridSetupWidget::changeStimNodeList(int status, Node* node) {
     break;
     }
 }
-void gridSetupWidget::changeMeasNodeList(int status, Node* node) {
+void gridSetupWidget::changeMeasNodeList(int status, pair<int,int> node) {
     switch(status) {
     case 2:
         proto->getDataNodes().insert(node);
@@ -166,10 +169,10 @@ void gridSetupWidget::addRow() {
         cellGrid->setCellWidget(i,j,cellWidget);
         connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
         connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
-            changeStimNodeList(status, cellWidget->getNode());
+            changeStimNodeList(status, cellWidget->getNodePair());
         });
         connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
-            changeMeasNodeList(status, cellWidget->getNode());
+            changeMeasNodeList(status, cellWidget->getNodePair());
         });
     }
     updateMenu();
@@ -185,10 +188,10 @@ void gridSetupWidget::addColumn() {
         cellGrid->setCellWidget(j,i,cellWidget);
         connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
         connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
-            changeStimNodeList(status, cellWidget->getNode());
+            changeStimNodeList(status, cellWidget->getNodePair());
         });
         connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
-            changeMeasNodeList(status, cellWidget->getNode());
+            changeMeasNodeList(status, cellWidget->getNodePair());
         });
     }
     updateMenu();
@@ -220,8 +223,6 @@ void gridSetupWidget::changeCellGroup(QString type) {
             }
         }
     }
-    if(!selected.empty()) {
-        emit cell_type_changed();
-    }
+    emit cell_type_changed();
     updateMenu();
 }

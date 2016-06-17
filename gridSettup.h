@@ -21,6 +21,7 @@ Q_OBJECT
     gridNode(Node* node, int X, int Y, gridCell* parentCell);
     ~gridNode();
     Node* getNode();
+    pair<int,int> getNodePair();
     void update(bool stim, bool meas);
   private:
     QComboBox* cellType;
@@ -61,8 +62,8 @@ Q_OBJECT
     QPushButton* addRowButton;
     QPushButton* removeRowButton;
   private slots:
-    void changeStimNodeList(int status, Node* node);
-    void changeMeasNodeList(int status, Node* node);
+    void changeStimNodeList(int status, pair<int,int> node);
+    void changeMeasNodeList(int status, pair<int,int> node);
     void addRow();
     void addColumn();
     void removeRow();

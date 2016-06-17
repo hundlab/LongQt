@@ -56,8 +56,8 @@ void chooseProtoWidget::Initialize() {
 Protocol* chooseProtoWidget::getCurrentProto() {
     return proto;
 }
-void chooseProtoWidget::setCurrentProto(Protocol* proto) {
-    this->proto = proto;
+void chooseProtoWidget::resetProto() {
+    this->changeProto(0);
 }
 void chooseProtoWidget::changeProto(int value) {
     Cell* old_cell = this->proto->cell->clone();

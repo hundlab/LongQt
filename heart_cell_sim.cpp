@@ -90,6 +90,7 @@ Simulation::Simulation(QWidget* parent){
         }
     });*/
     connect(run, SIGNAL(canceled()), this, SLOT(canceled()));
+//    connect(run, SIGNAL(finished()), choose, SLOT(resetProto()));
     connect(run, SIGNAL(finished()), this, SLOT(finished()));
     connect(run, SIGNAL(running()), this, SLOT(running()));
     connect(run, static_cast<void(runWidget::*)()>(&runWidget::running), sims ,static_cast<void(simvarMenu::*)()>(&simvarMenu::write_file));
@@ -157,10 +158,10 @@ void Simulation::canceled() {
 void Simulation::finished() {
     QMessageBox::information(0,"Folder", "Simulation is finished!\n The folder is named: " + QString(proto->datadir.c_str()));
     try {
-        menu_list.append(new Dialog(proto,QDir(proto->datadir.c_str()), this));
+        menu_list.append(new Dialog(proto,QDir(proto->datadir.c_str()), this));        
         menu->addWidget(menu_list.last());
-    } catch(badFile& e) {
         menu_options->addItem("Graph " + QFileInfo(proto->datadir.c_str()).baseName());
+    } catch(badFile& e) {
         cerr << e.what() << ": " << "data files not readable" << endl;
     }
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");

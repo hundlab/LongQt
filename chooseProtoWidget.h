@@ -16,7 +16,6 @@ Q_OBJECT
     chooseProtoWidget(QWidget* parent = 0);
     Protocol* getCurrentProto();
     void Initialize();
-    void setCurrentProto(Protocol* proto);
   signals:
     void protocolChanged(Protocol*);
     void cell_type_changed();
@@ -31,6 +30,7 @@ Q_OBJECT
     void changeCell(QString name);
   public slots:
     void cellChangedSlot();
+    void resetProto();
 };
 
 #endif
