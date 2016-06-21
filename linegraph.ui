@@ -17,7 +17,7 @@
    <item row="1" column="1">
     <widget class="QPushButton" name="chooseGraphs">
      <property name="text">
-      <string>Choose Visable Graphs</string>
+      <string>Choose Visible Graphs</string>
      </property>
     </widget>
    </item>
