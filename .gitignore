@@ -22,8 +22,9 @@ modellib/modelold/
 
 #data files and temp text editor files
 data*/
-*.txt
+defaultTrials/
 *.swp
+*.swo
 
 #testing utils
 test.pro
