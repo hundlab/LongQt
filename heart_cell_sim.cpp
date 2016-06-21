@@ -66,6 +66,7 @@ Simulation::Simulation(QWidget* parent){
     connect(this, SIGNAL(cell_type_changed()), choose, SLOT(cellChangedSlot()));
     connect(sims, SIGNAL(working_dir_changed(QDir&)), this, SIGNAL(working_dir_changed(QDir&)));
     connect(sims, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
+    connect(this, SIGNAL(working_dir_changed(QDir&)), sims, SLOT(setWorkingDir(QDir&)));
     connect(this, SIGNAL(working_dir_changed(QDir&)), dvars, SLOT(setWorkingDir(QDir&)));
     connect(this, SIGNAL(working_dir_changed(QDir&)), mvars, SLOT(setWorkingDir(QDir&)));
     connect(this, SIGNAL(working_dir_changed(QDir&)), pvars, SLOT(setWorkingDir(QDir&)));
