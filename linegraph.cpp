@@ -26,6 +26,7 @@ void lineGraph::Initialize() {
      ui->plot->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
      ui->plot->axisRect()->setRangeZoom(ui->plot->xAxis->orientation());
      ui->plot->axisRect()->setRangeDrag(ui->plot->xAxis->orientation());
+     ui->plot->legend->setVisible(true);
 
      if(ui->plot->plotLayout()->rowCount() < 2){
         ui->plot->plotLayout()->insertRow(0);
@@ -52,7 +53,6 @@ void lineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
         ui->plot->graph()->setName(name);
         ui->plot->yAxis->rescale();
         ui->plot->xAxis->setRange(x.first(), x.last());
-        ui->plot->legend->setVisible(true);
         ui->plot->replot();
 }
 void lineGraph::on_save_clicked() {
@@ -124,4 +124,8 @@ void lineGraph::on_chooseGraphs_clicked() {
     ChooseGraphs* choose = new ChooseGraphs(ui->plot, this);
     choose->setWindowTitle(this->yLabel);
     choose->exec();
+}
+void lineGraph::on_toggleLegend_clicked() {
+    ui->plot->legend->setVisible(!ui->plot->legend->visible());
+    ui->plot->replot();
 }

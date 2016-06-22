@@ -16,10 +16,15 @@ CONFIG += c++11
 INCLUDEPATH += ./modellib ./menu_object
 
 linux {
+    debug {
+        QMAKE_CXXFLAGS += -g
+        QMAKE_CXXFLAGS_RELEASE -= -O2
+    }
+    relase {
+        QMAKE_CXXFLAGS += -static
+    }
     TARGET = MyConcurrentModel.out
 
-    QMAKE_CXXFLAGS += -g
-    QMAKE_CXXFLAGS_RELEASE -= -O2
     DESTDIR = ./build 
     OBJECTS_DIR = ./build/obj
     MOC_DIR = ./build/obj

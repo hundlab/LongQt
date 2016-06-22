@@ -109,7 +109,7 @@ void simvarMenu::createMenu()  {
     tabs->addTab(temp,"Simulation files");
     if(proto->pars["celltype"].get() == "gridCell") {
         gridSetupWidget* grid = new gridSetupWidget((gridProtocol*)this->proto,working_dir);
-        tabs->addTab(grid, "Grid Settup");
+        tabs->addTab(grid, "Grid Setup");
         connect(grid, &gridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
         connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
     }
@@ -173,13 +173,25 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     };   
     initializers["directory"] = [this] (const map<string, GetSetRef>::iterator it) {
         QLineEdit* new_simvar = new QLineEdit();
+        QPushButton* setDir = new QPushButton("Choose");
+        QWidget* layoutWidget = new QWidget();
+        QHBoxLayout* layout = new QHBoxLayout(layoutWidget);
         QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        layout->setContentsMargins(0,0,0,0);
+        layout->addWidget(new_simvar);
+        layout->addWidget(setDir);
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         string type = it->second.type;
         simvars.insert(it->first.c_str(),new_simvar);
-        simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
-        connect((QLineEdit*)simvars.last(), static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
+        simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, layoutWidget);
+        connect(new_simvar, static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
+        connect(setDir, &QPushButton::clicked, [=] () {
+            QString value = QFileDialog::getExistingDirectory(this,tr(QString(it->first.c_str()).toStdString().c_str()),it->second.get().c_str());
+            if(value != "") {
+                this->update_pvars(pair<string,string>(name, value.toStdString()), type);
+            }
+        });
     };
     initializers["cell"] = [this]  (const map<string, GetSetRef>::iterator it) {
         QStringList cell_options;
@@ -211,10 +223,18 @@ void simvarMenu::update_menu() {
          {((QSpinBox*)simvars[it->first.c_str()])->setValue(std::stoi(it->second.get()));};
     updaters["bool"] = [this] (const map<string, GetSetRef>::iterator it)
          {((QCheckBox*)simvars[it->first.c_str()])->setChecked(Protocol::stob(it->second.get()));};
-    updaters["file"] = [this] (const map<string, GetSetRef>::iterator it)
-         {((QLineEdit*)simvars[it->first.c_str()])->setText(it->second.get().c_str());};
-    updaters["directory"] = [this] (const map<string, GetSetRef>::iterator it)
-         {((QLineEdit*)simvars[it->first.c_str()])->setText(it->second.get().c_str());};
+    updaters["file"] = [this] (const map<string, GetSetRef>::iterator it) {
+        QLineEdit* line = (QLineEdit*)simvars[it->first.c_str()];
+        if(line->text() != QString(it->second.get().c_str())) {
+            line->setText(it->second.get().c_str());
+        }
+    };
+    updaters["directory"] = [this] (const map<string, GetSetRef>::iterator it) {
+        QLineEdit* line = (QLineEdit*)simvars[it->first.c_str()];
+        if(line->text() != QString(it->second.get().c_str())) {
+            line->setText(it->second.get().c_str());
+        }
+    };
     updaters["cell"] = [this] (const map<string, GetSetRef>::iterator it)
          {  QComboBox* simv = ((QComboBox*)simvars[it->first.c_str()]);
             int index = simv->findText(it->second.get().c_str());
@@ -256,7 +276,7 @@ void simvarMenu::setWorkingDir(QDir& dir) {
 }
 bool simvarMenu::read_simvars(){
     bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = QFileDialog::getOpenFileName(this,"Simulation Settings",working_dir.absolutePath());
     if (!fileName.isEmpty()){
         ret = !(bool)proto->readpars(fileName.toStdString());
     }
@@ -399,7 +419,7 @@ void dvarMenu::createMenu()  {
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
     dvars = (QCheckBox**)malloc(vars.size()*sizeof(QCheckBox*));
-    get_vars = new QPushButton(tr("Import Tracked Variable  settings"), this);
+    get_vars = new QPushButton(tr("Import Tracked Variable Settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
@@ -511,7 +531,7 @@ void dvarMenu::setWorkingDir(QDir& dir) {
 }
 bool dvarMenu::read_dvars(){
     bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = QFileDialog::getOpenFileName(this,"Tracked Variable Settings",working_dir.absolutePath());
     if (!fileName.isEmpty()){
         ret = proto->readdvars(fileName.toStdString());  // use names in dvars.txt to resize datamap
     }
@@ -568,7 +588,7 @@ void mvarMenu::createMenu()  {
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
-    get_vars = new QPushButton(tr("Import Measurement settings"), this);
+    get_vars = new QPushButton(tr("Import Measurement Settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
     vars_view = new QListWidget(this);
@@ -674,7 +694,7 @@ void mvarMenu::setWorkingDir(QDir& dir) {
 }
 bool mvarMenu::read_mvars(){
     bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = QFileDialog::getOpenFileName(this,"Measurement Settings",working_dir.absolutePath());
     if (!fileName.isEmpty()){
         ret = proto->readMvarsFile(fileName.toStdString());
 //        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));//create measure from mvarfile
@@ -781,7 +801,7 @@ void pvarMenu::createMenu()  {
     QGridLayout* main_layout = new QGridLayout(this);
     central_layout = new QGridLayout;
 //initialize buttons &lables
-    get_vars = new QPushButton(tr("Import Initializer settings"), this);
+    get_vars = new QPushButton(tr("Import Initializer Settings"), this);
     pvar_table = new QTableWidget(0,5);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
@@ -951,7 +971,7 @@ void pvarMenu::setWorkingDir(QDir& dir) {
 bool pvarMenu::read_pvars(){
 
     bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = QFileDialog::getOpenFileName(this,"Initializer Settings",working_dir.absolutePath());
     if (!fileName.isEmpty()){
         ret = proto->parsemixedmap(proto->cell->pars, fileName.toStdString() ,&proto->pnames, &proto->pvals);
    }
@@ -1029,7 +1049,9 @@ void pvarMenu::add_row() {
     vector<string>::iterator it;
     bool found = false;
     string var_name_to_add = new_var_choice->currentText().toStdString();
-
+    if(var_name_to_add == "") {
+        found = true;
+    }
     for(it = proto->pnames.begin(); it != proto->pnames.end(); it++) {
         if(*it == var_name_to_add) {
             found = true;

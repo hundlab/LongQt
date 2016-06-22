@@ -37,6 +37,7 @@ private slots:
     void on_save_clicked();
     void on_loadControl_clicked();
     void on_chooseGraphs_clicked();
+    void on_toggleLegend_clicked();
 };
 
 #endif // LINEGRAPH_H
