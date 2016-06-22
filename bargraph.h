@@ -24,6 +24,7 @@ public:
     ~barGraph();
 private:
     void Initialize();
+    void setRange(bar newBar);
     void newBar(bar& newBar);
     QColor genColor(int numBars);
     Ui::barGraph *ui;

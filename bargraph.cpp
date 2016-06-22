@@ -15,6 +15,9 @@ barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidge
     this->var = var;
     this->Initialize();
     this->newBar(newBar);
+    QCPRange range(0,newBar.data.first()*1.2);
+    range.normalize();
+    ui->plot->yAxis->setRange(range);
 }
 void barGraph::Initialize() {
     ui->plot->plotLayout()->addElement(1,0, new QCPPlotTitle(ui->plot, var));
@@ -63,6 +66,13 @@ void barGraph::on_loadOtherTrial_clicked() {
 
     this->newBar(newBar);    
 }
+void barGraph::setRange(bar newBar) {
+    QCPRange oldRange = ui->plot->yAxis->range();
+    QCPRange newRange(0, newBar.data.first()*1.2);
+    newRange.normalize();
+    newRange.expand(oldRange);
+    ui->plot->yAxis->setRange(newRange);
+}
 void barGraph::newBar(bar& newBar) {
     if(labels.empty() || newBar.data.empty()) return;
     newBar.valueBar = new QCPBars(ui->plot->xAxis, ui->plot->yAxis);
@@ -79,9 +89,7 @@ void barGraph::newBar(bar& newBar) {
     ui->plot->xAxis->setTickLength(0, 4);
 //    ui->plot->xAxis->grid()->setVisible(true);
     ui->plot->xAxis->setRange(0, ticks.size()+1);
-    if(ui->plot->yAxis->range().upper < newBar.data.first()) {
-        ui->plot->yAxis->setRange(0, newBar.data.first()*1.2);
-    }
+    this->setRange(newBar);
     ui->plot->yAxis->setPadding(5); // a bit more space to the left border
 //    ui->plot->yAxis->setLabel("Power Consumption in\nKilowatts per Capita (2007)");
 //    ui->plot->yAxis->grid()->setSubGridVisible(true);
