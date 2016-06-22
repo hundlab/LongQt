@@ -571,6 +571,14 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     this->working_dir = working_dir;
     write_close = true;
 
+    descriptions.insert("amp","");
+    descriptions.insert("cl","");
+    descriptions.insert("ddr","");
+    descriptions.insert("deriv2ndt","");
+    descriptions.insert("derivt","");
+    descriptions.insert("dur","");
+    descriptions.insert("durtime1","");
+    descriptions.insert("maxduriv","");
     this->createMenu();
 }
 
@@ -652,9 +660,10 @@ void mvarMenu::update_menu(int row) {
     for(auto it = proto->Measures.begin(); it != proto->Measures.end(); it++) {
         QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly);
         if(vars_item.empty()) {
-            vars_view->addItem(it->second.varname.c_str()); 
+            QListWidgetItem* to_add = new QListWidgetItem(it->second.varname.c_str());
+//            to_add->setToolTip(descriptions[]);
+            vars_view->addItem(to_add); 
             row = vars_view->row(vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly).first());
-            vars_view->setToolTip("Details");
         }
     }
 
@@ -665,8 +674,9 @@ void mvarMenu::update_menu(int row) {
         for(auto it = selection.begin(); it != selection.end(); it++){
             QList<QListWidgetItem*> meas_item = meas_view->findItems(it->c_str(),Qt::MatchExactly);
             if(meas_item.empty()) {
-                meas_view->addItem(it->c_str());
-                meas_view->setToolTip("Measure Details");
+                QListWidgetItem* to_add = new QListWidgetItem(it->c_str());
+                to_add->setToolTip(descriptions[it->c_str()]);
+                meas_view->addItem(to_add);
             }
         }
     }
