@@ -43,6 +43,7 @@ Simulation::Simulation(QWidget* parent){
     chooseProtoWidget* choose = new chooseProtoWidget(this);
     this->proto = choose->getCurrentProto();
     proto->datadir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time).toStdString();
+    proto->cellStateDir = proto->datadir;
     simvarMenu* sims = new simvarMenu(proto,QDir(proto->datadir.c_str()), this);
     dvarMenu* dvars = new dvarMenu(proto,QDir(proto->datadir.c_str()) , this);
     mvarMenu* mvars =  new mvarMenu(proto,QDir(proto->datadir.c_str()), this);
@@ -171,6 +172,7 @@ void Simulation::finished() {
         working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time + "_" + QString::number(i));
     }
     proto->datadir = working_dir.absolutePath().toStdString();
+    proto->cellStateDir = proto->datadir;
     emit working_dir_changed(working_dir);
     cancel_button->hide();
     next_button->show();

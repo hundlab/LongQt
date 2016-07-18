@@ -62,6 +62,7 @@ void chooseProtoWidget::resetProto() {
 void chooseProtoWidget::changeProto(int value) {
     Cell* old_cell = this->proto->cell->clone();
     string datadir = this->proto->datadir;
+    string cellStateDir = this->proto->cellStateDir;
     if(old_cell->type == string("gridCell")) {
         cell_type->setEnabled(true);
         cell_type->removeItem(cell_type->count() -1);
@@ -87,6 +88,7 @@ void chooseProtoWidget::changeProto(int value) {
         changeCell(defaultCell);
     }
     this->proto->datadir = datadir;
+    this->proto->cellStateDir = cellStateDir;
     emit protocolChanged(this->proto);
 }
 
