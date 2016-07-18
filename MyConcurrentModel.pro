@@ -89,6 +89,7 @@ HEADERS  +=    dialog.h \
     heart_cell_sim.h \
     qcustomplot.h \
     modellib/cellUtils.h \
+    guiUtils.h \
     linegraph.h \
     bargraph.h \
     choosegraphs.h \

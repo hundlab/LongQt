@@ -27,6 +27,7 @@
 #include "varmenu.h"
 #include "protocol.h"
 #include "gridSettup.h"
+#include "guiUtils.h"
 
 
 /*########################
@@ -38,23 +39,8 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *paren
     this->parent = parent;
     this->working_dir = working_dir;
     write_close = true;
-    descriptions.insert("bcl","");
-    descriptions.insert("meastime", "");
-    descriptions.insert("paceflag","");
-    descriptions.insert("stimdur","");
-    descriptions.insert("tMax","");
-    descriptions.insert("maxdoutsize","");
-    descriptions.insert("numstims","");
-    descriptions.insert("readflag","");
-    descriptions.insert("stimt","");
-    descriptions.insert("writeflag", "1=write, 0=don't write");
-    descriptions.insert("measflag", "");
-    descriptions.insert("numtrials","");
-    descriptions.insert("saveflag","");
-    descriptions.insert("stimval","");
-    descriptions.insert("writetime", "time during simulation that writing will begin");
-
     this->createMenu();
+    descriptions = GuiUtils().parsDescriptions;
 }
 
 void simvarMenu::createMenu()  {
@@ -348,60 +334,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
 }
 
 void dvarMenu::createMenu()  {
-   QMap<QString, QString> definitions;
-        definitions.insert("Gate.d","");
-        definitions.insert("Gate.paf","");
-        definitions.insert("Gate.r","");
-        definitions.insert("cmdnI","");
-        definitions.insert("iCart","");
-        definitions.insert("iHna","");
-        definitions.insert("iTo","Indium Tin Oxide");
-        definitions.insert("naI", "Sodium Iodide");
-        definitions.insert("Gate.dt","");
-        definitions.insert("Gate.pas","");
-        definitions.insert("Gate.y","");
-        definitions.insert("cmdnR","");
-        definitions.insert("iCat","");
-        definitions.insert("iKach","");
-        definitions.insert("iNak","");
-        definitions.insert("iTot", "");
-        definitions.insert("t", "Time");
-        definitions.insert("Gate.f","");
-        definitions.insert("Gate.pi","");
-        definitions.insert("caI","");
-        definitions.insert("csqn","");
-        definitions.insert("iCatt","");
-        definitions.insert("iKr","");
-        definitions.insert("iNat","");
-        definitions.insert("iTr","");
-        definitions.insert("trpnCa","");
-        definitions.insert("Gate.fca","");
-        definitions.insert("Gate.q","");
-        definitions.insert("caJsr","");
-        definitions.insert("dVdt","");
-        definitions.insert("iDiff","");
-        definitions.insert("iKs","");
-        definitions.insert("iRel","");
-        definitions.insert("iTrek","");
-        definitions.insert("trpnMg","");
-        definitions.insert("Gate.ft","");
-        definitions.insert("Gate.qa","");
-        definitions.insert("caNsr","");
-        definitions.insert("iCait","");
-        definitions.insert("iH","");
-        definitions.insert("iKt","");
-        definitions.insert("iSt","");
-        definitions.insert("iUp","");
-        definitions.insert("trpnMgmg","");
-        definitions.insert("Gate.n","");
-        definitions.insert("Gate.qi","");
-        definitions.insert("caR","");
-        definitions.insert("iCal","");
-        definitions.insert("iHk","");
-        definitions.insert("iNah","");
-        definitions.insert("iSus","");
-        definitions.insert("kI","");
-       definitions.insert("vOld","");
+   QMap<QString, QString> definitions = GuiUtils().dvarsDescriptions;
     QMap<QString,QRegExp> dvars_groups;
         dvars_groups.insert("Gates",QRegExp("^Gate.",Qt::CaseInsensitive));
         dvars_groups.insert("Currents",QRegExp("^i"));
@@ -571,15 +504,7 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     this->working_dir = working_dir;
     write_close = true;
 
-    descriptions.insert("amp","");
-    descriptions.insert("cl","");
-    descriptions.insert("ddr","");
-    descriptions.insert("deriv2ndt","");
-    descriptions.insert("derivt","");
-    descriptions.insert("dur","");
-    descriptions.insert("durtime1","");
-    descriptions.insert("maxduriv","");
-    this->createMenu();
+   this->createMenu();
 }
 
 void mvarMenu::createMenu()  {
@@ -615,12 +540,18 @@ void mvarMenu::createMenu()  {
         close_button->hide();
     }
     set_vars->setChecked(write_close);
+    int i =0;
     for(it = proto->cell->vars.begin(); it != proto->cell->vars.end(); it++) {
         addto_vars_options->addItem(it->first.c_str());
+        addto_vars_options->setItemData(i,GuiUtils().dvarsDescriptions[it->first.c_str()],Qt::ToolTipRole);
+        i++;
     }
     measure_options = temp.getVariables();    
+    i =0;
     for(set<string>::iterator set_it = measure_options.begin(); set_it != measure_options.end(); set_it++) {
         addto_meas_options->addItem(set_it->c_str());
+        addto_meas_options->setItemData(i,GuiUtils().measDescriptions[set_it->c_str()],Qt::ToolTipRole);
+        i++;
     }
     vars_view->setSortingEnabled(true);
     meas_view->setSortingEnabled(true);
@@ -661,8 +592,8 @@ void mvarMenu::update_menu(int row) {
         QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly);
         if(vars_item.empty()) {
             QListWidgetItem* to_add = new QListWidgetItem(it->second.varname.c_str());
-//            to_add->setToolTip(descriptions[]);
-            vars_view->addItem(to_add); 
+            to_add->setToolTip(GuiUtils().dvarsDescriptions[it->second.varname.c_str()]);
+            vars_view->addItem(to_add);
             row = vars_view->row(vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly).first());
         }
     }
@@ -675,7 +606,7 @@ void mvarMenu::update_menu(int row) {
             QList<QListWidgetItem*> meas_item = meas_view->findItems(it->c_str(),Qt::MatchExactly);
             if(meas_item.empty()) {
                 QListWidgetItem* to_add = new QListWidgetItem(it->c_str());
-                to_add->setToolTip(descriptions[it->c_str()]);
+                to_add->setToolTip(GuiUtils().measDescriptions[it->c_str()]);
                 meas_view->addItem(to_add);
             }
         }
