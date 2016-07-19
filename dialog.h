@@ -4,10 +4,11 @@
 #include <QDialog>
 #include <QListWidget>
 #include <QDir>
+#include <exception>
 
-#include "protocol.h"
 #include "qcustomplot.h"
-class badFile: public exception
+
+class badFile : public std::exception
 {
   public:
   virtual const char* what() const throw()
@@ -25,12 +26,13 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(Protocol* inital_proto,QDir read_locaiton, QWidget *parent = 0);
+    explicit Dialog(QDir read_locaiton, QWidget *parent = 0);
     ~Dialog();
 private:
     void Initialize();
     QFileInfoList getFileNames(QDir location);
     QFileInfoList getFileNames();
+    QFileInfoList getFileNamesBar(QDir location, int trial);
     QString getName(QFileInfo file);
     QDir read_location;
 private slots:
@@ -40,7 +42,6 @@ private slots:
 
 private:
     Ui::Dialog *ui;
-    Protocol* proto;
 };
 
 #endif // DIALOG_H

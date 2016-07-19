@@ -1,8 +1,9 @@
 #include "linegraph.h"
 #include "ui_linegraph.h"
 #include "choosegraphs.h"
+#include "protocol.h"
 
-lineGraph::lineGraph(Protocol* proto, QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
+lineGraph::lineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
     QWidget(parent),
     ui(new Ui::lineGraph)
 {
@@ -10,7 +11,6 @@ lineGraph::lineGraph(Protocol* proto, QString xLabel, QString yLabel, QDir saveD
     this->controlLocation = -1;
     this->xLabel = xLabel;
     this->yLabel = yLabel;
-    this->proto = proto;
     this->saveDir = saveDir;
     this->Initialize();
 }
@@ -106,7 +106,7 @@ bool lineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
 }
 void lineGraph::populateList(int trial) {
     char filename[1500];
-    sprintf(filename, proto->finalpropertyoutfile.c_str(), trial, yLabel.toStdString().c_str());
+    sprintf(filename, Protocol().finalpropertyoutfile.c_str(), trial, yLabel.toStdString().c_str());
     QFile file(saveDir.absolutePath() +"/"+ QString(filename));
     if(!file.open(QIODevice::ReadOnly)){
         return;

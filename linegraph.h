@@ -7,8 +7,6 @@
 #include <QList>
 #include <QDir>
 
-#include "protocol.h"
-
 namespace Ui {
 class lineGraph;
 }
@@ -17,7 +15,7 @@ class lineGraph : public QWidget
 {
     Q_OBJECT
 public:
-    explicit lineGraph(Protocol* proto, QString xLabel, QString yLabel, QDir saveDir, QWidget *parent = 0);
+    explicit lineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget *parent = 0);
     ~lineGraph();
     void addData(QVector<double>& x, QVector<double>& y, QString name);
 private:
@@ -25,7 +23,6 @@ private:
     void populateList(int trial);
 
     Ui::lineGraph *ui;
-    Protocol* proto;
     QList<QVector<double>> y;
     QList<QVector<double>> x;
     QString xLabel;
