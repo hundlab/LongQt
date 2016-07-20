@@ -1,7 +1,7 @@
-#include "dialog.h"
+#include "graph.h"
 #include "linegraph.h"
 #include "bargraph.h"
-#include "ui_dialog.h"
+#include "ui_graph.h"
 #include "heart_cell_sim.h"
 #include "measure.h"
 

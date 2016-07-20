@@ -21,7 +21,7 @@
 #include "protocol.h"
 #include "heart_cell_sim.h"
 #include "varmenu.h"
-#include "dialog.h"
+#include "graph.h"
 #include "runWidget.h"
 #include "chooseProtoWidget.h"
 
@@ -128,7 +128,7 @@ Simulation::Simulation(QWidget* parent){
     main_layout->addWidget(cancel_button, 2, 2);
     
     this->setWindowTitle("LongQt");
-    showMaximized();
+    this->showMaximized();
 //connect buttons
     connect(about_button, &QPushButton::clicked, [] () {
         QMessageBox::information(NULL, tr("LongQt Information"),tr("Copyright© 2016 Thomas J. Hund\nLicense: Revised BSD License\nEmail: thomas.hund@osumc.edu\nVersion 0.1\nContributers:\n\tThomas Hund\n\tBirce Ela Onal\n\tDanielle Beckley\n\tDaniel Gratz\n"),QMessageBox::Close);

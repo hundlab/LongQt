@@ -7,14 +7,13 @@
 QT       += core gui concurrent
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-TARGET = LongQtGrapher
+TARGET = LongQt
 TEMPLATE = app
 
 QMAKE_MAC_SDK = macosx10.11
 
 CONFIG += c++11
 INCLUDEPATH += ./modellib ./modellib/cell ./modellib/structure ./modellib/protocol ./gui ./gui/simulaiton ./gui/graph
-
 
 linux {
     debug {
@@ -24,7 +23,7 @@ linux {
     relase {
         QMAKE_CXXFLAGS += -static
     }
-    TARGET = LongQtGrapher.out
+    TARGET = LongQt.out
 
     DESTDIR = ./build 
     OBJECTS_DIR = ./build/obj
@@ -33,14 +32,13 @@ linux {
     UI_DIR = ./build/obj
 }
 
-SOURCES += LongQtGrapher.cpp \
+SOURCES += LongQt.cpp \
     gui/simulaiton/*.cpp \
     gui/graph/*.cpp \
     modellib/*.cpp \
     modellib/cell/*.cpp \
     modellib/structure/*.cpp \
     modellib/protocol/*.cpp
-
 
 HEADERS  += gui/*.h \
     gui/simulaiton/*.h \
@@ -49,7 +47,6 @@ HEADERS  += gui/*.h \
     modellib/cell/*.h \
     modellib/structure/*.h \
     modellib/protocol/*.h
-
 
 FORMS    += gui/graph/*.ui \
 
