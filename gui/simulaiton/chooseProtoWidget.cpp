@@ -32,11 +32,16 @@ void chooseProtoWidget::Initialize() {
 
     clampType = new QButtonGroup();
     QGroupBox* clampTypeBox = new QGroupBox("Simulation Protocol Type");
-    auto startingButton = new QRadioButton("Current Clamp - Single Cell");
-    startingButton->setChecked(true);
-    clampType->addButton(startingButton, 0);
-    clampType->addButton(new QRadioButton("Voltage Clamp - Single Cell"), 1);
-    clampType->addButton(new QRadioButton("2D Grid Protocol"), 2);
+    auto nextToAdd = new QRadioButton("Current Clamp - Single Cell");
+    nextToAdd->setChecked(true);
+    nextToAdd->setToolTip("Clamp cell membrane to specified current");
+    clampType->addButton(nextToAdd, 0);
+    nextToAdd = new QRadioButton("Voltage Clamp - Single Cell");
+    nextToAdd->setToolTip("Clamp cell membrane to specified voltage");
+    clampType->addButton(nextToAdd, 1);
+    nextToAdd = new QRadioButton("2D Grid Protocol");
+    nextToAdd->setToolTip("Multicellular simulation");
+    clampType->addButton(nextToAdd, 2);
     QVBoxLayout* clampLayout = new QVBoxLayout();
     {    
     auto list = clampType->buttons();
