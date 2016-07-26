@@ -510,7 +510,6 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
 void mvarMenu::createMenu()  {
 //setup useful constants and aliases
     unsigned int row_len = 6;
-    std::map<string,double*>::iterator it;
     Measure temp = Measure();
     QString end_op = "Exit";
     if(parent != NULL) {
@@ -541,9 +540,10 @@ void mvarMenu::createMenu()  {
     }
     set_vars->setChecked(write_close);
     int i =0;
-    for(it = proto->cell->vars.begin(); it != proto->cell->vars.end(); it++) {
-        addto_vars_options->addItem(it->first.c_str());
-        addto_vars_options->setItemData(i,GuiUtils().dvarsDescriptions[it->first.c_str()],Qt::ToolTipRole);
+    auto vars = proto->cell->getVariables();
+    for(auto it = vars.begin(); it != vars.end(); it++) {
+        addto_vars_options->addItem(it->c_str());
+        addto_vars_options->setItemData(i,GuiUtils().dvarsDescriptions[it->c_str()],Qt::ToolTipRole);
         i++;
     }
     measure_options = temp.getVariables();    
@@ -775,7 +775,6 @@ void pvarMenu::update_menu() {
     unsigned int i;
     unsigned int end_row;
     vector<string>::iterator it;
-    map<string, double*>::iterator map_it;
     add_button = new QPushButton("+");
     new_var_choice = new QComboBox();
     QRegExp* allowed_vars = new QRegExp("Factor");
@@ -785,9 +784,9 @@ void pvarMenu::update_menu() {
         central_layout->addWidget(new QLabel(it->c_str()), i, 0);
         update_menu(i);
     }
-
-    for(map_it = proto->cell->pars.begin(); map_it != proto->cell->pars.end(); map_it++) {
-        QString to_insert = map_it->first.c_str();
+    auto pars = proto->cell->getConstants();
+    for(auto it = pars.begin(); it != pars.end(); it++) {
+        QString to_insert = it->c_str();
         if(allowed_vars->indexIn(to_insert) != -1) {
             new_var_choice->addItem(to_insert);
         }
@@ -915,7 +914,7 @@ bool pvarMenu::read_pvars(){
     bool ret = false;
     QString fileName = QFileDialog::getOpenFileName(this,"Initializer Settings",working_dir.absolutePath());
     if (!fileName.isEmpty()){
-        ret = proto->parsemixedmap(proto->cell->pars, fileName.toStdString() ,&proto->pnames, &proto->pvals);
+        ret = proto->parsemixedmap(proto->cell->getConstants(), fileName.toStdString() ,&proto->pnames, &proto->pvals);
    }
     update_menu();
     return ret;
