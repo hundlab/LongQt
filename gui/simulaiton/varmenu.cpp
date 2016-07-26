@@ -663,6 +663,7 @@ void mvarMenu::addto_meas_list(){
     QString to_add = addto_meas_options->currentText();
     QString measure_name;
     if(vars_view->currentItem() == NULL) {
+        this->addto_vars_list();
         return;
     }
     measure_name = vars_view->currentItem()->text();

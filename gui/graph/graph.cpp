@@ -38,7 +38,9 @@ QFileInfoList Dialog::getFileNames(QDir location) {
 QFileInfoList Dialog::getFileNamesBar(QDir location, int trial) {
     QFileInfoList toReturn;
     for(QFileInfo file : location.entryInfoList()) {
-        if(QRegExp(QString("dss")+QString::number(trial)+QString("_.+")).exactMatch(file.baseName())&& !QRegExp("dss\\d+_state.dat").exactMatch(file.baseName())&& !QRegExp("dss\\d+_pvars.dat").exactMatch(file.baseName())){
+        if(QRegExp(QString("dss")+QString::number(trial)+QString("_.+")).exactMatch(file.baseName())
+            && !QRegExp("dss\\d+_state").exactMatch(file.baseName())
+            && !QRegExp("dss\\d+_pvars").exactMatch(file.baseName())){
             toReturn << file;
         }
     }
