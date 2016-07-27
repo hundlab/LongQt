@@ -39,8 +39,8 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *paren
     this->parent = parent;
     this->working_dir = working_dir;
     write_close = true;
-    this->createMenu();
     descriptions = GuiUtils().parsDescriptions;
+    this->createMenu();
 }
 
 void simvarMenu::createMenu()  {
@@ -334,7 +334,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
 }
 
 void dvarMenu::createMenu()  {
-   QMap<QString, QString> definitions = GuiUtils().dvarsDescriptions;
+    QMap<QString, QString> definitions = GuiUtils().dvarsDescriptions;
     QMap<QString,QRegExp> dvars_groups;
         dvars_groups.insert("Gates",QRegExp("^Gate.",Qt::CaseInsensitive));
         dvars_groups.insert("Currents",QRegExp("^i"));
