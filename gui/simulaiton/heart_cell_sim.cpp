@@ -17,6 +17,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QSplitter>
+#include <QSettings>
 
 #include "protocol.h"
 #include "heart_cell_sim.h"
@@ -52,9 +53,9 @@ Simulation::Simulation(QWidget* parent){
 //add items menu_list
     menu_list.append(choose);
     menu_list.append(sims);
+    menu_list.append(pvars);
     menu_list.append(dvars);
     menu_list.append(mvars);
-    menu_list.append(pvars);
     menu_list.append(run);
 
     connect(choose, SIGNAL(protocolChanged(Protocol*)), sims, SLOT(changeProto(Protocol*)));
@@ -103,12 +104,18 @@ Simulation::Simulation(QWidget* parent){
 //set button/combo box inital values
     cancel_button->hide();
 //menu
-    menu_options->addItem("Choose Protocol");
-    menu_options->addItem("Choose Variables");
-    menu_options->addItem("Track Cell Values");
-    menu_options->addItem("Measure Cell Values");
-    menu_options->addItem("Perform Sensitivity Analysis");
+    menu_options->addItem("Set Protocol");
+    menu_options->item(menu_options->count()-1)->setToolTip("");
+    menu_options->addItem("Set Model Parameters");
+    menu_options->item(menu_options->count()-1)->setToolTip("Change model parameters (e.g. change an ion channel conductance)");
+    menu_options->addItem("Set Sim. Parameters");
+    menu_options->item(menu_options->count()-1)->setToolTip("");
+    menu_options->addItem("Select Output");
+    menu_options->item(menu_options->count()-1)->setToolTip("");
+    menu_options->addItem("Select Measure Props.");
+    menu_options->item(menu_options->count()-1)->setToolTip("Measure properties related to output variables (e.g. action potential duration, calcium amplitude)");
     menu_options->addItem("Run Simulation");
+    menu_options->item(menu_options->count()-1)->setToolTip("");
     for(auto it = menu_list.begin(); it != menu_list.end(); it++) {
         QScrollArea* scrollWraper = new QScrollArea();
         scrollWraper->setWidget(*it);
@@ -130,8 +137,11 @@ Simulation::Simulation(QWidget* parent){
     this->setWindowTitle("LongQt");
     this->showMaximized();
 //connect buttons
-    connect(about_button, &QPushButton::clicked, [] () {
-        QMessageBox::information(NULL, tr("LongQt Information"),tr("Copyright© 2016 Thomas J. Hund\nLicense: Revised BSD License\nEmail: thomas.hund@osumc.edu\nVersion 0.1\nContributers:\n\tThomas Hund\n\tBirce Ela Onal\n\tDanielle Beckley\n\tDaniel Gratz\n"),QMessageBox::Close);
+    connect(about_button, &QPushButton::clicked, [this] () {
+        if(QMessageBox::RestoreDefaults == QMessageBox::information(NULL,tr("LongQt Information"),tr("Copyright© 2016 Thomas J. Hund\nLicense: Revised BSD License\nEmail: thomas.hund@osumc.edu\nVersion 0.1\nContributers:\n\tThomas Hund\n\tBirce Ela Onal\n\tDanielle Beckley\n\tDaniel Gratz\n"),QMessageBox::Close|QMessageBox::RestoreDefaults,QMessageBox::Close)) {
+            QSettings settings;
+            settings.setValue("showHelp",true);
+        }
     });
     connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
     connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
