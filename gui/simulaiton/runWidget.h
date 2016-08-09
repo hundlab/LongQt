@@ -8,6 +8,8 @@
 #include <QProgressBar>
 #include <QFutureWatcher>
 #include <QFuture>
+#include <QTextEdit>
+#include <QLineEdit>
 
 #include "protocol.h"
 
@@ -31,6 +33,8 @@ Q_OBJECT
   private:
     QWidget* parent;
     Protocol* proto;
+    QTextEdit* note_box;
+    QLineEdit* note_box_name;
     QPushButton* run_button;
     QPushButton* cancel_button;
     QProgressBar* pdialog;
