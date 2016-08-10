@@ -526,8 +526,8 @@ void mvarMenu::createMenu()  {
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
     vars_view = new QListWidget(this);
     meas_view = new QListWidget(this);
-    meas_list_label = new QLabel("Variables to Track",this);
-    vars_list_label = new QLabel("Aspects to Measure", this);
+    meas_list_label = new QLabel("Aspects to Measure",this);
+    vars_list_label = new QLabel("Variables to Track", this);
     addto_vars_options = new QComboBox(this);
     addto_meas_options = new QComboBox(this);
     addto_meas_list_button = new QPushButton("+", this);

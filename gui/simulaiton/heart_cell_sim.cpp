@@ -106,9 +106,9 @@ Simulation::Simulation(QWidget* parent){
 //menu
     menu_options->addItem("Set Protocol");
     menu_options->item(menu_options->count()-1)->setToolTip("");
-    menu_options->addItem("Set Model Parameters");
-    menu_options->item(menu_options->count()-1)->setToolTip("Change model parameters (e.g. change an ion channel conductance)");
     menu_options->addItem("Set Sim. Parameters");
+    menu_options->item(menu_options->count()-1)->setToolTip("Change model parameters (e.g. change an ion channel conductance)");
+    menu_options->addItem("Set Model Parameters");
     menu_options->item(menu_options->count()-1)->setToolTip("");
     menu_options->addItem("Select Output");
     menu_options->item(menu_options->count()-1)->setToolTip("");
