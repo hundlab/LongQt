@@ -335,6 +335,9 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
 
 void dvarMenu::createMenu()  {
     QMap<QString, QString> definitions = GuiUtils().dvarsDescriptions;
+/*    for(auto temp = definitions.begin(); temp != definitions.end();temp++) {
+    qDebug() << "\t\tdvarsDescriptions.insert(" << temp.key() <<","<<temp.value()<<");";
+    }*/
     QMap<QString,QRegExp> dvars_groups;
         dvars_groups.insert("Gates",QRegExp("^Gate.",Qt::CaseInsensitive));
         dvars_groups.insert("Currents",QRegExp("^i"));

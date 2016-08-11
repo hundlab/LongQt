@@ -27,8 +27,7 @@ class GuiUtils {
         parsDescriptions.insert("cellStateDir","Folder containing output text files with data and initial conditions");
         parsDescriptions.insert("datadir","Folder that will contain output of simulation");
 
-
-		dvarsDescriptions.insert( "Ca" , "Ca2+ current through the L-type Ca2+ channel, uA/uF" );
+        dvarsDescriptions.insert( "Ca" , "Ca2+ current through the L-type Ca2+ channel, uA/uF" );
 		dvarsDescriptions.insert( "CaM" , "" );
 		dvarsDescriptions.insert( "Csqnb" , "" );
 		dvarsDescriptions.insert( "Gate.a" , "Activation gate of Ito1" );
@@ -71,7 +70,7 @@ class GuiUtils {
 		dvarsDescriptions.insert( "Gate.y" , "Activation gating variable for Ih" );
 		dvarsDescriptions.insert( "Gate.yf" , "" );
 		dvarsDescriptions.insert( "Gate.ykur" , "" );
-		dvarsDescriptions.insert( "caI" , "Concentration of free and buffered intracellular Ca2+, mmol/L" );
+		dvarsDescriptions.insert( "caI" , "Concentration of intracellular Ca2+, mmol/L" );
 		dvarsDescriptions.insert( "caJsr" , "Ca2+ concentration in junctional sarcoplasmic reticulum, mmol/L" );
 		dvarsDescriptions.insert( "caNsr" , "Ca2+ concentration in network sarcoplasmic reticulum, mmol/L" );
 		dvarsDescriptions.insert( "caR" , "" );
@@ -83,7 +82,7 @@ class GuiUtils {
 		dvarsDescriptions.insert( "cmdnI" , "" );
 		dvarsDescriptions.insert( "cmdnR" , "Calmodulin, Ca2+ buffer in subspace" );
 		dvarsDescriptions.insert( "csqn" , "Calsequestrin, Ca2+ buffer in junctional sarcoplasmic reticulum" );
-		dvarsDescriptions.insert( "dVdt" , "Change in voltage with respect fo time" );
+		dvarsDescriptions.insert( "dVdt" , "Change in voltage with respect to time, mV/ms" );
 		dvarsDescriptions.insert( "fBlock" , "" );
 		dvarsDescriptions.insert( "fBound" , "" );
 		dvarsDescriptions.insert( "fI" , "" );
@@ -98,13 +97,13 @@ class GuiUtils {
 		dvarsDescriptions.insert( "iCait" , "" );
 		dvarsDescriptions.insert( "iCajunc" , "" );
 		dvarsDescriptions.insert( "iCak" , "" );
-		dvarsDescriptions.insert( "iCal" , "Ca2+ current through the L-type Ca2+ channel, uA/uF" );
+		dvarsDescriptions.insert( "iCal" , "L-type Ca2+ channel current, uA/uF" );
 		dvarsDescriptions.insert( "iCana" , "" );
 		dvarsDescriptions.insert( "iCanajunc" , "" );
 		dvarsDescriptions.insert( "iCanasl" , "" );
 		dvarsDescriptions.insert( "iCart " , "Total calcium current due to L-type, T-type, and sodium-calcium exchanger" );
 		dvarsDescriptions.insert( "iCasl" , "" );
-		dvarsDescriptions.insert( "iCat" , "Ca2+ current through the T-type Ca2+ channel, uA/uF" );
+		dvarsDescriptions.insert( "iCat" , "T-type Ca2+ channel current, uA/uF" );
 		dvarsDescriptions.insert( "iCatt" , "T-type Ca2+ channel current" );
 		dvarsDescriptions.insert( "iClbk" , "" );
 		dvarsDescriptions.insert( "iClca" , "" );
@@ -124,13 +123,13 @@ class GuiUtils {
 		dvarsDescriptions.insert( "iKs" , "Slow delayed rectifier K+ current, uA/uF" );
 		dvarsDescriptions.insert( "iKsjunc" , "" );
 		dvarsDescriptions.insert( "iKssl" , "" );
-		dvarsDescriptions.insert( "iKt" , "Total transmembrane K+ current" );
+		dvarsDescriptions.insert( "iKt" , "Total transmembrane K+ current, uA/uF" );
 		dvarsDescriptions.insert( "iKur" , "" );
-		dvarsDescriptions.insert( "iLeak" , "Leak current from sarcoplasmic reticulum to cytoplasm" );
+		dvarsDescriptions.insert( "iLeak" , "Leak current from sarcoplasmic reticulum to cytoplasm, uA/uF" );
 		dvarsDescriptions.insert( "iNa" , "Fast Na+ current, uA/uF" );
 		dvarsDescriptions.insert( "iNaKjunc" , "" );
 		dvarsDescriptions.insert( "iNaKsl" , "" );
-		dvarsDescriptions.insert( "iNab" , "Background sodium current" );
+		dvarsDescriptions.insert( "iNab" , "Background sodium current, uA/uF" );
 		dvarsDescriptions.insert( "iNabjunc" , "" );
 		dvarsDescriptions.insert( "iNabsl" , "" );
 		dvarsDescriptions.insert( "iNaca" , "Na+-Ca2+ exchanger, uA/uF" );
@@ -139,10 +138,10 @@ class GuiUtils {
 		dvarsDescriptions.insert( "iNak" , "Na+-K+ pump, uA/uF" );
 		dvarsDescriptions.insert( "iNal" , "Slowly inactivating late Na+ current, uA/uF" );
 		dvarsDescriptions.insert( "iNasl" , "" );
-		dvarsDescriptions.insert( "iNat" , "Total transmembrane Na+ current" );
+		dvarsDescriptions.insert( "iNat" , "Total transmembrane Na+ current, uA/uF" );
 		dvarsDescriptions.insert( "iNcxjunc" , "" );
 		dvarsDescriptions.insert( "iNcxsl" , "" );
-		dvarsDescriptions.insert( "iPca" , "Plateau Ca2+ current" );
+		dvarsDescriptions.insert( "iPca" , "Plateau Ca2+ current, uA/uF" );
 		dvarsDescriptions.insert( "iRel" , "Ca2+ transfer from junctional SR to subspace" );
 		dvarsDescriptions.insert( "iSt" , "Sustained inward current" );
 		dvarsDescriptions.insert( "iSus" , "Sustained component of the 4AP-sensitive current" );
@@ -150,26 +149,27 @@ class GuiUtils {
 		dvarsDescriptions.insert( "iTo2" , "Ca2+-dependent transient outward Cl- current, uA/uF" );
 		dvarsDescriptions.insert( "iTof" , "" );
 		dvarsDescriptions.insert( "iTos" , "" );
-		dvarsDescriptions.insert( "iTot" , "Total transmembrane current" );
+		dvarsDescriptions.insert( "iTot" , "Total transmembrane current, uA/uF" );
 		dvarsDescriptions.insert( "iTr" , "Ca2+ transfer from network to junctional sarcoplasmic reticulum" );
 		dvarsDescriptions.insert( "iTrek" , "Transient outward K+ current" );
-		dvarsDescriptions.insert( "iUp" , "Pump current taking calcium into sarcoplasmic reticulum" );
+		dvarsDescriptions.insert( "iUp" , "Ca2+ uptake from myoplasm into sarcoplasmic reticulum" );
 		dvarsDescriptions.insert( "ipCa" , "" );
 		dvarsDescriptions.insert( "ipCajunc" , "" );
 		dvarsDescriptions.insert( "ipCasl" , "" );
-		dvarsDescriptions.insert( "ipK" , "Plateau potassium curent" );
-		dvarsDescriptions.insert( "kI" , "Intracellular potassium concentration" );
+		dvarsDescriptions.insert( "ipK" , "Plateau potassium current, uA/uF" );
+		dvarsDescriptions.insert( "kI" , "Intracellular potassium concentration, mM" );
 		dvarsDescriptions.insert( "mgI" , "" );
-		dvarsDescriptions.insert( "naI" , "Intracellular sodium concentration" );
+		dvarsDescriptions.insert( "naI" , "Intracellular sodium concentration, mM" );
 		dvarsDescriptions.insert( "najI" , "" );
 		dvarsDescriptions.insert( "naslI" , "" );
 		dvarsDescriptions.insert( "ryRopen" , "" );
-		dvarsDescriptions.insert( "t" , "Time (ms)" );
+		dvarsDescriptions.insert( "t" , "Time, ms" );
 		dvarsDescriptions.insert( "trpn" , "troponin" );
 		dvarsDescriptions.insert( "trpnCa" , "" );
 		dvarsDescriptions.insert( "trpnMg" , "" );
 		dvarsDescriptions.insert( "trpnMgmg" , "" );
-		dvarsDescriptions.insert( "vOld" , "Voltage (mV)" );
+		dvarsDescriptions.insert( "vOld" , "Transmembrane potential, mV" );
+
 
 		measDescriptions.insert("amp","Amplitude");
 		measDescriptions.insert("cl","Cycle length");
