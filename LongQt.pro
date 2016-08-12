@@ -14,6 +14,7 @@ QMAKE_MAC_SDK = macosx10.11
 
 CONFIG += c++11
 INCLUDEPATH += ./modellib ./modellib/cell ./modellib/structure ./modellib/protocol ./gui ./gui/simulaiton ./gui/graph ./lib
+RESOURCES = LongQt.qrc
 
 linux {
     debug {
