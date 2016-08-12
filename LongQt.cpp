@@ -22,9 +22,23 @@ int main(int argc, char *argv[])
     parser.addOption(GUIOption);
     QCommandLineOption licenseOption(QStringList() << "l" << "license", QCoreApplication::translate("main", "Print the license and exit"));
     parser.addOption(licenseOption);
+    QCommandLineOption pvarsFileOption("pvars",QCoreApplication::translate("main","Specify the file for setting model parameters or their random generation"),QCoreApplication::translate("main","pvars.txt"));
+    parser.addOption(pvarsFileOption);
+    QCommandLineOption dvarsFileOption("dvars",QCoreApplication::translate("main","Specify the file for choosing which variables will be writen out durring the simulation"),QCoreApplication::translate("main","dvars.txt"));
+    parser.addOption(dvarsFileOption);
+    QCommandLineOption mvarsFileOption("mvars",QCoreApplication::translate("main","Specify the file for choosing which variables will have properties measured about them e.g. Ampiltude on the Ca channel"),QCoreApplication::translate("main","mvars.txt"));
+    parser.addOption(mvarsFileOption);
+    QCommandLineOption simvarsFileOption("simvars",QCoreApplication::translate("main","Specify the file for setting simulation parameters e.g. number of trials"),QCoreApplication::translate("main","simvars.txt"));
+    parser.addOption(simvarsFileOption);
+
+
     parser.process(*app);     
     bool startCLI = parser.isSet(GUIOption);
     bool license = parser.isSet(licenseOption);
+    QString pvarsFile = parser.value(pvarsFileOption);
+    QString dvarsFile = parser.value(dvarsFileOption);
+    QString mvarsFile = parser.value(mvarsFileOption);
+    QString simvarsFile = parser.value(simvarsFileOption);
 
     if(license) {
         QFile* licenseFile = new QFile(":/LICENSE");
