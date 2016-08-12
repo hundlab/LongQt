@@ -105,17 +105,17 @@ Simulation::Simulation(QWidget* parent){
     cancel_button->hide();
 //menu
     menu_options->addItem("Set Protocol");
-    menu_options->item(menu_options->count()-1)->setToolTip("");
+    menu_options->item(menu_options->count()-1)->setToolTip("Choose the type of protocol to follow in the simulation (e.g. fix the cell membrane voltage)");
     menu_options->addItem("Set Sim. Parameters");
     menu_options->item(menu_options->count()-1)->setToolTip("Change model parameters (e.g. change an ion channel conductance)");
     menu_options->addItem("Set Model Parameters");
-    menu_options->item(menu_options->count()-1)->setToolTip("");
+    menu_options->item(menu_options->count()-1)->setToolTip("Set model constants or have them randomly choosen");
     menu_options->addItem("Select Output");
-    menu_options->item(menu_options->count()-1)->setToolTip("");
+    menu_options->item(menu_options->count()-1)->setToolTip("Select which model variables should be written to a file (e.g. Ca Concentration)");
     menu_options->addItem("Select Measured Props.");
     menu_options->item(menu_options->count()-1)->setToolTip("Measure properties related to output variables (e.g. action potential duration, calcium amplitude)");
     menu_options->addItem("Run Simulation");
-    menu_options->item(menu_options->count()-1)->setToolTip("");
+    menu_options->item(menu_options->count()-1)->setToolTip("Optionally write a description of the simulation and run the simulation");
     for(auto it = menu_list.begin(); it != menu_list.end(); it++) {
         QScrollArea* scrollWraper = new QScrollArea();
         scrollWraper->setWidget(*it);
