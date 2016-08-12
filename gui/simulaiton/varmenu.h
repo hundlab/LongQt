@@ -120,7 +120,8 @@ Q_OBJECT
     QWidget* parent;
     QDir working_dir;
     bool write_close;
-    QMap<QString, QString> descriptions;
+    QMap<QString,QString> dvarsDescriptions; 
+    QMap<QString,QString> measDescriptions;
 //Buttons & their labels
     QCheckBox* set_vars;
     QPushButton* get_vars;

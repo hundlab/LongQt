@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>LICENSE</file>
+    <file>hoverText/parsDescriptions.txt</file>
+    <file>hoverText/measDescriptions.txt</file>
+    <file>hoverText/dvarsDescriptions.txt</file>
+</qresource>
+</RCC>
