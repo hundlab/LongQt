@@ -26,9 +26,9 @@ Q_OBJECT
     QComboBox* cell_type;
     QString defaultCell;
   private slots:
-    void changeProto(int value);
     void changeCell(QString name);
   public slots:
+    void changeProto(int value);
     void cellChangedSlot();
     void resetProto();
 };
