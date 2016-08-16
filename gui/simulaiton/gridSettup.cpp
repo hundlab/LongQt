@@ -93,7 +93,7 @@ void gridSetupWidget::createMenu() {
         int j = 0;
         for(auto iv = it->nodes.begin();iv != it->nodes.end(); iv++,j++) {
             gridNode* cellWidget = new gridNode(*iv,i,j,((gridCell*)proto->cell));
-            cellGrid->setCellWidget(j,i,cellWidget);
+            cellGrid->setCellWidget(i,j,cellWidget);
             connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
             connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
                 changeStimNodeList(status, cellWidget->getNodePair());
