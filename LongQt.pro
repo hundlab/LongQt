@@ -13,7 +13,7 @@ TEMPLATE = app
 QMAKE_MAC_SDK = macosx10.11
 
 CONFIG += c++11
-INCLUDEPATH += ./modellib ./modellib/cell ./modellib/structure ./modellib/protocol ./gui ./gui/simulaiton ./gui/graph ./lib ./cli
+INCLUDEPATH += ./modellib ./modellib/cell ./modellib/structure ./modellib/protocol ./gui ./gui/simulaiton ./gui/graph ./cli
 RESOURCES = LongQt.qrc
 
 RESOURCES = LongQt.qrc 
@@ -70,7 +70,6 @@ SOURCES += LongQt.cpp \
 ./modellib/protocol/protocol.cpp\
 ./modellib/protocol/currentClampProtocol.cpp\
 ./modellib/protocol/voltageClampProtocol.cpp\
-./lib/argHandler.cpp\
 ./cli/CLISimulation.cpp
 
 HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
@@ -105,7 +104,6 @@ HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
 ./modellib/protocol/currentClampProtocol.h\
 ./modellib/protocol/protocol.h\
 ./modellib/protocol/gridProtocol.h\
-./lib/argHandler.h\
 ./cli/CLISimulation.h
 
 FORMS    += ./gui/graph/linegraph.ui \
