@@ -1,0 +1,32 @@
+amp
+Amplitude (peak - min)
+cl
+Cycle length
+ddr
+Diastolic depolarization rate
+deriv2ndt
+Second derivative of value with respect to time
+derivt
+Derivative of value with respect to time
+dur50
+Duration at %50 (dur50time1 – derivt)
+dur50time1
+Time at which duration is measured
+dur75
+Duration at %75 (dur75time1 – derivt)
+dur74time1
+Time at which duration is measured
+dur90
+Duration at %90 (dur90time1 – derivt)
+dur90time1
+Time at which duration is measured
+maxderiv
+Max derivative
+min
+Minimum value
+mint
+Time at which min is measured
+peak
+Peak value
+vartakeoff
+Takeoff value (determined by max second derivative)

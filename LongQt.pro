@@ -16,6 +16,8 @@ CONFIG += c++11
 INCLUDEPATH += ./modellib ./modellib/cell ./modellib/structure ./modellib/protocol ./gui ./gui/simulaiton ./gui/graph ./lib
 RESOURCES = LongQt.qrc
 
+RESOURCES = LongQt.qrc 
+
 linux {
     debug {
         QMAKE_CXXFLAGS += -g

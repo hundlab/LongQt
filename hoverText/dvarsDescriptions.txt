@@ -1,0 +1,286 @@
+Ca
+Ca2+ current through the L-type Ca2+ channel, uA/uF
+CaM
+Activated CaMKII
+Csqnb
+Concentration of Ca2+ bound Calsequestrin, mM
+Gate.a
+Activation gate of Ito1
+Gate.aa
+Ca2+-dependent inactivation gate of Ito2
+Gate.d
+Activation gate of ICaL
+Gate.dt
+Activation gate of ICaT
+Gate.f
+Fast voltage-dependent inactivation gate of ICaL
+Gate.f_ca
+Intracellular calcium-dependent inactivation gate of ICaL
+Gate.f_cabj
+Calcium-dependent inactivation gate of ICaL in junction
+Gate.f_cabsl
+Calcium-dependent inactivation gate of ICaL in sarcolemma
+Gate.fca
+Fast Ca2+-dependent inactivation gate of ICaL
+Gate.fca2
+Slow Ca2+-dependent inactivation gate of ICaL
+Gate.ft
+Inactivation gating variable for ICaT
+Gate.g
+Calcium-dependent inactivation gate of Irel
+Gate.h
+Fast inactivation gate of INa
+Gate.hl
+Inactivation gate of INaL
+Gate.i
+Fast inactivation gate of Ito1
+Gate.i2
+Slow inactivation gate of Ito1
+Gate.j
+Slow inactivation gate of INa
+Gate.m
+Activation gate of INa
+Gate.ml
+Activation gate of INaL
+Gate.n
+Activation gating variable for IKs
+Gate.paf
+Fast activation gating variable for IKr
+Gate.pas
+Slow activation gating variable for IKr
+Gate.pi
+Inactivation gating variable for IKr
+Gate.q
+Inactivation gating variable for Ito
+Gate.qa
+Activation gating variable for Ist
+Gate.qi
+Inactivation gating variable for Ist
+Gate.r
+Activation gating variable for Ito and Isus
+Gate.s
+Voltage-dependent inactivation gate of Ito
+Gate.xf
+Fast inactivation gate of Ito
+Gate.xkr
+Activation gate of IKr
+Gate.xks
+Fast activation gate of IKs
+Gate.xkur
+Fast activation gate of IKur
+Gate.xr
+Activation gate of IKr
+Gate.xr1
+Activation gate of IKr
+Gate.xr2
+Inactivation gate of IKr
+Gate.xs
+Fast activation gate of IKs
+Gate.xs2
+Slow activation gate of IKs
+Gate.y
+Activation gating variable for Ih
+Gate.yf
+Slow inactivation gate of Ito
+Gate.ykur
+Slow activation gate of Ikur
+caI
+Concentration of free and buffered intracellular Ca2+, mmol/L
+caJsr
+Ca2+ concentration in junctional sarcoplasmic reticulum, mmol/L
+caNsr
+Ca2+ concentration in network sarcoplasmic reticulum, mmol/L
+caR
+Ca2+ concentration in restricted space, mmol/L
+caSr
+Ca2+ concentration in sarcoplasmic reticulum, mmol/L
+cajI
+Ca2+ concentration in junction, mmol/L
+caslI
+Ca2+ concentration in sarcolemma, mmol/L
+clI
+Intracellular Cl- concentration
+cmdn
+Calmodulin, Ca2+ buffer in myoplasm
+cmdnI
+Concentration of calmodulin bound to Ca2+ buffer in bulk myoplasm, mM
+cmdnR
+Concentration of calmodulin bound to Ca2+ buffer in restricted space, mM
+csqn
+Calsequestrin, Ca2+ buffer in JSR
+dVdt
+Change in voltage with respect fo time
+fBlock
+
+fBound
+Fraction of active CaMKII subunits with bound Ca2+/calmodulin
+fI
+Fraction of inactive CaMKII subunits
+fOx
+Fraction of active oxidized CaMKII subunits
+fOxP
+Fraction of active oxidized/autophosphorylated CaMKII subunits
+fPhos
+Fraction of active autophosphorylated CaMKII subunits
+iCa
+Ca2+ current through the L-type Ca2+ channel, uA/uF
+iCaL
+Total L-type Ca2+ current due to calcium, sodium, and potassium through L-type Ca2+ channel in sarcolemma and junction
+iCab
+Background Ca2+ current, uA/uF
+iCabjunc
+Background Ca2+ current in junction, uA/uF
+iCabsl
+Background Ca2+ current in sarcolemma, uA/uF
+iCait
+
+iCajunc
+Ca2+ current in junction and sarcolemma, uA/uF
+iCak
+Potassium current through L-type Ca2+ channel
+iCal
+L-type Ca2+ channel current
+iCana
+Sodium current through L-type Ca2+ channel
+iCanajunc
+Sodium current through L-type Ca2+ channel in junction
+iCanasl
+Sodium current through L-type Ca2+ channel in sarcolemma
+iCart 
+Total calcium current due to L-type, T-type, and sodium-calcium exchanger
+iCasl
+Total Ca2+ current in sarcolemma, uA/uF
+iCat
+Ca2+ current through the T-type Ca2+ channel, uA/uF
+iCatt
+T-type Ca2+ channel current, uA/uF
+iClbk
+Background Cl current, uA/uF
+iClca
+Ca2+-activated Cl current, uA/uF
+iClcajunc
+Ca2+-activated Cl current in junction, uA/uF
+iClcasl
+Ca2+-activated Cl current in sarcolemma, uA/uF
+iClt
+Total transmembrane Cl- current
+iDiff
+Ca2+ transfer from restricted space to myoplasm, mmol/L per ms
+iH
+Hyperpolarization-activated current, uA/uF
+iHk
+Potassium component of hyperpolarization-activated current, uA/uF
+iHna
+Sodium component of hyperpolarization-activated current, uA/uF
+iK1
+Time-independent K+ current, uA/uF
+iKach
+Acetylcholine-sensitive K+ current, uA/uF
+iKp
+Plateau K+ current, uA/uF
+iKpjunc
+Plateau K+ current in junction, uA/uF
+iKpsl
+Plateau K+ current in sarcolemma, uA/uF
+iKr
+Rapid delayed rectifier K+ current, uA/uF
+iKs
+Slow delayed rectifier K+ current, uA/uF
+iKsjunc
+Slow delayed rectifier K+ current in junction, uA/uF
+iKssl
+Slow delayed rectifier K+ current in sarcolemma, uA/uF
+iKt
+Total transmembrane K+ current
+iKur
+Ultrarapid delayed rectifier K+ current, uA/uF
+iLeak
+Ca2+ leak from JSR to myoplasm, mmol/L per ms
+iNa
+Fast Na+ current, uA/uF
+iNaKjunc
+Na+-K+ pump in junction, uA/uF
+iNaKsl
+Na+-K+ pump in sarcolemma, uA/uF
+iNab
+Background sodium current, uA/uF
+iNabjunc
+Background Na+ current in junction, uA/uF
+iNabsl
+Background Na+ current in sarcolemma, uA/uF
+iNaca
+Na+-Ca2+ exchanger, uA/uF
+iNacar
+Na+-Ca2+ exchanger in restricted space membrane, uA/uF
+iNajunc
+Total Na+ current in junction, uA/uF
+iNak
+Na+-K+ pump, uA/uF
+iNal
+Late Na+ current, uA/uF
+iNasl
+Total Na+ current in sarcolemma, uA/uF
+iNat
+Total transmembrane Na+ current
+iNcxjunc
+Na+-Ca2+ exchanger current in junction, uA/uF
+iNcxsl
+Na+-Ca2+ exchanger current in sarcolemma, uA/uF
+iPca
+Sarcolemmal Ca2+ pump, uA/uF
+iRel
+Ca2+ release from JSR to myoplasm, mmol/L per ms
+iSt
+Sustained inward current, uA/uF
+iSus
+Sustained component of the 4AP-sensitive current, uA/uF
+iTo
+4AP-sensitive transient outward K+ current, uA/uF
+iTo2
+Ca2+-dependent transient outward Cl- current, uA/uF
+iTof
+Fast component of transient outward K+ current, uA/uF
+iTos
+Slow component of transient outward K+ current, uA/uF
+iTot
+Total transmembrane current
+iTr
+Ca2+ transfer from network to junctional sarcoplasmic reticulum, mmol/L per ms
+iTrek
+TREK-1 K+ current, uA/uF
+iUp
+Ca2+ uptake from myoplasm to NSR, mmol/L per ms
+ipCa
+Ca2+ pump current, uA/uF
+ipCajunc
+Ca2+ pump current in junction, uA/uF
+ipCasl
+Ca2+ pump current in sarcolemma, uA/uF
+ipK
+Plateau potassium current, uA/uF
+kI
+Intracellular potassium concentration
+mgI
+Intracellular magnesium concentration, mM
+naI
+Intracellular sodium concentration
+najI
+Junction sodium concentration, mM
+naslI
+Sarcolemma sodium concentration, mM
+ryRopen
+Activation gate of IRel
+t
+Time (ms)
+trpn
+troponin
+trpnCa
+Concentration of troponin with Ca2+ bound at Ca2+ site, mM
+trpnMg
+Concentration of troponin with Ca2+ bound at Mg2+ site, mM
+trpnMgmg
+Concentration of troponin with Mg2+ bound at Mg2+ site, mM
+vOld
+Transmembrane potential, mV
+vold
+Voltage (mV)

@@ -39,7 +39,7 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *paren
     this->parent = parent;
     this->working_dir = working_dir;
     write_close = true;
-    descriptions = GuiUtils().parsDescriptions;
+    descriptions = GuiUtils().readMap(":/hoverText/parsDescriptions.txt");
     this->createMenu();
 }
 
@@ -334,7 +334,11 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
 }
 
 void dvarMenu::createMenu()  {
-    QMap<QString, QString> definitions = GuiUtils().dvarsDescriptions;
+    QMap<QString, QString> definitions = GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt");
+/*    for(auto temp = definitions.begin(); temp != definitions.end();temp++) {
+    qInfo() << temp.key();
+    qInfo() << temp.value();
+    }*/
     QMap<QString,QRegExp> dvars_groups;
         dvars_groups.insert("Gates",QRegExp("^Gate.",Qt::CaseInsensitive));
         dvars_groups.insert("Currents",QRegExp("^i"));
@@ -504,7 +508,9 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     this->working_dir = working_dir;
     write_close = true;
 
-   this->createMenu();
+    this->dvarsDescriptions = GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt");
+    this->measDescriptions = GuiUtils().readMap(":/hoverText/measDescriptions.txt");
+    this->createMenu();
 }
 
 void mvarMenu::createMenu()  {
@@ -543,14 +549,14 @@ void mvarMenu::createMenu()  {
     int i =0;
     for(it = proto->cell->vars.begin(); it != proto->cell->vars.end(); it++) {
         addto_vars_options->addItem(it->first.c_str());
-        addto_vars_options->setItemData(i,GuiUtils().dvarsDescriptions[it->first.c_str()],Qt::ToolTipRole);
+        addto_vars_options->setItemData(i,dvarsDescriptions[it->first.c_str()],Qt::ToolTipRole);
         i++;
     }
     measure_options = temp.getVariables();    
     i =0;
     for(set<string>::iterator set_it = measure_options.begin(); set_it != measure_options.end(); set_it++) {
         addto_meas_options->addItem(set_it->c_str());
-        addto_meas_options->setItemData(i,GuiUtils().measDescriptions[set_it->c_str()],Qt::ToolTipRole);
+        addto_meas_options->setItemData(i,measDescriptions[set_it->c_str()],Qt::ToolTipRole);
         i++;
     }
     vars_view->setSortingEnabled(true);
@@ -592,7 +598,7 @@ void mvarMenu::update_menu(int row) {
         QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly);
         if(vars_item.empty()) {
             QListWidgetItem* to_add = new QListWidgetItem(it->second.varname.c_str());
-            to_add->setToolTip(GuiUtils().dvarsDescriptions[it->second.varname.c_str()]);
+            to_add->setToolTip(dvarsDescriptions[it->second.varname.c_str()]);
             vars_view->addItem(to_add);
             row = vars_view->row(vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly).first());
         }
@@ -606,7 +612,7 @@ void mvarMenu::update_menu(int row) {
             QList<QListWidgetItem*> meas_item = meas_view->findItems(it->c_str(),Qt::MatchExactly);
             if(meas_item.empty()) {
                 QListWidgetItem* to_add = new QListWidgetItem(it->c_str());
-                to_add->setToolTip(GuiUtils().measDescriptions[it->c_str()]);
+                to_add->setToolTip(measDescriptions[it->c_str()]);
                 meas_view->addItem(to_add);
             }
         }
