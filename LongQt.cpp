@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
     parser.addOption(GUIOption);
     QCommandLineOption licenseOption(QStringList() << "l" << "license", QCoreApplication::translate("main", "Print the license and exit"));
     parser.addOption(licenseOption);
+    QCommandLineOption protoOption("proto",QCoreApplication::translate("main","Specify the protocol to use 0=CurrentClamp, 1=VoltageClamp, 2=Grid"),QCoreApplication::translate("main","num[0-2]"));
+    parser.addOption(protoOption);
     QCommandLineOption pvarsFileOption("pvars",QCoreApplication::translate("main","Specify the file for setting model parameters or their random generation"),QCoreApplication::translate("main","pvars.txt"));
     parser.addOption(pvarsFileOption);
     QCommandLineOption dvarsFileOption("dvars",QCoreApplication::translate("main","Specify the file for choosing which variables will be writen out durring the simulation"),QCoreApplication::translate("main","dvars.txt"));
@@ -35,6 +37,11 @@ int main(int argc, char *argv[])
     parser.process(*app);     
     bool startCLI = parser.isSet(GUIOption);
     bool license = parser.isSet(licenseOption);
+    bool valid;
+    int protoNum = parser.value(protoOption).toInt(&valid);
+    if(!valid) {
+        protoNum = -1;
+    }
     QString pvarsFile = parser.value(pvarsFileOption);
     QString dvarsFile = parser.value(dvarsFileOption);
     QString mvarsFile = parser.value(mvarsFileOption);
@@ -51,7 +58,7 @@ int main(int argc, char *argv[])
     }
     
     if(!startCLI) {
-        Simulation* window = new Simulation();
+        Simulation* window = new Simulation(protoNum, simvarsFile, dvarsFile, mvarsFile, pvarsFile);
         window->show();
         QSettings settings;
         if(settings.value("showHelp",true).toBool() &&QMessageBox::Discard == QMessageBox::information(0,"Welcome!", "LongQt is a program for modeling cardiac potentials. As you go through this program keep a few things in mind. First, if you would like more information about something hover your mouse above its name and information will pop up. Second, default values have been provided for all options so if you don't know what an option does it's ok to simply skip it. And finally have fun!\n If you would like to re-enable this text after discarding it use the Restore Defaults button in the About dialog.", QMessageBox::Ok|QMessageBox::Discard,QMessageBox::Ok)) {

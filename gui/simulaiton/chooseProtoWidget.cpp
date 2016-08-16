@@ -94,6 +94,9 @@ void chooseProtoWidget::changeProto(int value) {
     }
     this->proto->datadir = datadir;
     this->proto->cellStateDir = cellStateDir;
+    if(!this->clampType->button(value)->isChecked()) {
+        this->clampType->button(value)->setChecked(true);
+    }
     emit protocolChanged(this->proto);
 }
 

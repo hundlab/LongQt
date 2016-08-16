@@ -23,7 +23,7 @@ class Simulation : public QWidget {
     Q_OBJECT
 
   public:
-    Simulation(QWidget* parent = 0);
+    Simulation(int protoType = -1, QString simvarFile = "", QString dvarFile = "", QString measFile = "", QString pvarFile = "", QWidget* parent = 0);
     ~Simulation();
 
   private:

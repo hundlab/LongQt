@@ -26,7 +26,7 @@
 #include "runWidget.h"
 #include "chooseProtoWidget.h"
 
-Simulation::Simulation(QWidget* parent){
+Simulation::Simulation(int protoType, QString simvarFile,QString dvarFile,QString measFile,QString pvarFile, QWidget* parent){
 //setup class variables
     this->parent = parent;
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
@@ -42,7 +42,22 @@ Simulation::Simulation(QWidget* parent){
     next_button = new QPushButton("Next");
     cancel_button = new QPushButton("Cancel");
     chooseProtoWidget* choose = new chooseProtoWidget(this);
+    if(0 <= protoType  && protoType <= 2) {
+        choose->changeProto(protoType);
+    }
     this->proto = choose->getCurrentProto();
+    if(simvarFile != "") {
+        proto->readpars(simvarFile.toStdString());
+    }
+    if(dvarFile != "") {
+        proto->readdvars(dvarFile.toStdString());
+    }
+    if(measFile != "") {
+        proto->readMvarsFile(measFile.toStdString());
+    }
+    if(pvarFile != "") {
+        proto->parsemixedmap(proto->cell->pars, measFile.toStdString() ,&proto->pnames, &proto->pvals);
+    }
     proto->datadir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time).toStdString();
     proto->cellStateDir = proto->datadir;
     simvarMenu* sims = new simvarMenu(proto,QDir(proto->datadir.c_str()), this);
