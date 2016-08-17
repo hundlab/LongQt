@@ -51,6 +51,8 @@ SOURCES += LongQt.cpp \
 ./gui/graph/bargraph.cpp\
 ./gui/graph/choosegraphs.cpp\
 ./gui/graph/linegraph.cpp\
+./modellib/SimManager.cpp\
+./modellib/TrialWorker.cpp\
 ./modellib/measure.cpp\
 ./modellib/measure_kernel.cpp\
 ./modellib/cell/gpbatrialRyr.cpp\
@@ -82,6 +84,8 @@ HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
 ./gui/graph/choosegraphs.h\
 ./gui/graph/choosegraphstoggle.h\
 ./gui/guiUtils.h\
+./modellib/SimManager.h\
+./modellib/TrialWorker.h\
 ./modellib/measure_kernel.h\
 ./modellib/measure.h\
 ./modellib/tridag.h\
