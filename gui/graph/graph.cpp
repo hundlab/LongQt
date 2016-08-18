@@ -9,6 +9,7 @@
 #include <QList>
 #include <QGridLayout>
 #include <QMap>
+#include <QProgressDialog>
 #include <exception>
 
 Dialog::Dialog(QDir read_location, QWidget *parent) :
@@ -68,7 +69,14 @@ void Dialog::buildLineGraphs(QFileInfoList files){
         throw badFile();
     }
     QMap<QString, lineGraph*> graphMap;
+    int progressCounter = 0;
+    QProgressDialog* progressDisp = new QProgressDialog("Opening Files", "Skip", 0, files.size(), this);
+    progressDisp->setWindowModality(Qt::WindowModal);
     for(QFileInfo fileInfo : files) {
+        progressDisp->setValue(progressCounter);
+        if(progressDisp->wasCanceled()) {
+            break;
+        }
         QFile file(fileInfo.absoluteFilePath());
         if(!file.open(QIODevice::ReadOnly)){
             QMessageBox::warning(0,"error", "File " +fileInfo.fileName() + " Could not be Opened");
@@ -107,7 +115,9 @@ void Dialog::buildLineGraphs(QFileInfoList files){
             }
             graphMap[split_line[i]]->addData(y[xIndex],y[i],this->getName(fileInfo));
         }
+        progressCounter++;
     }
+    progressDisp->deleteLater();
 }
 void Dialog::buildBarGraphs(int trial) {
     QFileInfoList fileInfos = this->getFileNamesBar(this->read_location, trial);
