@@ -86,6 +86,10 @@ void gridSetupWidget::createMenu() {
     removeRowButton = new QPushButton(tr("- Row"));
     addColumnButton = new QPushButton(tr("+ Column"));
     removeColumnButton = new QPushButton(tr("- Column"));
+    measureAll = new QPushButton(tr("Measure All"));
+    stimAll = new QPushButton(tr("Stimulate All"));
+    measureNone = new QPushButton(tr("Measure None"));
+    stimNone = new QPushButton(tr("Stimulate None"));
     cellGrid = new QTableWidget(grid->rowCount(),grid->columnCount());
 //setup nodes already present in grid
     {int i = 0;
@@ -108,14 +112,24 @@ void gridSetupWidget::createMenu() {
     connect(removeColumnButton, &QPushButton::clicked, this, &gridSetupWidget::removeColumn);
     connect(addRowButton, &QPushButton::clicked, this, &gridSetupWidget::addRow);
     connect(removeRowButton, &QPushButton::clicked, this, &gridSetupWidget::removeRow);
+    connect(stimAll, &QPushButton::clicked, this, &gridSetupWidget::stimAllPressed);
+    connect(measureAll, &QPushButton::clicked, this, &gridSetupWidget::measureAllPressed);
+    connect(stimNone, &QPushButton::clicked, this, &gridSetupWidget::stimNoneClicked);
+    connect(measureNone, &QPushButton::clicked, this, &gridSetupWidget::measureNoneClicked);
 //setup layout
     QGridLayout* main_layout = new QGridLayout(this);
     main_layout->addWidget(addRowButton,0,0);
     main_layout->addWidget(removeRowButton,0,1);
     main_layout->addWidget(addColumnButton,0,2);
     main_layout->addWidget(removeColumnButton,0,3);
+    main_layout->addWidget(stimAll,0,4);
+    main_layout->addWidget(stimNone,0,4);
+    main_layout->addWidget(measureAll,0,5);
+    main_layout->addWidget(measureNone,0,5);
     main_layout->addWidget(cellGrid,1,0,10,10);
     this->setLayout(main_layout);
+    this->measureNone->hide();
+    this->stimNone->hide();
     updateMenu();
 }
 void gridSetupWidget::updateMenu() {
@@ -225,4 +239,44 @@ void gridSetupWidget::changeCellGroup(QString type) {
     }
     emit cell_type_changed();
     updateMenu();
+}
+void gridSetupWidget::measureAllPressed() {
+    int i = 0;
+    for(auto& fiber : grid->fiber) {
+        int j = 0;
+        for(auto& node : fiber.nodes) {
+            this->changeMeasNodeList(2, make_pair(i,j));
+            j++;
+        }
+        i++;
+    }
+    this->measureAll->hide();
+    this->measureNone->show();
+    this->updateMenu();
+}
+void gridSetupWidget::stimAllPressed() {
+    int i = 0;
+    for(auto& fiber : grid->fiber) {
+        int j = 0;
+        for(auto& node : fiber.nodes) {
+            this->changeStimNodeList(2, make_pair(i,j));
+            j++;
+        }
+        i++;
+    }
+    this->stimAll->hide();
+    this->stimNone->show();
+    this->updateMenu();
+}
+void gridSetupWidget::measureNoneClicked() {
+    this->proto->getDataNodes().clear();   
+    this->measureNone->hide();
+    this->measureAll->show();
+    this->updateMenu();
+}
+void gridSetupWidget::stimNoneClicked() {
+    this->proto->getStimNodes().clear();
+    this->stimNone->hide();
+    this->stimAll->show();
+    this->updateMenu();
 }

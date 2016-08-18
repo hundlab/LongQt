@@ -23,6 +23,8 @@ Q_OBJECT
     Node* getNode();
     pair<int,int> getNodePair();
     void update(bool stim, bool meas);
+    bool getStimStatus();
+    bool getMeasStatus();
   private:
     QComboBox* cellType;
     QCheckBox* stimNode;
@@ -61,6 +63,10 @@ Q_OBJECT
     QPushButton* removeColumnButton;
     QPushButton* addRowButton;
     QPushButton* removeRowButton;
+    QPushButton* measureAll;
+    QPushButton* stimAll;
+    QPushButton* measureNone;
+    QPushButton* stimNone;
   private slots:
     void changeStimNodeList(int status, pair<int,int> node);
     void changeMeasNodeList(int status, pair<int,int> node);
@@ -69,6 +75,10 @@ Q_OBJECT
     void removeRow();
     void removeColumn();
     void changeCellGroup(QString type);
+    void measureAllPressed();
+    void stimAllPressed();
+    void measureNoneClicked();
+    void stimNoneClicked();
   public slots:
     void updateMenu();
 };
