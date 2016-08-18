@@ -12,6 +12,7 @@
 #include <QLineEdit>
 
 #include "protocol.h"
+#include "SimManager.h"
 
 using namespace std;
 
@@ -39,9 +40,7 @@ Q_OBJECT
     QPushButton* cancel_button;
     QProgressBar* pdialog;
     QDir working_dir;
-    QFutureWatcher<void> watcher;
-    QFuture<void> next;
-    QVector<Protocol*> vector;
+    SimManager* manager;
 };
 //need to reset Vector and reenable run_button
 #endif
