@@ -112,7 +112,7 @@ Simulation::Simulation(QWidget* parent){
     menu_options->item(menu_options->count()-1)->setToolTip("Set model constants or have them randomly choosen");
     menu_options->addItem("Select Output");
     menu_options->item(menu_options->count()-1)->setToolTip("Select which model variables should be written to a file (e.g. Ca Concentration)");
-    menu_options->addItem("Select Measured Props.");
+    menu_options->addItem("Select Measured Props");
     menu_options->item(menu_options->count()-1)->setToolTip("Measure properties related to output variables (e.g. action potential duration, calcium amplitude)");
     menu_options->addItem("Run Simulation");
     menu_options->item(menu_options->count()-1)->setToolTip("Optionally write a description of the simulation and run the simulation");
