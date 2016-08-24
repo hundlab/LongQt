@@ -74,7 +74,8 @@ SOURCES += LongQt.cpp \
 ./modellib/protocol/gridProtocol.cpp\
 ./modellib/protocol/protocol.cpp\
 ./modellib/protocol/currentClampProtocol.cpp\
-./modellib/protocol/voltageClampProtocol.cpp
+./modellib/protocol/voltageClampProtocol.cpp\
+./gui/graph/loadingprogress.cpp
 
 HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
 ./gui/simulaiton/chooseProtoWidget.h\
@@ -113,12 +114,12 @@ HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
 ./modellib/protocol/voltageClampProtocol.h\
 ./modellib/protocol/currentClampProtocol.h\
 ./modellib/protocol/protocol.h\
-./modellib/protocol/gridProtocol.h
+./modellib/protocol/gridProtocol.h\
+./gui/graph/loadingprogress.h
 
-FORMS    += ./gui/graph/linegraph.ui \
-./gui/graph/graph.ui \
-./gui/graph/bargraph.ui \
-./gui/graph/choosegraphs.ui \
-./gui/graph/choosegraphstoggle.ui
-
-
+FORMS    += ./gui/graph/linegraph.ui\
+./gui/graph/graph.ui\
+./gui/graph/bargraph.ui\
+./gui/graph/choosegraphs.ui\
+./gui/graph/choosegraphstoggle.ui\
+./gui/graph/loadingprogress.ui
