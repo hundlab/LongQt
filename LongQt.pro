@@ -62,6 +62,12 @@ SOURCES += LongQt.cpp \
 ./modellib/cell/hrd09.cpp\
 ./modellib/cell/gpbatrial.cpp\
 ./modellib/cell/gridCell.cpp\
+./modellib/cell/gpbhuman.cpp\
+./modellib/cell/ksan.cpp\
+./modellib/cell/gpbatrialWT.cpp\
+./modellib/cell/gpbatrialSE.cpp\
+./modellib/cell/atrial.cpp\
+./modellib/cell/br04.cpp\
 ./modellib/iobase.cpp\
 ./modellib/structure/fiber.cpp\
 ./modellib/structure/grid.cpp\
@@ -93,6 +99,12 @@ HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
 ./modellib/cell/tnnp04.h\
 ./modellib/cell/cell_kernel.h\
 ./modellib/cell/gpbatrialRyr.h\
+./modellib/cell/gpbhuman.h\
+./modellib/cell/ksan.h\
+./modellib/cell/gpbatrialWT.h\
+./modellib/cell/gpbatrialSE.h\
+./modellib/cell/atrial.h\
+./modellib/cell/br04.h\
 ./modellib/iobase.h\
 ./modellib/cellUtils.h\
 ./modellib/structure/grid.h\
