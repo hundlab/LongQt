@@ -17,11 +17,11 @@
    <item row="0" column="1">
     <widget class="QPushButton" name="skipButton">
      <property name="text">
-      <string>Load None</string>
+      <string>Select None</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="3">
+   <item row="3" column="0" colspan="3">
     <widget class="QGroupBox" name="advanced">
      <property name="title">
       <string>Trials to Load</string>
@@ -39,7 +39,7 @@
    <item row="0" column="0">
     <widget class="QPushButton" name="loadAll">
      <property name="text">
-      <string>Load All</string>
+      <string>Select All</string>
      </property>
     </widget>
    </item>
@@ -55,8 +55,28 @@
    </item>
    <item row="1" column="2">
     <widget class="QLabel" name="thLabel">
+     <property name="visible">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>th</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="rowLabel">
+     <property name="text">
+      <string>th row</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="columnSpinBox"/>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="columnLabel">
+     <property name="text">
+      <string>th Column</string>
      </property>
     </widget>
    </item>

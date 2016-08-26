@@ -71,9 +71,11 @@ void Dialog::buildLineGraphs(QFileInfoList files){
     }
     QMap<QString, lineGraph*> graphMap;
     int progressCounter = 0;
-    LoadingProgressDialog* loadingOptions = new LoadingProgressDialog(files, this);
-    if(QDialog::Accepted == loadingOptions->exec()) {
-        files = loadingOptions->getFilesToLoad();
+    if(files.length() > 10) {
+        LoadingProgressDialog* loadingOptions = new LoadingProgressDialog(files, this);
+        if(QDialog::Accepted == loadingOptions->exec()) {
+            files = loadingOptions->getFilesToLoad();
+        }
     }
     QProgressDialog* progressDisp = new QProgressDialog("Opening Files", "Skip", 0, files.size(), this);
     progressDisp->setRange(0,files.size());
