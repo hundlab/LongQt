@@ -334,7 +334,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
 }
 
 void dvarMenu::createMenu()  {
-    QMap<QString, QString> definitions = GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt");
+    QMap<QString, QString> definitions = GuiUtils().concatMaps(GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt"),", ",GuiUtils().readMap(":/hoverText/dvarsUnits.txt"));
 /*    for(auto temp = definitions.begin(); temp != definitions.end();temp++) {
     qInfo() << temp.key();
     qInfo() << temp.value();
@@ -508,7 +508,7 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     this->working_dir = working_dir;
     write_close = true;
 
-    this->dvarsDescriptions = GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt");
+    this->dvarsDescriptions = GuiUtils().concatMaps(GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt"),", ",GuiUtils().readMap(":/hoverText/dvarsUnits.txt"));
     this->measDescriptions = GuiUtils().readMap(":/hoverText/measDescriptions.txt");
     this->createMenu();
 }
@@ -541,6 +541,7 @@ void mvarMenu::createMenu()  {
     removefr_vars_list_button = new QPushButton("-", this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
+    measure_options = temp.getVariables();
     if(this->parent != NULL) {
         close_button->hide();
     }
@@ -551,13 +552,7 @@ void mvarMenu::createMenu()  {
         addto_vars_options->setItemData(i,dvarsDescriptions[it->first.c_str()],Qt::ToolTipRole);
         i++;
     }
-    measure_options = temp.getVariables();    
-    i =0;
-    for(set<string>::iterator set_it = measure_options.begin(); set_it != measure_options.end(); set_it++) {
-        addto_meas_options->addItem(set_it->c_str());
-        addto_meas_options->setItemData(i,measDescriptions[set_it->c_str()],Qt::ToolTipRole);
-        i++;
-    }
+    this->checkMeasOpts(this->addto_vars_options->currentText());
     vars_view->setSortingEnabled(true);
     meas_view->setSortingEnabled(true);
 //central_layout
@@ -722,7 +717,7 @@ void mvarMenu::removefr_vars_list(){
 void mvarMenu::switch_var(int row){
     update_menu(row);
 };
-void mvarMenu::checkMeasOpts(QString& value) {
+void mvarMenu::checkMeasOpts(const QString& value) {
     bool fullList = (value == "vOld" || value == "caI");
     this->addto_meas_options->clear();
     if(fullList) {
