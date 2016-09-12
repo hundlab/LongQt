@@ -17,6 +17,18 @@ lineGraph::lineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* pare
     this->Initialize();
 }
 void lineGraph::Initialize() {
+    this->plus = new QShortcut(QKeySequence("+"),this);
+    this->minus = new QShortcut(QKeySequence("-"),this);
+    this->left = new QShortcut(QKeySequence(Qt::Key_Left),this);
+    this->right = new QShortcut(QKeySequence(Qt::Key_Right),this);
+    this->up = new QShortcut(QKeySequence(Qt::Key_Up),this);
+    this->down = new QShortcut(QKeySequence(Qt::Key_Down),this);
+    connect(plus, &QShortcut::activated, this, &lineGraph::zoomIn);
+    connect(minus, &QShortcut::activated, this, &lineGraph::zoomOut);
+    connect(left, &QShortcut::activated, this, &lineGraph::shiftLeft);
+    connect(right, &QShortcut::activated, this, &lineGraph::shiftRight);
+    connect(up, &QShortcut::activated, this, &lineGraph::shiftUp);
+    connect(down, &QShortcut::activated, this, &lineGraph::shiftDown);
 //should not just be 0!!
      populateList(0);
      ui->plot->xAxis->grid()->setVisible(false);
@@ -133,4 +145,38 @@ void lineGraph::on_chooseGraphs_clicked() {
 void lineGraph::on_toggleLegend_clicked() {
     ui->plot->legend->setVisible(!ui->plot->legend->visible());
     ui->plot->replot();
+}
+
+void lineGraph::zoomIn() {
+    this->ui->plot->yAxis->setRange(this->ui->plot->yAxis->range()*.75);
+    this->ui->plot->xAxis->setRange(this->ui->plot->xAxis->range()*.75);
+    this->ui->plot->replot();
+}
+
+void lineGraph::zoomOut() {
+    double zoomOutScale = 1.0/0.75;
+    this->ui->plot->yAxis->setRange(this->ui->plot->yAxis->range()*zoomOutScale);
+    this->ui->plot->xAxis->setRange(this->ui->plot->xAxis->range()*zoomOutScale);
+    this->ui->plot->replot();
+
+}
+
+void lineGraph::shiftLeft() {
+    this->ui->plot->xAxis->setRange(this->ui->plot->xAxis->range()-(this->ui->plot->xAxis->range().size()*.05));
+    this->ui->plot->replot();
+}
+
+void lineGraph::shiftRight() {
+    this->ui->plot->xAxis->setRange(this->ui->plot->xAxis->range()+(this->ui->plot->xAxis->range().size()*.05));
+    this->ui->plot->replot();
+}
+
+void lineGraph::shiftUp() {
+    this->ui->plot->yAxis->setRange(this->ui->plot->yAxis->range()+(this->ui->plot->yAxis->range().size()*.05));
+    this->ui->plot->replot();
+}
+
+void lineGraph::shiftDown() {
+    this->ui->plot->yAxis->setRange(this->ui->plot->yAxis->range()-(this->ui->plot->yAxis->range().size()*.05));
+    this->ui->plot->replot();
 }

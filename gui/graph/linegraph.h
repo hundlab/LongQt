@@ -7,6 +7,7 @@
 #include <QList>
 #include <QDir>
 #include <QMap>
+#include <QShortcut>
 
 namespace Ui {
 class lineGraph;
@@ -31,12 +32,24 @@ private:
     QDir saveDir;
     QMap<QString, QString> unitsMap;
     int controlLocation;
+    QShortcut* plus;
+    QShortcut* minus;
+    QShortcut* up;
+    QShortcut* down;
+    QShortcut* left;
+    QShortcut* right;
 private slots:
     bool control_on_graph(QVector<double> &x, QVector<double> &y);
     void on_save_clicked();
     void on_loadControl_clicked();
     void on_chooseGraphs_clicked();
     void on_toggleLegend_clicked();
+    void zoomIn();
+    void zoomOut();
+    void shiftLeft();
+    void shiftRight();
+    void shiftUp();
+    void shiftDown();
 };
 
 #endif // LINEGRAPH_H
