@@ -522,7 +522,6 @@ void mvarMenu::createMenu()  {
     if(parent != NULL) {
         end_op = "Next";
     }
-    set<string> measure_options;
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
@@ -582,6 +581,7 @@ void mvarMenu::createMenu()  {
 //connect buttons   
     connect(get_vars, SIGNAL(clicked()), this, SLOT(read_mvars())); 
     connect(vars_view, &QListWidget::currentRowChanged, this, &mvarMenu::switch_var);
+    connect(addto_vars_options, &QComboBox::currentTextChanged, this, &mvarMenu::checkMeasOpts);
     connect(addto_vars_list_button, &QPushButton::clicked, this, &mvarMenu::addto_vars_list);
     connect(removefr_vars_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_vars_list);
     connect(addto_meas_list_button, &QPushButton::clicked, this, &mvarMenu::addto_meas_list);
@@ -673,7 +673,9 @@ void mvarMenu::addto_meas_list(){
         return;
     }
     measure_name = vars_view->currentItem()->text();
+//    if(to_add == "peak" && measure_name != "vOld" && measure_name != "caI") {
 
+ //   }
 //    if(meas_view->findItems(to_add, Qt::MatchExactly).empty()) {
         proto->addToMeasreSelection(measure_name.toStdString(), to_add.toStdString());
 //    }
@@ -720,6 +722,22 @@ void mvarMenu::removefr_vars_list(){
 void mvarMenu::switch_var(int row){
     update_menu(row);
 };
+void mvarMenu::checkMeasOpts(QString& value) {
+    bool fullList = (value == "vOld" || value == "caI");
+    this->addto_meas_options->clear();
+    if(fullList) {
+        int i =0;
+        for(set<string>::iterator set_it = this->measure_options.begin(); set_it != this->measure_options.end(); set_it++) {
+            addto_meas_options->addItem(set_it->c_str());
+            addto_meas_options->setItemData(i,measDescriptions[set_it->c_str()],Qt::ToolTipRole);
+            i++;
+        }
+    } else {
+        addto_meas_options->addItem("peak");
+        addto_meas_options->setItemData(0,measDescriptions["peak"],Qt::ToolTipRole);
+    }
+};
+
 /*#################################
     begin pvarMenu class
 ###################################*/

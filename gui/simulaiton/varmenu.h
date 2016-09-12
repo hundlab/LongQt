@@ -16,6 +16,7 @@
 #include <QFormLayout>
 #include <QMap>
 #include <QDir>
+#include <set>
 
 #include "protocol.h"
 
@@ -120,6 +121,7 @@ Q_OBJECT
     QWidget* parent;
     QDir working_dir;
     bool write_close;
+    Set<string> measure_options;
     QMap<QString,QString> dvarsDescriptions; 
     QMap<QString,QString> measDescriptions;
 //Buttons & their labels
@@ -151,6 +153,7 @@ Q_OBJECT
     void addto_vars_list(); //add an item to mpnames
     void removefr_vars_list(); //remove and item from mpnames & its mvnames
     void switch_var(int row);
+    void checkMeasOpts(QString& value);
   public slots:
     void changeProto(Protocol* proto);
     void reset();
