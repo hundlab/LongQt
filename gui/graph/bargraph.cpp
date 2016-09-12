@@ -1,6 +1,7 @@
 #include "bargraph.h"
 #include "ui_bargraph.h"
 #include <QInputDialog>
+#include "guiUtils.h"
 
 barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidget *parent) :
     QWidget(parent),
@@ -8,6 +9,7 @@ barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidge
 {
     ui->setupUi(this);
     this->saveDir = saveDir;
+    this->unitsMap = GuiUtils().readMap(":/hoverText/dvarsUnits.txt");
     bar newBar;
     newBar.data.append(value);
     labels.append(name);
@@ -20,7 +22,7 @@ barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidge
     ui->plot->yAxis->setRange(range);
 }
 void barGraph::Initialize() {
-    ui->plot->plotLayout()->addElement(1,0, new QCPPlotTitle(ui->plot, var));
+    ui->plot->plotLayout()->addElement(1,0, new QCPPlotTitle(ui->plot, var + " (" + this->unitsMap[var] + ")"));
 //    valueBar->setName(name);
     ui->plot->xAxis->setAutoTicks(false);
     ui->plot->xAxis->setAutoTickLabels(false);

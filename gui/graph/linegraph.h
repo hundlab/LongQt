@@ -6,6 +6,7 @@
 #include <QPair>
 #include <QList>
 #include <QDir>
+#include <QMap>
 
 namespace Ui {
 class lineGraph;
@@ -28,6 +29,7 @@ private:
     QString xLabel;
     QString yLabel;
     QDir saveDir;
+    QMap<QString, QString> unitsMap;
     int controlLocation;
 private slots:
     bool control_on_graph(QVector<double> &x, QVector<double> &y);

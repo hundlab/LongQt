@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>LICENSE</file>
+        <file>hoverText/dvarsUnits.txt</file>
+    </qresource>
+</RCC>

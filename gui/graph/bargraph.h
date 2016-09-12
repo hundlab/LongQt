@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QDir>
 #include <QColor>
+#include <QMap>
 #include "qcustomplot.h"
 
 namespace Ui {
@@ -33,6 +34,7 @@ private:
     QVector<double> ticks;
     QString var;
     QString aspect;
+    QMap<QString, QString> unitsMap;
 private slots:
     void on_loadOtherTrial_clicked();
     void on_save_clicked();

@@ -2,12 +2,14 @@
 #include "ui_linegraph.h"
 #include "choosegraphs.h"
 #include "protocol.h"
+#include "guiUtils.h"
 
 lineGraph::lineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
     QWidget(parent),
     ui(new Ui::lineGraph)
 {
     ui->setupUi(this);
+    this->unitsMap = GuiUtils().readMap(":/hoverText/dvarsUnits.txt");
     this->controlLocation = -1;
     this->xLabel = xLabel;
     this->yLabel = yLabel;
@@ -22,7 +24,7 @@ void lineGraph::Initialize() {
      ui->plot->xAxis->setLabelFont(QFont(font().family(), 16));
      ui->plot->yAxis->setLabelFont(QFont(font().family(), 16));
      ui->plot->xAxis->setLabel("Time (ms)");
-     ui->plot->yAxis->setLabel(this->yLabel);
+     ui->plot->yAxis->setLabel(this->yLabel+ " (" + this->unitsMap[this->yLabel] + ")");
      ui->plot->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
      ui->plot->axisRect()->setRangeZoom(ui->plot->xAxis->orientation());
      ui->plot->axisRect()->setRangeDrag(ui->plot->xAxis->orientation());
@@ -45,6 +47,9 @@ QColor genColor(int num) {
     return QColor::fromHsv((num*4*17)%360,200,200);
 }
 void lineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
+        if(x.isEmpty() || y.isEmpty()) {
+            return;
+        }
         this->x.append(x);
         this->y.append(y);
         ui->plot->addGraph();

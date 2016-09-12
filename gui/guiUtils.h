@@ -22,7 +22,7 @@ class GuiUtils {
         QMap<QString, QString> returnMap;
         for(auto it1 = m1.begin(); it1 != m1.end(); it1++) {
             auto m2Pair = m2.find(it1.key());
-            if(m2Pair != m2.end()) {
+            if(m2Pair != m2.end() && m2Pair.value() != "") {
                 returnMap[it1.key()] = it1.value() + divider + m2Pair.value();
             } else {
                 returnMap[it1.key()] = it1.value();

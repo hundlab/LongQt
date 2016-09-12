@@ -142,7 +142,7 @@ void Dialog::buildBarGraphs(int trial) {
         auto value = values.begin();
         auto var = fileInfo.baseName().split("_").last();
         for(;name != names.end()&& value != values.end(); name++,value++) {
-            ui->tabWidget->addTab(new barGraph(*name, value->toDouble(), var, read_location), var +":"+QString(*name));
+            ui->tabWidget->addTab(new barGraph(*name, value->toDouble(), var , read_location), var +":"+QString(*name));
         }
     }
 }
