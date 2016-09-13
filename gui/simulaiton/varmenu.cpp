@@ -843,7 +843,7 @@ void pvarMenu::update_menu(unsigned int row) {
                central_layout->addWidget(take_init, row, 3);
                if(proto->pvals[row].size() == 3) {
                     take_init->setChecked(true);
-                    inc_pos = 1;
+                    inc_pos = 2;
                     add_doublespinbox_tomenu(row, 1, 1, 4);
                }
                central_layout->addWidget(new QLabel("increment"), row, 5);
