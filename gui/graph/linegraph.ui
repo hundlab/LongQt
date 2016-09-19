@@ -64,7 +64,11 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="5">
-    <widget class="QCustomPlot" name="plot" native="true"/>
+    <widget class="QCustomPlot" name="plot" native="true">
+     <property name="toolTip">
+      <string>Use I (zoom in), O (zoom out), and the arrow keys and mouse to move around</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="3">
     <spacer name="horizontalSpacer">

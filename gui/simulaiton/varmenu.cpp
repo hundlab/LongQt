@@ -668,9 +668,9 @@ void mvarMenu::addto_meas_list(){
         return;
     }
     measure_name = vars_view->currentItem()->text();
-//    if(to_add == "peak" && measure_name != "vOld" && measure_name != "caI") {
-
- //   }
+    if(to_add != "peak" && (measure_name != "vOld"  && measure_name != "caI")) {
+        return;
+    }
 //    if(meas_view->findItems(to_add, Qt::MatchExactly).empty()) {
         proto->addToMeasreSelection(measure_name.toStdString(), to_add.toStdString());
 //    }

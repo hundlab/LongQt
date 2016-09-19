@@ -17,8 +17,8 @@ lineGraph::lineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* pare
     this->Initialize();
 }
 void lineGraph::Initialize() {
-    this->plus = new QShortcut(QKeySequence("+"),this);
-    this->minus = new QShortcut(QKeySequence("-"),this);
+    this->plus = new QShortcut(QKeySequence(Qt::Key_I),this);
+    this->minus = new QShortcut(QKeySequence(Qt::Key_O),this);
     this->left = new QShortcut(QKeySequence(Qt::Key_Left),this);
     this->right = new QShortcut(QKeySequence(Qt::Key_Right),this);
     this->up = new QShortcut(QKeySequence(Qt::Key_Up),this);
@@ -147,16 +147,21 @@ void lineGraph::on_toggleLegend_clicked() {
     ui->plot->replot();
 }
 
+QCPRange zoom(QCPRange range, double scale) {
+    double diff = scale*(range.center() - range.lower);
+    return QCPRange(range.center()+diff,range.center()-diff);
+}
+
 void lineGraph::zoomIn() {
-    this->ui->plot->yAxis->setRange(this->ui->plot->yAxis->range()*.75);
-    this->ui->plot->xAxis->setRange(this->ui->plot->xAxis->range()*.75);
+    this->ui->plot->yAxis->setRange(zoom(this->ui->plot->yAxis->range(),.75));
+    this->ui->plot->xAxis->setRange(zoom(this->ui->plot->xAxis->range(),.75));
     this->ui->plot->replot();
 }
 
 void lineGraph::zoomOut() {
     double zoomOutScale = 1.0/0.75;
-    this->ui->plot->yAxis->setRange(this->ui->plot->yAxis->range()*zoomOutScale);
-    this->ui->plot->xAxis->setRange(this->ui->plot->xAxis->range()*zoomOutScale);
+    this->ui->plot->yAxis->setRange(zoom(this->ui->plot->yAxis->range(),zoomOutScale));
+    this->ui->plot->xAxis->setRange(zoom(this->ui->plot->xAxis->range(),zoomOutScale));
     this->ui->plot->replot();
 
 }
