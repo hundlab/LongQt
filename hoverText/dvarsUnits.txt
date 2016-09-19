@@ -99,17 +99,17 @@ mmol/L
 caslI
 mmol/L
 clI
-
+mM
 cmdn
-
+mM
 cmdnI
 mM
 cmdnR
 mM
 csqn
-
+mM
 dVdt
-
+mV/ms
 fBlock
 
 fBound
@@ -125,7 +125,7 @@ fPhos
 iCa
 uA/uF
 iCaL
-
+uA/uF
 iCab
 uA/uF
 iCabjunc
@@ -133,21 +133,21 @@ uA/uF
 iCabsl
 uA/uF
 iCait
-
+uA/uF
 iCajunc
 uA/uF
 iCak
-
+uA/uF
 iCal
-
+uA/uF
 iCana
-
+uA/uF
 iCanajunc
-
+uA/uF
 iCanasl
-
+uA/uF
 iCart 
-
+uA/uF
 iCasl
 uA/uF
 iCat
@@ -163,7 +163,7 @@ uA/uF
 iClcasl
 uA/uF
 iClt
-
+uA/uF
 iDiff
 mmol/L per ms
 iH
@@ -191,7 +191,7 @@ uA/uF
 iKssl
 uA/uF
 iKt
-
+uA/uF
 iKur
 uA/uF
 iLeak
@@ -221,7 +221,7 @@ uA/uF
 iNasl
 uA/uF
 iNat
-
+uA/uF
 iNcxjunc
 uA/uF
 iNcxsl
@@ -243,7 +243,7 @@ uA/uF
 iTos
 uA/uF
 iTot
-
+uA/uF
 iTr
 mmol/L per ms
 iTrek
@@ -259,11 +259,11 @@ uA/uF
 ipK
 uA/uF
 kI
-
+mM
 mgI
 mM
 naI
-
+mM
 najI
 mM
 naslI
@@ -273,9 +273,9 @@ ryRopen
 t
 ms
 trpn
-
+mM
 troponin
-
+mM
 trpnCa
 mM
 trpnMg
