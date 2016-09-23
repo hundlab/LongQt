@@ -56,3 +56,5 @@ cellStateDir
 Folder containing output text files with data and initial conditions
 datadir
 Folder that will contain output of simulation
+writeint
+The frequency with which variables from "Select output" will be written to a file. (Small values here can cause long run-times) 
