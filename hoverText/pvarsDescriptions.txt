@@ -1,139 +1,281 @@
 IcabFactor
+Fraction multiplied by background Ca2+ current
 IclbFactor
+Fraction multiplied by background Cl- current
 Ik1Factor
+Fraction multiplied by time-independent K+ current
 IkclFactor
+Fraction multiplied by K+-Cl transporter 
 IkpFactor
+Fraction multiplied by plateau K+ current
 IkrFactor
+Fraction multiplied by rapid delayed rectifier K+ current
 IksFactor
+Fraction multiplied by slow delayed rectifier K+ current
 IlcaFactor
+Fraction multiplied by L-type Ca2+ current
 IleakFactor
+Fraction multiplied by Ca2+ leak from JSR to myoplasm
 InaFactor
+Fraction multiplied by fast Na+ current
 InacaFactorbulk
+Fraction multiplied by bulk Na+-Ca2+ exchanger current
 InacaFactorss
+Fraction multiplied by subspace Na+-Ca2+ exchanger current
 InaclFactor
+Fraction multiplied by Na+-Cl transporter 
 InakFactor
+Fraction multiplied by Na+-K+ pump current
 InalFactor
+Fraction multiplied by late Na+ current
 IpcaFactor
+Fraction multiplied by sarcolemmal Ca2+ pump
 IrelFactor
+Fraction multiplied by Ca2+ release from JSR to myoplasm
 Ito2Factor
+Fraction multiplied by Ca2+-dependent transient outward Cl- current
 ItoFactor
+Fraction multiplied by 4AP-sensitive transient outward Cl- current
 ItrFactor
+Fraction multiplied by Ca2+ transfer from NSR to JSR
 IupFactor
+Fraction multiplied by Ca2+ uptake from myoplasm to NSR
 IcabjuncFactor
+Fraction multiplied by background Ca2+ current in junction
 IcabslFactor
+Fraction multiplied by background Ca2+ current in sarcolemma
 IcajuncFactor
+Fraction multiplied by L-type Ca2+ current in junction
 IcakFactor
+Fraction multiplied by K+ current through L-type Ca2+ channel 
 IcanajuncFactor
+Fraction multiplied by Na+ current through L-type Ca2+ channel in junction
 IcanaslFactor
+Fraction multiplied by Na+ current through L-type Ca2+ channel in sarcolemma
 IcaslFactor
+Fraction multiplied by total Ca2+ current in sarcolemma
 IclbkFactor
+Fraction multiplied by background Cl- current
 IclcajuncFactor
+Fraction multiplied by Ca2+-activated Cl current in junction
 IclcaslFactor
+Fraction multiplied by Ca2+-activated Cl current in sarcolemma
 Ik1Factor
+Fraction multiplied by time-independent K+ current
 IkrFactor
+Fraction multiplied by rapid delayed rectifier K+ current
 IksjuncFactor
+Fraction multiplied by slow delayed rectifier K+ current in junction
 IksslFactor
+Fraction multiplied by slow delayed rectifier K+ current in sarcolemma
 IkurFactor
+Fraction multiplied by ultrarapid delayed rectifier K+ current 
 InabjuncFactor
+Fraction multiplied by background Na+ current in junction 
 InabslFactor
+Fraction multiplied by background Na+ current in sarcolemma
 InacajuncFactor
+Fraction multiplied by Na+-Ca2+ exchanger in junction
 InacaslFactor
+Fraction multiplied by Na+-Ca2+ exchanger in sarcolemma
 InajuncFactor
+Fraction multiplied by fast Na+ current in junction
 InakjuncFactor
+Fraction multiplied by Na+-K+ pump in junction
 InakslFactor
+Fraction multiplied by Na+-K+ pump in sarcolemma
 InaslFactor
+Fraction multiplied by fast Na+ current in sarcolemma
 IpcajuncFactor
+Fraction multiplied by sarcolemmal Ca2+ pump in junction
 IpcaslFactor
+Fraction multiplied by sarcolemmal Ca2+ pump in sarcolemma
 IpkjuncFactor
+Fraction multiplied by plateau K+ current in junction
 IpkslFactor
+Fraction multiplied by plateau K+ current in sarcolemma
 ItoFactor
+Fraction multiplied by 4AP-sensitive transient outward K+ current
 JsercaFactor
+Fraction multiplied by sarco/endoplasmic reticulum Ca2+-ATPase flux 
 JsrcarelFactor
+Fraction multiplied by Ca2+ release from SR flux
 JsrleakFactor
+Fraction multiplied by Ca2+ leak from SR flux
 IcabjuncFactor
+Fraction multiplied by background Ca2+ current in junction
 IcabslFactor
+Fraction multiplied by background Ca2+ current in sarcolemma
 IcajuncFactor
+Fraction multiplied by Ca2+ current in junction
 IcakFactor
+Fraction multiplied by K+ current through L-type Ca2+ channel 
 IcanajuncFactor
+Fraction multiplied by Na+ current through L-type Ca2+ channel in junction
 IcanaslFactor
+Fraction multiplied by Na+ current through L-type Ca2+ channel in sarcolemma
 IcaslFactor
+Fraction multiplied by Ca2+ current in sarcolemma
 IclbkFactor
+Fraction multiplied by background Cl- current
 IclcajuncFactor
+Fraction multiplied by Ca2+-activated Cl current in junction
 IclcaslFactor
+Fraction multiplied by Ca2+-activated Cl current in sarcolemma
 Ik1Factor
+Fraction multiplied by time-independent K+ current
 IkrFactor
+Fraction multiplied by rapid delayed rectifier K+ current
 IksjuncFactor
+Fraction multiplied by slow delayed rectifier K+ current in junction
 IksslFactor
+Fraction multiplied by slow delayed rectifier K+ current in sarcolemma
 IkurFactor
+Fraction multiplied by ultrarapid delayed rectifier K+ current 
 InabjuncFactor
+Fraction multiplied by background Na+ current in junction 
 InabslFactor
+Fraction multiplied by background Na+ current in sarcolemma
 InacajuncFactor
+Fraction multiplied by Na+-Ca2+ exchanger in junction
 InacaslFactor
+Fraction multiplied by Na+-Ca2+ exchanger in sarcolemma
 InajuncFactor
+Fraction multiplied by fast Na+ current in junction
 InakjuncFactor
+Fraction multiplied by Na+-K+ pump in junction
 InakslFactor
+Fraction multiplied by Na+-K+ pump in sarcolemma
 InaslFactor
+Fraction multiplied by fast Na+ current in sarcolemma
 IpcajuncFactor
+Fraction multiplied by sarcolemmal Ca2+ pump in junction
 IpcaslFactor
+Fraction multiplied by sarcolemmal Ca2+ pump in sarcolemma
 IpkjuncFactor
+Fraction multiplied by plateau K+ current in junction
 IpkslFactor
+Fraction multiplied by plateau K+ current in sarcolemma
 ItoFactor
+Fraction multiplied by 4AP-sensitive transient outward K+ current
 JsercaFactor
+Fraction multiplied by sarco/endoplasmic reticulum Ca2+-ATPase flux 
 JsrcarelFactor
+Fraction multiplied by Ca2+ release from SR flux
 JsrleakFactor
+Fraction multiplied by Ca2+ leak from SR flux
 IcabFactor
+Fraction multiplied by background Ca2+ current
 IcalFactor
+Fraction multiplied by L-type Ca2+ current
 Ik1Factor
+Fraction multiplied by time-independent K+ current
 IkrFactor
+Fraction multiplied by rapid delayed rectifier K+ current
 IksFactor
+Fraction multiplied by slow delayed rectifier K+ current in junction
 InaFactor
+Fraction multiplied by fast Na+ current
 InabFactor
+Fraction multiplied by background Na+ current
 InacaFactor
+Fraction multiplied by Na+-Ca2+ exchanger
 InakFactor
+Fraction multiplied by Na+-K+ pump
 IpcaFactor
+Fraction multiplied by sarcolemmal Ca2+ pump
 IpkFactor
+Fraction multiplied by plateau K+ current 
 ItoFactor
+Fraction multiplied by 4AP-sensitive transient outward K+ current
 iRelFactor
+Fraction multiplied by Ca2+ release from JSR to myoplasm
 ileakFactor
+Fraction multiplied by Ca2+ leak from JSR to myoplasm
 IcabFactor
+Fraction multiplied by background Ca2+ current
 IcalFactor
+Fraction multiplied by L-type Ca2+ current
 Ik1Factor
+Fraction multiplied by time-independent K+ current
 IkrFactor
+Fraction multiplied by rapid delayed rectifier K+ current
 IksFactor
+Fraction multiplied by slow delayed rectifier K+ current in junction
 InaFactor
+Fraction multiplied by fast Na+ current
 InabFactor
+Fraction multiplied by background Na+ current
 InacaFactor
+Fraction multiplied by Na+-Ca2+ exchanger
 InakFactor
+Fraction multiplied by Na+-K+ pump
 IpcaFactor
+Fraction multiplied by sarcolemmal Ca2+ pump
 IpkFactor
+Fraction multiplied by plateau K+ current 
 ItoFactor
+Fraction multiplied by 4AP-sensitive transient outward K+ current
 iRelFactor
+Fraction multiplied by Ca2+ release from JSR to myoplasm
 ileakFactor
+Fraction multiplied by Ca2+ leak from JSR to myoplasm
 icalFactor
+Fraction multiplied by L-type Ca2+ current
 icattFactor
+Fraction multiplied by Ca2+ current through T-Type Ca2+ channel
 ihFactor
+Fraction multiplied by hyperpolarization-activated current
 ikachFactor
+Fraction multiplied by acetylcholine-sensitive K+ current
 ikrFactor
+Fraction multiplied by rapid delayed rectifier K+ current
+IkrFactor
+Fraction multiplied by rapid delayed rectifier K+ current
 iksFactor
+Fraction multiplied by slow delayed rectifier K+ current
 inabFactor
+Fraction multiplied by background Na+ current
 inacaFactor
+Fraction multiplied by Na+-Ca2+ exchanger
 inakFactor
+Fraction multiplied by Na+-K+ pump
 irelFactor
+Fraction multiplied by Ca2+ release from JSR to myoplasm
 istFactor
+Fraction multiplied by sustained inward current
 isusFactor
+Fraction multiplied by sustained component of 4AP-sensitive current
 itoFactor
+Fraction multiplied by 4AP-sensitive transient outward K+ current
 iupFactor
+Fraction multiplied by Ca2+ uptake from myoplasm to NSR
 icalFactor
+Fraction multiplied by L-type Ca2+ current
 icattFactor
+Fraction multiplied by Ca2+ current through T-Type Ca2+ channel
 ihFactor
+Fraction multiplied by hyperpolarization-activated current
 ikachFactor
+Fraction multiplied by acetylcholine-sensitive K+ current
 ikrFactor
+Fraction multiplied by rapid delayed rectifier K+ current
 iksFactor
+Fraction multiplied by slow delayed rectifier K+ current
 inabFactor
+Fraction multiplied by background Na+ current
 inacaFactor
+Fraction multiplied by Na+-Ca2+ exchanger
 inakFactor
+Fraction multiplied by Na+-K+ pump
 irelFactor
+Fraction multiplied by Ca2+ release from JSR to myoplasm
 istFactor
+Fraction multiplied by sustained inward current
 isusFactor
+Fraction multiplied by sustained component of 4AP-sensitive current
 itoFactor
+Fraction multiplied by 4AP-sensitive transient outward K+ current
 iupFactor
+Fraction multiplied by Ca2+ uptake from myoplasm to NSR
+
