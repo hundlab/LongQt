@@ -123,3 +123,4 @@ FORMS    += ./gui/graph/linegraph.ui\
 ./gui/graph/choosegraphs.ui\
 ./gui/graph/choosegraphstoggle.ui\
 ./gui/graph/loadingprogress.ui
+
