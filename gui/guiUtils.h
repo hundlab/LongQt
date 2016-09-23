@@ -18,14 +18,18 @@ class GuiUtils {
         }
         return map;
     }
-    QMap<QString, QString> concatMaps(QMap<QString, QString> m1, QString divider, QMap<QString, QString> m2) {
+    QMap<QString, QString> concatMaps(QMap<QString, QString> m1, QString divider, QMap<QString, QString> m2, QString blankVal = "") {
         QMap<QString, QString> returnMap;
+        QString blankEnd = "";
+        if(blankVal != "") {
+            blankEnd = divider + blankVal;
+        }
         for(auto it1 = m1.begin(); it1 != m1.end(); it1++) {
             auto m2Pair = m2.find(it1.key());
             if(m2Pair != m2.end() && m2Pair.value() != "") {
                 returnMap[it1.key()] = it1.value() + divider + m2Pair.value();
             } else {
-                returnMap[it1.key()] = it1.value();
+                returnMap[it1.key()] = it1.value() + blankEnd;
             }
          }
          return returnMap;

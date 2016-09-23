@@ -334,7 +334,7 @@ dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
 }
 
 void dvarMenu::createMenu()  {
-    QMap<QString, QString> definitions = GuiUtils().concatMaps(GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt"),", ",GuiUtils().readMap(":/hoverText/dvarsUnits.txt"));
+    QMap<QString, QString> definitions = GuiUtils().concatMaps(GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt"),", ",GuiUtils().readMap(":/hoverText/dvarsUnits.txt"), "unitless");
 /*    for(auto temp = definitions.begin(); temp != definitions.end();temp++) {
     qInfo() << temp.key();
     qInfo() << temp.value();
