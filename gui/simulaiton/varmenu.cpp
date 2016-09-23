@@ -747,6 +747,8 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     pvals_options[1] << "lognormal" << "normal";
     pvals_options[2] << "logdistribution" << "logmean";
 
+    this->pvarsDescriptions = GuiUtils().readMap(":/hoverText/pvarsDescriptions.txt");
+
     this->createMenu();
 }
 
@@ -801,7 +803,9 @@ void pvarMenu::update_menu() {
 
     for(i = 0, it = proto->pnames.begin(); it != proto->pnames.end();i++, it++) {
         clear_row(i,0);
-        central_layout->addWidget(new QLabel(it->c_str()), i, 0);
+        QLabel* newLabel = new QLabel(it->c_str());
+        newLabel->setToolTip(pvarsDescriptions[it->c_str()]);
+        central_layout->addWidget(newLabel, i, 0);
         update_menu(i);
     }
 
@@ -809,6 +813,7 @@ void pvarMenu::update_menu() {
         QString to_insert = map_it->first.c_str();
         if(allowed_vars->indexIn(to_insert) != -1) {
             new_var_choice->addItem(to_insert);
+            new_var_choice->setItemData(new_var_choice->count()-1,pvarsDescriptions[to_insert],Qt::ToolTipRole);
         }
     }
     end_row = i;

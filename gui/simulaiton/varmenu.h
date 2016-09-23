@@ -173,6 +173,7 @@ Q_OBJECT
     QWidget* parent;
     QDir working_dir;
     bool write_close;
+    QMap<QString,QString> pvarsDescriptions;
 //Buttons & their labels
     QGridLayout* central_layout;
     QCheckBox* set_vars;
