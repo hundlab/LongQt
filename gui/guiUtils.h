@@ -1,5 +1,6 @@
 #ifndef GUIUTILS_H
 #define GUIUTILS_H
+#include <QTextStream>
 
 class GuiUtils {
   public:
@@ -33,6 +34,9 @@ class GuiUtils {
             }
          }
          return returnMap;
+    }
+    QColor genColor(int num, int saturation = 200) {
+        return QColor::fromHsv((num*4*17)%360,saturation,200);
     }
 };
 #endif

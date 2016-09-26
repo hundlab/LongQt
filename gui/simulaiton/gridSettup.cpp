@@ -1,8 +1,11 @@
 #include "gridSettup.h"
 #include "cellUtils.h"
+#include "guiUtils.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPainter>
+#include <QPen>
 
 //###########################
 //gridNode
@@ -23,12 +26,16 @@ gridNode::gridNode(Node* node, int X, int Y, gridCell* parentCell) {
     for(auto it : cellMap) {
         cellType->addItem(it.first.c_str());
     }
+//    this->setAutoFillBackground(true);
+    this->setMinimumSize(30,30);
+    this->stimStatus = false;
+    this->measStatus = false;
 //layout management
     this->setLayout(new QHBoxLayout(this));
-    this->layout()->addWidget(stimNode);
-    this->layout()->addWidget(measNode);
-    this->layout()->addWidget(new QLabel("Type:"));
-    this->layout()->addWidget(cellType);
+//    this->layout()->addWidget(stimNode);
+//    this->layout()->addWidget(measNode);
+//    this->layout()->addWidget(new QLabel("Type:"));
+//    this->layout()->addWidget(cellType);
     connect(cellType, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeCell(QString)));
     connect(stimNode, SIGNAL(stateChanged(int)), this, SIGNAL(stimNodeChanged(int)));
     connect(measNode, SIGNAL(stateChanged(int)), this, SIGNAL(measNodeChanged(int)));
@@ -39,6 +46,12 @@ Node* gridNode::getNode() {
 }
 pair<int,int> gridNode::getNodePair() {
     return make_pair(this->info->X,this->info->Y);
+}
+bool gridNode::getStimStatus() {
+    return this->stimStatus;
+}
+bool gridNode::getMeasStatus() {
+    return this->measStatus;
 }
 void gridNode::changeCell(QString type) {
     try {
@@ -60,14 +73,42 @@ void gridNode::changeCell(QString type) {
             emit cell_type_changed(type);
         }
         cellType->setCurrentText(type);
+        QPalette palet(this->palette());
+        palet.setColor(QPalette::Base, GuiUtils().genColor(this->cellType->currentIndex()));
+        palet.setColor(QPalette::Highlight, GuiUtils().genColor(this->cellType->currentIndex(),20));
+        palet.setColor(QPalette::HighlightedText, GuiUtils().genColor(this->cellType->currentIndex(),20));
+        this->setPalette(palet);
     } catch(const std::out_of_range&) {
         return;
     }
 }
 void gridNode::update(bool stim, bool meas) {
     changeCell(node->cell->type);
-    stimNode->setChecked(stim);
-    measNode->setChecked(meas);
+    this->stimStatus = stim;
+    this->measStatus = meas;
+    ((QWidget*)this)->update();
+}
+void gridNode::paintEvent(QPaintEvent *){
+    QPainter painter(this);
+    QPen pen(Qt::black);
+    pen.setWidth(3);
+    painter.setPen(pen);
+    painter.fillRect(QRect(0,0,this->size().width(),this->size().height()),this->palette().base());
+    if(this->measStatus) {
+        QRect rectangle(2, 2, this->size().width()-2, this->size().height()-2);
+        if(!rectangle.isValid()) {
+            return;
+        }
+        int startAngle = 0;
+        int spanAngle = 360 * 16;
+        painter.drawArc(rectangle, startAngle, spanAngle);
+    }
+    if(this->stimStatus) {
+        QLine line1(2,2,this->size().width()-2, this->size().height()-2);
+        QLine line2(this->size().width()-2, 2,2,this->size().height()-2);
+        painter.drawLine(line1);
+        painter.drawLine(line2);
+    }
 }
 //##############################
 //gridSetupWidget

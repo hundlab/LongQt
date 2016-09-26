@@ -33,6 +33,10 @@ Q_OBJECT
     Node* node;
     cellInfo* info;
     gridCell* parentCell;
+    bool stimStatus;
+    bool measStatus;
+  protected:
+    void paintEvent(QPaintEvent *);
   public slots:
     void changeCell(QString);
   signals:
