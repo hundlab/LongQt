@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QSpinBox>
 
 #include "gridProtocol.h"
 #include "node.h"
@@ -63,26 +64,25 @@ Q_OBJECT
     Grid* grid;
 
     QTableWidget* cellGrid;
+    QSpinBox* columnInt;
     QPushButton* addColumnButton;
     QPushButton* removeColumnButton;
+    QSpinBox* rowInt;
     QPushButton* addRowButton;
     QPushButton* removeRowButton;
-    QPushButton* measureAll;
-    QPushButton* stimAll;
-    QPushButton* measureNone;
-    QPushButton* stimNone;
+    QPushButton* toggleMeasure;
+    QPushButton* toggleStim;
+    QComboBox* chooseType;
   private slots:
     void changeStimNodeList(int status, pair<int,int> node);
     void changeMeasNodeList(int status, pair<int,int> node);
-    void addRow();
-    void addColumn();
-    void removeRow();
-    void removeColumn();
+    void addRows(int num);
+    void addColumns(int num);
+    void removeRows(int num);
+    void removeColumns(int num);
     void changeCellGroup(QString type);
-    void measureAllPressed();
-    void stimAllPressed();
-    void measureNoneClicked();
-    void stimNoneClicked();
+    void toggleMeasurePressed();
+    void toggleStimPressed();
   public slots:
     void updateMenu();
 };
