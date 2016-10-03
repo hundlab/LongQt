@@ -516,7 +516,6 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
 void mvarMenu::createMenu()  {
 //setup useful constants and aliases
     unsigned int row_len = 6;
-    std::map<string,double*>::iterator it;
     Measure temp = Measure();
     QString end_op = "Exit";
     if(parent != NULL) {
@@ -547,9 +546,10 @@ void mvarMenu::createMenu()  {
     }
     set_vars->setChecked(write_close);
     int i =0;
-    for(it = proto->cell->vars.begin(); it != proto->cell->vars.end(); it++) {
-        addto_vars_options->addItem(it->first.c_str());
-        addto_vars_options->setItemData(i,dvarsDescriptions[it->first.c_str()],Qt::ToolTipRole);
+    set<string> cellVars = proto->cell->getVariables();
+    for(auto it = cellVars.begin(); it != cellVars.end(); it++) {
+        addto_vars_options->addItem(it->c_str());
+        addto_vars_options->setItemData(i,dvarsDescriptions[it->c_str()],Qt::ToolTipRole);
         i++;
     }
     this->checkMeasOpts(this->addto_vars_options->currentText());
@@ -588,7 +588,6 @@ void mvarMenu::createMenu()  {
 }
 mvarMenu::~mvarMenu(){}
 void mvarMenu::update_menu(int row) {
-
     for(auto it = proto->Measures.begin(); it != proto->Measures.end(); it++) {
         QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly);
         if(vars_item.empty()) {
