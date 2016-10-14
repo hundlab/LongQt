@@ -538,6 +538,8 @@ void mvarMenu::createMenu()  {
     removefr_meas_list_button = new QPushButton("-", this);
     addto_vars_list_button = new QPushButton("+", this);
     removefr_vars_list_button = new QPushButton("-", this);
+    QLabel* percrepol_label = new QLabel("Percent Repolarization",this);
+    percrepol_spinbox = new QSpinBox(this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
     measure_options = temp.getVariables();
@@ -555,6 +557,8 @@ void mvarMenu::createMenu()  {
     this->checkMeasOpts(this->addto_vars_options->currentText());
     vars_view->setSortingEnabled(true);
     meas_view->setSortingEnabled(true);
+    percrepol_spinbox->setRange(0,99);
+    percrepol_spinbox->setValue((int)temp.getPercrepol());
 //central_layout
     central_layout->addWidget(vars_list_label, 0,0);
     central_layout->addWidget(meas_list_label, 0,2);
@@ -566,6 +570,8 @@ void mvarMenu::createMenu()  {
     central_layout->addWidget(removefr_vars_list_button,3,1);
     central_layout->addWidget(addto_meas_list_button,3,2);
     central_layout->addWidget(removefr_meas_list_button,3,3);
+    central_layout->addWidget(percrepol_label,4,0);
+    central_layout->addWidget(percrepol_spinbox,4,1);
 //main_layout
     main_layout->addWidget(get_vars, 0,0);
     main_layout->addWidget(set_vars, 0,1);
@@ -583,6 +589,12 @@ void mvarMenu::createMenu()  {
     connect(removefr_meas_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_meas_list);
     connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
+    connect(percrepol_spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this] (int val) {auto measures = this->proto->Measures;
+		    for(auto& meas : measures) {
+		    	meas.second.setPercrepol(val);
+		    }
+		    this->proto->setMeasures(measures);
+		    });
 //make menu match proto
     update_menu(-1);
 }
@@ -698,7 +710,7 @@ void mvarMenu::addto_vars_list(){
     QString to_add = addto_vars_options->currentText();
 
     if(vars_view->findItems(to_add, Qt::MatchExactly).empty()) {
-        proto->addMeasure(Measure(to_add.toStdString()));
+        proto->addMeasure(Measure(to_add.toStdString(), (int)percrepol_spinbox->value()));
         update_menu(-1);
         addto_meas_list();
     }

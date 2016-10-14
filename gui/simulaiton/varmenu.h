@@ -138,6 +138,7 @@ Q_OBJECT
     QPushButton* removefr_meas_list_button;
     QPushButton* addto_vars_list_button;
     QPushButton* removefr_vars_list_button;
+    QSpinBox* percrepol_spinbox;
 //screen functions
     void update_menu(int row); //make menu match pars
 
