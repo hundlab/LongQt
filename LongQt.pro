@@ -12,7 +12,7 @@ TEMPLATE = app
 
 QMAKE_MAC_SDK = macosx10.11
 
-CONFIG += c++11
+CONFIG += c++11 wayland-compositor
 INCLUDEPATH += ./modellib ./modellib/cell ./modellib/structure ./modellib/protocol ./gui ./gui/simulaiton ./gui/graph
 
 RESOURCES = LongQt.qrc 
