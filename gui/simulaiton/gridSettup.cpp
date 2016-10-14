@@ -146,13 +146,14 @@ void gridSetupWidget::createMenu() {
         for(auto iv = it->nodes.begin();iv != it->nodes.end(); iv++,j++) {
             gridNode* cellWidget = new gridNode(*iv,i,j,((gridCell*)proto->cell));
             cellGrid->setCellWidget(i,j,cellWidget);
+            connect(cellWidget, &gridNode::cell_type_changed, this, &gridSetupWidget::cell_type_changed);
 //            connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
-            connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
-                changeStimNodeList(status, cellWidget->getNodePair());
-            });
-            connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
-                changeMeasNodeList(status, cellWidget->getNodePair());
-            });
+//            connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
+//                changeStimNodeList(status, cellWidget->getNodePair());
+//            });
+//            connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
+//                changeMeasNodeList(status, cellWidget->getNodePair());
+//            });
         }
     }
     }
@@ -236,37 +237,43 @@ void gridSetupWidget::addRows(int num) {
     grid->addRows(num,-1);
     int rowCount = cellGrid->rowCount();
     cellGrid->setRowCount(rowCount+num);
-//    for(auto it = )
+/*    for(int i = rowCount; i < rowCount+num; i++) {
+	for(int j = 0; j < static_cast<int>(grid->fibery.size()); j++) {
+		gridNode* cellWidget = new gridNode(grid->fiber[i].nodes[j], i,j,((gridCell*)proto->cell));
+	        cellGrid->setCellWidget(i,j,cellWidget);
+        	connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
+	        connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
+           		changeStimNodeList(status, cellWidget->getNodePair());
+        	});
+        	connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
+            	changeMeasNodeList(status, cellWidget->getNodePair());
+        });
+	
+	}
+    }*/
 /*    for(auto iv = newRow.nodes.begin(); iv!= newRow.nodes.end(); iv++,j++) {
-        gridNode* cellWidget = new gridNode(*iv, i,j,((gridCell*)proto->cell));
-        cellGrid->setCellWidget(i,j,cellWidget);
-        connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
-        connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
-            changeStimNodeList(status, cellWidget->getNodePair());
-        });
-        connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
-            changeMeasNodeList(status, cellWidget->getNodePair());
-        });
     }*/
     updateMenu();
 }
 void gridSetupWidget::addColumns(int num) {
     grid->addColumns(num,-1);
-    cellGrid->setColumnCount(cellGrid->columnCount()+1);
-    int i = static_cast<int>(grid->fibery.size())-1;
-    int j = 0;
-    auto newRow = grid->fibery[i];
-/*    for(auto iv = newRow.nodes.begin(); iv != newRow.nodes.end(); iv++,j++) {
-        gridNode* cellWidget = new gridNode(*iv,j,i,((gridCell*)proto->cell));
-        cellGrid->setCellWidget(j,i,cellWidget);
-        connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
-        connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
-            changeStimNodeList(status, cellWidget->getNodePair());
-        });
-        connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
-            changeMeasNodeList(status, cellWidget->getNodePair());
-        });
+    int columnCount = cellGrid->columnCount();
+    cellGrid->setColumnCount(cellGrid->columnCount()+columnCount);
+ /*   for(int i = 0; i < static_cast<int>(grid->fiber.size()); i++) {
+	for(int j = columnCount; j < columnCount+num; j++) {
+	        gridNode* cellWidget = new gridNode(grid->fiber[j].nodes[i],j,i,((gridCell*)proto->cell));
+        	cellGrid->setCellWidget(j,i,cellWidget);
+	        connect(cellWidget, SIGNAL(cell_type_changed(QString)), this, SLOT(changeCellGroup(QString)));
+        	connect(cellWidget, &gridNode::stimNodeChanged, [this,cellWidget] (int status) {
+            		changeStimNodeList(status, cellWidget->getNodePair());
+        	});
+       		connect(cellWidget, &gridNode::measNodeChanged, [this,cellWidget] (int status) {
+            		changeMeasNodeList(status, cellWidget->getNodePair());
+        	});
+	}
     }*/
+/*    for(auto iv = newRow.nodes.begin(); iv != newRow.nodes.end(); iv++,j++) {
+   }*/
     updateMenu();
 }
 void gridSetupWidget::removeRows(int num) {
