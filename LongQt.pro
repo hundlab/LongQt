@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = LongQt
 TEMPLATE = app
 
-QMAKE_MAC_SDK = macosx10.11
+QMAKE_MAC_SDK = macosx10.12
 
 CONFIG += c++11 wayland-compositor
 INCLUDEPATH += ./modellib ./modellib/cell ./modellib/structure ./modellib/protocol ./gui ./gui/simulaiton ./gui/graph
