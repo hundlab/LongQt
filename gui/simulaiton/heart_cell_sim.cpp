@@ -160,10 +160,21 @@ void Simulation::next_button_aciton () {
         menu->setCurrentIndex(current_row +1);
         menu_options->setCurrentRow(current_row +1);
     }
+    date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
+    QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
+ 
 }
 void Simulation::canceled() {
     qDebug()<<"canceled!";
     QMessageBox::critical(this,"Cancel","Simulation canceled!");
+    date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
+    QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
+    for(int i = 1; working_dir.exists(); i++) {
+        working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time + "_" + QString::number(i));
+    }
+    proto->datadir = working_dir.absolutePath().toStdString();
+    proto->cellStateDir = proto->datadir;
+    emit working_dir_changed(working_dir);
     cancel_button->hide();
     next_button->show();
 }

@@ -176,6 +176,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
             QString value = QFileDialog::getExistingDirectory(this,tr(QString(it->first.c_str()).toStdString().c_str()),it->second.get().c_str());
             if(value != "") {
                 this->update_pvars(pair<string,string>(name, value.toStdString()), type);
+				this->update_menu();
             }
         });
     };
@@ -623,6 +624,16 @@ void mvarMenu::update_menu(int row) {
             }
         }
     }
+	if(proto->Measures.size() >0) {
+		double val = proto->Measures.begin()->second.getPercrepol();
+		if(val != this->percrepol_spinbox->value()) {
+			this->percrepol_spinbox->setValue(val);
+			auto measures = this->proto->Measures;
+		    for(auto& meas : measures) {
+		    	meas.second.setPercrepol(val);
+		    }
+		}
+	}
 }
 void mvarMenu::reset() {
     qDeleteAll(this->children());
