@@ -176,6 +176,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
             QString value = QFileDialog::getExistingDirectory(this,tr(QString(it->first.c_str()).toStdString().c_str()),it->second.get().c_str());
             if(value != "") {
                 this->update_pvars(pair<string,string>(name, value.toStdString()), type);
+				this->update_menu();
             }
         });
     };
