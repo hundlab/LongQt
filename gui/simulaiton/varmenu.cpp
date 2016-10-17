@@ -623,6 +623,16 @@ void mvarMenu::update_menu(int row) {
             }
         }
     }
+	if(proto->Measures.size() >0) {
+		double val = proto->Measures.begin()->second.getPercrepol();
+		if(val != this->percrepol_spinbox->value()) {
+			this->percrepol_spinbox->setValue(val);
+			auto measures = this->proto->Measures;
+		    for(auto& meas : measures) {
+		    	meas.second.setPercrepol(val);
+		    }
+		}
+	}
 }
 void mvarMenu::reset() {
     qDeleteAll(this->children());
