@@ -19,9 +19,9 @@ Total number of independent simulations to perform
 paceflag
 Check to apply train of current stimuli defined by numstims, Bcl, Stimdur, Stimt, and Stimval 
 readCellState
-Check to read in initial conditions for state variables from a specified file
+Check to read in initial conditions for state variables from the cellStateFile. Default is the most recently imported simvars file
 writeCellState
-Check to save final state variable values to a specified file
+Check to save final state variable values to the simvars file
 celltype
 The cell model to use in the simulation
 t1
@@ -58,3 +58,5 @@ datadir
 Folder that will contain output of simulation
 writeint
 The sampling data interval for variables in "Select output" will be written to a file. (Small values here can cause long run-times)
+cellStateFile
+The file to read the cell state from. Default is the most recently imported simvars file.

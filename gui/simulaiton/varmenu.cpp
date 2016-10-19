@@ -266,6 +266,14 @@ bool simvarMenu::read_simvars(){
     QString fileName = QFileDialog::getOpenFileName(this,"Simulation Settings",working_dir.absolutePath());
     if (!fileName.isEmpty()){
         ret = !(bool)proto->readpars(fileName.toStdString());
+		try {
+			if(proto->pars.at("writeCellState").get() == "true") {
+				proto->pars.at("cellStateFile").set(fileName.toStdString());
+				proto->pars.at("readCellState").set("true");
+				proto->pars.at("writeCellState").set("false");
+			}
+		} catch (const std::out_of_range&) {
+		}
     }
     proto->datadir = working_dir.absolutePath().toStdString();
     update_menu();

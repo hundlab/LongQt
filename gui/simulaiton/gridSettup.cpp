@@ -174,7 +174,9 @@ void gridSetupWidget::createMenu() {
     connect(cellGrid,&QTableWidget::itemSelectionChanged, [this] () {
         QList<QTableWidgetSelectionRange> selected = cellGrid->selectedRanges();
         if(!selected.isEmpty()) {
+			bool oldState = this->chooseType->blockSignals(true);
             this->chooseType->setCurrentText(((gridNode*)cellGrid->cellWidget(selected.first().topRow(),selected.first().leftColumn()))->getNode()->cell->type);
+			this->chooseType->blockSignals(oldState);
         }
     });
 //setup layout
