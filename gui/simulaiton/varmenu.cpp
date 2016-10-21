@@ -226,7 +226,13 @@ void simvarMenu::update_menu() {
          {  QComboBox* simv = ((QComboBox*)simvars[it->first.c_str()]);
             int index = simv->findText(it->second.get().c_str());
             if(index != -1) {
-                simv->setCurrentIndex(index);
+				if(!this->signalCellTypeChange) {
+					bool oldState = simv->blockSignals(true);
+                	simv->setCurrentIndex(index);
+					simv->blockSignals(oldState);
+				} else {
+                	simv->setCurrentIndex(index);
+				}
             }
          };
 
@@ -276,7 +282,9 @@ bool simvarMenu::read_simvars(){
 		}
     }
     proto->datadir = working_dir.absolutePath().toStdString();
+	this->signalCellTypeChange = false;
     update_menu();
+	this->signalCellTypeChange = true;
     return ret;
 }
 bool simvarMenu::write_simvars(){

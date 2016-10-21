@@ -52,6 +52,7 @@ Q_OBJECT
     void initialize(const map<string,GetSetRef>::iterator it);
 //screen functions
     void update_menu(); //make menu match pars
+	bool signalCellTypeChange = true;
 
   private slots:
     bool read_simvars(); //wrapper for Protocol::readpars with QFileDialog
