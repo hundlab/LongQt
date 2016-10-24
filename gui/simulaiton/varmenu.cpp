@@ -285,6 +285,7 @@ bool simvarMenu::read_simvars(){
 	this->signalCellTypeChange = false;
     update_menu();
 	this->signalCellTypeChange = true;
+	emit cell_type_changed();
     return ret;
 }
 bool simvarMenu::write_simvars(){
