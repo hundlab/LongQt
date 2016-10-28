@@ -34,7 +34,7 @@ void chooseProtoWidget::Initialize() {
     QGroupBox* clampTypeBox = new QGroupBox("Simulation Protocol Type");
     auto nextToAdd = new QRadioButton("Current Clamp - Single Cell");
     nextToAdd->setChecked(true);
-    nextToAdd->setToolTip("Clamp cell membrane to specified current");
+    nextToAdd->setToolTip("Apply current stimulus");
     clampType->addButton(nextToAdd, 0);
     nextToAdd = new QRadioButton("Voltage Clamp - Single Cell");
     nextToAdd->setToolTip("Clamp cell membrane to specified voltage");
