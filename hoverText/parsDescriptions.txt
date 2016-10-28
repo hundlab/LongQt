@@ -1,7 +1,7 @@
 bcl
 Basic pacing cycle length, ms
 meastime
-Time to begin measuring variables checked in the “Measure Variables” panel, ms
+Time to begin measuring variables checked in the "Measure Variables" panel, ms
 stimdur
 Duration of injected stimulus current, ms 
 stimt
@@ -11,7 +11,7 @@ Amplitude of injected stimulus current, uA/uF
 tMax
 Maximum duration of simulation, ms
 writetime
-Time to begin writing value of variables checked in the “Track Variables” panel, ms
+Time to begin writing value of variables checked in the "Track Variables" panel, ms
 numstims
 Total number of pacing stimuli to apply at interval defined by Bcl with injected current properties defined by Stimdur, Stimval, and Stimt 
 numtrials
@@ -45,13 +45,13 @@ Value to fix the cell membrane voltage to at time t1, mV
 v5
 Value to fix the cell membrane voltage to at time t1, mV
 dvarfile
-Name of output text file denoting initial conditions/ values checked in “Select output”
+Name of output text file denoting initial conditions/ values checked in "Select output"
 measfile
-Name of output text file denoting initial conditions/ values checked in “Select measured properties”
+Name of output text file denoting initial conditions/ values checked in "Select measured properties"
 pvarfile
-Name of output text file denoting initial conditions/ values checked in “Set model parameters”
+Name of output text file denoting initial conditions/ values checked in "Set model parameters"
 simvarfile
-Name of output text file denoting initial conditions/ values checked in “Set simulation parameters”
+Name of output text file denoting initial conditions/ values checked in "Set simulation parameters"
 cellStateDir
 Folder containing output text files with data and initial conditions
 datadir
