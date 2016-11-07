@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QDir>
-#include <QTableWidget>
+#include <QTableView>
 #include <QPushButton>
 #include <QComboBox>
 #include <QCheckBox>
@@ -13,6 +13,7 @@
 #include "node.h"
 #include "grid.h"
 #include "gridCell.h"
+#include "gridModel.h"
 
 using namespace std;
 
@@ -49,6 +50,7 @@ Q_OBJECT
 class gridSetupWidget : public QWidget {
 Q_OBJECT
   public:
+	gridSetupWidget(QWidget* parent = 0);
     gridSetupWidget(gridProtocol* initial_proto, QDir workingDir, QWidget* parent = 0);
     ~gridSetupWidget() {}
     void setGrid(Grid* grid);
@@ -63,7 +65,8 @@ Q_OBJECT
     QWidget* parent;
     Grid* grid;
 
-    QTableWidget* cellGrid;
+    QTableView* cellGrid;
+	GridModel* model;
     QSpinBox* columnInt;
     QPushButton* addColumnButton;
     QPushButton* removeColumnButton;
@@ -76,10 +79,6 @@ Q_OBJECT
   private slots:
     void changeStimNodeList(int status, pair<int,int> node);
     void changeMeasNodeList(int status, pair<int,int> node);
-    void addRows(int num);
-    void addColumns(int num);
-    void removeRows(int num);
-    void removeColumns(int num);
     void changeCellGroup(QString type);
     void toggleMeasurePressed();
     void toggleStimPressed();

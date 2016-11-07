@@ -1,5 +1,5 @@
 #include "varmenu.h"
-#include "gridSettup.h"
+#include "lqgrideditor.h"
 #include <QApplication>
 #include <QStandardPaths> 
 #include <QFileDialog>
@@ -13,11 +13,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("http://hundlab.org");
     QCoreApplication::setApplicationName("LQGridEditor");
 
-    QDir location = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first();
-    location = QDir(QFileDialog::getExistingDirectory(Q_NULLPTR,"Choose Data Directory", location.absolutePath()));
-	gridProtocol* proto = new gridProtocol();
- 
-    gridSetupWidget window(proto, location);
+    LQGridEditor window;
     window.show();
     return a.exec();
 }

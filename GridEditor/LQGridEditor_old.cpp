@@ -1,5 +1,6 @@
 //GridEditor class implementaions
 #include <QStandardPaths>
+#include "LQGridEditor.cpp"
 
 GridEditor::GridEditor(QWidget* parent = 0) : QMainWindow(parent) {
 	//construct class variables
