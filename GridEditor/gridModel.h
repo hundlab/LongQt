@@ -1,10 +1,15 @@
+#ifndef GRID_MODEL_H
+#define GRID_MODEL_H
 #include <QAbstractTableModel>
 #include "grid.h"
+#include "cellUtils.h"
+#include "gridProtocol.h"
 
 class GridModel : public QAbstractTableModel {
+	Q_OBJECT
 	public:
-		GridModel(Grid* grid = 0, QObject* parent = 0);
-		bool setGrid(Grid* grid);
+		GridModel(gridProtocol* grid = 0, QObject* parent = 0);
+		bool setProtocol(gridProtocol* grid);
 		//implemented and reimplemented functions from QAbstractTableModel
 		int rowCount(const QModelIndex & parent = QModelIndex()) const;
 		int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -15,6 +20,11 @@ class GridModel : public QAbstractTableModel {
 		bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
 		bool insertColumns(int column, int count, const QModelIndex & parent = QModelIndex());
 		bool removeColumns(int column, int count, const QModelIndex & parent = QModelIndex());
+		QModelIndex index(int row, int column, const QModelIndex & parent) const;
+		QModelIndex parent(const QModelIndex & index) const;
 	private:
+		gridProtocol* proto;
 		Grid* grid;
+		map<string, CellInitializer> cellMap;
 };
+#endif

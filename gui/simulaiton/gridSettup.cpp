@@ -1,12 +1,15 @@
 #include "gridSettup.h"
 #include "cellUtils.h"
 #include "guiUtils.h"
+#include "gridDelegate.h"
 
 #include <QHBoxLayout>
+#include <QDebug>
 #include <QLabel>
 #include <QPainter>
 #include <QPen>
 #include <QStandardPaths>
+#include <QHeaderView>
 
 //###########################
 //gridNode
@@ -127,7 +130,7 @@ gridSetupWidget::gridSetupWidget(gridProtocol* initial_proto, QDir workingDir, Q
     this->workingDir = workingDir;
     this->parent = parent;
     this->grid = ((gridCell*)proto->cell)->getGrid();
-	this->model = new GridModel(this->grid,this);
+	this->model = new GridModel(this->proto,this);
 
     this->createMenu();
 }
@@ -146,7 +149,10 @@ void gridSetupWidget::createMenu() {
     cellGrid = new QTableView();
 //setup view
 	this->cellGrid->setModel(this->model);
-
+	this->cellGrid->setItemDelegate(new GridDelegate);
+	this->cellGrid->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+	this->cellGrid->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	this->cellGrid->setShowGrid(false);
     auto cellMap = cellUtils().cellMap;
     cellMap["Inexcitable Cell"] = [] () {return new Cell;};
     for(auto it : cellMap) {
@@ -159,25 +165,25 @@ void gridSetupWidget::createMenu() {
 			});
     connect(removeColumnButton, &QPushButton::clicked, [this] () {
 			int num = this->columnInt->value();
-			this->model->removeColumns(this->model->columnCount()-num-1,num);
+			this->model->removeColumns(this->model->columnCount()-num,num);
 			});
     connect(addRowButton, &QPushButton::clicked, [this] () {
 			this->model->insertRows(this->model->rowCount(), this->rowInt->value());
 			});
     connect(removeRowButton, &QPushButton::clicked, [this] () {
 			int num = this->rowInt->value();
-			this->model->removeRows(this->model->rowCount()-num-1,num);
+			this->model->removeRows(this->model->rowCount()-num,num);
 			});
     connect(toggleStim, &QPushButton::clicked, this, &gridSetupWidget::toggleStimPressed);
     connect(toggleMeasure, &QPushButton::clicked, this, &gridSetupWidget::toggleMeasurePressed);
     connect(chooseType, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeCellGroup(QString)));
-/*    connect(cellGrid,&QItemSelectionModel::selectionChanged, [this] (const QItemSelection& selected, const QItemSelection&) {
+    connect(cellGrid->selectionModel(),&QItemSelectionModel::selectionChanged, [this] (const QItemSelection& selected, const QItemSelection&) {
         if(!selected.isEmpty()) {
 			bool oldState = this->chooseType->blockSignals(true);
             this->chooseType->setCurrentText(selected.first().topLeft().data().toString());
 			this->chooseType->blockSignals(oldState);
         }
-    });*/
+    });
 //setup layout
     QGridLayout* main_layout = new QGridLayout(this);
     main_layout->addWidget(rowInt,0,0);
@@ -240,52 +246,27 @@ void gridSetupWidget::changeMeasNodeList(int status, pair<int,int> node) {
 void gridSetupWidget::setGrid(Grid* grid) {
     this->grid = grid;
 //	delete this->model;
-	this->model = new GridModel(this->grid);
+	this->model = new GridModel(this->proto);
 	this->cellGrid->setModel(this->model);
 }
 Grid* gridSetupWidget::getGrid() {
     return this->grid;
 }
 void gridSetupWidget::changeCellGroup(QString type) {
-/*    auto selected = cellGrid->selectedIndexes();
-    for(auto it : selected) {
-        for(int i = it.topRow(); i <= it.bottomRow(); i++) {
-            for(int j = it.leftColumn(); j <= it.rightColumn(); j++) {
-                ((gridNode*)cellGrid->cellWidget(i,j))->changeCell(type);
-            }
-        }
+    auto selected = this->cellGrid->selectionModel()->selectedIndexes();
+    for(auto index : selected) {
+		this->model->setData(index,type);
     }
-    emit cell_type_changed();
-    updateMenu();*/
 }
 void gridSetupWidget::toggleMeasurePressed() {
-/*    auto selected = cellGrid->selectionModel()->selectedIndexes();
-    set<pair<int,int>> data = this->proto->getDataNodes();
-    for(auto it : selected) {
-        for(int i = it.topRow(); i <= it.bottomRow(); i++) {
-            for(int j = it.leftColumn(); j <= it.rightColumn(); j++) {
-                if(data.find(make_pair(i,j)) != data.cend()) {
-                    this->changeMeasNodeList(0, make_pair(i,j));
-                } else {
-                    this->changeMeasNodeList(2, make_pair(i,j));
-                }
-            }
-        }
+    auto selected = cellGrid->selectionModel()->selectedIndexes();
+    for(auto index : selected) {
+		this->model->setData(index.child(0,1),!index.child(0,1).data().toBool());
     }
-    updateMenu();*/
 }
 void gridSetupWidget::toggleStimPressed() {
-/*    auto selected = cellGrid->selectionModel()->selectedIndexes();
-    for(auto it : selected) {
-        for(int i = it.topRow(); i <= it.bottomRow(); i++) {
-            for(int j = it.leftColumn(); j <= it.rightColumn(); j++) {
-                if(this->proto->getStimNodes().find(make_pair(i,j)) != this->proto->getStimNodes().end()) {
-                    this->changeStimNodeList(0, make_pair(i,j));
-                } else {
-                    this->changeStimNodeList(2, make_pair(i,j));
-                }
-            }
-        }
+    auto selected = cellGrid->selectionModel()->selectedIndexes();
+    for(auto index : selected) {
+		this->model->setData(index.child(0,0),!index.child(0,0).data().toBool());
     }
-    updateMenu();*/
 }

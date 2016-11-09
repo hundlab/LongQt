@@ -78,7 +78,8 @@ SOURCES += ./GridEditor/main.cpp\
 ./gui/graph/loadingprogress.cpp \
 ./GridEditor/lqgrideditor.cpp \
 ./GridEditor/gridModel.cpp\
-./GridEditor/conductivityeditor.cpp
+./GridEditor/conductivityeditor.cpp\
+./GridEditor/gridDelegate.cpp
 
 HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
 ./gui/simulaiton/chooseProtoWidget.h\
@@ -121,7 +122,8 @@ HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
 ./gui/graph/loadingprogress.h \
 ./GridEditor/lqgrideditor.h \
 ./GridEditor/gridModel.h\
-./GridEditor/conductivityeditor.h
+./GridEditor/conductivityeditor.h\
+./GridEditor/gridDelegate.h
 
 FORMS    += ./gui/graph/linegraph.ui\
 ./gui/graph/graph.ui\
