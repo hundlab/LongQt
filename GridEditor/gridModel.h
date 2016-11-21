@@ -14,6 +14,9 @@ class GridModel : public QAbstractTableModel {
 		int rowCount(const QModelIndex & parent = QModelIndex()) const;
 		int columnCount(const QModelIndex & parent = QModelIndex()) const;
 		QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+		QVariant dataDisplay(const QModelIndex & index) const;
+		QVariant dataToolTip(const QModelIndex & index) const;
+		QVariant dataStatusTip(const QModelIndex & index) const;
 		bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 		Qt::ItemFlags flags(const QModelIndex & index) const;
 		bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
@@ -22,6 +25,8 @@ class GridModel : public QAbstractTableModel {
 		bool removeColumns(int column, int count, const QModelIndex & parent = QModelIndex());
 		QModelIndex index(int row, int column, const QModelIndex & parent) const;
 		QModelIndex parent(const QModelIndex & index) const;
+	signals:
+   		void cell_type_changed();
 	private:
 		gridProtocol* proto;
 		Grid* grid;

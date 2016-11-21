@@ -17,36 +17,6 @@
 
 using namespace std;
 
-class gridNode : public QWidget {
-Q_OBJECT
-  public:
-    gridNode(Node* node, int X, int Y, gridCell* parentCell);
-    ~gridNode();
-    Node* getNode();
-    pair<int,int> getNodePair();
-    void update(bool stim, bool meas);
-    bool getStimStatus();
-    bool getMeasStatus();
-  private:
-    QComboBox* cellType;
-    QCheckBox* stimNode;
-    QCheckBox* measNode;
-    map<string, CellInitializer> cellMap;
-    Node* node;
-    cellInfo* info;
-    gridCell* parentCell;
-    bool stimStatus;
-    bool measStatus;
-  protected:
-    void paintEvent(QPaintEvent *);
-  public slots:
-    void changeCell(QString);
-  signals:
-    void stimNodeChanged(int);
-    void measNodeChanged(int);
-    void cell_type_changed(QString);
-};
-
 class gridSetupWidget : public QWidget {
 Q_OBJECT
   public:
@@ -55,6 +25,7 @@ Q_OBJECT
     ~gridSetupWidget() {}
     void setGrid(Grid* grid);
     Grid* getGrid();
+	QTableView* view();
   signals:
     void cell_type_changed();
   private:
@@ -77,12 +48,8 @@ Q_OBJECT
     QPushButton* toggleStim;
     QComboBox* chooseType;
   private slots:
-    void changeStimNodeList(int status, pair<int,int> node);
-    void changeMeasNodeList(int status, pair<int,int> node);
     void changeCellGroup(QString type);
     void toggleMeasurePressed();
     void toggleStimPressed();
-  public slots:
-    void updateMenu();
 };
 #endif

@@ -2,6 +2,8 @@
 #define LQGRIDEDITOR_H
 
 #include <QMainWindow>
+#include <QTableView>
+#include "conductivityeditor.h"
 
 namespace Ui {
 class LQGridEditor;
@@ -17,6 +19,10 @@ public:
 
 private:
     Ui::LQGridEditor *ui;
+	QTableView* gridView;
+	ConductivityEditor* condEdit = 0; 
+private slots:
+	void on_actionSet_Conductivities_triggered();
 };
 
 #endif // LQGRIDEDITOR_H

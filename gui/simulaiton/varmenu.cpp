@@ -97,7 +97,7 @@ void simvarMenu::createMenu()  {
         gridSetupWidget* grid = new gridSetupWidget((gridProtocol*)this->proto,working_dir);
         tabs->addTab(grid, "Grid Setup");
         connect(grid, &gridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
-        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
+//        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
     }
     }
 //main_layout

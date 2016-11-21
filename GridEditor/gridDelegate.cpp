@@ -22,10 +22,6 @@ GridDelegate::GridDelegate(QWidget *parent) : QStyledItemDelegate(parent), size(
 	}
 }
 
-QWidget* GridDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,const QModelIndex &index) const {
-	return 0;
-}
-
 void GridDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
 	const QPalette& type = this->colors.value(index.data().toString());
 	painter->save();
@@ -61,4 +57,3 @@ void GridDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 QSize GridDelegate::sizeHint(const QStyleOptionViewItem &option,const QModelIndex &index) const {
 	return this->size;	
 }
-

@@ -26,7 +26,22 @@ int  GridModel::rowCount(const QModelIndex & parent) const {
 int  GridModel::columnCount(const QModelIndex & parent) const {
 	return this->grid->columnCount();
 }
-QVariant  GridModel::data(const QModelIndex & index, int role) const {
+QVariant GridModel::data(const QModelIndex & index, int role) const {
+	switch(role) {
+		case Qt::DisplayRole:
+			return this->dataDisplay(index);
+			break;
+		case Qt::ToolTipRole:
+			return this->dataToolTip(index);
+			break;
+		case Qt::StatusTipRole:
+			return this->dataStatusTip(index);
+			break;
+		default:
+			return QVariant();
+	}
+}
+QVariant GridModel::dataDisplay(const QModelIndex & index) const {
 	if(index.internalPointer() == 0) {
 		pair<int,int> p = make_pair(index.row(), index.column());
 		Node* n = this->grid->findNode(p);
@@ -42,9 +57,38 @@ QVariant  GridModel::data(const QModelIndex & index, int role) const {
 			} else if(index.column() == 1) {
 				return this->proto->getDataNodes().find(p) != this->proto->getDataNodes().end();
 			}
+		} else if(index.row() == 1) {
+			switch(index.column()) {
+				case 0: //top
+					return grid->fibery.at(p.second).B.at(p.first);
+					break;
+				case 1: //right
+					return grid->fiber.at(p.first).B.at(p.second+1);
+					break;
+				case 2: //bottom
+					return grid->fibery.at(p.second).B.at(p.first+1);
+					break;
+				case 3: //left
+					return grid->fiber.at(p.first).B.at(p.second);
+					break;
+			}
 		}
 	}
 	return QVariant();
+}
+QVariant GridModel::dataToolTip(const QModelIndex & index) const {
+	return this->data(index);
+}
+QVariant GridModel::dataStatusTip(const QModelIndex & index) const {
+	pair<int,int> p = make_pair(index.row(), index.column());
+
+	QString statusTip = "";
+	statusTip += "Top: "+QString::number(grid->fibery.at(p.second).B.at(p.first))+" ";
+	statusTip += "Right: "+QString::number(grid->fiber.at(p.first).B.at(p.second+1))+" ";
+	statusTip += "Bottom: "+QString::number(grid->fibery.at(p.second).B.at(p.first+1))+" ";
+	statusTip += "Left: "+QString::number(grid->fiber.at(p.first).B.at(p.second))+" ";
+
+	return statusTip;
 }
 bool GridModel::setData(const QModelIndex & index, const QVariant & value, int role) {
 	bool success = false;
@@ -54,20 +98,20 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int r
 		info->Y = index.column();
 		try {
 			info->cell = this->cellMap.at(value.toString().toStdString())();
-			//		info->dx = *parentCell->pars["dx"];
-			//		info->dy = *parentCell->pars["dy"];
-			//		info->np = *parentCell->pars["np"];
-			//		if(*info->cell->pars["dtmin"] < *parentCell->pars["dtmin"]) {
-			//			*parentCell->pars["dtmin"] = *info->cell->pars["dtmin"];
-			//		}
-			//		if(*info->cell->pars["dtmed"] < *parentCell->pars["dtmed"]) {
-			//			*parentCell->pars["dtmed"] = *info->cell->pars["dtmed"];
-			//		}
-			//		if(*info->cell->pars["dtmax"] < *parentCell->pars["dtmax"]) {
-			//			*parentCell->pars["dtmax"] = *info->cell->pars["dtmax"];
-			//		}
+			info->dx = *proto->cell->pars["dx"];
+			info->dy = *proto->cell->pars["dy"];
+			info->np = *proto->cell->pars["np"];
+			if(*info->cell->pars["dtmin"] < *proto->cell->pars["dtmin"]) {
+				*proto->cell->pars["dtmin"] = *info->cell->pars["dtmin"];
+			}
+			if(*info->cell->pars["dtmed"] < *proto->cell->pars["dtmed"]) {
+				*proto->cell->pars["dtmed"] = *info->cell->pars["dtmed"];
+			}
+			if(*info->cell->pars["dtmax"] < *proto->cell->pars["dtmax"]) {
+				*proto->cell->pars["dtmax"] = *info->cell->pars["dtmax"];
+			}
 			this->grid->setCellTypes(*info);
-			//		emit cell_type_changed(type);
+			emit cell_type_changed();
 			emit dataChanged(index, index);
 		} catch(const std::out_of_range&) {
 		} 
@@ -89,6 +133,25 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int r
 					this->proto->getDataNodes().erase(p);
 				}
 				success = true;
+			}
+		} else if(index.row() == 1) {
+			switch(index.column()) {
+				case 0: //top
+					grid->fibery.at(p.second).B.at(p.first) = value.toDouble();
+					success = true;
+					break;
+				case 1: //right
+					grid->fiber.at(p.first).B.at(p.second+1) = value.toDouble();
+					success = true;
+					break;
+				case 2: //bottom
+					grid->fibery.at(p.second).B.at(p.first+1) = value.toDouble();
+					success = true;
+					break;
+				case 3: //left
+					grid->fiber.at(p.first).B.at(p.second) = value.toDouble();
+					success = true;
+					break;
 			}
 		}
 		if(success) {
@@ -155,14 +218,14 @@ QModelIndex GridModel::index(int row, int column, const QModelIndex & parent) co
 	if(!parent.isValid()) {
 		return QAbstractTableModel::index(row, column, parent);
 	}
-//	if(row > 0 || column > 1) {
-//		return QModelIndex();
-//	}
+	//	if(row > 0 || column > 1) {
+	//		return QModelIndex();
+	//	}
 	return QAbstractTableModel::createIndex(row, column, new QPair<int,int>(parent.row(), parent.column()));
 }
 QModelIndex GridModel::parent(const QModelIndex & index) const {
 	QPair<int,int>* p = 0;
-	if(p = static_cast<QPair<int,int>*>(index.internalPointer())) {
+	if((p = static_cast<QPair<int,int>*>(index.internalPointer()))) {
 		return this->index(p->first, p->second, QModelIndex());
 	}
 	return QModelIndex();
