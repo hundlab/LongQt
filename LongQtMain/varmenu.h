@@ -19,6 +19,7 @@
 #include <set>
 
 #include "protocol.h"
+#include "gridSettup.h"
 
 using namespace std;
 
@@ -47,6 +48,7 @@ Q_OBJECT
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QPushButton* close_button;
+	gridSetupWidget* grid = 0;
     void set_default_vals(string name);
 //initalizer
     void initialize(const map<string,GetSetRef>::iterator it);

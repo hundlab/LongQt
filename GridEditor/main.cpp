@@ -1,4 +1,3 @@
-#include "varmenu.h"
 #include "lqgrideditor.h"
 #include <QApplication>
 #include <QStandardPaths> 

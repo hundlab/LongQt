@@ -121,3 +121,6 @@ void gridSetupWidget::toggleStimPressed() {
 QTableView* gridSetupWidget::view() {
 	return this->cellGrid;
 }
+void gridSetupWidget::reset() {
+	this->model->reloadModel();
+}

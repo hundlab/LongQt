@@ -25,6 +25,7 @@ class GridModel : public QAbstractTableModel {
 		bool removeColumns(int column, int count, const QModelIndex & parent = QModelIndex());
 		QModelIndex index(int row, int column, const QModelIndex & parent) const;
 		QModelIndex parent(const QModelIndex & index) const;
+		void reloadModel();
 	signals:
    		void cell_type_changed();
 	private:

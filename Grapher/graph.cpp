@@ -2,7 +2,6 @@
 #include "linegraph.h"
 #include "bargraph.h"
 #include "ui_graph.h"
-#include "heart_cell_sim.h"
 #include "measure.h"
 #include "loadingprogress.h"
 

@@ -26,7 +26,6 @@
 
 #include "varmenu.h"
 #include "protocol.h"
-#include "gridSettup.h"
 #include "guiUtils.h"
 
 
@@ -94,7 +93,7 @@ void simvarMenu::createMenu()  {
     temp->setLayout(central_layouts.last());
     tabs->addTab(temp,"Simulation files");
     if(proto->pars["celltype"].get() == "gridCell") {
-        gridSetupWidget* grid = new gridSetupWidget((gridProtocol*)this->proto,working_dir);
+        this->grid = new gridSetupWidget((gridProtocol*)this->proto,working_dir);
         tabs->addTab(grid, "Grid Setup");
         connect(grid, &gridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
 //        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
@@ -282,6 +281,9 @@ bool simvarMenu::read_simvars(){
 		}
     }
     proto->datadir = working_dir.absolutePath().toStdString();
+	if(this->grid) {
+		this->grid->reset();
+	}
 	this->signalCellTypeChange = false;
     update_menu();
 	this->signalCellTypeChange = true;

@@ -231,3 +231,7 @@ QModelIndex GridModel::parent(const QModelIndex & index) const {
 	return QModelIndex();
 }
 
+void GridModel::reloadModel() {
+	this->beginResetModel();
+	this->endResetModel();
+}

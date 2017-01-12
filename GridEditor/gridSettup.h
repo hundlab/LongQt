@@ -51,5 +51,7 @@ Q_OBJECT
     void changeCellGroup(QString type);
     void toggleMeasurePressed();
     void toggleStimPressed();
+  public slots:
+	void reset();
 };
 #endif
