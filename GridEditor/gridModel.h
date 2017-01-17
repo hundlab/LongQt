@@ -26,6 +26,7 @@ class GridModel : public QAbstractTableModel {
 		QModelIndex index(int row, int column, const QModelIndex & parent) const;
 		QModelIndex parent(const QModelIndex & index) const;
 		void reloadModel();
+		void clear();
 	signals:
    		void cell_type_changed();
 	private:

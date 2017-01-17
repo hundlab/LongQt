@@ -235,3 +235,9 @@ void GridModel::reloadModel() {
 	this->beginResetModel();
 	this->endResetModel();
 }
+
+void GridModel::clear() {
+	this->grid->reset();
+	this->beginResetModel();
+	this->endResetModel();
+}

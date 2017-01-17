@@ -25,7 +25,9 @@ Q_OBJECT
     ~gridSetupWidget() {}
     void setGrid(Grid* grid);
     Grid* getGrid();
+	gridProtocol* getProtocol();
 	QTableView* view();
+	GridModel* getModel();
   signals:
     void cell_type_changed();
   private:

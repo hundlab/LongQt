@@ -100,6 +100,9 @@ void gridSetupWidget::setGrid(Grid* grid) {
 Grid* gridSetupWidget::getGrid() {
     return this->grid;
 }
+gridProtocol* gridSetupWidget::getProtocol() {
+	return this->proto;
+}
 void gridSetupWidget::changeCellGroup(QString type) {
     auto selected = this->cellGrid->selectionModel()->selectedIndexes();
     for(auto index : selected) {
@@ -120,6 +123,9 @@ void gridSetupWidget::toggleStimPressed() {
 }
 QTableView* gridSetupWidget::view() {
 	return this->cellGrid;
+}
+GridModel* gridSetupWidget::getModel() {
+	return this->model;
 }
 void gridSetupWidget::reset() {
 	this->model->reloadModel();
