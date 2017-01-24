@@ -21,7 +21,10 @@
 
 #include "protocol.h"
 #include "heart_cell_sim.h"
-#include "varmenu.h"
+#include "simvarmenu.h"
+#include "dvarmenu.h"
+#include "mvarmenu.h"
+#include "pvarmenu.h"
 #include "graph.h"
 #include "runWidget.h"
 #include "chooseProtoWidget.h"

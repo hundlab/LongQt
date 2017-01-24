@@ -17,7 +17,10 @@
 #include <QDir>
 
 #include "protocol.h"
-#include "varmenu.h"
+#include "simvarmenu.h"
+#include "dvarmenu.h"
+#include "mvarmenu.h"
+#include "pvarmenu.h"
 
 class Simulation : public QWidget {
     Q_OBJECT
