@@ -1,5 +1,6 @@
 #include "lqgrideditor.h"
 #include "ui_lqgrideditor.h"
+
 #include <QStatusBar>
 #include <QFileDialog>
 #include <QStandardPaths>
@@ -11,24 +12,12 @@ LQGridEditor::LQGridEditor(QWidget *parent) :
 	ui->setupUi(this);
 	this->setStatusBar(new QStatusBar());
 	this->gridView = this->ui->centralWidget->view();
+	this->proto = this->ui->centralWidget->getProtocol();
 }
 
 LQGridEditor::~LQGridEditor()
 {
 	delete ui;
-}
-void LQGridEditor::on_actionSet_Conductivities_triggered()
-{
-	if(this->condEdit == 0) {
-		this->condEdit = new ConductivityEditor(this->gridView);
-		this->condEdit->show();
-		connect(this->condEdit, &QObject::destroyed, [this] () {
-			this->condEdit = 0;
-		});
-	} else {
-		this->condEdit->show();
-		this->condEdit->raise();
-	}
 }
 void LQGridEditor::on_actionNew_triggered() {
 	this->ui->centralWidget->getModel()->clear();
@@ -54,4 +43,29 @@ void LQGridEditor::on_actionSave_As_triggered() {
 		this->saveFile = fileName;
 	    this->ui->centralWidget->getProtocol()->writepars(fileName.toStdString(),2);
     }
+}
+void LQGridEditor::on_actionSet_Conductivities_triggered()
+{
+	if(this->condEdit == 0) {
+		this->condEdit = new ConductivityEditor(this->gridView);
+		this->condEdit->show();
+		connect(this->condEdit, &QObject::destroyed, [this] () {
+			this->condEdit = 0;
+		});
+	} else {
+		this->condEdit->show();
+		this->condEdit->raise();
+	}
+}
+void LQGridEditor::on_actionConfigure_Ion_Channels_triggered() {
+	if(this->ionConfig == 0) {
+		this->ionConfig = new IonChannelConfig(this->gridView, this->proto);
+		this->ionConfig->show();
+		connect(this->ionConfig, &QObject::destroyed, [this] () {
+			this->ionConfig = 0;
+		});
+	} else {
+		this->ionConfig->show();
+		this->ionConfig->raise();
+	}
 }

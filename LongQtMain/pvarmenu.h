@@ -18,6 +18,7 @@
 #include <set>
 
 #include "protocol.h"
+#include "grid.h"
 
 using namespace std;
 
@@ -32,6 +33,7 @@ Q_OBJECT
   private:
     Protocol* proto;
     QWidget* parent;
+		Grid* grid = 0;
     QDir working_dir;
     bool write_close;
     QMap<QString,QString> pvarsDescriptions;

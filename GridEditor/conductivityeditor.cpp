@@ -6,8 +6,8 @@ ConductivityEditor::ConductivityEditor(QTableView* view, QWidget *parent) :
     ui(new Ui::ConductivityEditor)
 {
     ui->setupUi(this);
-		this->view = view;
-		this->model = (GridModel*)view->model();
+	this->view = view;
+	this->model = (GridModel*)view->model();
 }
 
 ConductivityEditor::~ConductivityEditor()

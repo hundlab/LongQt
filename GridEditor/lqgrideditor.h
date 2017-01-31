@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTableView>
 #include "conductivityeditor.h"
+#include "ionchannelconfig.h"
 
 namespace Ui {
 class LQGridEditor;
@@ -21,13 +22,16 @@ private:
     Ui::LQGridEditor *ui;
 	QTableView* gridView;
 	ConductivityEditor* condEdit = 0; 
+	IonChannelConfig* ionConfig = 0;
+	gridProtocol* proto = 0;
 	QString saveFile = "";
 private slots:
-	void on_actionSet_Conductivities_triggered();
 	void on_actionNew_triggered();
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();
 	void on_actionSave_As_triggered();
+	void on_actionSet_Conductivities_triggered();
+	void on_actionConfigure_Ion_Channels_triggered();
 };
 
 #endif // LQGRIDEDITOR_H
