@@ -28,7 +28,7 @@ private:
 	set<pair<int,int>> current;
 	set<pair<int,int>> visited;
 
-	void setIonChannels(int maxDist, double maxVal, gridProtocol::MIonChanParam ionConf);
+	void setIonChannels(int maxDist, double maxVal, gridProtocol::MIonChanParam& ionConf);
 	void getInitial();
 	void getNext();
 	void add(pair<int,int> e, set<pair<int,int>>& next);
@@ -39,6 +39,7 @@ public slots:
 private slots:
 	void on_randomize_stateChanged(int state);
 	void on_multiple_stateChanged(int state);
+	void on_normalDist_toggled(bool checked);
 	void on_addButton_clicked();
 };
 

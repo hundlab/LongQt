@@ -41,6 +41,15 @@
        <property name="visible">
         <bool>false</bool>
        </property>
+       <property name="minimum">
+        <double>-10.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
       </widget>
      </item>
      <item row="9" column="0">
@@ -58,6 +67,15 @@
        <property name="visible">
         <bool>false</bool>
        </property>
+       <property name="minimum">
+        <double>-10.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.200000000000000</double>
+       </property>
       </widget>
      </item>
      <item row="10" column="0">
@@ -68,7 +86,14 @@
       </widget>
      </item>
      <item row="10" column="1">
-      <widget class="QDoubleSpinBox" name="startVal"/>
+      <widget class="QDoubleSpinBox" name="startVal">
+       <property name="minimum">
+        <double>-10.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item row="13" column="0">
       <widget class="QLabel" name="incAmtLabel">
@@ -78,7 +103,14 @@
       </widget>
      </item>
      <item row="13" column="1">
-      <widget class="QDoubleSpinBox" name="incAmt"/>
+      <widget class="QDoubleSpinBox" name="incAmt">
+       <property name="minimum">
+        <double>-10.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item row="14" column="0">
       <widget class="QLabel" name="gridOpsLabel">
@@ -109,6 +141,9 @@
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="maximum">
+        <double>400.000000000000000</double>
+       </property>
       </widget>
      </item>
      <item row="16" column="0">
@@ -126,6 +161,12 @@
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="minimum">
+        <double>-10.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10.000000000000000</double>
+       </property>
       </widget>
      </item>
      <item row="17" column="1">
@@ -137,25 +178,25 @@
      </item>
      <item row="5" column="1">
       <widget class="QRadioButton" name="normalDist">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Nor&amp;mal Distribution</string>
        </property>
        <property name="checked">
         <bool>true</bool>
        </property>
-	   <property name="visible">
-		   <bool>false</bool>
-	   </property>
       </widget>
      </item>
      <item row="6" column="1">
       <widget class="QRadioButton" name="lognormalDist">
+       <property name="visible">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>&amp;Lognormal Distribution</string>
        </property>
-	   <property name="visible">
-		   <bool>false</bool>
-	   </property>
       </widget>
      </item>
      <item row="5" column="0">

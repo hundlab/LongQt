@@ -34,14 +34,14 @@ void LQGridEditor::on_actionSave_triggered() {
 	if(this->saveFile == "") {
 		this->on_actionSave_As_triggered();
 	} else {
-		this->ui->centralWidget->getProtocol()->writepars(this->saveFile.toStdString(),2);
+		this->ui->centralWidget->getProtocol()->writepars(this->saveFile.toStdString());
 	}
 }
 void LQGridEditor::on_actionSave_As_triggered() {
-    QString fileName = QFileDialog::getSaveFileName(this);
+    QString fileName = QFileDialog::getSaveFileName(this,"Save As",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
 		this->saveFile = fileName;
-	    this->ui->centralWidget->getProtocol()->writepars(fileName.toStdString(),2);
+	    this->ui->centralWidget->getProtocol()->writepars(fileName.toStdString());
     }
 }
 void LQGridEditor::on_actionSet_Conductivities_triggered()

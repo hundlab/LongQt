@@ -12,6 +12,9 @@ IonChannelConfig::IonChannelConfig(QTableView* view, gridProtocol* proto, QWidge
 	this->model = (GridModel*)view->model();
 	this->proto = proto;
 	this->cellChanged();
+	this->updateList();
+	ui->maxDist->setValue(0);
+	ui->maxVal->setValue(1000);
 	connect(this->model, &GridModel::cell_type_changed, this, &IonChannelConfig::cellChanged);
 }
 
@@ -22,9 +25,24 @@ IonChannelConfig::~IonChannelConfig()
 
 void IonChannelConfig::updateList() {
 	QStringList toAdd;
+	string info;
 	this->ui->listWidget->clear();
 	for(auto& pvar : this->proto->new_pvars) {
-		toAdd += pvar.first.c_str();
+		switch(pvar.second.dist) {
+			case gridProtocol::Distribution::none:
+				info = (pvar.first + "\tIncrementing\tInitial Value: "+to_string(pvar.second.val[0])+
+						"\tIncrement Amount: "+to_string(pvar.second.val[1]));
+				break;
+			case gridProtocol::Distribution::normal:
+				info = (pvar.first + "\tNormal Distribution\t Mean: "+to_string(pvar.second.val[0])+
+						"\tStandard Deviation: "+to_string(pvar.second.val[1]));
+				break;
+			case gridProtocol::Distribution::lognormal:
+				info = (pvar.first + "\tLognormal Distribution\t Mean: "+to_string(pvar.second.val[0])+
+						"\tStandard Deviation: "+to_string(pvar.second.val[1]));
+				break;
+		}
+		toAdd += info.c_str();
 	}
 	this->ui->listWidget->addItems(toAdd);
 }
@@ -45,21 +63,35 @@ void IonChannelConfig::cellChanged() {
 void IonChannelConfig::on_randomize_stateChanged(int state) {
 	ui->normalDist->setVisible(state);
 	ui->lognormalDist->setVisible(state);
-		ui->mean->setVisible(state);
-		ui->meanLabel->setVisible(state);
-		ui->stdDev->setVisible(state);
-		ui->stdDevLabel->setVisible(state);
-		ui->startVal->setVisible(!state);
-		ui->startValLabel->setVisible(!state);
-		ui->incAmt->setVisible(!state);
-		ui->incAmtLabel->setVisible(!state);
+	ui->mean->setVisible(state);
+	ui->meanLabel->setVisible(state);
+	ui->stdDev->setVisible(state);
+	ui->stdDevLabel->setVisible(state);
+	ui->startVal->setVisible(!state);
+	ui->startValLabel->setVisible(!state);
+	ui->incAmt->setVisible(!state);
+	ui->incAmtLabel->setVisible(!state);
 }
 
 void IonChannelConfig::on_multiple_stateChanged(int state) {
+	ui->maxDist->setValue(0);
+	ui->maxVal->setValue(1000);
 	ui->maxDist->setEnabled(state);
 	ui->maxDistLabel->setEnabled(state);
 	ui->maxVal->setEnabled(state);
 	ui->maxValLabel->setEnabled(state);
+}
+
+void IonChannelConfig::on_normalDist_toggled(bool checked) {
+	if(checked) {
+	if(ui->mean->value() == 0) {
+		ui->mean->setValue(1);
+	}
+	} else {
+		if(ui->mean->value() == 1) {
+			ui->mean->setValue(0);
+		}
+	}
 }
 
 void IonChannelConfig::on_addButton_clicked()
@@ -80,10 +112,12 @@ void IonChannelConfig::on_addButton_clicked()
 		}
 	}
 	this->setIonChannels(ui->maxDist->value(), ui->maxVal->value(), toAdd);
-	this->proto->new_pvars[type] = toAdd;
+	if(toAdd.cells.size() > 0) {
+		this->proto->new_pvars[type] = toAdd;
+	}
 	this->updateList();
 }
-void IonChannelConfig::setIonChannels(int maxDist, double maxVal, gridProtocol::MIonChanParam ionConf) {
+void IonChannelConfig::setIonChannels(int maxDist, double maxVal, gridProtocol::MIonChanParam& ionConf) {
 	this->getInitial(); 
 	int i = 0;
 	double val = 0;
@@ -96,16 +130,18 @@ void IonChannelConfig::setIonChannels(int maxDist, double maxVal, gridProtocol::
 						val = maxVal;
 					}
 					break;
-				case gridProtocol::Distribution::normal: {
-					normal_distribution<double> distribution(ionConf.val[0],ionConf.val[1]);
-					val = distribution(proto->generator);
-					break;
-														 }
-				case gridProtocol::Distribution::lognormal: {
-					lognormal_distribution<double> logdistribution(ionConf.val[0], ionConf.val[1]);
-					val = logdistribution(proto->generator);
-					break;
-															}
+				case gridProtocol::Distribution::normal: 
+					{
+						normal_distribution<double> distribution(ionConf.val[0],ionConf.val[1]);
+						val = distribution(proto->generator);
+						break;
+					}
+				case gridProtocol::Distribution::lognormal:
+					{
+						lognormal_distribution<double> logdistribution(ionConf.val[0], ionConf.val[1]);
+						val = logdistribution(proto->generator);
+						break;
+					}
 			}
 			ionConf.cells[make_pair(e.first,e.second)] = val;
 			this->visited.insert(e);
