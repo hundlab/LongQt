@@ -27,9 +27,9 @@ void ConductivityEditor::setConductivities(double startVal, double incAmount, in
 			//val is not correct
 			double val = startVal+incAmount*i;
 			if(val < maxVal) {
-				this->model->setData(this->model->index(e.y,e.x,QModelIndex()).child(1,e.p),val);
+				this->setConductivity(e, val);
 			} else {
-				this->model->setData(this->model->index(e.y,e.x,QModelIndex()).child(1,e.p),maxVal);
+				this->setConductivity(e, maxVal);
 			}
 			this->visited.insert(e);
 		}
@@ -49,6 +49,7 @@ void ConductivityEditor::getInitial() {
 		this->add({toAdd.column(),toAdd.row(),left},this->current);
 	}
 }
+
 
 void ConductivityEditor::getNext() {
 	set<Edge> next;
@@ -92,10 +93,6 @@ void ConductivityEditor::getNext() {
 }
 //need to check for duplicates
 void ConductivityEditor::add(Edge e, set<Edge>& next) {
-	//check for edge cases
-	if((e.y==0&&e.p==top)||(e.y==this->model->rowCount()-1&&e.p==bottom)||(e.x==0&&e.p==left)||(e.x==this->model->columnCount()-1&&e.p==right)) {
-		return;
-	}
 	//check for out of bounds
 	if(e.y<0||e.x<0||e.y>=this->model->rowCount()||e.x>=this->model->columnCount()) {
 		return;
@@ -106,3 +103,10 @@ void ConductivityEditor::add(Edge e, set<Edge>& next) {
 
 }
 
+void ConductivityEditor::setConductivity(Edge e, double val) {
+	//check for edge cases
+	if((e.y==0&&e.p==top)||(e.y==this->model->rowCount()-1&&e.p==bottom)||(e.x==0&&e.p==left)||(e.x==this->model->columnCount()-1&&e.p==right)) {
+		return;
+	}
+	this->model->setData(this->model->index(e.y,e.x,QModelIndex()).child(1,e.p),val);
+}
