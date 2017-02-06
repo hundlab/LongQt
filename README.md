@@ -13,7 +13,8 @@ Skip to the **Install** instructions or simply run the unpacked executable
   - windows:    mingw or visual studio compiler
   - OS X:       clang
 
-*(note: this project can imported into QtCreator and built from there which 
+=======
+*(note: this project can be imported into QtCreator and built from there which 
 this is often the easiest way to build it)*
 
 ### Build
