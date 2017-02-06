@@ -2,6 +2,7 @@
 
 unpack the .app or executable from the archive format (.zip)
 
+=======
 Skip to the **Install** instructions or simply run the unpacked executable
 
 ## Build
@@ -12,7 +13,9 @@ Skip to the **Install** instructions or simply run the unpacked executable
  	- linux:      gcc
   - windows:    mingw or visual studio compiler
   - OS X:       clang
+<<<<<<< HEAD
 
+=======
 *(note: this project can imported into QtCreator and built from there which 
 this is often the easiest way to build it)*
 
@@ -26,6 +29,7 @@ this is often the easiest way to build it)*
 the executable/.app will usually be found in the folder where it was made
 execpt on linux where it will be found in the build directory
 
+=======
 *(note: if built with QtCreator the files will be in a build directory located
 in the same directory as the source files are located
 when using QtCreator on windows it is recomended to copy LongQt with all of
