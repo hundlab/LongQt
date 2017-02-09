@@ -50,6 +50,7 @@ private:
 	void getInitial();
 	void getNext();
 	void add(Edge e, set<Edge>& next);
+	void setConductivity(Edge e, double val);
 
 
 private slots:
