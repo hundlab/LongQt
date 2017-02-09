@@ -1,3 +1,7 @@
+/*
+ * sim variables are in proto->pars and control how the simulation is run
+ * this is a widget to edit those variables
+ */
 #ifndef SIMVARMENU_H
 #define SIMVARMENU_H
 
@@ -47,7 +51,7 @@ Q_OBJECT
     QCheckBox* set_vars;
     QPushButton* get_vars;
     QPushButton* close_button;
-	gridSetupWidget* grid = 0;
+	GridSetupWidget* grid = 0;
     void set_default_vals(string name);
 //initalizer
     void initialize(const map<string,GetSetRef>::iterator it);

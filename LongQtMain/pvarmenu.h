@@ -1,3 +1,7 @@
+/*
+ * The single cell equivelant of ion channel channel config
+ * allows for cell->pars ending in Factor to be modified
+ */
 #ifndef PVARMENU_H
 #define PVARMENU_H
 

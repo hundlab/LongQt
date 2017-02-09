@@ -78,11 +78,11 @@ void chooseProtoWidget::changeProto(int value) {
         this->proto->cell = old_cell;
     break;
     case 1:
-        this->proto = new voltageClamp();
+        this->proto = new VoltageClamp();
         this->proto->cell = old_cell;
     break;
     case 2:
-        this->proto = new gridProtocol();
+        this->proto = new GridProtocol();
         cell_type->addItem("gridCell");
         cell_type->setEnabled(false);
         emit cell_type_changed();

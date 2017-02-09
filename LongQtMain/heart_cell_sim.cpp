@@ -184,10 +184,10 @@ void Simulation::canceled() {
 void Simulation::finished() {
     QMessageBox::information(0,"Folder", "Simulation is finished!\n The folder is named: " + QString(proto->datadir.c_str()));
     try {
-        menu_list.append(new Dialog(QDir(proto->datadir.c_str()), this));        
+        menu_list.append(new Grapher(QDir(proto->datadir.c_str()), this));        
         menu->addWidget(menu_list.last());
         menu_options->addItem("Graph " + QFileInfo(proto->datadir.c_str()).baseName());
-    } catch(badFile& e) {
+    } catch(BadFile& e) {
         cerr << e.what() << ": " << "data files not readable" << endl;
     }
     date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");

@@ -1,3 +1,6 @@
+/*
+ * A dialog to allow users to toggle the displaying of graphs
+ */
 #ifndef CHOOSEGRAPHS_H
 #define CHOOSEGRAPHS_H
 

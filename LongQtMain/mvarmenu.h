@@ -1,3 +1,8 @@
+/*
+ * Measurement variables are the cell->vars which will have basic measurements
+ * taken of them durring the simulation
+ * This widget alows for them to be added and removed from the mvars list
+ */
 #ifndef MVARMENU_H
 #define MVARMENU_H
 

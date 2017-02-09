@@ -1,3 +1,6 @@
+/*
+ * responsible for creating line graphs
+ */
 #ifndef LINEGRAPH_H
 #define LINEGRAPH_H
 
@@ -10,21 +13,21 @@
 #include <QShortcut>
 
 namespace Ui {
-class lineGraph;
+class LineGraph;
 }
 
-class lineGraph : public QWidget
+class LineGraph : public QWidget
 {
     Q_OBJECT
 public:
-    explicit lineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget *parent = 0);
-    ~lineGraph();
+    explicit LineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget *parent = 0);
+    ~LineGraph();
     void addData(QVector<double>& x, QVector<double>& y, QString name);
 private:
     void Initialize();
     void populateList(int trial);
 
-    Ui::lineGraph *ui;
+    Ui::LineGraph *ui;
     QList<QVector<double>> y;
     QList<QVector<double>> x;
     QString xLabel;

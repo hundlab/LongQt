@@ -1,3 +1,7 @@
+/*
+ * A widget for setting ion channels in a grid (or single cell)
+ * ion channels are the *Factor in cell->pars
+ */
 #ifndef IONCHANNELCONFIG_H
 #define IONCHANNELCONFIG_H
 
@@ -16,19 +20,19 @@ class IonChannelConfig : public QWidget
     Q_OBJECT
 
 public:
-    explicit IonChannelConfig(QTableView* view, gridProtocol* proto, QWidget *parent = 0);
+    explicit IonChannelConfig(QTableView* view, GridProtocol* proto, QWidget *parent = 0);
     ~IonChannelConfig();
 	void updateList();
 
 private:
     Ui::IonChannelConfig *ui;
 	GridModel* model = 0;
-	gridProtocol* proto = 0;
+	GridProtocol* proto = 0;
 	QTableView* view = 0;
 	set<pair<int,int>> current;
 	set<pair<int,int>> visited;
 
-	void setIonChannels(int maxDist, double maxVal, gridProtocol::MIonChanParam& ionConf);
+	void setIonChannels(int maxDist, double maxVal, GridProtocol::MIonChanParam& ionConf);
 	void getInitial();
 	void getNext();
 	void add(pair<int,int> e, set<pair<int,int>>& next);

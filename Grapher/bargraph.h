@@ -1,3 +1,6 @@
+/*
+ * Class contains one bar graph (multiple bars)
+ */
 #ifndef BARGRAPH_H
 #define BARGRAPH_H
 
@@ -8,7 +11,7 @@
 #include "qcustomplot.h"
 
 namespace Ui {
-class barGraph;
+class BarGraph;
 }
 
 struct bar
@@ -21,14 +24,19 @@ class barGraph : public QWidget
 {
     Q_OBJECT
 public:
+	// constructs the bar graph with one bar
     explicit barGraph(QString name, double value, QString var, QDir saveDir, QWidget *parent = 0);
     ~barGraph();
 private:
+	// prepares bar graph 
     void Initialize();
+	// get new axis ranges
     void setRange(bar newBar);
+	// add annother bar
     void newBar(bar& newBar);
+	// is the same as in guiUtils
     QColor genColor(int numBars);
-    Ui::barGraph *ui;
+    Ui::BarGraph *ui;
     QDir saveDir;
     QVector<QString> labels;
     QVector<double> ticks;
@@ -36,7 +44,9 @@ private:
     QString aspect;
     QMap<QString, QString> unitsMap;
 private slots:
+	// will load a new set of bars as give by the user
     void on_loadOtherTrial_clicked();
+	// exports bar graph as jpg
     void on_save_clicked();
 };
 

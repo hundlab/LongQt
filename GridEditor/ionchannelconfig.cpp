@@ -3,7 +3,7 @@
 #include "ionchannelconfig.h"
 #include "ui_ionchannelconfig.h"
 
-IonChannelConfig::IonChannelConfig(QTableView* view, gridProtocol* proto, QWidget *parent) :
+IonChannelConfig::IonChannelConfig(QTableView* view, GridProtocol* proto, QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::IonChannelConfig)
 {
@@ -29,15 +29,15 @@ void IonChannelConfig::updateList() {
 	this->ui->listWidget->clear();
 	for(auto& pvar : this->proto->new_pvars) {
 		switch(pvar.second.dist) {
-			case gridProtocol::Distribution::none:
+			case GridProtocol::Distribution::none:
 				info = (pvar.first + "\tIncrementing\tInitial Value: "+to_string(pvar.second.val[0])+
 						"\tIncrement Amount: "+to_string(pvar.second.val[1]));
 				break;
-			case gridProtocol::Distribution::normal:
+			case GridProtocol::Distribution::normal:
 				info = (pvar.first + "\tNormal Distribution\t Mean: "+to_string(pvar.second.val[0])+
 						"\tStandard Deviation: "+to_string(pvar.second.val[1]));
 				break;
-			case gridProtocol::Distribution::lognormal:
+			case GridProtocol::Distribution::lognormal:
 				info = (pvar.first + "\tLognormal Distribution\t Mean: "+to_string(pvar.second.val[0])+
 						"\tStandard Deviation: "+to_string(pvar.second.val[1]));
 				break;
@@ -97,18 +97,18 @@ void IonChannelConfig::on_normalDist_toggled(bool checked) {
 void IonChannelConfig::on_addButton_clicked()
 {
 	string type = ui->ionChannelType->currentText().toStdString();
-	gridProtocol::MIonChanParam toAdd;
+	GridProtocol::MIonChanParam toAdd;
 	if(ui->randomize->checkState() == 0) {
-		toAdd.dist = gridProtocol::Distribution::none;
+		toAdd.dist = GridProtocol::Distribution::none;
 		toAdd.val[0] = ui->startVal->value();
 		toAdd.val[1] = ui->incAmt->value();
 	} else {
 		toAdd.val[0] = ui->mean->value();
 		toAdd.val[1] = ui->stdDev->value();
 		if(ui->normalDist->isChecked()) {
-			toAdd.dist = gridProtocol::Distribution::normal;
+			toAdd.dist = GridProtocol::Distribution::normal;
 		} else {
-			toAdd.dist = gridProtocol::Distribution::lognormal;
+			toAdd.dist = GridProtocol::Distribution::lognormal;
 		}
 	}
 	this->setIonChannels(ui->maxDist->value(), ui->maxVal->value(), toAdd);
@@ -117,26 +117,26 @@ void IonChannelConfig::on_addButton_clicked()
 	}
 	this->updateList();
 }
-void IonChannelConfig::setIonChannels(int maxDist, double maxVal, gridProtocol::MIonChanParam& ionConf) {
+void IonChannelConfig::setIonChannels(int maxDist, double maxVal, GridProtocol::MIonChanParam& ionConf) {
 	this->getInitial(); 
 	int i = 0;
 	double val = 0;
 	while(current.size() > 0 && i <= maxDist) {
 		for(const pair<int,int>& e: this->current) {
 			switch(ionConf.dist) {
-				case gridProtocol::Distribution::none:
+				case GridProtocol::Distribution::none:
 					val = ionConf.val[0]+ionConf.val[1]*i;
 					if(val > maxVal) {
 						val = maxVal;
 					}
 					break;
-				case gridProtocol::Distribution::normal: 
+				case GridProtocol::Distribution::normal: 
 					{
 						normal_distribution<double> distribution(ionConf.val[0],ionConf.val[1]);
 						val = distribution(proto->generator);
 						break;
 					}
-				case gridProtocol::Distribution::lognormal:
+				case GridProtocol::Distribution::lognormal:
 					{
 						lognormal_distribution<double> logdistribution(ionConf.val[0], ionConf.val[1]);
 						val = logdistribution(proto->generator);

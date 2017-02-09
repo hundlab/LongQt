@@ -91,9 +91,9 @@ void simvarMenu::createMenu()  {
     temp->setLayout(central_layouts.last());
     tabs->addTab(temp,"Simulation files");
     if(string(proto->type) == "Grid Protocol") {
-        this->grid = new gridSetupWidget((gridProtocol*)this->proto,working_dir);
+        this->grid = new GridSetupWidget((GridProtocol*)this->proto,working_dir);
         tabs->addTab(grid, "Grid Setup");
-        connect(grid, &gridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
+        connect(grid, &GridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
 //        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
     }
     }
@@ -330,7 +330,7 @@ void simvarMenu::changeCellType() {
     update_menu(); 
 }
 void simvarMenu::set_default_vals(string name) {
-    auto cellDefaultsList = cellUtils().protocolCellDefaults[name];
+    auto cellDefaultsList = CellUtils().protocolCellDefaults[name];
     for(auto val : cellDefaultsList) {
         try {
             proto->pars.at(val.first).set(val.second);

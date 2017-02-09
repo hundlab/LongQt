@@ -1,3 +1,7 @@
+/*
+ * the main window for LongQt contains all the pretinant widgets and maintains
+ * the side pannel to switch between them
+ */
 #ifndef HEART_CELL_SIM_H
 #define HEART_CELL_SIM_H
 

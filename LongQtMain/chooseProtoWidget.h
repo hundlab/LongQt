@@ -1,3 +1,7 @@
+/*
+ * This class provides a way to switch between different protocols
+ * it creates and returns the new protocol which the user selects
+ */
 #ifndef chooseProtoWidget_H
 #define chooseProtoWidget_H
 

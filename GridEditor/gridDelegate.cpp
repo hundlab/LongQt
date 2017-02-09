@@ -8,7 +8,7 @@
 #include <QDebug>
 
 GridDelegate::GridDelegate(QWidget *parent) : QStyledItemDelegate(parent), size(30,30) {
-	map<string, CellInitializer> cellMap = cellUtils().cellMap;
+	map<string, CellInitializer> cellMap = CellUtils().cellMap;
 	cellMap["Inexcitable Cell"] = [] () {return new Cell;};	
 	int i = 0;
 	for(auto& pair : cellMap) {

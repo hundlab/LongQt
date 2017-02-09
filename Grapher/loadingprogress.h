@@ -1,3 +1,9 @@
+/*
+ * for large sims it can take a while to load
+ * this allows for someone to see the progress and select which parts should be 
+ * graphed
+ *
+ */
 #ifndef LOADINGPROGRESS_H
 #define LOADINGPROGRESS_H
 

@@ -1,3 +1,6 @@
+/*
+ * GridModel acts as an interface between the Grid & Grid Protocol and the GUI
+ */
 #ifndef GRID_MODEL_H
 #define GRID_MODEL_H
 #include <QAbstractTableModel>
@@ -8,8 +11,8 @@
 class GridModel : public QAbstractTableModel {
 	Q_OBJECT
 	public:
-		GridModel(gridProtocol* grid = 0, QObject* parent = 0);
-		bool setProtocol(gridProtocol* grid);
+		GridModel(GridProtocol* grid = 0, QObject* parent = 0);
+		bool setProtocol(GridProtocol* grid);
 		//implemented and reimplemented functions from QAbstractTableModel
 		int rowCount(const QModelIndex & parent = QModelIndex()) const;
 		int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -30,7 +33,7 @@ class GridModel : public QAbstractTableModel {
 	signals:
    		void cell_type_changed();
 	private:
-		gridProtocol* proto;
+		GridProtocol* proto;
 		Grid* grid;
 		map<string, CellInitializer> cellMap;
 };

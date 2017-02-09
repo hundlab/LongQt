@@ -1,3 +1,7 @@
+/*
+ * The main window for the LQGridEditor.pro
+ * contains the other widgets which alow for configuring the grid
+ */
 #ifndef LQGRIDEDITOR_H
 #define LQGRIDEDITOR_H
 
@@ -23,7 +27,7 @@ private:
 	QTableView* gridView;
 	ConductivityEditor* condEdit = 0; 
 	IonChannelConfig* ionConfig = 0;
-	gridProtocol* proto = 0;
+	GridProtocol* proto = 0;
 	QString saveFile = "";
 private slots:
 	void on_actionNew_triggered();

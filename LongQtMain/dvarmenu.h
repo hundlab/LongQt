@@ -1,3 +1,7 @@
+/*
+ * Dvars are the output or tracked variables from a sim. they can be found in
+ * cell->vars
+ */
 #ifndef DVARMENU_H
 #define DVARMENU_H
 

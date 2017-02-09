@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="gridSetupWidget" name="centralWidget"/>
+  <widget class="GridSetupWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -77,7 +77,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>gridSetupWidget</class>
+   <class>GridSetupWidget</class>
    <extends>QWidget</extends>
    <header location="global">gridSettup.h</header>
    <container>1</container>

@@ -1,3 +1,6 @@
+/*
+ * widget for modifying the grid
+ */
 #ifndef gridSetupWidget_H
 #define gridSetupWidget_H
 
@@ -17,15 +20,15 @@
 
 using namespace std;
 
-class gridSetupWidget : public QWidget {
+class GridSetupWidget : public QWidget {
 Q_OBJECT
   public:
-	gridSetupWidget(QWidget* parent = 0);
-    gridSetupWidget(gridProtocol* initial_proto, QDir workingDir, QWidget* parent = 0);
-    ~gridSetupWidget() {}
+    GridSetupWidget(QWidget* parent = 0);
+    GridSetupWidget(GridProtocol* initial_proto, QDir workingDir, QWidget* parent = 0);
+    ~GridSetupWidget() {}
     void setGrid(Grid* grid);
     Grid* getGrid();
-	gridProtocol* getProtocol();
+	GridProtocol* getProtocol();
 	QTableView* view();
 	GridModel* getModel();
   signals:
@@ -33,7 +36,7 @@ Q_OBJECT
   private:
     void createMenu();
     
-    gridProtocol* proto;
+    GridProtocol* proto;
     QDir workingDir;
     QWidget* parent;
     Grid* grid;

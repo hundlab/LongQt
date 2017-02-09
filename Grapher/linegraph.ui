@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>lineGraph</class>
+ <class>LineGraph</class>
  <widget class="QWidget" name="lineGraph">
   <property name="geometry">
    <rect>

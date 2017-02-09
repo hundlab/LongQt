@@ -13,18 +13,18 @@
 //##############################
 //gridSetupWidget
 //##############################
-gridSetupWidget::gridSetupWidget(QWidget* parent) : gridSetupWidget(new gridProtocol(), QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first(),parent) {}
+GridSetupWidget::GridSetupWidget(QWidget* parent) : GridSetupWidget(new GridProtocol(), QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first(),parent) {}
 
-gridSetupWidget::gridSetupWidget(gridProtocol* initial_proto, QDir workingDir, QWidget* parent) : QWidget(parent) {
+GridSetupWidget::GridSetupWidget(GridProtocol* initial_proto, QDir workingDir, QWidget* parent) : QWidget(parent) {
     this->proto = initial_proto;
     this->workingDir = workingDir;
     this->parent = parent;
-    this->grid = ((gridCell*)proto->cell)->getGrid();
+    this->grid = ((GridCell*)proto->cell)->getGrid();
 	this->model = new GridModel(this->proto,this);
 
     this->createMenu();
 }
-void gridSetupWidget::createMenu() {
+void GridSetupWidget::createMenu() {
 //initialize widgets
     rowInt = new QSpinBox();
     addRowButton = new QPushButton(tr("+ Row"));
@@ -44,7 +44,7 @@ void gridSetupWidget::createMenu() {
 	this->cellGrid->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 	this->cellGrid->setShowGrid(false);
 	this->cellGrid->viewport()->setMouseTracking(true);
-    auto cellMap = cellUtils().cellMap;
+    auto cellMap = CellUtils().cellMap;
     cellMap["Inexcitable Cell"] = [] () {return new Cell;};
     for(auto it : cellMap) {
         chooseType->addItem(it.first.c_str());
@@ -65,8 +65,8 @@ void gridSetupWidget::createMenu() {
 			int num = this->rowInt->value();
 			this->model->removeRows(this->model->rowCount()-num,num);
 			});
-    connect(toggleStim, &QPushButton::clicked, this, &gridSetupWidget::toggleStimPressed);
-    connect(toggleMeasure, &QPushButton::clicked, this, &gridSetupWidget::toggleMeasurePressed);
+    connect(toggleStim, &QPushButton::clicked, this, &GridSetupWidget::toggleStimPressed);
+    connect(toggleMeasure, &QPushButton::clicked, this, &GridSetupWidget::toggleMeasurePressed);
     connect(chooseType, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeCellGroup(QString)));
     connect(cellGrid->selectionModel(),&QItemSelectionModel::selectionChanged, [this] (const QItemSelection& selected, const QItemSelection&) {
         if(!selected.isEmpty()) {
@@ -75,7 +75,7 @@ void gridSetupWidget::createMenu() {
 			this->chooseType->blockSignals(oldState);
         }
     });
-	connect(this->model, &GridModel::cell_type_changed, this, &gridSetupWidget::cell_type_changed);
+	connect(this->model, &GridModel::cell_type_changed, this, &GridSetupWidget::cell_type_changed);
 //setup layout
     QGridLayout* main_layout = new QGridLayout(this);
     main_layout->addWidget(rowInt,0,0);
@@ -91,42 +91,42 @@ void gridSetupWidget::createMenu() {
     main_layout->addWidget(cellGrid,2,0,10,10);
     this->setLayout(main_layout);
 }
-void gridSetupWidget::setGrid(Grid* grid) {
+void GridSetupWidget::setGrid(Grid* grid) {
     this->grid = grid;
 //	delete this->model;
 	this->model = new GridModel(this->proto);
 	this->cellGrid->setModel(this->model);
 }
-Grid* gridSetupWidget::getGrid() {
+Grid* GridSetupWidget::getGrid() {
     return this->grid;
 }
-gridProtocol* gridSetupWidget::getProtocol() {
+GridProtocol* GridSetupWidget::getProtocol() {
 	return this->proto;
 }
-void gridSetupWidget::changeCellGroup(QString type) {
+void GridSetupWidget::changeCellGroup(QString type) {
     auto selected = this->cellGrid->selectionModel()->selectedIndexes();
     for(auto index : selected) {
 		this->model->setData(index,type);
     }
 }
-void gridSetupWidget::toggleMeasurePressed() {
+void GridSetupWidget::toggleMeasurePressed() {
     auto selected = cellGrid->selectionModel()->selectedIndexes();
     for(auto index : selected) {
 		this->model->setData(index.child(0,1),!index.child(0,1).data().toBool());
     }
 }
-void gridSetupWidget::toggleStimPressed() {
+void GridSetupWidget::toggleStimPressed() {
     auto selected = cellGrid->selectionModel()->selectedIndexes();
     for(auto index : selected) {
 		this->model->setData(index.child(0,0),!index.child(0,0).data().toBool());
     }
 }
-QTableView* gridSetupWidget::view() {
+QTableView* GridSetupWidget::view() {
 	return this->cellGrid;
 }
-GridModel* gridSetupWidget::getModel() {
+GridModel* GridSetupWidget::getModel() {
 	return this->model;
 }
-void gridSetupWidget::reset() {
+void GridSetupWidget::reset() {
 	this->model->reloadModel();
 }

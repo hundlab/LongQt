@@ -5,7 +5,7 @@
 
 barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::barGraph)
+    ui(new Ui::BarGraph)
 {
     ui->setupUi(this);
     this->saveDir = saveDir;

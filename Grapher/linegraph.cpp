@@ -4,9 +4,9 @@
 #include "protocol.h"
 #include "guiUtils.h"
 
-lineGraph::lineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
+LineGraph::LineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
     QWidget(parent),
-    ui(new Ui::lineGraph)
+    ui(new Ui::LineGraph)
 {
     ui->setupUi(this);
     this->unitsMap = GuiUtils().readMap(":/hoverText/dvarsUnits.txt");
@@ -16,19 +16,19 @@ lineGraph::lineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* pare
     this->saveDir = saveDir;
     this->Initialize();
 }
-void lineGraph::Initialize() {
+void LineGraph::Initialize() {
     this->plus = new QShortcut(QKeySequence(Qt::Key_I),this);
     this->minus = new QShortcut(QKeySequence(Qt::Key_O),this);
     this->left = new QShortcut(QKeySequence(Qt::Key_Left),this);
     this->right = new QShortcut(QKeySequence(Qt::Key_Right),this);
     this->up = new QShortcut(QKeySequence(Qt::Key_Up),this);
     this->down = new QShortcut(QKeySequence(Qt::Key_Down),this);
-    connect(plus, &QShortcut::activated, this, &lineGraph::zoomIn);
-    connect(minus, &QShortcut::activated, this, &lineGraph::zoomOut);
-    connect(left, &QShortcut::activated, this, &lineGraph::shiftLeft);
-    connect(right, &QShortcut::activated, this, &lineGraph::shiftRight);
-    connect(up, &QShortcut::activated, this, &lineGraph::shiftUp);
-    connect(down, &QShortcut::activated, this, &lineGraph::shiftDown);
+    connect(plus, &QShortcut::activated, this, &LineGraph::zoomIn);
+    connect(minus, &QShortcut::activated, this, &LineGraph::zoomOut);
+    connect(left, &QShortcut::activated, this, &LineGraph::shiftLeft);
+    connect(right, &QShortcut::activated, this, &LineGraph::shiftRight);
+    connect(up, &QShortcut::activated, this, &LineGraph::shiftUp);
+    connect(down, &QShortcut::activated, this, &LineGraph::shiftDown);
 //should not just be 0!!
      populateList(0);
      ui->plot->xAxis->grid()->setVisible(false);
@@ -51,14 +51,14 @@ void lineGraph::Initialize() {
      ui->plot->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot, this->yLabel +" vs "+ this->xLabel));
 }
 
-lineGraph::~lineGraph()
+LineGraph::~LineGraph()
 {
     delete ui;
 }
 QColor genColor(int num) {
     return QColor::fromHsv((num*4*17)%360,200,200);
 }
-void lineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
+void LineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
         if(x.isEmpty() || y.isEmpty()) {
             return;
         }
@@ -72,10 +72,10 @@ void lineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
         ui->plot->xAxis->setRange(x.first(), x.last());
         ui->plot->replot();
 }
-void lineGraph::on_save_clicked() {
+void LineGraph::on_save_clicked() {
     ui->plot->saveJpg(saveDir.absolutePath() + "/" + yLabel + "vs" + xLabel + ".jpg", 0,0,1.0, -1);
 }
-void lineGraph::on_loadControl_clicked() {
+void LineGraph::on_loadControl_clicked() {
     QVector<double> x, y;
 
     if (control_on_graph(x, y)){
@@ -90,7 +90,7 @@ void lineGraph::on_loadControl_clicked() {
         controlLocation = this->x.size()-1;
     }
 }
-bool lineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
+bool LineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
     QString filename = QFileDialog::getOpenFileName(
                 this,
                 tr("Open File"),
@@ -121,7 +121,7 @@ bool lineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
     }
     return false;
 }
-void lineGraph::populateList(int trial) {
+void LineGraph::populateList(int trial) {
     char filename[1500];
     sprintf(filename, Protocol().finalpropertyoutfile.c_str(), trial, yLabel.toStdString().c_str());
     QFile file(saveDir.absolutePath() +"/"+ QString(filename));
@@ -137,12 +137,12 @@ void lineGraph::populateList(int trial) {
         ui->listWidget->insertItem(ui->listWidget->count(),*it+"\t"+*iv);
     }
 }
-void lineGraph::on_chooseGraphs_clicked() {
+void LineGraph::on_chooseGraphs_clicked() {
     ChooseGraphs* choose = new ChooseGraphs(ui->plot, this);
     choose->setWindowTitle(this->yLabel);
     choose->exec();
 }
-void lineGraph::on_toggleLegend_clicked() {
+void LineGraph::on_toggleLegend_clicked() {
     ui->plot->legend->setVisible(!ui->plot->legend->visible());
     ui->plot->replot();
 }
@@ -152,13 +152,13 @@ QCPRange zoom(QCPRange range, double scale) {
     return QCPRange(range.center()+diff,range.center()-diff);
 }
 
-void lineGraph::zoomIn() {
+void LineGraph::zoomIn() {
     this->ui->plot->yAxis->setRange(zoom(this->ui->plot->yAxis->range(),.75));
     this->ui->plot->xAxis->setRange(zoom(this->ui->plot->xAxis->range(),.75));
     this->ui->plot->replot();
 }
 
-void lineGraph::zoomOut() {
+void LineGraph::zoomOut() {
     double zoomOutScale = 1.0/0.75;
     this->ui->plot->yAxis->setRange(zoom(this->ui->plot->yAxis->range(),zoomOutScale));
     this->ui->plot->xAxis->setRange(zoom(this->ui->plot->xAxis->range(),zoomOutScale));
@@ -166,22 +166,22 @@ void lineGraph::zoomOut() {
 
 }
 
-void lineGraph::shiftLeft() {
+void LineGraph::shiftLeft() {
     this->ui->plot->xAxis->setRange(this->ui->plot->xAxis->range()-(this->ui->plot->xAxis->range().size()*.05));
     this->ui->plot->replot();
 }
 
-void lineGraph::shiftRight() {
+void LineGraph::shiftRight() {
     this->ui->plot->xAxis->setRange(this->ui->plot->xAxis->range()+(this->ui->plot->xAxis->range().size()*.05));
     this->ui->plot->replot();
 }
 
-void lineGraph::shiftUp() {
+void LineGraph::shiftUp() {
     this->ui->plot->yAxis->setRange(this->ui->plot->yAxis->range()+(this->ui->plot->yAxis->range().size()*.05));
     this->ui->plot->replot();
 }
 
-void lineGraph::shiftDown() {
+void LineGraph::shiftDown() {
     this->ui->plot->yAxis->setRange(this->ui->plot->yAxis->range()-(this->ui->plot->yAxis->range().size()*.05));
     this->ui->plot->replot();
 }

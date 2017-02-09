@@ -3,20 +3,20 @@
 
 using namespace std;
 
-GridModel::GridModel(gridProtocol* proto, QObject* parent) : QAbstractTableModel(parent) {
+GridModel::GridModel(GridProtocol* proto, QObject* parent) : QAbstractTableModel(parent) {
 	if(proto) {
 		this->proto = proto;
 	} else {
-		this->proto = new gridProtocol();
+		this->proto = new GridProtocol();
 	}
-	this->grid = ((gridCell*)proto->cell)->getGrid();
-	cellMap = cellUtils().cellMap;
+	this->grid = ((GridCell*)proto->cell)->getGrid();
+	cellMap = CellUtils().cellMap;
 	cellMap["Inexcitable Cell"] = [] () {return new Cell;};
 
 }
-bool GridModel::setProtocol(gridProtocol* proto) {
+bool GridModel::setProtocol(GridProtocol* proto) {
 	this->proto = proto;
-	this->grid = ((gridCell*)proto->cell)->getGrid();
+	this->grid = ((GridCell*)proto->cell)->getGrid();
 	QAbstractItemModel::resetInternalData();
 	return true;
 }
@@ -93,7 +93,7 @@ QVariant GridModel::dataStatusTip(const QModelIndex & index) const {
 bool GridModel::setData(const QModelIndex & index, const QVariant & value, int role) {
 	bool success = false;
 	if(index.internalPointer() == 0) {
-		cellInfo* info = new cellInfo;
+		CellInfo* info = new CellInfo;
 		info->X = index.row();
 		info->Y = index.column();
 		try {

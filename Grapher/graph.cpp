@@ -12,22 +12,22 @@
 #include <QProgressDialog>
 #include <exception>
 
-Dialog::Dialog(QDir read_location, QWidget *parent) :
+Grapher::Grapher(QDir read_location, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::Dialog)
+    ui(new Ui::Grapher)
 {
     ui->setupUi(this);
     this->read_location = read_location;
     this->Initialize();
 }
-void Dialog::Initialize() {
+void Grapher::Initialize() {
     this->buildLineGraphs(this->getFileNames());
     this->buildBarGraphs(0);
 }
-QFileInfoList Dialog::getFileNames() {
+QFileInfoList Grapher::getFileNames() {
     return this->getFileNames(this->read_location);
 }
-QFileInfoList Dialog::getFileNames(QDir location) {
+QFileInfoList Grapher::getFileNames(QDir location) {
     QFileInfoList toReturn;
     for(QFileInfo file : location.entryInfoList()) {
         if(QRegExp("cell_\\d+_\\d+_dt\\d+_dvars|dt\\d+_dvars").exactMatch(file.baseName())) {
@@ -36,7 +36,7 @@ QFileInfoList Dialog::getFileNames(QDir location) {
     }
     return toReturn;
 }
-QFileInfoList Dialog::getFileNamesBar(QDir location, int trial) {
+QFileInfoList Grapher::getFileNamesBar(QDir location, int trial) {
     QFileInfoList toReturn;
     for(QFileInfo file : location.entryInfoList()) {
         if(QRegExp(QString("dss")+QString::number(trial)+QString("_.+")).exactMatch(file.baseName())
@@ -47,7 +47,7 @@ QFileInfoList Dialog::getFileNamesBar(QDir location, int trial) {
     }
     return toReturn;
 }
-QString Dialog::getName(QFileInfo file) {
+QString Grapher::getName(QFileInfo file) {
     QStringList nums;
     nums = file.baseName().split(QRegExp("\\D+"), QString::SkipEmptyParts);
     if(nums.length() > 1) {
@@ -58,17 +58,17 @@ QString Dialog::getName(QFileInfo file) {
         return "Cell";
     }
 }
-Dialog::~Dialog()
+Grapher::~Grapher()
 {
     delete ui;
 }
-void Dialog::buildLineGraphs(QFileInfoList files){
+void Grapher::buildLineGraphs(QFileInfoList files){
     QString xName = "t";
     if(files.isEmpty()) {
         QMessageBox::warning(0,"error", "No Files Found");
-        throw badFile();
+        throw BadFile();
     }
-    QMap<QString, lineGraph*> graphMap;
+    QMap<QString, LineGraph*> graphMap;
     int progressCounter = 0;
     if(files.length() > 10) {
         LoadingProgressDialog* loadingOptions = new LoadingProgressDialog(files, this);
@@ -117,7 +117,7 @@ void Dialog::buildLineGraphs(QFileInfoList files){
                 continue;
             }
             if(!graphMap.contains(split_line[i])) {
-                auto graph = new lineGraph(split_line[xIndex],split_line[i],this->read_location);
+                auto graph = new LineGraph(split_line[xIndex],split_line[i],this->read_location);
                 graphMap.insert(split_line[i],graph);
                 ui->tabWidget->addTab(graph,split_line[i]);
             }
@@ -127,7 +127,7 @@ void Dialog::buildLineGraphs(QFileInfoList files){
     }
     progressDisp->deleteLater();
 }
-void Dialog::buildBarGraphs(int trial) {
+void Grapher::buildBarGraphs(int trial) {
     QFileInfoList fileInfos = this->getFileNamesBar(this->read_location, trial);
     for(auto fileInfo : fileInfos) {
         QFile file(fileInfo.absoluteFilePath());
@@ -145,7 +145,7 @@ void Dialog::buildBarGraphs(int trial) {
         }
     }
 }
-void Dialog::on_loadNew_clicked()
+void Grapher::on_loadNew_clicked()
 {
     QFileDialog getDirOrFile(0,tr("Open File"));
     getDirOrFile.setFileMode(QFileDialog::Directory);
@@ -172,7 +172,7 @@ void Dialog::on_loadNew_clicked()
     }
     try {
         buildLineGraphs(fileInfos);
-    } catch(badFile e) {
+    } catch(BadFile e) {
         QMessageBox::warning(0,tr("Error"),tr("Selected files could not be used"));
     }
 }
