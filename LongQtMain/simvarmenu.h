@@ -23,7 +23,7 @@
 #include <set>
 
 #include "protocol.h"
-#include "gridSettup.h"
+#include "gridsetupwidget.h"
 
 using namespace std;
 

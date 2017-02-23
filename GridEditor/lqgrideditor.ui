@@ -71,7 +71,7 @@
   </action>
   <action name="actionConfigure_Ion_Channels">
    <property name="text">
-    <string>Configure Ion Channels</string>
+    <string>&amp;Configure Ion Channels</string>
    </property>
   </action>
  </widget>
@@ -79,12 +79,12 @@
   <customwidget>
    <class>GridSetupWidget</class>
    <extends>QWidget</extends>
-   <header location="global">gridSettup.h</header>
+   <header location="global">gridsetupwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <includes>
-  <include location="local">gridSettup.h</include>
+  <include location="local">gridsetupwidget.h</include>
  </includes>
  <resources/>
  <connections/>
