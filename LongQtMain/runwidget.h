@@ -18,14 +18,16 @@
 #include "protocol.h"
 
 using namespace std;
-
+namespace Ui {
+class RunWidget;
+}
 //at the moment the progress bar is not terribly helpful this is because in the
 //multithreading done with QtConncurrent there is no good way to report progress
 //from inside one simulation only multiple trials can be displayed
-class runWidget : public QWidget {
+class RunWidget : public QWidget {
 Q_OBJECT
   public:
-    runWidget(Protocol* proto, QDir working_dir, QWidget* parent = 0);
+    RunWidget(Protocol* proto, QDir working_dir, QWidget* parent = 0);
   public slots:
     void setWorkingDir(QDir& dir);
     void setProto(Protocol* proto);
@@ -35,20 +37,20 @@ Q_OBJECT
     void finished();
     void running();
   private slots:
-    void run_sims();
+    void on_runButton_clicked();
     void finish();
   private:
+	Ui::RunWidget *ui;
     QWidget* parent;
     Protocol* proto;
-    QTextEdit* note_box;
+/*    QTextEdit* note_box;
     QLineEdit* note_box_name;
     QPushButton* run_button;
     QPushButton* cancel_button;
-    QProgressBar* pdialog;
+    QProgressBar* pdialog;*/
     QDir working_dir;
     QFutureWatcher<void> watcher;
     QFuture<void> next;
     QVector<Protocol*> vector;
 };
-//need to reset Vector and reenable run_button
 #endif

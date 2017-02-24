@@ -4,7 +4,7 @@
 #include <QRadioButton>
 #include <QGroupBox>
 
-#include "chooseProtoWidget.h"
+#include "chooseprotowidget.h"
 #include "currentClampProtocol.h"
 #include "voltageClampProtocol.h"
 #include "gridProtocol.h"

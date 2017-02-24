@@ -1,4 +1,4 @@
-#include "heart_cell_sim.h"
+#include "heartcellsim.h"
 #include <QApplication>
 #include <QSettings>
 #include <QMessageBox>

@@ -1,18 +1,23 @@
 INCLUDEPATH += $$PWD
 
-SOURCES += $$PWD/chooseProtoWidget.cpp\
-$$PWD/runWidget.cpp\
+SOURCES +=\
 $$PWD/simvarmenu.cpp\
 $$PWD/dvarmenu.cpp\
 $$PWD/mvarmenu.cpp\
 $$PWD/pvarmenu.cpp\
-$$PWD/heart_cell_sim.cpp
+    $$PWD/runwidget.cpp \
+    $$PWD/heartcellsim.cpp \
+    $$PWD/chooseprotowidget.cpp
 
-HEADERS  += $$PWD/heart_cell_sim.h\
-$$PWD/chooseProtoWidget.h\
+HEADERS  +=\
 $$PWD/simvarmenu.h\
 $$PWD/dvarmenu.h\
 $$PWD/mvarmenu.h\
-$$PWD/pvarmenu.h\
-$$PWD/runWidget.h
+$$PWD/pvarmenu.h \
+    $$PWD/runwidget.h \
+    $$PWD/heartcellsim.h \
+    $$PWD/chooseprotowidget.h
+
+FORMS += \
+    $$PWD/runwidget.ui
 
