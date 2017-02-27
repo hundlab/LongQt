@@ -36,7 +36,7 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *paren
     this->parent = parent;
     this->working_dir = working_dir;
     write_close = true;
-    descriptions = GuiUtils().readMap(":/hoverText/parsDescriptions.txt");
+    descriptions = GuiUtils::readMap(":/hoverText/parsDescriptions.txt");
     this->createMenu();
 }
 
@@ -206,7 +206,7 @@ void simvarMenu::update_menu() {
     updaters["int"] = [this] (const map<string, GetSetRef>::iterator it)
          {((QSpinBox*)simvars[it->first.c_str()])->setValue(std::stoi(it->second.get()));};
     updaters["bool"] = [this] (const map<string, GetSetRef>::iterator it)
-         {((QCheckBox*)simvars[it->first.c_str()])->setChecked(Protocol::stob(it->second.get()));};
+         {((QCheckBox*)simvars[it->first.c_str()])->setChecked(CellUtils::stob(it->second.get()));};
     updaters["file"] = [this] (const map<string, GetSetRef>::iterator it) {
         QLineEdit* line = (QLineEdit*)simvars[it->first.c_str()];
         if(line->text() != QString(it->second.get().c_str())) {
@@ -317,7 +317,7 @@ void simvarMenu::update_pvars(pair<string,string> p, string type){
 }
 void simvarMenu::update_pvars(pair<string,int> p, string type) {
     if(type == "bool") {
-        proto->pars[p.first].set(Protocol::to_string(p.second));
+        proto->pars[p.first].set(CellUtils::to_string(p.second));
     } else {
         proto->pars[p.first].set(to_string(p.second));
     }
@@ -330,7 +330,7 @@ void simvarMenu::changeCellType() {
     update_menu(); 
 }
 void simvarMenu::set_default_vals(string name) {
-    auto cellDefaultsList = CellUtils().protocolCellDefaults[name];
+    auto cellDefaultsList = CellUtils::protocolCellDefaults[name];
     for(auto val : cellDefaultsList) {
         try {
             proto->pars.at(val.first).set(val.second);

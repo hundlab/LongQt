@@ -9,7 +9,7 @@ barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidge
 {
     ui->setupUi(this);
     this->saveDir = saveDir;
-    this->unitsMap = GuiUtils().readMap(":/hoverText/dvarsUnits.txt");
+    this->unitsMap = GuiUtils::readMap(":/hoverText/dvarsUnits.txt");
     bar newBar;
     newBar.data.append(value);
     labels.append(name);

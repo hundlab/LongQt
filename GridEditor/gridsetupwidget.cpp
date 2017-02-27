@@ -36,7 +36,7 @@ void GridSetupWidget::createMenu() {
 	this->ui->cellGrid->setModel(this->model);
 	this->ui->cellGrid->setItemDelegate(new GridDelegate);
 	this->ui->cellGrid->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    auto cellMap = CellUtils().cellMap;
+    auto cellMap = CellUtils::cellMap;
     cellMap["Inexcitable Cell"] = [] () {return new Cell;};
     for(auto it : cellMap) {
         ui->chooseType->addItem(it.first.c_str());

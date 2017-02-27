@@ -4,73 +4,52 @@
 #include <QRadioButton>
 #include <QGroupBox>
 
+#include "ui_chooseprotowidget.h"
 #include "chooseprotowidget.h"
 #include "currentClampProtocol.h"
 #include "voltageClampProtocol.h"
 #include "gridProtocol.h"
 
-chooseProtoWidget::chooseProtoWidget(QWidget* parent) {
+ChooseProtoWidget::ChooseProtoWidget(QWidget* parent) : QWidget(parent),
+	ui(new Ui::ChooseProtoWidget)
+{
+	ui->setupUi(this);
     this->parent = parent;
     this->Initialize();
 }
 
-void chooseProtoWidget::Initialize() {
+void ChooseProtoWidget::Initialize() {
     this->proto = new CurrentClamp();
     this->defaultCell = this->proto->cell->type;
+
     QStringList cell_options;
-    cell_type = new QComboBox();
-    QHBoxLayout* cellLayout = new QHBoxLayout();
-    QLabel* simvars_label = new QLabel("Cell Type");
     auto cell_opitons_stl = proto->cellOptions();
     for(auto im = cell_opitons_stl.begin(); im != cell_opitons_stl.end(); im++) {
         cell_options << im->c_str();
     }
-    cell_type->addItems(cell_options);
-    cellLayout->addWidget(simvars_label);
-    cellLayout->addWidget(cell_type);
+    ui->cellType->addItems(cell_options);
     this->cellChangedSlot();
 
     clampType = new QButtonGroup();
-    QGroupBox* clampTypeBox = new QGroupBox("Simulation Protocol Type");
-    auto nextToAdd = new QRadioButton("Current Clamp - Single Cell");
-    nextToAdd->setChecked(true);
-    nextToAdd->setToolTip("Apply current stimulus");
-    clampType->addButton(nextToAdd, 0);
-    nextToAdd = new QRadioButton("Voltage Clamp - Single Cell");
-    nextToAdd->setToolTip("Clamp cell membrane to specified voltage");
-    clampType->addButton(nextToAdd, 1);
-    nextToAdd = new QRadioButton("2D Grid Protocol");
-    nextToAdd->setToolTip("Multicellular simulation");
-    clampType->addButton(nextToAdd, 2);
-    QVBoxLayout* clampLayout = new QVBoxLayout();
-    {    
-    auto list = clampType->buttons();
-    for(auto it = list.begin(); it != list.end(); it++) {
-        clampLayout->addWidget(*it);
-    }
-    }
-    clampTypeBox->setLayout(clampLayout);
+    clampType->addButton(ui->currentClamp, 0);
+    clampType->addButton(ui->voltageClamp, 1);
+    clampType->addButton(ui->grid, 2);
 
-    QVBoxLayout* centralLayout = new QVBoxLayout();
-    centralLayout->addLayout(cellLayout);
-    centralLayout->addWidget(clampTypeBox);
-    this->setLayout(centralLayout);
     connect(clampType, SIGNAL(buttonPressed(int)), this, SLOT(changeProto(int)));
-    connect(cell_type, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeCell(QString)));
 }
-Protocol* chooseProtoWidget::getCurrentProto() {
+Protocol* ChooseProtoWidget::getCurrentProto() {
     return proto;
 }
-void chooseProtoWidget::resetProto() {
+void ChooseProtoWidget::resetProto() {
     this->changeProto(0);
 }
-void chooseProtoWidget::changeProto(int value) {
+void ChooseProtoWidget::changeProto(int value) {
     Cell* old_cell = this->proto->cell->clone();
     string datadir = this->proto->datadir;
     string cellStateDir = this->proto->cellStateDir;
     if(old_cell->type == string("gridCell")) {
-        cell_type->setEnabled(true);
-        cell_type->removeItem(cell_type->count() -1);
+        ui->cellType->setEnabled(true);
+        ui->cellType->removeItem(ui->cellType->count() -1);
     }
     switch(value) {
     case 0:
@@ -83,28 +62,28 @@ void chooseProtoWidget::changeProto(int value) {
     break;
     case 2:
         this->proto = new GridProtocol();
-        cell_type->addItem("gridCell");
-        cell_type->setEnabled(false);
+        ui->cellType->addItem("gridCell");
+        ui->cellType->setEnabled(false);
         emit cell_type_changed();
     break;
     }
 
     if(old_cell->type == string("gridCell")) {
-        changeCell(defaultCell);
+        on_cellType_currentIndexChanged(defaultCell);
     }
     this->proto->datadir = datadir;
     this->proto->cellStateDir = cellStateDir;
     emit protocolChanged(this->proto);
 }
 
-void chooseProtoWidget::changeCell(QString name) {
+void ChooseProtoWidget::on_cellType_currentIndexChanged(QString name) {
     this->proto->pars["celltype"].set(name.toStdString());
     emit cell_type_changed();
 }
 
-void chooseProtoWidget::cellChangedSlot() {
-    int index = cell_type->findText(this->proto->pars["celltype"].get().c_str());
+void ChooseProtoWidget::cellChangedSlot() {
+    int index = ui->cellType->findText(this->proto->pars["celltype"].get().c_str());
     if(index != -1) {
-        cell_type->setCurrentIndex(index);
+        ui->cellType->setCurrentIndex(index);
     }
 }

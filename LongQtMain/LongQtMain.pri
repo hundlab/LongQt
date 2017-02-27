@@ -19,5 +19,6 @@ $$PWD/pvarmenu.h \
     $$PWD/chooseprotowidget.h
 
 FORMS += \
-    $$PWD/runwidget.ui
+    $$PWD/runwidget.ui \
+    $$PWD/chooseprotowidget.ui
 

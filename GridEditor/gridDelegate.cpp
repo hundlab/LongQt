@@ -8,14 +8,14 @@
 #include <QDebug>
 
 GridDelegate::GridDelegate(QWidget *parent) : QStyledItemDelegate(parent), size(30,30) {
-	map<string, CellInitializer> cellMap = CellUtils().cellMap;
+    map<string, CellUtils::CellInitializer> cellMap = CellUtils::cellMap;
 	cellMap["Inexcitable Cell"] = [] () {return new Cell;};	
 	int i = 0;
 	for(auto& pair : cellMap) {
 		QPalette* palette = new QPalette();
-		palette->setColor(QPalette::Base, GuiUtils().genColor(i));
-		palette->setColor(QPalette::Highlight, GuiUtils().genColor(i,80));
-		palette->setColor(QPalette::HighlightedText, GuiUtils().genColor(i,80));
+        palette->setColor(QPalette::Base, GuiUtils::genColor(i));
+        palette->setColor(QPalette::Highlight, GuiUtils::genColor(i,80));
+        palette->setColor(QPalette::HighlightedText, GuiUtils::genColor(i,80));
 
 		this->colors.insert(pair.first.c_str(), *palette);
 		i++;

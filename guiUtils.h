@@ -8,10 +8,9 @@
 #include <QTextStream>
 #include <QFile>
 
-class GuiUtils {
-  public:
-		//used to read in hoverTexts from thier files
-    QMap<QString, QString> readMap(QString fileName) {
+namespace GuiUtils {
+    //used to read in hoverTexts from thier files
+    inline QMap<QString, QString> readMap(QString fileName) {
         QFile* file = new QFile(fileName);
         QMap<QString, QString> map;
         file->open(QIODevice::ReadOnly|QIODevice::Text);
@@ -27,7 +26,7 @@ class GuiUtils {
         return map;
     }
 		//also for hoverTexts (add units &etc)
-    QMap<QString, QString> concatMaps(QMap<QString, QString> m1, QString divider, QMap<QString, QString> m2, QString blankVal = "") {
+    inline QMap<QString, QString> concatMaps(QMap<QString, QString> m1, QString divider, QMap<QString, QString> m2, QString blankVal = "") {
         QMap<QString, QString> returnMap;
         QString blankEnd = "";
         if(blankVal != "") {
@@ -44,8 +43,8 @@ class GuiUtils {
          return returnMap;
     }
 		//used by gridEditor and Grapher to get colors that wont repeat
-    QColor genColor(int num, int saturation = 200) {
+    inline QColor genColor(int num, int saturation = 200) {
         return QColor::fromHsv((num*4*17)%360,saturation,200);
     }
-};
+}
 #endif

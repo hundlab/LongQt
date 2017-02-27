@@ -37,8 +37,10 @@ mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     this->working_dir = working_dir;
     write_close = true;
 
-    this->dvarsDescriptions = GuiUtils().concatMaps(GuiUtils().readMap(":/hoverText/dvarsDescriptions.txt"),", ",GuiUtils().readMap(":/hoverText/dvarsUnits.txt"));
-    this->measDescriptions = GuiUtils().readMap(":/hoverText/measDescriptions.txt");
+    this->dvarsDescriptions = GuiUtils::concatMaps(
+                GuiUtils::readMap(":/hoverText/dvarsDescriptions.txt"),
+                ", ",GuiUtils::readMap(":/hoverText/dvarsUnits.txt"));
+    this->measDescriptions = GuiUtils::readMap(":/hoverText/measDescriptions.txt");
     this->createMenu();
 }
 
@@ -118,31 +120,36 @@ void mvarMenu::createMenu()  {
     connect(removefr_meas_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_meas_list);
     connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
-    connect(percrepol_spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this] (int val) {auto measures = this->proto->Measures;
+    connect(percrepol_spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+        [this] (int val) {
+            auto measures = this->proto->Measures;
 		    for(auto& meas : measures) {
 		    	meas.second.setPercrepol(val);
 		    }
 		    this->proto->setMeasures(measures);
-		    });
+    });
 //make menu match proto
     update_menu(-1);
 }
 mvarMenu::~mvarMenu(){}
 void mvarMenu::update_menu(int row) {
     for(auto it = proto->Measures.begin(); it != proto->Measures.end(); it++) {
-        QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly);
+        QList<QListWidgetItem*> vars_item = vars_view->findItems(it->second.varname.c_str()
+            ,Qt::MatchExactly);
         if(vars_item.empty()) {
             QListWidgetItem* to_add = new QListWidgetItem(it->second.varname.c_str());
             to_add->setToolTip(dvarsDescriptions[it->second.varname.c_str()]);
             vars_view->addItem(to_add);
-            row = vars_view->row(vars_view->findItems(it->second.varname.c_str(),Qt::MatchExactly).first());
+            row = vars_view->row(vars_view->findItems(it->second.varname.c_str(),
+             Qt::MatchExactly).first());
         }
     }
 
     meas_view->clear();
     vars_view->setCurrentRow(row);
     if(vars_view->currentRow() >= 0) {
-        auto selection = proto->Measures.at(vars_view->currentItem()->text().toStdString()).Selection;
+        auto selection = proto->Measures.at(vars_view->currentItem()->text().toStdString())
+                .Selection;
         for(auto it = selection.begin(); it != selection.end(); it++){
             QList<QListWidgetItem*> meas_item = meas_view->findItems(it->c_str(),Qt::MatchExactly);
             if(meas_item.empty()) {
@@ -178,7 +185,8 @@ void mvarMenu::closeEvent(QCloseEvent* event){
 void mvarMenu::write_file () {
     if(write_close) {
         working_dir.mkpath(working_dir.absolutePath());
-        proto->writeMVarsFile(working_dir.absolutePath().toStdString() + string("/") + proto->measfile);
+        proto->writeMVarsFile(working_dir.absolutePath().toStdString() + string("/") +
+                              proto->measfile);
     }
 }
 void mvarMenu::setWorkingDir(QDir& dir) {
@@ -186,10 +194,12 @@ void mvarMenu::setWorkingDir(QDir& dir) {
 }
 bool mvarMenu::read_mvars(){
     bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this,"Measurement Settings",working_dir.absolutePath());
+    QString fileName = QFileDialog::getOpenFileName(this,"Measurement Settings",
+                                                    working_dir.absolutePath());
     if (!fileName.isEmpty()){
         ret = proto->readMvarsFile(fileName.toStdString());
-//        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));//create measure from mvarfile
+//        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));
+        //create measure from mvarfile
    }
     update_menu(-1);
     return ret;
@@ -241,7 +251,8 @@ void mvarMenu::removefr_meas_list(){
 
     meas_view->setCurrentRow(meas_row -1);
     if(var_row != -1) {
-        proto->removeFromMeasureSelection(vars_view->currentItem()->text().toStdString(), taken_meas->text().toStdString());
+        proto->removeFromMeasureSelection(vars_view->currentItem()->text().toStdString(),
+                                          taken_meas->text().toStdString());
         update_menu(vars_view->currentRow());
     }
 };
@@ -272,7 +283,9 @@ void mvarMenu::checkMeasOpts(const QString& value) {
     this->addto_meas_options->clear();
     if(fullList) {
         int i =0;
-        for(set<string>::iterator set_it = this->measure_options.begin(); set_it != this->measure_options.end(); set_it++) {
+        for(set<string>::iterator set_it = this->measure_options.begin();
+            set_it != this->measure_options.end(); set_it++) {
+
             addto_meas_options->addItem(set_it->c_str());
             addto_meas_options->setItemData(i,measDescriptions[set_it->c_str()],Qt::ToolTipRole);
             i++;

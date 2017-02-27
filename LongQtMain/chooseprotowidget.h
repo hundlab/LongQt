@@ -14,24 +14,29 @@
 
 using namespace std;
 
-class chooseProtoWidget : public QWidget {
+namespace Ui {
+class ChooseProtoWidget;
+}
+
+class ChooseProtoWidget : public QWidget {
 Q_OBJECT
   public:
-    chooseProtoWidget(QWidget* parent = 0);
+    ChooseProtoWidget(QWidget* parent = 0);
     Protocol* getCurrentProto();
     void Initialize();
   signals:
     void protocolChanged(Protocol*);
     void cell_type_changed();
   private:
+	Ui::ChooseProtoWidget* ui;
     Protocol* proto;
     QWidget* parent;
     QButtonGroup* clampType;
-    QComboBox* cell_type;
+//    QComboBox* ui::cellType;
     QString defaultCell;
   private slots:
     void changeProto(int value);
-    void changeCell(QString name);
+    void on_cellType_currentIndexChanged(QString name);
   public slots:
     void cellChangedSlot();
     void resetProto();

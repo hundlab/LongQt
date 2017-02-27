@@ -41,7 +41,7 @@ pvarMenu::pvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  
     pvals_options[1] << "lognormal" << "normal";
     pvals_options[2] << "logdistribution" << "logmean";
 
-    this->pvarsDescriptions = GuiUtils().readMap(":/hoverText/pvarsDescriptions.txt");
+    this->pvarsDescriptions = GuiUtils::readMap(":/hoverText/pvarsDescriptions.txt");
 
     this->createMenu();
 }

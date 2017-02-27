@@ -10,7 +10,7 @@ GridModel::GridModel(GridProtocol* proto, QObject* parent) : QAbstractTableModel
 		this->proto = new GridProtocol();
 	}
 	this->grid = ((GridCell*)proto->cell)->getGrid();
-	cellMap = CellUtils().cellMap;
+    cellMap = CellUtils::cellMap;
 	cellMap["Inexcitable Cell"] = [] () {return new Cell;};
 
 }

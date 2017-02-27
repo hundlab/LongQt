@@ -44,7 +44,7 @@ Simulation::Simulation(QWidget* parent){
 	about_button = new QPushButton(QIcon::fromTheme("help-about"),"About");
 	next_button = new QPushButton("Next");
 	cancel_button = new QPushButton("Cancel");
-	chooseProtoWidget* choose = new chooseProtoWidget(this);
+	ChooseProtoWidget* choose = new ChooseProtoWidget(this);
 	this->proto = choose->getCurrentProto();
 	proto->datadir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time).toStdString();
 	proto->cellStateDir = proto->datadir;

@@ -35,6 +35,6 @@ class GridModel : public QAbstractTableModel {
 	private:
 		GridProtocol* proto;
 		Grid* grid;
-		map<string, CellInitializer> cellMap;
+        map<string, CellUtils::CellInitializer> cellMap;
 };
 #endif
