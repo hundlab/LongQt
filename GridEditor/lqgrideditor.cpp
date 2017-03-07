@@ -1,5 +1,6 @@
 #include "lqgrideditor.h"
 #include "ui_lqgrideditor.h"
+#include "simvarmenu.h"
 
 #include <QStatusBar>
 #include <QFileDialog>
@@ -68,4 +69,13 @@ void LQGridEditor::on_actionConfigure_Ion_Channels_triggered() {
 		this->ionConfig->show();
 		this->ionConfig->raise();
 	}
+}
+
+void LQGridEditor::on_actionToggle_Second_Stim_triggered() {
+    this->proto->toggleStim2();
+}
+
+void LQGridEditor::on_actionSet_Sim_Parameters_triggered() {
+    simvarMenu* menu = new simvarMenu(this->proto,QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
+    menu->show();
 }

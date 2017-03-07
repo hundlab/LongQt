@@ -39,6 +39,8 @@
     <addaction name="separator"/>
     <addaction name="actionSet_Conductivities"/>
     <addaction name="actionConfigure_Ion_Channels"/>
+    <addaction name="actionToggle_Second_Stim"/>
+    <addaction name="actionSet_Sim_Parameters"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -72,6 +74,16 @@
   <action name="actionConfigure_Ion_Channels">
    <property name="text">
     <string>&amp;Configure Ion Channels</string>
+   </property>
+  </action>
+  <action name="actionToggle_Second_Stim">
+   <property name="text">
+    <string>Toggle Second Stim</string>
+   </property>
+  </action>
+  <action name="actionSet_Sim_Parameters">
+   <property name="text">
+    <string>Set Sim Parameters</string>
    </property>
   </action>
  </widget>

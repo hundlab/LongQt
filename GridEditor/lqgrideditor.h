@@ -36,6 +36,8 @@ private slots:
 	void on_actionSave_As_triggered();
 	void on_actionSet_Conductivities_triggered();
 	void on_actionConfigure_Ion_Channels_triggered();
+    void on_actionToggle_Second_Stim_triggered();
+    void on_actionSet_Sim_Parameters_triggered();
 };
 
 #endif // LQGRIDEDITOR_H
