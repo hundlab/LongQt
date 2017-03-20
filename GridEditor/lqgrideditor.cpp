@@ -72,7 +72,8 @@ void LQGridEditor::on_actionConfigure_Ion_Channels_triggered() {
 }
 
 void LQGridEditor::on_actionToggle_Second_Stim_triggered() {
-    this->proto->toggleStim2();
+    this->proto->pars["secondStim"].set(CellUtils::to_string(
+				!CellUtils::stob(this->proto->pars["secondStim"].get())));
 }
 
 void LQGridEditor::on_actionSet_Sim_Parameters_triggered() {
