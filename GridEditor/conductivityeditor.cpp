@@ -1,5 +1,6 @@
 #include "conductivityeditor.h"
 #include "ui_conductivityeditor.h"
+/*
 ConductivityEditor::Edge ConductivityEditor::Edge::minimize(const Edge e) const {
 	Edge n = e;
 	switch(e.p) {
@@ -62,7 +63,7 @@ bool ConductivityEditor::Edge::operator ==(Edge e) const {
 	}
 	return false;
 }
-
+*/
 ConductivityEditor::ConductivityEditor(QTableView* view, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ConductivityEditor)
@@ -85,7 +86,7 @@ void ConductivityEditor::setConductivities(double startVal, double incAmount, in
 	this->getInitial(); 
 	int i = 0;
 	while(current.size() > 0 && i <= maxDist) {
-		for(const Edge& e: this->current) {
+		for(const pair<int,int>& e: this->current) {
 			//val is not correct
 			double val = startVal+incAmount*i;
 			if(val < maxVal) {
@@ -105,70 +106,49 @@ void ConductivityEditor::setConductivities(double startVal, double incAmount, in
 void ConductivityEditor::getInitial() {
 	auto selected = this->view->selectionModel()->selectedIndexes();
 	for(auto toAdd : selected) {
-		this->add({toAdd.column(),toAdd.row(),top},this->current);
-		this->add({toAdd.column(),toAdd.row(),right},this->current);
-		this->add({toAdd.column(),toAdd.row(),bottom},this->current);
-		this->add({toAdd.column(),toAdd.row(),left},this->current);
+		this->add({toAdd.column(),toAdd.row()},this->current);
 	}
 }
 
 
 void ConductivityEditor::getNext() {
-	set<Edge> next;
-	for(const Edge& e: this->current) {
-		switch(e.p) {
-			case top:
-				this->add({e.x,e.y+1,left}, next);
-				this->add({e.x,e.y+1,right}, next);
-				this->add({e.x,e.y,left}, next);
-				this->add({e.x,e.y,right}, next);
-				this->add({e.x+1,e.y,top}, next);
-				this->add({e.x-1,e.y,top}, next);
-				break;
-			case bottom:
-				this->add({e.x,e.y-1,left}, next);
-				this->add({e.x,e.y-1,right}, next);
-				this->add({e.x,e.y,left}, next);
-				this->add({e.x,e.y,right}, next);
-				this->add({e.x+1,e.y,bottom}, next);
-				this->add({e.x-1,e.y,bottom}, next);
-				break;
-			case right:
-				this->add({e.x+1,e.y,top}, next);
-				this->add({e.x+1,e.y,bottom}, next);
-				this->add({e.x,e.y,top}, next);
-				this->add({e.x,e.y,bottom}, next);
-				this->add({e.x,e.y-1,right}, next);
-				this->add({e.x,e.y+1,right}, next);
-				break;
-			case left:
-				this->add({e.x-1,e.y,top}, next);
-				this->add({e.x-1,e.y,bottom}, next);
-				this->add({e.x,e.y,top}, next);
-				this->add({e.x,e.y,bottom}, next);
-				this->add({e.x,e.y-1,left}, next);
-				this->add({e.x,e.y+1,left}, next);
-				break;
-		}
+	set<pair<int,int>> next;
+	for(const pair<int,int>& e: this->current) {
+		this->add({e.first,e.second+1}, next);
+		this->add({e.first,e.second-1}, next);
+		this->add({e.first+1,e.second}, next);
+		this->add({e.first-1,e.second}, next);
 	}
 	this->current = next;
 }
 //need to check for duplicates
-void ConductivityEditor::add(Edge e, set<Edge>& next) {
+void ConductivityEditor::add(pair<int,int> e, set<pair<int,int>>& next) {
 	//check for out of bounds
-	if(e.y<0||e.x<0||e.y>=this->model->rowCount()||e.x>=this->model->columnCount()) {
+	if(e.second<0||e.first<0||e.second>=this->model->rowCount()||e.first>=this->model->columnCount()) {
 		return;
 	}
 	if(this->visited.count(e) == 0) {
 		next.insert(e);
 	}
-
 }
 
-void ConductivityEditor::setConductivity(Edge e, double val) {
+void ConductivityEditor::setConductivity(pair<int,int> e, double val) {
+	for(int i = 0; i < 4; i++) {
 	//check for edge cases
-	if((e.y==0&&e.p==top)||(e.y==this->model->rowCount()-1&&e.p==bottom)||(e.x==0&&e.p==left)||(e.x==this->model->columnCount()-1&&e.p==right)) {
-		return;
+		if((e.second==0&&i==Pos::top)||
+				(e.second==this->model->rowCount()-1&&i==Pos::bottom)||
+				(e.first==0&&i==Pos::left)||
+				(e.first==this->model->columnCount()-1&&i==Pos::right)) {
+			continue;
+		}
+		//check for overlaping edges
+		if((current.count(make_pair(e.first -1, e.second)) == 1 && i == Pos::left) ||
+				(current.count(make_pair(e.first +1, e.second)) == 1 && i == Pos::right) ||
+				(current.count(make_pair(e.first, e.second -1)) == 1 && i == Pos::bottom) ||
+				(current.count(make_pair(e.first, e.second +1)) == 1 && i == Pos::top)) 
+		{
+			continue;
+		}
+		this->model->setData(this->model->index(e.second,e.first,QModelIndex()).child(1,i),val);
 	}
-	this->model->setData(this->model->index(e.y,e.x,QModelIndex()).child(1,e.p),val);
 }
