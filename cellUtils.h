@@ -14,6 +14,7 @@
 #include "gpbatrialSE.h"
 #include "atrial.h"
 #include "br04.h"
+#include "FR.h"
 
 #include <map>
 #include <list>
@@ -32,6 +33,7 @@ class cellUtils {
         cellMap[HRD09Control().type] = [] () {return (Cell*) new HRD09Control;};
         cellMap[HRD09BorderZone().type] = [] () {return (Cell*) new HRD09BorderZone;};
         cellMap[TNNP04Control().type] = [] () {return (Cell*) new TNNP04Control;};
+        cellMap[FR().type] = [] () {return (Cell*) new FR;};
 //        cellMap[GpbVent().type] = [] () {return (Cell*) new GpbVent;};
 //        cellMap[Br04().type] = [] () {return (Cell*) new Br04;};
 //        cellMap[Ksan().type] = [] () {return (Cell*) new Ksan;};
@@ -49,6 +51,7 @@ class cellUtils {
         protocolCellDefaults[gridCell().type] = {{"paceflag","true"},{"stimval","-12.5"},{"stimdur","5"},{"tMax","500000"},{"writetime","495000"},{"bcl","1000"},{"numstims","500"}};
         protocolCellDefaults[HRD09BorderZone().type] = {{"paceflag","true"},{"stimval","-80"},{"stimdur","0.5"},{"tMax","500000"},{"writetime","495000"},{"bcl","1000"},{"numstims","500"}};
         protocolCellDefaults[TNNP04Control().type] = {{"paceflag","true"},{"stimval","-60"},{"stimdur","1"},{"tMax","500000"},{"writetime","495000"},{"bcl","1000"},{"numstims","500"}};
+        protocolCellDefaults[FR().type] = {{"paceflag","true"},{"stimval","-80"},{"stimdur","10"},{"tMax","500000"},{"writetime","495000"},{"bcl","1000"},{"numstims","500"}};
 
  
    }
