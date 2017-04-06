@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -68,7 +68,7 @@
   </action>
   <action name="actionSet_Conductivities">
    <property name="text">
-    <string>&amp;Set Conductivities</string>
+    <string>&amp;Conductivities</string>
    </property>
   </action>
   <action name="actionConfigure_Ion_Channels">
@@ -83,7 +83,7 @@
   </action>
   <action name="actionSet_Sim_Parameters">
    <property name="text">
-    <string>Set Sim Parameters</string>
+    <string>Sim Parameters</string>
    </property>
   </action>
  </widget>
