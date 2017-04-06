@@ -73,7 +73,7 @@
   </action>
   <action name="actionConfigure_Ion_Channels">
    <property name="text">
-    <string>&amp;Configure Ion Channels</string>
+    <string>&amp;Ion Channels</string>
    </property>
   </action>
   <action name="actionToggle_Second_Stim">
