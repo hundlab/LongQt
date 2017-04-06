@@ -1,10 +1,10 @@
-#include "runWidget.h"
+#include "runwidget.h"
 #include "ui_runwidget.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QtConcurrent>
 
-runWidget::runWidget(Protocol* proto, QDir working_dir, QWidget* parent) : 
+RunWidget::RunWidget(Protocol* proto, QDir working_dir, QWidget* parent) :
 	QWidget(parent),
 	ui(new Ui::RunWidget)
 {
@@ -12,15 +12,31 @@ runWidget::runWidget(Protocol* proto, QDir working_dir, QWidget* parent) :
 	this->parent = parent;
 	this->proto = proto;
 	this->working_dir = working_dir;
+	/*       QGridLayout* run_button_container_layout = new QGridLayout();
+			 run_button = new QPushButton("Run Simulations");
+			 pdialog = new QProgressBar();
+			 note_box = new QTextEdit;
+			 note_box->setAcceptRichText(false);
+			 note_box_name = new QLineEdit("notes");
+			 run_button_container_layout->addWidget(new QLabel("Notes on the simulation will be stored in the simulation folder upon running the simulation"), 0,0,1,2);
+			 run_button_container_layout->addWidget(new QLabel("Filename"), 1,0,1,1);
+			 run_button_container_layout->addWidget(note_box_name, 1,1,1,1);
+			 run_button_container_layout->addWidget(note_box,2,0,1,2);
+			 run_button_container_layout->addWidget(run_button, 3,0,1,2);
+			 run_button_container_layout->addWidget(new QLabel("Progress"), 4,0);
+			 run_button_container_layout->addWidget(pdialog, 4,1);
+			 this->setLayout(run_button_container_layout);
+			 */
 	connect(&watcher,SIGNAL(finished()),this,SLOT(finish()));
 	connect(&watcher,SIGNAL(finished()),ui->progressBar,SLOT(reset()));
 	connect(&watcher,SIGNAL(progressRangeChanged(int,int)),ui->progressBar,SLOT(setRange(int,int)));
 	connect(&watcher,SIGNAL(progressValueChanged(int)),ui->progressBar,SLOT(setValue(int)));
+	//        connect(run_button, SIGNAL(clicked()),this,SLOT(run_sims()));
 }
-void runWidget::setProto(Protocol* proto) {
+void RunWidget::setProto(Protocol* proto) {
 	this->proto = proto;
 }
-void runWidget::on_runButton_clicked() {
+void RunWidget::on_runButton_clicked() {
 	int i = 0;
 	ui->runButton->setEnabled(false);
 	working_dir.mkpath(working_dir.absolutePath());
@@ -54,15 +70,15 @@ void runWidget::on_runButton_clicked() {
 	watcher.setFuture(next);
 	emit running();
 }
-void runWidget::setWorkingDir(QDir& dir) {
+void RunWidget::setWorkingDir(QDir& dir) {
 	working_dir = dir;
 }
-void runWidget::cancel() {
+void RunWidget::cancel() {
 	watcher.cancel();
 	ui->runButton->setEnabled(true);
 	emit canceled();
 }
-void runWidget::finish() {
+void RunWidget::finish() {
 	ui->runButton->setEnabled(true);
 	emit finished();
 }
