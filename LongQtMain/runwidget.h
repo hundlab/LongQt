@@ -24,10 +24,10 @@ class RunWidget;
 //at the moment the progress bar is not terribly helpful this is because in the
 //multithreading done with QtConncurrent there is no good way to report progress
 //from inside one simulation only multiple trials can be displayed
-class RunWidget : public QWidget {
+class runWidget : public QWidget {
 Q_OBJECT
   public:
-    RunWidget(Protocol* proto, QDir working_dir, QWidget* parent = 0);
+    runWidget(Protocol* proto, QDir working_dir, QWidget* parent = 0);
   public slots:
     void setWorkingDir(QDir& dir);
     void setProto(Protocol* proto);
@@ -43,11 +43,6 @@ Q_OBJECT
 	Ui::RunWidget *ui;
     QWidget* parent;
     Protocol* proto;
-/*    QTextEdit* note_box;
-    QLineEdit* note_box_name;
-    QPushButton* run_button;
-    QPushButton* cancel_button;
-    QProgressBar* pdialog;*/
     QDir working_dir;
     QFutureWatcher<void> watcher;
     QFuture<void> next;
