@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = LongQtGrapher
 TEMPLATE = app
 
-QMAKE_MAC_SDK = macosx10.11
+QMAKE_MAC_SDK = macosx10.12
 
 CONFIG += c++11
 
