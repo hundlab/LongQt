@@ -1,5 +1,6 @@
 #include "conductivityeditor.h"
 #include "ui_conductivityeditor.h"
+#include "side.h"
 /*
 ConductivityEditor::Edge ConductivityEditor::Edge::minimize(const Edge e) const {
 	Edge n = e;
@@ -79,8 +80,8 @@ ConductivityEditor::~ConductivityEditor()
 }
 void ConductivityEditor::on_applyButton_clicked()
 {
+	this->model->setPercent(ui->percValuesCheckBox->isChecked());
 	this->setConductivities(ui->startingValueDoubleSpinBox->value(), ui->incrementAmountDoubleSpinBox->value(), ui->distanceSpinBox->value(), ui->valueMaximumDoubleSpinBox->value());
-
 }
 void ConductivityEditor::setConductivities(double startVal, double incAmount, int maxDist, double maxVal) {
 	this->getInitial(); 
@@ -135,17 +136,25 @@ void ConductivityEditor::add(pair<int,int> e, set<pair<int,int>>& next) {
 void ConductivityEditor::setConductivity(pair<int,int> e, double val) {
 	for(int i = 0; i < 4; i++) {
 	//check for edge cases
-		if((e.second==0&&i==Pos::top)||
-				(e.second==this->model->rowCount()-1&&i==Pos::bottom)||
-				(e.first==0&&i==Pos::left)||
-				(e.first==this->model->columnCount()-1&&i==Pos::right)) {
+		if((e.second==0&&i==CellUtils::top)||
+				(e.second==this->model->rowCount()-1&&i==CellUtils::bottom)||
+				(e.first==0&&i==CellUtils::left)||
+				(e.first==this->model->columnCount()-1&&i==CellUtils::right)) {
 			continue;
 		}
-		//check for overlaping edges
-		if((current.count(make_pair(e.first -1, e.second)) == 1 && i == Pos::left) ||
-				(current.count(make_pair(e.first +1, e.second)) == 1 && i == Pos::right) ||
-				(current.count(make_pair(e.first, e.second -1)) == 1 && i == Pos::bottom) ||
-				(current.count(make_pair(e.first, e.second +1)) == 1 && i == Pos::top)) 
+		//check for overlaping edges in current
+		if((current.count(make_pair(e.first -1, e.second)) == 1 && i == CellUtils::left) ||
+				(current.count(make_pair(e.first +1, e.second)) == 1 && i == CellUtils::right) ||
+				(current.count(make_pair(e.first, e.second +1)) == 1 && i == CellUtils::bottom) ||
+				(current.count(make_pair(e.first, e.second -1)) == 1 && i == CellUtils::top)) 
+		{
+			continue;
+		}
+		//check for overlaping edges in visited
+		if((visited.count(make_pair(e.first -1, e.second)) == 1 && i == CellUtils::left) ||
+				(visited.count(make_pair(e.first +1, e.second)) == 1 && i == CellUtils::right) ||
+				(visited.count(make_pair(e.first, e.second +1)) == 1 && i == CellUtils::bottom) ||
+				(visited.count(make_pair(e.first, e.second -1)) == 1 && i == CellUtils::top)) 
 		{
 			continue;
 		}

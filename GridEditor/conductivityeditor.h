@@ -17,12 +17,12 @@ class ConductivityEditor : public QWidget
     Q_OBJECT
 
 	//position of the edge
-	enum Pos {
+/*	enum Pos {
 		top = 0,
 		right = 1,
 		bottom = 2,
 		left = 3
-	};
+	};*/
 	//an edge to a cell
 /*	struct Edge {
 		int x;

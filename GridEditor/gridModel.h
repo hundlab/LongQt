@@ -30,11 +30,15 @@ class GridModel : public QAbstractTableModel {
 		QModelIndex parent(const QModelIndex & index) const;
 		void reloadModel();
 		void clear();
+		bool getPercent();
+		void setPercent(bool percent);
+
 	signals:
    		void cell_type_changed();
 	private:
 		GridProtocol* proto;
 		Grid* grid;
         map<string, CellUtils::CellInitializer> cellMap;
+		bool percent = false;
 };
 #endif

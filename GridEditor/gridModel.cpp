@@ -1,4 +1,5 @@
 #include "gridModel.h"
+#include "side.h"
 #include <QDebug>
 
 using namespace std;
@@ -66,10 +67,10 @@ QVariant GridModel::dataDisplay(const QModelIndex & index) const {
 					return grid->fiber.at(p.first).B.at(p.second+1);
 					break;
 				case 2: //bottom
-					return grid->fibery.at(p.second).B.at(p.first+1);
+					return  grid->fibery.at(p.second).B.at(p.first+1);
 					break;
 				case 3: //left
-					return grid->fiber.at(p.first).B.at(p.second);
+					return  grid->fiber.at(p.first).B.at(p.second);
 					break;
 			}
 		}
@@ -83,10 +84,10 @@ QVariant GridModel::dataStatusTip(const QModelIndex & index) const {
 	pair<int,int> p = make_pair(index.row(), index.column());
 
 	QString statusTip = "";
-	statusTip += "Top: "+QString::number(grid->fibery.at(p.second).B.at(p.first))+" ";
-	statusTip += "Right: "+QString::number(grid->fiber.at(p.first).B.at(p.second+1))+" ";
-	statusTip += "Bottom: "+QString::number(grid->fibery.at(p.second).B.at(p.first+1))+" ";
-	statusTip += "Left: "+QString::number(grid->fiber.at(p.first).B.at(p.second))+" ";
+	statusTip += "Top: "+QString::number(index.child(1,0).data().toDouble())+" ";
+	statusTip += "Right: "+QString::number(index.child(1,1).data().toDouble())+" ";
+	statusTip += "Bottom: "+QString::number(index.child(1,2).data().toDouble())+" ";
+	statusTip += "Left: "+QString::number(index.child(1,3).data().toDouble())+" ";
 
 	return statusTip;
 }
@@ -135,23 +136,24 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int r
 				success = true;
 			}
 		} else if(index.row() == 1) {
-			switch(index.column()) {
-				case 0: //top
-					grid->fibery.at(p.second).B.at(p.first) = value.toDouble();
-					success = true;
-					break;
-				case 1: //right
-					grid->fiber.at(p.first).B.at(p.second+1) = value.toDouble();
-					success = true;
-					break;
-				case 2: //bottom
-					grid->fibery.at(p.second).B.at(p.first+1) = value.toDouble();
-					success = true;
-					break;
-				case 3: //left
-					grid->fiber.at(p.first).B.at(p.second) = value.toDouble();
-					success = true;
-					break;
+			CellInfo u;
+			u.X = index.parent().row();
+			u.Y = index.parent().column();
+			u.dx = *proto->cell->pars["dx"];
+			u.dy = *proto->cell->pars["dy"];
+			u.np = *proto->cell->pars["np"];
+			//this works because column is setup follow side.h:Side
+			double val = value.toDouble();
+			if(this->percent) {
+				val /= 100;
+			}
+			u.c[index.column()] = val;
+			u.c_perc = this->percent;
+			try {
+				grid->setCellTypes(u);
+				success = true;
+			} catch(std::out_of_range) {
+				success = false;
 			}
 		}
 		if(success) {
@@ -240,4 +242,12 @@ void GridModel::clear() {
 	this->grid->reset();
 	this->beginResetModel();
 	this->endResetModel();
+}
+
+bool GridModel::getPercent() {
+	return this->percent;
+}
+
+void GridModel::setPercent(bool percent) {
+	this->percent = percent;
 }
