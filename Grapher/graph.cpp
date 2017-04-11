@@ -82,6 +82,7 @@ void Grapher::buildLineGraphs(QFileInfoList files){
     progressDisp->show();
     for(QFileInfo fileInfo : files) {
         progressDisp->setValue(progressCounter);
+        QCoreApplication::processEvents();
         if(progressDisp->wasCanceled()) {
             break;
         }
