@@ -45,6 +45,8 @@ private slots:
 	void on_multiple_stateChanged(int state);
 	void on_normalDist_toggled(bool checked);
 	void on_addButton_clicked();
+    void on_actionDelete_triggered();
+    void on_actionShow_Cells_triggered();
 };
 
 #endif // IONCHANNELCONFIG_H

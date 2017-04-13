@@ -1,4 +1,5 @@
 #include <QStringList>
+#include <QMessageBox>
 
 #include "ionchannelconfig.h"
 #include "ui_ionchannelconfig.h"
@@ -13,8 +14,10 @@ IonChannelConfig::IonChannelConfig(QTableView* view, GridProtocol* proto, QWidge
 	this->proto = proto;
 	this->cellChanged();
 	this->updateList();
-	ui->maxDist->setValue(0);
-	ui->maxVal->setValue(1000);
+//	ui->maxDist->setValue(0);
+//	ui->maxVal->setValue(1000);
+    ui->listWidget->addAction(ui->actionDelete);
+    ui->listWidget->addAction(ui->actionShow_Cells);
 	connect(this->model, &GridModel::cell_type_changed, this, &IonChannelConfig::cellChanged);
 }
 
@@ -182,3 +185,29 @@ void IonChannelConfig::add(pair<int,int> e, set<pair<int,int>>& next) {
 
 }
 
+void IonChannelConfig::on_actionDelete_triggered() {
+    QList<QListWidgetItem *> items = ui->listWidget->selectedItems();
+    for(auto item: items) {
+        QString name = item->data(Qt::DisplayRole).toString().split("\t")[0];
+        this->proto->new_pvars.erase(name.toStdString());
+        int row = ui->listWidget->row(item);
+        ui->listWidget->takeItem(row);
+        delete item;
+    }
+}
+void IonChannelConfig::on_actionShow_Cells_triggered() {
+    QList<QListWidgetItem *> items = ui->listWidget->selectedItems();
+    QString text = "(X <column>, Y <row>)\n";
+    for(auto item: items) {
+        QString name = item->data(Qt::DisplayRole).toString().split("\t")[0];
+        text += name+"\n";
+        GridProtocol::MIonChanParam param = this->proto->new_pvars[name.toStdString()];
+        for(auto& cell: param.cells) {
+            text += "(" + QString::number(cell.first.first) +","+
+                    QString::number(cell.first.second) +") = "+QString::number(cell.second)+"\n";
+        }
+    }
+    QMessageBox msgBox;
+    msgBox.setText(text);
+    msgBox.exec();
+}

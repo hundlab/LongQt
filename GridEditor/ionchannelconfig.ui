@@ -215,9 +215,23 @@
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="listWidget"/>
+    <widget class="QListWidget" name="listWidget">
+     <property name="contextMenuPolicy">
+      <enum>Qt::ActionsContextMenu</enum>
+     </property>
+    </widget>
    </item>
   </layout>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionShow_Cells">
+   <property name="text">
+    <string>Show Cells</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
