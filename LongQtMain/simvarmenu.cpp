@@ -317,8 +317,10 @@ void simvarMenu::update_pvars(pair<string,string> p, string type){
 }
 void simvarMenu::update_pvars(pair<string,int> p, string type) {
     if(type == "bool") {
+		bool changed = !(((bool)p.second) == 
+				CellUtils::stob(proto->pars[p.first].get()));
         proto->pars[p.first].set(CellUtils::to_string(p.second));
-		if(p.first == "secondStim") {
+		if(p.first == "secondStim" && changed) {
 			this->reset();
 		}
     } else {
