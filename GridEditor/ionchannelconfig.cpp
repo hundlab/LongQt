@@ -99,6 +99,8 @@ void IonChannelConfig::on_normalDist_toggled(bool checked) {
 
 void IonChannelConfig::on_addButton_clicked()
 {
+	int maxDist = 0;
+	double maxVal = 100;
 	string type = ui->ionChannelType->currentText().toStdString();
 	GridProtocol::MIonChanParam toAdd;
 	if(ui->randomize->checkState() == 0) {
@@ -114,7 +116,11 @@ void IonChannelConfig::on_addButton_clicked()
 			toAdd.dist = GridProtocol::Distribution::lognormal;
 		}
 	}
-	this->setIonChannels(ui->maxDist->value(), ui->maxVal->value(), toAdd);
+	if(ui->multiple->isChecked()) {
+		maxDist = ui->maxDist->value();
+		maxVal = ui->maxVal->value();
+	}
+	this->setIonChannels(maxDist, maxVal, toAdd);
 	if(toAdd.cells.size() > 0) {
 		this->proto->new_pvars[type] = toAdd;
 	}
