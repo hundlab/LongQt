@@ -271,7 +271,9 @@ bool simvarMenu::read_simvars(){
         ret = !(bool)proto->readpars(fileName.toStdString());
 		try {
 			if(proto->pars.at("writeCellState").get() == "true") {
-				proto->pars.at("cellStateFile").set(fileName.toStdString());
+				QDir fileDir(fileName);
+				fileDir.cdUp();
+				proto->pars.at("cellStateDir").set(fileDir.path().toStdString());
 				proto->pars.at("readCellState").set("true");
 				proto->pars.at("writeCellState").set("false");
 			}
