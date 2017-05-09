@@ -196,7 +196,9 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
 
     try {
         initializers[it->second.type.c_str()](it);
-    } catch(std::bad_function_call e){}
+    } catch(std::bad_function_call e){
+        qDebug("SimvarMenu: %s not a valid initializer type",it->second.type.c_str());
+    }
 }
 simvarMenu::~simvarMenu(){}
 void simvarMenu::update_menu() {
@@ -236,7 +238,9 @@ void simvarMenu::update_menu() {
     for(auto it = proto->pars.begin(); it != proto->pars.end(); it++){
         try {
             updaters[it->second.type.c_str()](it);
-        } catch(std::bad_function_call e){}
+        } catch(std::bad_function_call){
+            qDebug("SimvarMenu: %s not a valid updater type",it->second.type.c_str());
+        }
     }
     emit updated();
 }
@@ -277,7 +281,8 @@ bool simvarMenu::read_simvars(){
 				proto->pars.at("readCellState").set("true");
 				proto->pars.at("writeCellState").set("false");
 			}
-		} catch (const std::out_of_range&) {
+        } catch(const std::out_of_range& e) {
+            qDebug("SimvarMenu: par not in proto: %s", e);
 		}
     }
     proto->datadir = working_dir.absolutePath().toStdString();
@@ -342,6 +347,8 @@ void simvarMenu::set_default_vals(string name) {
         try {
             proto->pars.at(val.first).set(val.second);
         } catch(bad_function_call) {
-        } catch(out_of_range) {};
+        } catch(out_of_range) {
+            qDebug("SimvarMenu: %s not in proto pars", val.first.c_str());
+        };
     }
 }

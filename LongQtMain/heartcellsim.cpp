@@ -189,7 +189,7 @@ void Simulation::finished() {
 		menu->addWidget(menu_list.last());
 		menu_options->addItem("Graph " + QFileInfo(proto->datadir.c_str()).baseName());
 	} catch(BadFile& e) {
-		cerr << e.what() << ": " << "data files not readable" << endl;
+        qCritical() << e.what() << ": " << "data files not readable";
 	}
 	date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
 	QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);

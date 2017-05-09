@@ -114,7 +114,8 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int r
 			this->grid->setCellTypes(*info);
 			emit cell_type_changed();
 			emit dataChanged(index, index);
-		} catch(const std::out_of_range&) {
+        } catch(const std::out_of_range&) {
+            qWarning("%s not a valid cell type or (%i,%i) out of range", value.toString(),info->Y,info->X);
 		} 
 		success = true;
 	} else {
@@ -153,6 +154,7 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int r
 				grid->setCellTypes(u);
 				success = true;
 			} catch(std::out_of_range) {
+                qWarning("(%i,%i) out of range", u.Y,u.X);
 				success = false;
 			}
 		}
