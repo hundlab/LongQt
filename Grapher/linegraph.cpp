@@ -104,16 +104,16 @@ bool lineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
     QTextStream in(&file1);
     int point = 0;
     QString fline = in.readLine();
-    QStringList split_line = fline.split("\t");
+    QStringList split_line = fline.split(QRegExp("\\s+"));
     int varpos = split_line.indexOf(yLabel);
     if(varpos == -1){ QMessageBox::information(0,"Error", yLabel +" not found!"); return false;}
     int timepos = split_line.indexOf(xLabel);
     if(timepos == -1){ QMessageBox::information(0,"Error", xLabel +" not found!"); return false;}
     while(!in.atEnd()){
         QString line = in.readLine();
-        QStringList split_line = line.split("\t");
-        y.push_back(split_line[varpos].toDouble());
-        x.push_back(split_line[timepos].toDouble());
+        QStringList split_line = line.split(QRegExp("\\s+"));
+        y.push_back(split_line.at(varpos).toDouble());
+        x.push_back(split_line.at(timepos).toDouble());
         point++;
     }
     file1.close();
