@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QDir>
-#include <QTableWidget>
+#include <QTableView>
 #include <QPushButton>
 #include <QComboBox>
 #include <QCheckBox>
@@ -13,46 +13,19 @@
 #include "node.h"
 #include "grid.h"
 #include "gridCell.h"
+#include "gridModel.h"
 
 using namespace std;
-
-class gridNode : public QWidget {
-Q_OBJECT
-  public:
-    gridNode(Node* node, int X, int Y, gridCell* parentCell);
-    ~gridNode();
-    Node* getNode();
-    pair<int,int> getNodePair();
-    void update(bool stim, bool meas);
-    bool getStimStatus();
-    bool getMeasStatus();
-  private:
-    QComboBox* cellType;
-    QCheckBox* stimNode;
-    QCheckBox* measNode;
-    map<string, CellInitializer> cellMap;
-    Node* node;
-    cellInfo* info;
-    gridCell* parentCell;
-    bool stimStatus;
-    bool measStatus;
-  protected:
-    void paintEvent(QPaintEvent *);
-  public slots:
-    void changeCell(QString);
-  signals:
-    void stimNodeChanged(int);
-    void measNodeChanged(int);
-    void cell_type_changed(QString);
-};
 
 class gridSetupWidget : public QWidget {
 Q_OBJECT
   public:
+	gridSetupWidget(QWidget* parent = 0);
     gridSetupWidget(gridProtocol* initial_proto, QDir workingDir, QWidget* parent = 0);
     ~gridSetupWidget() {}
     void setGrid(Grid* grid);
     Grid* getGrid();
+	QTableView* view();
   signals:
     void cell_type_changed();
   private:
@@ -63,7 +36,8 @@ Q_OBJECT
     QWidget* parent;
     Grid* grid;
 
-    QTableWidget* cellGrid;
+    QTableView* cellGrid;
+	GridModel* model;
     QSpinBox* columnInt;
     QPushButton* addColumnButton;
     QPushButton* removeColumnButton;
@@ -74,16 +48,8 @@ Q_OBJECT
     QPushButton* toggleStim;
     QComboBox* chooseType;
   private slots:
-    void changeStimNodeList(int status, pair<int,int> node);
-    void changeMeasNodeList(int status, pair<int,int> node);
-    void addRows(int num);
-    void addColumns(int num);
-    void removeRows(int num);
-    void removeColumns(int num);
     void changeCellGroup(QString type);
     void toggleMeasurePressed();
     void toggleStimPressed();
-  public slots:
-    void updateMenu();
 };
 #endif

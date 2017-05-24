@@ -138,7 +138,7 @@ Simulation::Simulation(QWidget* parent){
     this->showMaximized();
 //connect buttons
     connect(about_button, &QPushButton::clicked, [this] () {
-        if(QMessageBox::RestoreDefaults == QMessageBox::information(NULL,tr("LongQt Information"),tr("Copyright© 2016 Thomas J. Hund\nLicense: Revised BSD License\nEmail: thomas.hund@osumc.edu\nVersion 0.1\nContributers:\n\tThomas Hund\n\tBirce Ela Onal\n\tDanielle Beckley\n\tDaniel Gratz\n"),QMessageBox::Close|QMessageBox::RestoreDefaults,QMessageBox::Close)) {
+        if(QMessageBox::RestoreDefaults == QMessageBox::information(NULL,tr("LongQt Information"),tr("Copyright© 2016 Thomas J. Hund\nLicense: Revised BSD License\nEmail: thomas.hund@osumc.edu\nVersion 0.2\nContributers:\n\tThomas Hund\n\tBirce Ela Onal\n\tDanielle Beckley\n\tDaniel Gratz\n"),QMessageBox::Close|QMessageBox::RestoreDefaults,QMessageBox::Close)) {
             QSettings settings;
             settings.setValue("showHelp",true);
         }

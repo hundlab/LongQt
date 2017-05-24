@@ -1,6 +1,7 @@
 #ifndef GUIUTILS_H
 #define GUIUTILS_H
 #include <QTextStream>
+#include <QFile>
 
 class GuiUtils {
   public:

@@ -97,7 +97,7 @@ void simvarMenu::createMenu()  {
         gridSetupWidget* grid = new gridSetupWidget((gridProtocol*)this->proto,working_dir);
         tabs->addTab(grid, "Grid Setup");
         connect(grid, &gridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
-        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
+//        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
     }
     }
 //main_layout
@@ -226,7 +226,13 @@ void simvarMenu::update_menu() {
          {  QComboBox* simv = ((QComboBox*)simvars[it->first.c_str()]);
             int index = simv->findText(it->second.get().c_str());
             if(index != -1) {
-                simv->setCurrentIndex(index);
+				if(!this->signalCellTypeChange) {
+					bool oldState = simv->blockSignals(true);
+                	simv->setCurrentIndex(index);
+					simv->blockSignals(oldState);
+				} else {
+                	simv->setCurrentIndex(index);
+				}
             }
          };
 
@@ -266,9 +272,20 @@ bool simvarMenu::read_simvars(){
     QString fileName = QFileDialog::getOpenFileName(this,"Simulation Settings",working_dir.absolutePath());
     if (!fileName.isEmpty()){
         ret = !(bool)proto->readpars(fileName.toStdString());
+		try {
+			if(proto->pars.at("writeCellState").get() == "true") {
+				proto->pars.at("cellStateFile").set(fileName.toStdString());
+				proto->pars.at("readCellState").set("true");
+				proto->pars.at("writeCellState").set("false");
+			}
+		} catch (const std::out_of_range&) {
+		}
     }
     proto->datadir = working_dir.absolutePath().toStdString();
+	this->signalCellTypeChange = false;
     update_menu();
+	this->signalCellTypeChange = true;
+	emit cell_type_changed();
     return ret;
 }
 bool simvarMenu::write_simvars(){

@@ -7,20 +7,19 @@
 QT       += core gui concurrent
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-TARGET = LongQtGrapher
+TARGET = LQGridEditor
 TEMPLATE = app
 
 QMAKE_MAC_SDK = macosx10.11
 
-CONFIG += c++11
+CONFIG += c++11 wayland-compositor
 
+include(GridEditor/GridEdit.pri)
 include(modellib/model.pri)
-include(Grapher/Grapher.pri)
 
-RESOURCES = LongQtGrapher.qrc 
+RESOURCES = LongQt.qrc 
 
 linux {
-
     debug {
         QMAKE_CXXFLAGS += -g
         QMAKE_CXXFLAGS_RELEASE -= -O2
@@ -33,8 +32,8 @@ linux {
     profile {
         TARGET =$$TARGET"-profile"
     }
-
     TARGET = $$TARGET".out"
+
     DESTDIR = ./build 
     OBJECTS_DIR = ./build/obj
     MOC_DIR = ./build/obj
@@ -42,5 +41,5 @@ linux {
     UI_DIR = ./build/obj
 }
 
-SOURCES += LongQtGrapher.cpp
+SOURCES += ./GridEditor/main.cpp
 
