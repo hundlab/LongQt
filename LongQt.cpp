@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 	app->setOrganizationName("Hund lab BME OSU");
 	app->setOrganizationDomain("http://hundlab.org");
 	app->setApplicationName("LongQt");
-	app->setApplicationVersion("v0.1");
+	app->setApplicationVersion("v0.2");
 
 	AppParser parser(app);
 	parser.process();

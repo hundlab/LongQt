@@ -149,8 +149,31 @@ class HRD09Control : public Cell
     struct RateConst Rate;
     struct GateVariable Gate;
 
+    double Inafactor;
+    double Inalfactor;
+    double Inakfactor;
+    double Inacafactorss;
+    double Inacafactorbulk;
+    double Icabfactor;
+    double Iclbfactor;
+    double Inaclfactor;
+    double Ilcafactor;
+    double Ipcafactor;
+    double Iksfactor;
+    double Ikrfactor;
+    double Ikclfactor;
+    double Ik1factor;
+    double Ikpfactor;
+    double Itofactor;
+    double Ito2factor;
+    double Irelfactor;
+    double Itrfactor;
+    double Iupfactor;
+    double Ileakfactor;
+
     private:
     void Initialize();
+
 };
 
 class HRD09BorderZone : public HRD09Control

@@ -1,3 +1,7 @@
+/*
+ * the main window for LongQt contains all the pretinant widgets and maintains
+ * the side pannel to switch between them
+ */
 #ifndef HEART_CELL_SIM_H
 #define HEART_CELL_SIM_H
 
@@ -17,7 +21,10 @@
 #include <QDir>
 
 #include "protocol.h"
-#include "varmenu.h"
+#include "simvarmenu.h"
+#include "dvarmenu.h"
+#include "mvarmenu.h"
+#include "pvarmenu.h"
 
 class Simulation : public QWidget {
     Q_OBJECT

@@ -1,7 +1,7 @@
 bcl
 Basic pacing cycle length, ms
 meastime
-Time to begin measuring variables checked in the “Measure Variables” panel, ms
+Time to begin measuring variables checked in the "Measure Variables" panel, ms
 stimdur
 Duration of injected stimulus current, ms 
 stimt
@@ -11,7 +11,7 @@ Amplitude of injected stimulus current, uA/uF
 tMax
 Maximum duration of simulation, ms
 writetime
-Time to begin writing value of variables checked in the “Track Variables” panel, ms
+Time to begin writing value of variables checked in the "Track Variables" panel, ms
 numstims
 Total number of pacing stimuli to apply at interval defined by Bcl with injected current properties defined by Stimdur, Stimval, and Stimt 
 numtrials
@@ -19,9 +19,9 @@ Total number of independent simulations to perform
 paceflag
 Check to apply train of current stimuli defined by numstims, Bcl, Stimdur, Stimt, and Stimval 
 readCellState
-Check to read in initial conditions for state variables from a specified file
+Check to read in initial conditions for state variables from the cellStateFile. Default is the most recently imported simvars file
 writeCellState
-Check to save final state variable values to a specified file
+Check to save final state variable values to the simvars file
 celltype
 The cell model to use in the simulation
 t1
@@ -45,14 +45,18 @@ Value to fix the cell membrane voltage to at time t1, mV
 v5
 Value to fix the cell membrane voltage to at time t1, mV
 dvarfile
-Name of output text file denoting initial conditions/ values checked in “Select output”
+Name of output text file denoting initial conditions/ values checked in "Select output"
 measfile
-Name of output text file denoting initial conditions/ values checked in “Select measured properties”
+Name of output text file denoting initial conditions/ values checked in "Select measured properties"
 pvarfile
-Name of output text file denoting initial conditions/ values checked in “Set model parameters”
+Name of output text file denoting initial conditions/ values checked in "Set model parameters"
 simvarfile
-Name of output text file denoting initial conditions/ values checked in “Set simulation parameters”
+Name of output text file denoting initial conditions/ values checked in "Set simulation parameters"
 cellStateDir
 Folder containing output text files with data and initial conditions
 datadir
 Folder that will contain output of simulation
+writeint
+The sampling data interval for variables in "Select output" will be written to a file. (Small values here can cause long run-times)
+cellStateFile
+The file to read the cell state from. Default is the most recently imported simvars file.

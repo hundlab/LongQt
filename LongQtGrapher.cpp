@@ -13,11 +13,11 @@ int main(int argc, char *argv[])
 
     QDir location = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first();
     location = QDir(QFileDialog::getExistingDirectory(Q_NULLPTR,"Choose Data Directory", location.absolutePath()));
-    Dialog* window;
+    Grapher* window;
     try {
-        window = new Dialog(location);
+        window = new Grapher(location);
         window->showMaximized();
-    } catch (badFile) {
+    } catch (BadFile) {
         return 0;
     }
 
