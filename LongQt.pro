@@ -70,6 +70,7 @@ SOURCES += LongQt.cpp \
 ./modellib/protocol/protocol.cpp\
 ./modellib/protocol/currentClampProtocol.cpp\
 ./modellib/protocol/voltageClampProtocol.cpp\
+./appparser.cpp\
 ./cli/CLISimulation.cpp
 
 HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
@@ -104,6 +105,7 @@ HEADERS  += ./gui/simulaiton/heart_cell_sim.h\
 ./modellib/protocol/currentClampProtocol.h\
 ./modellib/protocol/protocol.h\
 ./modellib/protocol/gridProtocol.h\
+./appparser.h\
 ./cli/CLISimulation.h
 
 FORMS    += ./gui/graph/linegraph.ui \
