@@ -6,9 +6,8 @@
 
 #include "ui_chooseprotowidget.h"
 #include "chooseprotowidget.h"
+#include "cellutils.h"
 #include "currentClampProtocol.h"
-#include "voltageClampProtocol.h"
-#include "gridProtocol.h"
 
 ChooseProtoWidget::ChooseProtoWidget(QWidget* parent) : QWidget(parent),
 	ui(new Ui::ChooseProtoWidget)
@@ -31,9 +30,25 @@ void ChooseProtoWidget::Initialize() {
     this->cellChangedSlot();
 
     clampType = new QButtonGroup();
-    clampType->addButton(ui->currentClamp, 0);
-    clampType->addButton(ui->voltageClamp, 1);
-    clampType->addButton(ui->grid, 2);
+	int i = 3;
+	for(auto& protocol: CellUtils::protoMap) { 
+		if(protocol.first == string("Current Clamp Protocol")) {
+			clampType->addButton(ui->currentClamp,0);
+			this->protoNumMap.insert(0,protocol.second);
+		} else if(protocol.first == string("Voltage Clamp Protocol")) {
+			clampType->addButton(ui->voltageClamp,1);
+			this->protoNumMap.insert(1,protocol.second);
+		} else if(protocol.first == string("Grid Protocol")) {
+			clampType->addButton(ui->grid,2);
+			this->protoNumMap.insert(2,protocol.second);
+		} else {
+			QRadioButton* protoChoice = new QRadioButton(protocol.first.c_str());
+			clampType->addButton(protoChoice,i);
+			ui->groupBoxLayout->addWidget(protoChoice);
+			this->protoNumMap.insert(i,protocol.second);
+			i++;
+		}
+	}
 
     connect(clampType, SIGNAL(buttonPressed(int)), this, SLOT(changeProto(int)));
 }
@@ -51,23 +66,16 @@ void ChooseProtoWidget::changeProto(int value) {
         ui->cellType->setEnabled(true);
         ui->cellType->removeItem(ui->cellType->count() -1);
     }
-    switch(value) {
-    case 0:
-        this->proto = new CurrentClamp();
-        this->proto->cell = old_cell;
-    break;
-    case 1:
-        this->proto = new VoltageClamp();
-        this->proto->cell = old_cell;
-    break;
-    case 2:
-        this->proto = new GridProtocol();
-        ui->cellType->addItem("gridCell");
+
+	this->proto = protoNumMap[value]();
+
+	if(this->proto->cell->type == string("gridCell")) {
+	    ui->cellType->addItem("");
         ui->cellType->setEnabled(false);
         emit cell_type_changed();
-    break;
-    }
-
+	} else {
+        this->proto->cell = old_cell;
+	}
     if(old_cell->type == string("gridCell")) {
         on_cellType_currentIndexChanged(defaultCell);
     }

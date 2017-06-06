@@ -1,5 +1,5 @@
 #include "gridDelegate.h"
-#include "cellUtils.h"
+#include "cellutils.h"
 #include "guiUtils.h"
 
 #include <QPen>

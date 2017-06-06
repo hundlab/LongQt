@@ -11,6 +11,7 @@
 #include <QLabel>
 
 #include "protocol.h"
+#include "cellutils.h"
 
 using namespace std;
 
@@ -34,6 +35,7 @@ Q_OBJECT
     QButtonGroup* clampType;
 //    QComboBox* ui::cellType;
     QString defaultCell;
+	QMap<int,CellUtils::ProtocolInitializer> protoNumMap;
   private slots:
     void on_cellType_currentIndexChanged(QString name);
   public slots:

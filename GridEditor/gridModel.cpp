@@ -1,5 +1,6 @@
 #include "gridModel.h"
-#include "side.h"
+#include "cellutils.h"
+#include "gridCell.h"
 #include <QDebug>
 
 using namespace std;
@@ -143,7 +144,7 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int r
 			u.dx = *proto->cell->pars["dx"];
 			u.dy = *proto->cell->pars["dy"];
 			u.np = *proto->cell->pars["np"];
-			//this works because column is setup follow side.h:Side
+			//this works because column is setup follow cellutils_side.h:Side
 			double val = value.toDouble();
 			if(this->percent) {
 				val /= 100;

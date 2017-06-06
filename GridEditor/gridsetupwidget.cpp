@@ -1,8 +1,8 @@
 #include "gridsetupwidget.h"
 #include "ui_gridsetupwidget.h"
-#include "cellUtils.h"
 #include "guiUtils.h"
 #include "gridDelegate.h"
+#include "cellutils.h"
 
 #include <QHBoxLayout>
 #include <QDebug>

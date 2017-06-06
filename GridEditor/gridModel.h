@@ -5,8 +5,8 @@
 #define GRID_MODEL_H
 #include <QAbstractTableModel>
 #include "grid.h"
-#include "cellUtils.h"
 #include "gridProtocol.h"
+#include "cellutils.h"
 
 class GridModel : public QAbstractTableModel {
 	Q_OBJECT

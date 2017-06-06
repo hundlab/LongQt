@@ -1,6 +1,6 @@
 #include "conductivityeditor.h"
 #include "ui_conductivityeditor.h"
-#include "side.h"
+#include "cellutils.h"
 /*
 ConductivityEditor::Edge ConductivityEditor::Edge::minimize(const Edge e) const {
 	Edge n = e;
