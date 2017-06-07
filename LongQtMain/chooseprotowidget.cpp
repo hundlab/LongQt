@@ -34,18 +34,18 @@ void ChooseProtoWidget::Initialize() {
 	for(auto& protocol: CellUtils::protoMap) { 
 		if(protocol.first == string("Current Clamp Protocol")) {
 			clampType->addButton(ui->currentClamp,0);
-			this->protoNumMap.insert(0,protocol.second);
+			this->protoNumMap.insert(0,protocol.first);
 		} else if(protocol.first == string("Voltage Clamp Protocol")) {
 			clampType->addButton(ui->voltageClamp,1);
-			this->protoNumMap.insert(1,protocol.second);
+			this->protoNumMap.insert(1,protocol.first);
 		} else if(protocol.first == string("Grid Protocol")) {
 			clampType->addButton(ui->grid,2);
-			this->protoNumMap.insert(2,protocol.second);
+			this->protoNumMap.insert(2,protocol.first);
 		} else {
 			QRadioButton* protoChoice = new QRadioButton(protocol.first.c_str());
 			clampType->addButton(protoChoice,i);
 			ui->groupBoxLayout->addWidget(protoChoice);
-			this->protoNumMap.insert(i,protocol.second);
+			this->protoNumMap.insert(i,protocol.first);
 			i++;
 		}
 	}
@@ -59,29 +59,40 @@ void ChooseProtoWidget::resetProto() {
     this->changeProto(0);
 }
 void ChooseProtoWidget::changeProto(int value) {
-    Cell* old_cell = this->proto->cell->clone();
+	this->changeProto(CellUtils::protoMap.at(this->protoNumMap[value])(),true);
+}
+void ChooseProtoWidget::changeProto(string name) {
+	this->changeProto(CellUtils::protoMap.at(name)(),true);
+}
+void ChooseProtoWidget::changeProto(Protocol* newProto, bool raise) {
     string datadir = this->proto->datadir;
-    string cellStateDir = this->proto->cellStateDir;
-    if(old_cell->type == string("gridCell")) {
-        ui->cellType->setEnabled(true);
-        ui->cellType->removeItem(ui->cellType->count() -1);
-    }
-
-	this->proto = protoNumMap[value]();
+	Cell* old_cell = this->proto->cell->clone();
+	string cellStateDir = this->proto->cellStateDir;
+	if(old_cell->type == string("gridCell")) {
+		ui->cellType->setEnabled(true);
+		ui->cellType->removeItem(ui->cellType->count() -1);
+	}
+	this->proto = newProto;
 
 	if(this->proto->cell->type == string("gridCell")) {
-	    ui->cellType->addItem("");
-        ui->cellType->setEnabled(false);
-        emit cell_type_changed();
+		ui->cellType->addItem("");
+		ui->cellType->setEnabled(false);
+		emit cell_type_changed();
 	} else {
-        this->proto->cell = old_cell;
+		this->proto->cell = old_cell;
 	}
-    if(old_cell->type == string("gridCell")) {
-        on_cellType_currentIndexChanged(defaultCell);
-    }
-    this->proto->datadir = datadir;
-    this->proto->cellStateDir = cellStateDir;
-    emit protocolChanged(this->proto);
+	if(old_cell->type == string("gridCell")) {
+		on_cellType_currentIndexChanged(defaultCell);
+	}
+	this->proto->cellStateDir = cellStateDir;
+	this->proto->datadir = datadir;
+	if(raise) {
+    	emit protocolChanged(this->proto);
+	}
+	int typeNum = this->protoNumMap.keys(this->proto->type).at(0);
+	auto button = this->clampType->button(typeNum);
+	if(button)
+		button->setChecked(true);
 }
 
 void ChooseProtoWidget::on_cellType_currentIndexChanged(QString name) {

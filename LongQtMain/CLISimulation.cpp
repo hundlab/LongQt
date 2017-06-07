@@ -5,33 +5,13 @@
 #include "currentClampProtocol.h"
 #include "voltageClampProtocol.h"
 #include "gridProtocol.h"
+#include "settingsIO.h"
 
-CLISimulation::CLISimulation(int protoType, QString simvarFile, QString dvarFile, QString measFile, QString pvarFile) {
-    switch(protoType) {
-    case 0:
-        this->proto = new CurrentClamp();
-    break;
-    case 1:
-        this->proto = new VoltageClamp();
-    break;
-    case 2:
-        this->proto = new GridProtocol();
-    break;
-    default:
-        this->proto = new CurrentClamp();
-    }
-    if(simvarFile != "") {
-        proto->readpars(simvarFile.toStdString());
-    }
-    if(dvarFile != "") {
-        proto->readdvars(dvarFile.toStdString());
-    }
-    if(measFile != "") {
-        proto->readMvarsFile(measFile.toStdString());
-    }
-    if(pvarFile != "") {
-        proto->parsemixedmap(proto->cell->pars, measFile.toStdString() ,&proto->pnames, &proto->pvals);
-    }
+CLISimulation::CLISimulation(QString simvarFile, QString dvarFile, QString measFile, QString pvarFile) {
+    this->proto = new CurrentClamp();
+	SettingsIO* settingsMgr = new SettingsIO();
+	settingsMgr->readSettings(proto, simvarFile);
+	this->proto = settingsMgr->lastProto;
     QString dateTime = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
     proto->datadir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + dateTime).toStdString();
     connect(&watcher,SIGNAL(finished()),this,SLOT(finish()));

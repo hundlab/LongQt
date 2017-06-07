@@ -30,12 +30,10 @@
 /*#################################
     begin mvarMenu class
 ###################################*/
-mvarMenu::mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
+mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
     this->parent = parent;
-    this->working_dir = working_dir;
-    write_close = true;
 
     this->dvarsDescriptions = GuiUtils::concatMaps(
                 GuiUtils::readMap(":/hoverText/dvarsDescriptions.txt"),
@@ -77,7 +75,6 @@ void mvarMenu::createMenu()  {
     if(this->parent != NULL) {
         close_button->hide();
     }
-    set_vars->setChecked(write_close);
     int i =0;
     set<string> cellVars = proto->cell->getVariables();
     for(auto it = cellVars.begin(); it != cellVars.end(); it++) {
@@ -111,14 +108,12 @@ void mvarMenu::createMenu()  {
     setLayout(main_layout); 
     setWindowTitle(tr("Output Variables Menu"));
 //connect buttons   
-    connect(get_vars, SIGNAL(clicked()), this, SLOT(read_mvars())); 
     connect(vars_view, &QListWidget::currentRowChanged, this, &mvarMenu::switch_var);
     connect(addto_vars_options, &QComboBox::currentTextChanged, this, &mvarMenu::checkMeasOpts);
     connect(addto_vars_list_button, &QPushButton::clicked, this, &mvarMenu::addto_vars_list);
     connect(removefr_vars_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_vars_list);
     connect(addto_meas_list_button, &QPushButton::clicked, this, &mvarMenu::addto_meas_list);
     connect(removefr_meas_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_meas_list);
-    connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
     connect(percrepol_spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
         [this] (int val) {
@@ -177,47 +172,6 @@ void mvarMenu::reset() {
 void mvarMenu::changeProto(Protocol* proto) {
     this->proto = proto;
     this->reset();
-}
-void mvarMenu::closeEvent(QCloseEvent* event){
-   write_file();
-   event->accept();
-}
-void mvarMenu::write_file () {
-    if(write_close) {
-        working_dir.mkpath(working_dir.absolutePath());
-        proto->writeMVarsFile(working_dir.absolutePath().toStdString() + string("/") +
-                              proto->measfile);
-    }
-}
-void mvarMenu::setWorkingDir(QDir& dir) {
-    working_dir = dir;
-}
-bool mvarMenu::read_mvars(){
-    bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this,"Measurement Settings",
-                                                    working_dir.absolutePath());
-    if (!fileName.isEmpty()){
-        ret = proto->readMvarsFile(fileName.toStdString());
-//        ret = !(bool)proto->initializeMeasure(int(proto->maxmeassize));
-        //create measure from mvarfile
-   }
-    update_menu(-1);
-    return ret;
-}
-bool mvarMenu::write_mvars(){
-    
-    bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this);
-    if (!fileName.isEmpty()){
-        proto->measfile = fileName.toStdString();
-        ret = proto->writeMVarsFile(proto->measfile.c_str());
-    }
-    return ret;
-
-}
-void mvarMenu::set_write_close(int state) {
-    write_close = (bool) state;
-    set_vars->setChecked(write_close);
 }
 void mvarMenu::addto_meas_list(){
     int var_row = vars_view->currentRow();

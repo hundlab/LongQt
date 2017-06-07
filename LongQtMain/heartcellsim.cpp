@@ -28,7 +28,7 @@
 #include "graph.h"
 #include "runwidget.h"
 #include "chooseprotowidget.h"
-Simulation::Simulation(int protoType, QString simvarFile,QString dvarFile,QString measFile,QString pvarFile, QWidget* parent){
+Simulation::Simulation(QString simvarFile,QString dvarFile,QString measFile,QString pvarFile, QWidget* parent){
 	//setup class variables
 	this->parent = parent;
 	date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
@@ -44,27 +44,13 @@ Simulation::Simulation(int protoType, QString simvarFile,QString dvarFile,QStrin
 	next_button = new QPushButton("Next");
 	cancel_button = new QPushButton("Cancel");
 	ChooseProtoWidget* choose = new ChooseProtoWidget(this);
-	if(0 <= protoType  && protoType <= 2) {
-		choose->changeProto(protoType);
-	}
 	this->proto = choose->getCurrentProto();
-	if(simvarFile != "") {
-		proto->readpars(simvarFile.toStdString());
-	}
-	if(dvarFile != "") {
-		proto->readdvars(dvarFile.toStdString());
-	}
-	if(measFile != "") {
-		proto->readMvarsFile(measFile.toStdString());
-	}
-	if(pvarFile != "") {
-		proto->parsemixedmap(proto->cell->pars, measFile.toStdString() ,&proto->pnames, &proto->pvals);
-	}
+
 	proto->datadir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time).toStdString();
 	proto->cellStateDir = proto->datadir;
 	simvarMenu* sims = new simvarMenu(proto,QDir(proto->datadir.c_str()), this);
-	dvarMenu* dvars = new dvarMenu(proto,QDir(proto->datadir.c_str()) , this);
-	mvarMenu* mvars =  new mvarMenu(proto,QDir(proto->datadir.c_str()), this);
+	dvarMenu* dvars = new dvarMenu(proto->cell, this);
+	mvarMenu* mvars =  new mvarMenu(proto, this);
 	pvarMenu* pvars =  new pvarMenu(proto,QDir(proto->datadir.c_str()), this);
 	RunWidget* run = new RunWidget(proto,QDir(proto->datadir.c_str()));
 	//add items menu_list
@@ -76,32 +62,43 @@ Simulation::Simulation(int protoType, QString simvarFile,QString dvarFile,QStrin
 	menu_list.append(run);
 
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), sims, SLOT(changeProto(Protocol*)));
-	connect(choose, SIGNAL(protocolChanged(Protocol*)), dvars, SLOT(changeProto(Protocol*)));
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), pvars, SLOT(changeProto(Protocol*)));
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), mvars, SLOT(changeProto(Protocol*)));
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), run, SLOT(setProto(Protocol*)));
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), this, SLOT(changeProto(Protocol*)));
+
+	connect(sims, SIGNAL(protocolChanged(Protocol*)), choose, SLOT(changeProto(Protocol*)));
+	connect(sims, SIGNAL(protocolChanged(Protocol*)), pvars, SLOT(changeProto(Protocol*)));
+	connect(sims, SIGNAL(protocolChanged(Protocol*)), mvars, SLOT(changeProto(Protocol*)));
+	connect(sims, SIGNAL(protocolChanged(Protocol*)), run, SLOT(setProto(Protocol*)));
+	connect(sims, SIGNAL(protocolChanged(Protocol*)), this, SLOT(changeProto(Protocol*)));
+
 	connect(choose, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
 	connect(this, SIGNAL(cell_type_changed()), choose, SLOT(cellChangedSlot()));
 	connect(sims, SIGNAL(working_dir_changed(QDir&)), this, SIGNAL(working_dir_changed(QDir&)));
 	connect(sims, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
 	connect(this, SIGNAL(working_dir_changed(QDir&)), sims, SLOT(setWorkingDir(QDir&)));
-	connect(this, SIGNAL(working_dir_changed(QDir&)), dvars, SLOT(setWorkingDir(QDir&)));
-	connect(this, SIGNAL(working_dir_changed(QDir&)), mvars, SLOT(setWorkingDir(QDir&)));
 	connect(this, SIGNAL(working_dir_changed(QDir&)), pvars, SLOT(setWorkingDir(QDir&)));
 	connect(this, SIGNAL(working_dir_changed(QDir&)), run, SLOT(setWorkingDir(QDir&)));
 	connect(this, SIGNAL(cell_type_changed()), sims, SLOT(changeCellType()));
-	connect(this, SIGNAL(cell_type_changed()), dvars, SLOT(reset()));
+	connect(this, &Simulation::cell_type_changed,
+			[this,dvars] () {
+				dvars->changeCell(this->proto->cell);
+			});
 	connect(this, SIGNAL(cell_type_changed()), mvars, SLOT(reset()));
 	connect(this, SIGNAL(cell_type_changed()), pvars, SLOT(reset()));
 	connect(run, SIGNAL(canceled()), this, SLOT(canceled()));
 	//    connect(run, SIGNAL(finished()), choose, SLOT(resetProto()));
 	connect(run, SIGNAL(finished()), this, SLOT(finished()));
 	connect(run, SIGNAL(running()), this, SLOT(running()));
-	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), sims ,static_cast<void(simvarMenu::*)()>(&simvarMenu::write_file));
+	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running),
+			[this] () {
+				this->settingsMgmt.writeSettings(this->proto,(this->proto->datadir+"/"+this->proto->simvarfile).c_str());
+			});
+/*	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), sims ,static_cast<void(simvarMenu::*)()>(&simvarMenu::write_file));
 	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), dvars ,static_cast<void(dvarMenu::*)()>(&dvarMenu::write_file));
-	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), mvars ,static_cast<void(mvarMenu::*)()>(&mvarMenu::write_file));
 	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), pvars ,static_cast<void(pvarMenu::*)()>(&pvarMenu::write_file));
+	*/
 	connect(cancel_button, SIGNAL(clicked()),run, SLOT(cancel()));
 	/*    connect(this, static_cast<void(Simulation::*)()>(&Simulation::cell_type_changed), [this,&was_grid,pvars,run] () {
 				if((proto->cell->type == string("gridCell"))&&(!was_grid)) {
@@ -174,6 +171,10 @@ Simulation::Simulation(int protoType, QString simvarFile,QString dvarFile,QStrin
 			});
 	connect(menu_options, SIGNAL(currentRowChanged(int)), this, SLOT(list_click_aciton(int)));
 	connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
+	//read in simvars file if passed in
+	if(simvarFile != "") {
+		settingsMgmt.readSettings(proto,simvarFile);
+	}
 };
 Simulation::~Simulation(){};
 void Simulation::changeProto(Protocol* proto) {

@@ -30,12 +30,9 @@
 /*#################################
     begin dvarMenu class
 ###################################*/
-dvarMenu::dvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
+dvarMenu::dvarMenu(Cell* cell, QWidget *parent): QWidget(parent) {
 //setup class variables
-    proto = initial_proto;
-    this->parent = parent;
-    this->working_dir = working_dir;
-    write_close = true;
+    this->cell = cell;
  
     this->createMenu();
 }
@@ -53,9 +50,9 @@ void dvarMenu::createMenu()  {
  
  //setup useful constants and aliases
     unsigned int i, row_len = 6;
-    set<string> vars = proto->cell->getVariables();
+    set<string> vars = cell->getVariables();
     QString end_op = "Exit";
-    if(parent != NULL) {
+    if(parent() != NULL) {
         end_op = "Next";
     }
 //initialize layouts and signal maps
@@ -68,10 +65,9 @@ void dvarMenu::createMenu()  {
     close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
-    if(this->parent != NULL) {
+    if(parent() != NULL) {
         close_button->hide();
     }
-    set_vars->setChecked(write_close);
 //do all the work for dvars setup
     QMap<QString,QList<QCheckBox*>> widgets;
     for(auto it = dvars_groups.begin(); it != dvars_groups.end(); it++) {
@@ -131,18 +127,16 @@ void dvarMenu::createMenu()  {
     setLayout(main_layout); 
     setWindowTitle(tr("Output Variables Menu"));
 //connect buttons   
-    connect(get_vars, SIGNAL(clicked()), this, SLOT(read_dvars())); 
-    connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
-//make menu match proto
+//make menu match cell 
     update_menu();
 }
 dvarMenu::~dvarMenu(){}
 void dvarMenu::update_menu() {
     set<string>::iterator it;
     unsigned int i; 
-    set<string> selection = proto->cell->getVariableSelection();
-    set<string> variables = proto->cell->getVariables();
+    set<string> selection = cell->getVariableSelection();
+    set<string> variables = cell->getVariables();
     for(it = variables.begin(), i = 0; it != variables.end(); it++, i++)     {  
         if(selection.find(*it) != selection.end()) {
             dvars[i]->setChecked(true);
@@ -156,52 +150,16 @@ void dvarMenu::reset() {
     qDeleteAll(this->children());
     createMenu();
 }
-void dvarMenu::changeProto(Protocol* proto) {
-    this->proto = proto;
+void dvarMenu::changeCell(Cell* cell) {
+    this->cell = cell;
     this->reset();
 }
-void dvarMenu::closeEvent(QCloseEvent* event){
-    write_file();
-    event->accept();
-}
-void dvarMenu::write_file() {
-    if(write_close) {
-        working_dir.mkpath(working_dir.absolutePath());
-        proto->writedvars(working_dir.absolutePath().toStdString() + string("/") + proto->dvarfile);
-    }
-}
-void dvarMenu::setWorkingDir(QDir& dir) {
-    working_dir = dir;
-}
-bool dvarMenu::read_dvars(){
-    bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this,"Tracked Variable Settings",working_dir.absolutePath());
-    if (!fileName.isEmpty()){
-        ret = proto->readdvars(fileName.toStdString());  // use names in dvars.txt to resize datamap
-    }
-    update_menu();
-    return ret;
-}
-bool dvarMenu::write_dvars(){  
-    bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this);
-    if (!fileName.isEmpty()){
-        proto->dvarfile = fileName.toStdString();
-    ret = !(bool)proto->writedvars(proto->dvarfile);
-    }
-    return ret;
-
-}
 void dvarMenu::update_datamap(string p, int state){
-    set<string> selection = proto->cell->getVariableSelection();
+    set<string> selection = cell->getVariableSelection();
     if((state == 0)) {
         selection.erase(p);
     } else {
         selection.insert(p);
     }
-    proto->cell->setVariableSelection(selection);
-}
-void dvarMenu::set_write_close(int state) {
-    write_close = (bool) state;
-    set_vars->setChecked(write_close);
+    cell->setVariableSelection(selection);
 }

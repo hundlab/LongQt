@@ -29,16 +29,13 @@ using namespace std;
 class mvarMenu :public QWidget {
 Q_OBJECT
   public:
-    mvarMenu(Protocol* initial_proto, QDir working_dir, QWidget* parent = 0);
+    mvarMenu(Protocol* initial_proto, QWidget* parent = 0);
     void createMenu();
    ~mvarMenu();
-    void write_file();
 
   private:
     Protocol* proto;
     QWidget* parent;
-    QDir working_dir;
-    bool write_close;
     set<string> measure_options;
     QMap<QString,QString> dvarsDescriptions; 
     QMap<QString,QString> measDescriptions;
@@ -60,13 +57,7 @@ Q_OBJECT
 //screen functions
     void update_menu(int row); //make menu match pars
 
-  protected:
-    void closeEvent(QCloseEvent* event);
-
   private slots:
-    bool read_mvars(); //wrapper for Protocol::readpars with QFileDialog
-    bool write_mvars(); //wrapper for Protocol::writepars
-    void set_write_close(int state); //update function for write_close
     void addto_meas_list(); //add an item to mvnames
     void removefr_meas_list(); //remove and item from mvnames
     void addto_vars_list(); //add an item to mpnames
@@ -76,7 +67,6 @@ Q_OBJECT
   public slots:
     void changeProto(Protocol* proto);
     void reset();
-    void setWorkingDir(QDir& dir);
 };
 
 #endif

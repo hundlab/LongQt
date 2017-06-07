@@ -35,11 +35,13 @@ Q_OBJECT
     QButtonGroup* clampType;
 //    QComboBox* ui::cellType;
     QString defaultCell;
-	QMap<int,CellUtils::ProtocolInitializer> protoNumMap;
+	QMap<int,string> protoNumMap;
   private slots:
     void on_cellType_currentIndexChanged(QString name);
   public slots:
     void changeProto(int value);
+  	void changeProto(string name);
+	void changeProto(Protocol*, bool preserve = false);
     void cellChangedSlot();
     void resetProto();
 };

@@ -11,11 +11,11 @@ AppParser::AppParser(QCoreApplication* app):
 			QCoreApplication::translate("main", "Start LongQt in CLI mode")),
 	licenseOption(QStringList() << "l" << "license",
 			QCoreApplication::translate("main", "Print the license and exit")),
-	protoOption("proto",
+/*	protoOption("proto",
 				QCoreApplication::translate("main",
 					"Specify the protocol to use 0=CurrentClamp, "
 					"1=VoltageClamp, 2=Grid"),
-				QCoreApplication::translate("main","num[0-2]")),
+				QCoreApplication::translate("main","num[0-2]")),*/
 	pvarsFileOption("pvars",
 				QCoreApplication::translate("main",
 					"Specify the file for setting model parameters or their random "
@@ -53,7 +53,7 @@ AppParser::AppParser(QCoreApplication* app):
 	parser.addVersionOption();
 	parser.addOption(GUIOption);
 	parser.addOption(licenseOption);
-	parser.addOption(protoOption);
+//	parser.addOption(protoOption);
 	parser.addOption(pvarsFileOption);
 	parser.addOption(dvarsFileOption);
 	parser.addOption(mvarsFileOption);
@@ -87,20 +87,20 @@ void AppParser::showLicense() {
 void AppParser::start() {
 	bool startCLI = parser.isSet(GUIOption);
 	bool valid;
-	int protoNum = parser.value(protoOption).toInt(&valid);
+/*	int protoNum = parser.value(protoOption).toInt(&valid);
 	if(!valid) {
 		protoNum = -1;
-	}
+	}*/
 
 	if(!startCLI) {
-		Simulation* window = new Simulation(protoNum, simvarsFile, dvarsFile, mvarsFile, pvarsFile);
+		Simulation* window = new Simulation(simvarsFile, dvarsFile, mvarsFile, pvarsFile);
 		window->show();
 		QSettings settings;
 		if(settings.value("showHelp",true).toBool() &&QMessageBox::Discard == QMessageBox::information(0,"Welcome!", "LongQt is a program for modeling cardiac potentials. As you go through this program keep a few things in mind. First, if you would like more information about something hover your mouse above its name and information will pop up. Second, default values have been provided for all options so if you don't know what an option does it's ok to simply skip it. And finally have fun!\n If you would like to re-enable this text after discarding it use the Restore Defaults button in the About dialog.", QMessageBox::Ok|QMessageBox::Discard,QMessageBox::Ok)) {
 			settings.setValue("showHelp",false);
 		}
 	} else {
-		CLISimulation* sim = new CLISimulation(protoNum, simvarsFile, dvarsFile, mvarsFile, pvarsFile);       
+		CLISimulation* sim = new CLISimulation(simvarsFile, dvarsFile, mvarsFile, pvarsFile);       
 		sim->runSim();
 	}
 }

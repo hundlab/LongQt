@@ -9,6 +9,7 @@
 #include <QTableView>
 #include "conductivityeditor.h"
 #include "ionchannelconfig.h"
+#include "settingsIO.h"
 
 namespace Ui {
 class LQGridEditor;
@@ -24,6 +25,7 @@ public:
 
 private:
     Ui::LQGridEditor *ui;
+	SettingsIO settingsMgr;
 	QTableView* gridView;
 	ConductivityEditor* condEdit = 0; 
 	IonChannelConfig* ionConfig = 0;

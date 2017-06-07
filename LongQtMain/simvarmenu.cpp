@@ -35,7 +35,6 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *paren
     proto = initial_proto;
     this->parent = parent;
     this->working_dir = working_dir;
-    write_close = true;
     descriptions = GuiUtils::readMap(":/hoverText/parsDescriptions.txt");
     this->createMenu();
 }
@@ -59,7 +58,6 @@ void simvarMenu::createMenu()  {
     if(this->parent != NULL) {
         close_button->hide();
     }
-    set_vars->setChecked(write_close);
     
 //do all the work for simvars setup
     for(map<string,GetSetRef>::iterator it = proto->pars.begin(); it!=proto->pars.end(); it++) {
@@ -105,8 +103,6 @@ void simvarMenu::createMenu()  {
     setWindowTitle(tr("Simulation Variables Menu"));
     setLayout(main_layout);
 //connect buttons   
-    connect(get_vars, SIGNAL(clicked()), this, SLOT(read_simvars())); 
-    connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
     connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
     update_menu();
@@ -254,58 +250,28 @@ void simvarMenu::changeProto(Protocol* proto) {
     this->proto = proto;
     this->reset();
 }
-void simvarMenu::closeEvent(QCloseEvent* event){
-    write_file();
-    event->accept();
-}
-void simvarMenu::write_file() {
-    if(write_close) {
-        working_dir.mkpath(working_dir.absolutePath());
-        proto->writepars(working_dir.absolutePath().toStdString() + string("/") + proto->simvarfile);
-    }
-}
 void simvarMenu::setWorkingDir(QDir& dir) {
     working_dir = dir;
     update_menu();
 }
+/*
 bool simvarMenu::read_simvars(){
-    bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this,"Simulation Settings",working_dir.absolutePath());
-    if (!fileName.isEmpty()){
-        ret = !(bool)proto->readpars(fileName.toStdString());
-		try {
-			if(proto->pars.at("writeCellState").get() == "true") {
-				QDir fileDir(fileName);
-				fileDir.cdUp();
-				proto->pars.at("cellStateDir").set(fileDir.path().toStdString());
-				proto->pars.at("readCellState").set("true");
-				proto->pars.at("writeCellState").set("false");
-			}
-        } catch(const std::out_of_range& e) {
-            qDebug("SimvarMenu: par not in proto: %s", e.what());
-		}
-    }
-    proto->datadir = working_dir.absolutePath().toStdString();
+I Think this is covered
+>>>>>
 	if(this->grid) {
 		this->grid->reset();
 	}
-	this->signalCellTypeChange = false;
-    update_menu();
-	this->signalCellTypeChange = true;
-	emit cell_type_changed();
-    return ret;
-}
-bool simvarMenu::write_simvars(){
-    
-    bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this);
-    if (!fileName.isEmpty()){
-        proto->simvarfile = fileName.toStdString();
-    ret = !(bool)proto->writepars(proto->simvarfile);
-    }
-    return ret;
+>>>>>>
+	if(changed) {
+		emit protocolChanged(this->proto);	
+		this->setCellDefaults = false;
+		this->reset();
+		this->setCellDefaults = true;
+		emit cell_type_changed();
+		return ret;
+	}
+}*/
 
-}
 void simvarMenu::update_pvars(pair<string,double> p){
     proto->pars.at(p.first).set(to_string(p.second));
 }
@@ -334,14 +300,13 @@ void simvarMenu::update_pvars(pair<string,int> p, string type) {
         proto->pars[p.first].set(to_string(p.second));
     }
 }
-void simvarMenu::set_write_close(int state) {
-    write_close = (bool) state;
-    set_vars->setChecked(write_close);
-}
 void simvarMenu::changeCellType() {
     update_menu(); 
 }
 void simvarMenu::set_default_vals(string name) {
+	if(!this->setCellDefaults) {
+		return;
+	}
     auto cellDefaultsList = CellUtils::protocolCellDefaults[name];
     for(auto val : cellDefaultsList) {
         try {

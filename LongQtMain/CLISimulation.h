@@ -10,7 +10,7 @@
 class CLISimulation : QObject {
     Q_OBJECT
   public:
-    CLISimulation(int protoType = -1, QString simvarFile = "", QString dvarFile = "", QString measFile = "", QString pvarFile = "");
+    CLISimulation(QString simvarFile = "", QString dvarFile = "", QString measFile = "", QString pvarFile = "");
     ~CLISimulation() {};
     bool runTrial(int trialnum);
     void runSim();

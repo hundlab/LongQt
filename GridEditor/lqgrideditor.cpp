@@ -14,6 +14,7 @@ LQGridEditor::LQGridEditor(QWidget *parent) :
 	this->setStatusBar(new QStatusBar());
 	this->gridView = this->ui->centralWidget->view();
 	this->proto = this->ui->centralWidget->getProtocol();
+	this->settingsMgr.allowProtoChange = false;
 }
 
 LQGridEditor::~LQGridEditor()
@@ -27,7 +28,8 @@ void LQGridEditor::on_actionNew_triggered() {
 void LQGridEditor::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this,"Open Grid File",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
-        this->ui->centralWidget->getProtocol()->readpars(fileName.toStdString());
+		Protocol* proto = this->ui->centralWidget->getProtocol();
+		settingsMgr.readSettings(proto,fileName);
     }
 	this->ui->centralWidget->getModel()->reloadModel();
 }
@@ -35,14 +37,15 @@ void LQGridEditor::on_actionSave_triggered() {
 	if(this->saveFile == "") {
 		this->on_actionSave_As_triggered();
 	} else {
-		this->ui->centralWidget->getProtocol()->writepars(this->saveFile.toStdString());
+		settingsMgr.writeSettings(this->ui->centralWidget->getProtocol(),this->saveFile);
 	}
 }
 void LQGridEditor::on_actionSave_As_triggered() {
     QString fileName = QFileDialog::getSaveFileName(this,"Save As",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
 		this->saveFile = fileName;
-	    this->ui->centralWidget->getProtocol()->writepars(fileName.toStdString());
+		Protocol* proto = this->ui->centralWidget->getProtocol();
+		settingsMgr.writeSettings(proto,fileName);
     }
 }
 void LQGridEditor::on_actionSet_Conductivities_triggered()

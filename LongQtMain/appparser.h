@@ -13,7 +13,6 @@ class AppParser {
 
 	QCommandLineOption GUIOption;
 	QCommandLineOption licenseOption;
-	QCommandLineOption protoOption;
 	QCommandLineOption pvarsFileOption;
 	QCommandLineOption dvarsFileOption;
 	QCommandLineOption mvarsFileOption;

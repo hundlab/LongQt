@@ -21,16 +21,14 @@
 #include <QDir>
 
 #include "protocol.h"
-#include "simvarmenu.h"
-#include "dvarmenu.h"
-#include "mvarmenu.h"
-#include "pvarmenu.h"
+#include "settingsIO.h"
+
 
 class Simulation : public QWidget {
     Q_OBJECT
 
   public:
-    Simulation(int protoType = -1, QString simvarFile = "", QString dvarFile = "", QString measFile = "", QString pvarFile = "", QWidget* parent = 0);
+    Simulation(QString simvarFile = "", QString dvarFile = "", QString measFile = "", QString pvarFile = "", QWidget* parent = 0);
     ~Simulation();
 
   private:
@@ -38,7 +36,8 @@ class Simulation : public QWidget {
     Protocol* proto;
     QString date_time;
     QList<QWidget*> menu_list;
-//utility functions
+//utility functions & classes
+	SettingsIO settingsMgmt;
     void leave_current(int current);
 //buttons
     QPushButton* next_button;
@@ -47,11 +46,6 @@ class Simulation : public QWidget {
 //organizational widgets
     QListWidget* menu_options;
     QStackedWidget* menu;
-//varmenu widgets
-    simvarMenu* edit_simvars_menu;
-    dvarMenu* edit_dvars_menu;
-    mvarMenu* edit_mvars_menu;
-    pvarMenu* edit_pvars_menu;
 //layouts
     QGridLayout* main_layout;
 

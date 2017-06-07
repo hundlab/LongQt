@@ -12,26 +12,11 @@ RunWidget::RunWidget(Protocol* proto, QDir working_dir, QWidget* parent) :
 	this->parent = parent;
 	this->proto = proto;
 	this->working_dir = working_dir;
-	/*       QGridLayout* run_button_container_layout = new QGridLayout();
-			 run_button = new QPushButton("Run Simulations");
-			 pdialog = new QProgressBar();
-			 note_box = new QTextEdit;
-			 note_box->setAcceptRichText(false);
-			 note_box_name = new QLineEdit("notes");
-			 run_button_container_layout->addWidget(new QLabel("Notes on the simulation will be stored in the simulation folder upon running the simulation"), 0,0,1,2);
-			 run_button_container_layout->addWidget(new QLabel("Filename"), 1,0,1,1);
-			 run_button_container_layout->addWidget(note_box_name, 1,1,1,1);
-			 run_button_container_layout->addWidget(note_box,2,0,1,2);
-			 run_button_container_layout->addWidget(run_button, 3,0,1,2);
-			 run_button_container_layout->addWidget(new QLabel("Progress"), 4,0);
-			 run_button_container_layout->addWidget(pdialog, 4,1);
-			 this->setLayout(run_button_container_layout);
-			 */
+
 	connect(&watcher,SIGNAL(finished()),this,SLOT(finish()));
 	connect(&watcher,SIGNAL(finished()),ui->progressBar,SLOT(reset()));
 	connect(&watcher,SIGNAL(progressRangeChanged(int,int)),ui->progressBar,SLOT(setRange(int,int)));
 	connect(&watcher,SIGNAL(progressValueChanged(int)),ui->progressBar,SLOT(setValue(int)));
-	//        connect(run_button, SIGNAL(clicked()),this,SLOT(run_sims()));
 }
 void RunWidget::setProto(Protocol* proto) {
 	this->proto = proto;
