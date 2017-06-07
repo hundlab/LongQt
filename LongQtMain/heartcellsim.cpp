@@ -28,7 +28,7 @@
 #include "graph.h"
 #include "runwidget.h"
 #include "chooseprotowidget.h"
-Simulation::Simulation(QString simvarFile,QString dvarFile,QString measFile,QString pvarFile, QWidget* parent){
+Simulation::Simulation(QString simvarFile, QWidget* parent){
 	//setup class variables
 	this->parent = parent;
 	date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
@@ -67,12 +67,6 @@ Simulation::Simulation(QString simvarFile,QString dvarFile,QString measFile,QStr
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), run, SLOT(setProto(Protocol*)));
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), this, SLOT(changeProto(Protocol*)));
 
-	connect(sims, SIGNAL(protocolChanged(Protocol*)), choose, SLOT(changeProto(Protocol*)));
-	connect(sims, SIGNAL(protocolChanged(Protocol*)), pvars, SLOT(changeProto(Protocol*)));
-	connect(sims, SIGNAL(protocolChanged(Protocol*)), mvars, SLOT(changeProto(Protocol*)));
-	connect(sims, SIGNAL(protocolChanged(Protocol*)), run, SLOT(setProto(Protocol*)));
-	connect(sims, SIGNAL(protocolChanged(Protocol*)), this, SLOT(changeProto(Protocol*)));
-
 	connect(choose, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
 	connect(this, SIGNAL(cell_type_changed()), choose, SLOT(cellChangedSlot()));
 	connect(sims, SIGNAL(working_dir_changed(QDir&)), this, SIGNAL(working_dir_changed(QDir&)));
@@ -100,22 +94,6 @@ Simulation::Simulation(QString simvarFile,QString dvarFile,QString measFile,QStr
 	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), pvars ,static_cast<void(pvarMenu::*)()>(&pvarMenu::write_file));
 	*/
 	connect(cancel_button, SIGNAL(clicked()),run, SLOT(cancel()));
-	/*    connect(this, static_cast<void(Simulation::*)()>(&Simulation::cell_type_changed), [this,&was_grid,pvars,run] () {
-				if((proto->cell->type == string("gridCell"))&&(!was_grid)) {
-				int pvarsPos = menu_list.indexOf(pvars);
-				menu_list.removeAt(pvarsPos);
-				menu->removeWidget(pvars);
-				menu_options->takeItem(pvarsPos);
-				was_grid = true;
-				} else if((proto->cell->type != string("gridCell"))&&was_grid) {
-				int pvarsPos = menu_list.indexOf(run)-1;
-				menu_list.insert(pvarsPos,pvars);
-				menu->insertWidget(pvarsPos,pvars);
-				menu_options->insertItem(pvarsPos,"Cell Initializers");
-				was_grid = false;
-				}
-				});*/
-
 	//set button/combo box inital values
 	cancel_button->hide();
 	//menu

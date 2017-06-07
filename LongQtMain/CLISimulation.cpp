@@ -7,7 +7,7 @@
 #include "gridProtocol.h"
 #include "settingsIO.h"
 
-CLISimulation::CLISimulation(QString simvarFile, QString dvarFile, QString measFile, QString pvarFile) {
+CLISimulation::CLISimulation(QString simvarFile) {
     this->proto = new CurrentClamp();
 	SettingsIO* settingsMgr = new SettingsIO();
 	settingsMgr->readSettings(proto, simvarFile);

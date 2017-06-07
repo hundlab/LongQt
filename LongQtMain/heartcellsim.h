@@ -28,7 +28,7 @@ class Simulation : public QWidget {
     Q_OBJECT
 
   public:
-    Simulation(QString simvarFile = "", QString dvarFile = "", QString measFile = "", QString pvarFile = "", QWidget* parent = 0);
+    Simulation(QString simvarFile = "", QWidget* parent = 0);
     ~Simulation();
 
   private:

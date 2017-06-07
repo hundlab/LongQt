@@ -66,7 +66,6 @@ Q_OBJECT
     void setWorkingDir(QDir& dir);
   signals:
     void cell_type_changed();
-	void protocolChanged(Protocol*);
     void working_dir_changed(QDir&);
     void updated();
 };

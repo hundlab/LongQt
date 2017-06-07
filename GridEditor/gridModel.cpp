@@ -22,13 +22,13 @@ bool GridModel::setProtocol(GridProtocol* proto) {
 	QAbstractItemModel::resetInternalData();
 	return true;
 }
-int  GridModel::rowCount(const QModelIndex & parent) const {
+int  GridModel::rowCount(const QModelIndex&) const {
 	return this->grid->rowCount();
 }
-int  GridModel::columnCount(const QModelIndex & parent) const {
+int  GridModel::columnCount(const QModelIndex&) const {
 	return this->grid->columnCount();
 }
-QVariant GridModel::data(const QModelIndex & index, int role) const {
+QVariant GridModel::data(const QModelIndex& index, int role) const {
 	switch(role) {
 		case Qt::DisplayRole:
 			return this->dataDisplay(index);
@@ -82,8 +82,6 @@ QVariant GridModel::dataToolTip(const QModelIndex & index) const {
 	return this->data(index);
 }
 QVariant GridModel::dataStatusTip(const QModelIndex & index) const {
-	pair<int,int> p = make_pair(index.row(), index.column());
-
 	QString statusTip = "";
 	statusTip += "Top: "+QString::number(index.child(1,0).data().toDouble())+" ";
 	statusTip += "Right: "+QString::number(index.child(1,1).data().toDouble())+" ";
@@ -92,7 +90,7 @@ QVariant GridModel::dataStatusTip(const QModelIndex & index) const {
 
 	return statusTip;
 }
-bool GridModel::setData(const QModelIndex & index, const QVariant & value, int role) {
+bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) {
 	bool success = false;
 	if(index.internalPointer() == 0) {
 		CellInfo* info = new CellInfo;
@@ -116,7 +114,7 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int r
 			emit cell_type_changed();
 			emit dataChanged(index, index);
         } catch(const std::out_of_range&) {
-            qWarning("%s not a valid cell type or (%i,%i) out of range", value.toString(),info->Y,info->X);
+            qWarning("%s not a valid cell type or (%i,%i) out of range",qUtf8Printable(value.toString()),info->Y,info->X);
 		} 
 		success = true;
 	} else {

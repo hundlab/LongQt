@@ -13,9 +13,6 @@ class AppParser {
 
 	QCommandLineOption GUIOption;
 	QCommandLineOption licenseOption;
-	QCommandLineOption pvarsFileOption;
-	QCommandLineOption dvarsFileOption;
-	QCommandLineOption mvarsFileOption;
 	QCommandLineOption simvarsFileOption;
 
 	public:
@@ -26,9 +23,6 @@ class AppParser {
 	void start();
 
 	QString simvarsFile;
-	QString mvarsFile;
-	QString dvarsFile;
-	QString pvarsFile;
 };
 
 #endif

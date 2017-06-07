@@ -54,6 +54,6 @@ void GridDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	painter->restore();
 }
 
-QSize GridDelegate::sizeHint(const QStyleOptionViewItem &option,const QModelIndex &index) const {
+QSize GridDelegate::sizeHint(const QStyleOptionViewItem&,const QModelIndex&) const {
 	return this->size;	
 }

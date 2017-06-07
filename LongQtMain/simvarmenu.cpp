@@ -256,19 +256,10 @@ void simvarMenu::setWorkingDir(QDir& dir) {
 }
 /*
 bool simvarMenu::read_simvars(){
-I Think this is covered
->>>>>
-	if(this->grid) {
-		this->grid->reset();
-	}
->>>>>>
 	if(changed) {
-		emit protocolChanged(this->proto);	
 		this->setCellDefaults = false;
 		this->reset();
 		this->setCellDefaults = true;
-		emit cell_type_changed();
-		return ret;
 	}
 }*/
 
