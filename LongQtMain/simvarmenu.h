@@ -45,7 +45,6 @@ Q_OBJECT
     QMap<QString,QFormLayout*> simvars_layouts;
     QCheckBox* set_vars;
     QPushButton* get_vars;
-    QPushButton* close_button;
 	GridSetupWidget* grid = 0;
     void set_default_vals(string name);
 //initalizer

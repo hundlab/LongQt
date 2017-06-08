@@ -51,7 +51,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	simvarMenu* sims = new simvarMenu(proto,QDir(proto->datadir.c_str()), this);
 	dvarMenu* dvars = new dvarMenu(proto->cell, this);
 	mvarMenu* mvars =  new mvarMenu(proto, this);
-	pvarMenu* pvars =  new pvarMenu(proto,QDir(proto->datadir.c_str()), this);
+	pvarMenu* pvars =  new pvarMenu(proto, this);
 	RunWidget* run = new RunWidget(proto,QDir(proto->datadir.c_str()));
 	//add items menu_list
 	menu_list.append(choose);
@@ -72,7 +72,6 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	connect(sims, SIGNAL(working_dir_changed(QDir&)), this, SIGNAL(working_dir_changed(QDir&)));
 	connect(sims, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
 	connect(this, SIGNAL(working_dir_changed(QDir&)), sims, SLOT(setWorkingDir(QDir&)));
-	connect(this, SIGNAL(working_dir_changed(QDir&)), pvars, SLOT(setWorkingDir(QDir&)));
 	connect(this, SIGNAL(working_dir_changed(QDir&)), run, SLOT(setWorkingDir(QDir&)));
 	connect(this, SIGNAL(cell_type_changed()), sims, SLOT(changeCellType()));
 	connect(this, &Simulation::cell_type_changed,

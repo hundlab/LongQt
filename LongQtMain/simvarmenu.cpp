@@ -52,13 +52,7 @@ void simvarMenu::createMenu()  {
     QTabWidget* tabs = new QTabWidget();
     get_vars = new QPushButton(tr("Import Simulation settings"), this);
     set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
-    close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
-//set button inital states
-    if(this->parent != NULL) {
-        close_button->hide();
-    }
-    
 //do all the work for simvars setup
     for(map<string,GetSetRef>::iterator it = proto->pars.begin(); it!=proto->pars.end(); it++) {
         if(simvars_layouts.find(it->second.type.c_str()) == simvars_layouts.end()) {

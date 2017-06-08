@@ -135,10 +135,7 @@ void IonChannelConfig::setIonChannels(int maxDist, double maxVal, GridProtocol::
 			switch(ionConf.dist) {
 				case GridProtocol::Distribution::none:
 					val = ionConf.val[0]+ionConf.val[1]*i;
-					if(val > maxVal) {
-						val = maxVal;
-					}
-					break;
+				break;
 				case GridProtocol::Distribution::normal: 
 					{
 						normal_distribution<double> distribution(ionConf.val[0],ionConf.val[1]);
@@ -151,6 +148,9 @@ void IonChannelConfig::setIonChannels(int maxDist, double maxVal, GridProtocol::
 						val = logdistribution(proto->generator);
 						break;
 					}
+			}
+			if(val > maxVal) {
+				val = maxVal;
 			}
 			ionConf.cells[make_pair(e.first,e.second)] = val;
 			this->visited.insert(e);
