@@ -36,9 +36,6 @@ Q_OBJECT
 
 //Buttons & their labels
     QCheckBox** dvars;
-    QCheckBox* set_vars;
-    QPushButton* get_vars;
-    QPushButton* close_button;
 //screen functions
     void update_menu(); //make menu match pars
 

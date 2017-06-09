@@ -36,15 +36,12 @@ Q_OBJECT
 
   private:
     Protocol* proto;
-    QWidget* parent;
     QDir working_dir;
 //Buttons & their labels
     QGridLayout* main_layout;
     QMap<QString, QString> descriptions;
     QMap<QString, QWidget*> simvars;
     QMap<QString,QFormLayout*> simvars_layouts;
-    QCheckBox* set_vars;
-    QPushButton* get_vars;
 	GridSetupWidget* grid = 0;
     void set_default_vals(string name);
 //initalizer

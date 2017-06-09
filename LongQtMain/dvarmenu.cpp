@@ -60,14 +60,7 @@ void dvarMenu::createMenu()  {
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
     dvars = (QCheckBox**)malloc(vars.size()*sizeof(QCheckBox*));
-    get_vars = new QPushButton(tr("Import Tracked Variable Settings"), this);
-    set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
-    close_button = new QPushButton(QString("Save and ") +=end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
-//set button inital states
-    if(parent() != NULL) {
-        close_button->hide();
-    }
 //do all the work for dvars setup
     QMap<QString,QList<QCheckBox*>> widgets;
     for(auto it = dvars_groups.begin(); it != dvars_groups.end(); it++) {
@@ -120,14 +113,9 @@ void dvarMenu::createMenu()  {
     }
     }
 //main_layout
-    main_layout->addWidget(get_vars, 0,0);
-    main_layout->addWidget(set_vars, 0,1);
     main_layout->addLayout(central_layout, 1,0, central_layout->rowCount(), central_layout->columnCount()); 
-    main_layout->addWidget(close_button, (2*i)*row_len, 2*row_len -1);
     setLayout(main_layout); 
     setWindowTitle(tr("Output Variables Menu"));
-//connect buttons   
-    connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match cell 
     update_menu();
 }

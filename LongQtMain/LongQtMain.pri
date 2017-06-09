@@ -24,5 +24,6 @@ HEADERS  +=\
 
 FORMS += \
     $$PWD/runwidget.ui \
-    $$PWD/chooseprotowidget.ui
+    $$PWD/chooseprotowidget.ui\
+	$$PWD/pvarmenu.ui
 

@@ -33,7 +33,6 @@
 simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
 //setup class variables
     proto = initial_proto;
-    this->parent = parent;
     this->working_dir = working_dir;
     descriptions = GuiUtils::readMap(":/hoverText/parsDescriptions.txt");
     this->createMenu();
@@ -41,17 +40,12 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *paren
 
 void simvarMenu::createMenu()  {
 //setup useful constants and aliases
-    QString end_op = "Exit";
-    if(parent != NULL) {
-        end_op = "Next";
-    }
+    QString end_op = "Next";
 //initialize layouts
     main_layout = new QGridLayout(this);
     QList<QHBoxLayout*> central_layouts;
 //initialize buttons &lables
     QTabWidget* tabs = new QTabWidget();
-    get_vars = new QPushButton(tr("Import Simulation settings"), this);
-    set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //do all the work for simvars setup
     for(map<string,GetSetRef>::iterator it = proto->pars.begin(); it!=proto->pars.end(); it++) {
@@ -90,8 +84,6 @@ void simvarMenu::createMenu()  {
     }
     }
 //main_layout
-    main_layout->addWidget(get_vars, 0,0);
-    main_layout->addWidget(set_vars, 0,1);
     main_layout->addWidget(tabs , 1,0,10 ,19 ); 
     main_layout->addWidget(close_button, 11, 20);
     setWindowTitle(tr("Simulation Variables Menu"));

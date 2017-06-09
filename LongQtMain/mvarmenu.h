@@ -35,14 +35,10 @@ Q_OBJECT
 
   private:
     Protocol* proto;
-    QWidget* parent;
     set<string> measure_options;
     QMap<QString,QString> dvarsDescriptions; 
     QMap<QString,QString> measDescriptions;
 //Buttons & their labels
-    QCheckBox* set_vars;
-    QPushButton* get_vars;
-    QPushButton* close_button;
     QListWidget* vars_view;
     QListWidget* meas_view;
     QLabel* meas_list_label;

@@ -30,10 +30,9 @@
 /*#################################
     begin mvarMenu class
 ###################################*/
-mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent)  {
+mvarMenu::mvarMenu(Protocol* initial_proto, QWidget *parent):QWidget(parent)  {
 //setup class variables
     proto = initial_proto;
-    this->parent = parent;
 
     this->dvarsDescriptions = GuiUtils::concatMaps(
                 GuiUtils::readMap(":/hoverText/dvarsDescriptions.txt"),
@@ -46,17 +45,11 @@ void mvarMenu::createMenu()  {
 //setup useful constants and aliases
     unsigned int row_len = 6;
     Measure temp = Measure();
-    QString end_op = "Exit";
-    if(parent != NULL) {
-        end_op = "Next";
-    }
+    QString end_op = "Next";
 //initialize layouts and signal maps
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
-    get_vars = new QPushButton(tr("Import Measurement Settings"), this);
-    set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
-    close_button = new QPushButton(QString("Save and ") +=end_op, this);
     vars_view = new QListWidget(this);
     meas_view = new QListWidget(this);
     meas_list_label = new QLabel("Aspects to Measure",this);
@@ -72,9 +65,6 @@ void mvarMenu::createMenu()  {
 //    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //set button inital states
     measure_options = temp.getVariables();
-    if(this->parent != NULL) {
-        close_button->hide();
-    }
     int i =0;
     set<string> cellVars = proto->cell->getVariables();
     for(auto it = cellVars.begin(); it != cellVars.end(); it++) {
@@ -101,10 +91,7 @@ void mvarMenu::createMenu()  {
     central_layout->addWidget(percrepol_label,4,0);
     central_layout->addWidget(percrepol_spinbox,4,1);
 //main_layout
-    main_layout->addWidget(get_vars, 0,0);
-    main_layout->addWidget(set_vars, 0,1);
     main_layout->addLayout(central_layout, 1,0, row_len, row_len); 
-    main_layout->addWidget(close_button, row_len +1, row_len -1);
     setLayout(main_layout); 
     setWindowTitle(tr("Output Variables Menu"));
 //connect buttons   
@@ -114,7 +101,6 @@ void mvarMenu::createMenu()  {
     connect(removefr_vars_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_vars_list);
     connect(addto_meas_list_button, &QPushButton::clicked, this, &mvarMenu::addto_meas_list);
     connect(removefr_meas_list_button, &QPushButton::clicked, this, &mvarMenu::removefr_meas_list);
-    connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
     connect(percrepol_spinbox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
         [this] (int val) {
             auto measures = this->proto->Measures;
