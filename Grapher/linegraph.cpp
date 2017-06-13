@@ -1,7 +1,7 @@
 #include "linegraph.h"
 #include "ui_linegraph.h"
 #include "choosegraphs.h"
-#include "protocol.h"
+#include "currentClampProtocol.h"
 #include "guiUtils.h"
 
 LineGraph::LineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
@@ -123,7 +123,7 @@ bool LineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
 }
 void LineGraph::populateList(int trial) {
     char filename[1500];
-    sprintf(filename, Protocol().finalpropertyoutfile.c_str(), trial, yLabel.toStdString().c_str());
+    sprintf(filename, CurrentClamp().finalpropertyoutfile.c_str(), trial, yLabel.toStdString().c_str());
     QFile file(saveDir.absolutePath() +"/"+ QString(filename));
     if(!file.open(QIODevice::ReadOnly)){
         return;

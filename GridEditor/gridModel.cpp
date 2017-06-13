@@ -111,7 +111,7 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
 				*proto->cell->pars["dtmax"] = *info->cell->pars["dtmax"];
 			}
 			this->grid->setCellTypes(*info);
-			emit cell_type_changed();
+			emit cellChanged(proto->cell);
 			emit dataChanged(index, index);
         } catch(const std::out_of_range&) {
             qWarning("%s not a valid cell type or (%i,%i) out of range",qUtf8Printable(value.toString()),info->Y,info->X);

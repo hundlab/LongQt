@@ -3,6 +3,7 @@
 
 #include "ionchannelconfig.h"
 #include "ui_ionchannelconfig.h"
+#include "pvarsgrid.h"
 
 IonChannelConfig::IonChannelConfig(QTableView* view, GridProtocol* proto, QWidget *parent) :
 	QWidget(parent),
@@ -12,13 +13,11 @@ IonChannelConfig::IonChannelConfig(QTableView* view, GridProtocol* proto, QWidge
 	this->view = view;
 	this->model = (GridModel*)view->model();
 	this->proto = proto;
-	this->cellChanged();
+	this->cellChanged(proto->cell);
 	this->updateList();
-//	ui->maxDist->setValue(0);
-//	ui->maxVal->setValue(1000);
     ui->listWidget->addAction(ui->actionDelete);
     ui->listWidget->addAction(ui->actionShow_Cells);
-	connect(this->model, &GridModel::cell_type_changed, this, &IonChannelConfig::cellChanged);
+	connect(this->model, &GridModel::cellChanged, this, &IonChannelConfig::cellChanged);
 }
 
 IonChannelConfig::~IonChannelConfig()
@@ -30,19 +29,19 @@ void IonChannelConfig::updateList() {
 	QStringList toAdd;
 	string info;
 	this->ui->listWidget->clear();
-	for(auto& pvar : this->proto->new_pvars) {
-		switch(pvar.second.dist) {
-			case GridProtocol::Distribution::none:
-				info = (pvar.first + "\tIncrementing\tInitial Value: "+to_string(pvar.second.val[0])+
-						"\tIncrement Amount: "+to_string(pvar.second.val[1]));
+	for(auto& pvar : *this->proto->pvars) {
+		switch(pvar.second->dist) {
+			case CellPvars::Distribution::none:
+				info = (pvar.first + "\tIncrementing\tInitial Value: "+to_string(pvar.second->val[0])+
+						"\tIncrement Amount: "+to_string(pvar.second->val[1]));
 				break;
-			case GridProtocol::Distribution::normal:
-				info = (pvar.first + "\tNormal Distribution\t Mean: "+to_string(pvar.second.val[0])+
-						"\tStandard Deviation: "+to_string(pvar.second.val[1]));
+			case CellPvars::Distribution::normal:
+				info = (pvar.first + "\tNormal Distribution\t Mean: "+to_string(pvar.second->val[0])+
+						"\tStandard Deviation: "+to_string(pvar.second->val[1]));
 				break;
-			case GridProtocol::Distribution::lognormal:
-				info = (pvar.first + "\tLognormal Distribution\t Mean: "+to_string(pvar.second.val[0])+
-						"\tStandard Deviation: "+to_string(pvar.second.val[1]));
+			case CellPvars::Distribution::lognormal:
+				info = (pvar.first + "\tLognormal Distribution\t Mean: "+to_string(pvar.second->val[0])+
+						"\tStandard Deviation: "+to_string(pvar.second->val[1]));
 				break;
 		}
 		toAdd += info.c_str();
@@ -50,7 +49,10 @@ void IonChannelConfig::updateList() {
 	this->ui->listWidget->addItems(toAdd);
 }
 
-void IonChannelConfig::cellChanged() {
+void IonChannelConfig::cellChanged(Cell* cell) {
+	if(cell != proto->cell) {
+		qWarning("IonChannelConfig: Cell does not match proto cell");
+	}
 	QRegExp* allowed_vars = new QRegExp("Factor");
 	QStringList toAdd;
 	ui->ionChannelType->clear();
@@ -102,100 +104,44 @@ void IonChannelConfig::on_addButton_clicked()
 	int maxDist = 0;
 	double maxVal = 100;
 	string type = ui->ionChannelType->currentText().toStdString();
-	GridProtocol::MIonChanParam toAdd;
+	CellPvars::IonChanParam toAdd = CellPvars::IonChanParam();
 	if(ui->randomize->checkState() == 0) {
-		toAdd.dist = GridProtocol::Distribution::none;
+		toAdd.dist = CellPvars::Distribution::none;
 		toAdd.val[0] = ui->startVal->value();
 		toAdd.val[1] = ui->incAmt->value();
 	} else {
 		toAdd.val[0] = ui->mean->value();
 		toAdd.val[1] = ui->stdDev->value();
 		if(ui->normalDist->isChecked()) {
-			toAdd.dist = GridProtocol::Distribution::normal;
+			toAdd.dist = CellPvars::Distribution::normal;
 		} else {
-			toAdd.dist = GridProtocol::Distribution::lognormal;
+			toAdd.dist = CellPvars::Distribution::lognormal;
 		}
 	}
+	proto->pvars->insert(type,toAdd);
 	if(ui->multiple->isChecked()) {
 		maxDist = ui->maxDist->value();
 		maxVal = ui->maxVal->value();
+		((PvarsGrid*)proto->pvars)->setMaxDistAndVal(type,maxDist,maxVal);
 	}
-	this->setIonChannels(maxDist, maxVal, toAdd);
-	if(toAdd.cells.size() > 0) {
-		this->proto->new_pvars[type] = toAdd;
-	}
+	auto startCells = this->getInitial();
+	((PvarsGrid*)proto->pvars)->setStartCells(type,startCells);
 	this->updateList();
 }
-void IonChannelConfig::setIonChannels(int maxDist, double maxVal, GridProtocol::MIonChanParam& ionConf) {
-	this->getInitial(); 
-	int i = 0;
-	double val = 0;
-	while(current.size() > 0 && i <= maxDist) {
-		for(const pair<int,int>& e: this->current) {
-			switch(ionConf.dist) {
-				case GridProtocol::Distribution::none:
-					val = ionConf.val[0]+ionConf.val[1]*i;
-				break;
-				case GridProtocol::Distribution::normal: 
-					{
-						normal_distribution<double> distribution(ionConf.val[0],ionConf.val[1]);
-						val = distribution(proto->generator);
-						break;
-					}
-				case GridProtocol::Distribution::lognormal:
-					{
-						lognormal_distribution<double> logdistribution(ionConf.val[0], ionConf.val[1]);
-						val = logdistribution(proto->generator);
-						break;
-					}
-			}
-			if(val > maxVal) {
-				val = maxVal;
-			}
-			ionConf.cells[make_pair(e.first,e.second)] = val;
-			this->visited.insert(e);
-		}
-		++i;
-		this->getNext();	
-	}
-	this->current.clear();
-	this->visited.clear();
-}
-
-void IonChannelConfig::getInitial() {
+set<pair<int,int>> IonChannelConfig::getInitial() {
+	set<pair<int,int>> startCells;
 	auto selected = this->view->selectionModel()->selectedIndexes();
 	for(auto toAdd : selected) {
-		this->add({toAdd.column(),toAdd.row()},this->current);
+		startCells.insert({toAdd.column(),toAdd.row()});
 	}
-}
-
-void IonChannelConfig::getNext() {
-	set<pair<int,int>> next;
-	for(const pair<int,int>& e: this->current) {
-		this->add({e.first,e.second+1}, next);
-		this->add({e.first,e.second-1}, next);
-		this->add({e.first+1,e.second}, next);
-		this->add({e.first-1,e.second}, next);
-	}
-	this->current = next;
-}
-//need to check for duplicates
-void IonChannelConfig::add(pair<int,int> e, set<pair<int,int>>& next) {
-	//check for out of bounds
-	if(e.second<0||e.first<0||e.second>=this->model->rowCount()||e.first>=this->model->columnCount()) {
-		return;
-	}
-	if(this->visited.count(e) == 0) {
-		next.insert(e);
-	}
-
+	return startCells;
 }
 
 void IonChannelConfig::on_actionDelete_triggered() {
     QList<QListWidgetItem *> items = ui->listWidget->selectedItems();
     for(auto item: items) {
         QString name = item->data(Qt::DisplayRole).toString().split("\t")[0];
-        this->proto->new_pvars.erase(name.toStdString());
+        this->proto->pvars->erase(name.toStdString());
         int row = ui->listWidget->row(item);
         ui->listWidget->takeItem(row);
         delete item;
@@ -203,15 +149,10 @@ void IonChannelConfig::on_actionDelete_triggered() {
 }
 void IonChannelConfig::on_actionShow_Cells_triggered() {
     QList<QListWidgetItem *> items = ui->listWidget->selectedItems();
-    QString text = "(X <column>, Y <row>)\n";
+    QString text;
     for(auto item: items) {
         QString name = item->data(Qt::DisplayRole).toString().split("\t")[0];
-        text += name+"\n";
-        GridProtocol::MIonChanParam param = this->proto->new_pvars[name.toStdString()];
-        for(auto& cell: param.cells) {
-            text += "(" + QString::number(cell.first.first) +","+
-                    QString::number(cell.first.second) +") = "+QString::number(cell.second)+"\n";
-        }
+		text += this->proto->pvars->at(name.toStdString())->str(name.toStdString()).c_str();
     }
     QMessageBox msgBox;
     msgBox.setText(text);

@@ -7,6 +7,7 @@
 #define GUIUTILS_H
 #include <QTextStream>
 #include <QFile>
+#include <QColor>
 
 namespace GuiUtils {
     //used to read in hoverTexts from thier files

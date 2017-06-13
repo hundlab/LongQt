@@ -21,8 +21,6 @@
 #include <QDir>
 
 #include "protocol.h"
-#include "settingsIO.h"
-
 
 class Simulation : public QWidget {
     Q_OBJECT
@@ -37,7 +35,6 @@ class Simulation : public QWidget {
     QString date_time;
     QList<QWidget*> menu_list;
 //utility functions & classes
-	SettingsIO settingsMgmt;
     void leave_current(int current);
 //buttons
     QPushButton* next_button;
@@ -57,7 +54,7 @@ class Simulation : public QWidget {
     void running();
     void changeProto(Protocol* proto);
   signals:
-    void cell_type_changed();
+    void cellChanged(Cell*);
     void working_dir_changed(QDir& dir);
 };
 

@@ -3,11 +3,13 @@
 #include <QVBoxLayout>
 #include <QRadioButton>
 #include <QGroupBox>
+#include <QFileDialog>
 
 #include "ui_chooseprotowidget.h"
 #include "chooseprotowidget.h"
 #include "cellutils.h"
 #include "currentClampProtocol.h"
+#include "settingsIO.h"
 
 ChooseProtoWidget::ChooseProtoWidget(QWidget* parent) : QWidget(parent),
 	ui(new Ui::ChooseProtoWidget)
@@ -27,7 +29,7 @@ void ChooseProtoWidget::Initialize() {
         cell_options << im->c_str();
     }
     ui->cellType->addItems(cell_options);
-    this->cellChangedSlot();
+    this->changeCell(proto->cell);
 
     clampType = new QButtonGroup();
 	int i = 3;
@@ -74,10 +76,13 @@ void ChooseProtoWidget::changeProto(Protocol* newProto, bool raise) {
 	}
 	this->proto = newProto;
 
+	if(raise) {
+    	emit protocolChanged(this->proto);
+	}
 	if(this->proto->cell->type == string("gridCell")) {
 		ui->cellType->addItem("");
 		ui->cellType->setEnabled(false);
-		emit cell_type_changed();
+		emit cellChanged(proto->cell);
 	} else {
 		this->proto->cell = old_cell;
 	}
@@ -86,9 +91,10 @@ void ChooseProtoWidget::changeProto(Protocol* newProto, bool raise) {
 	}
 	this->proto->cellStateDir = cellStateDir;
 	this->proto->datadir = datadir;
-	if(raise) {
-    	emit protocolChanged(this->proto);
-	}
+	this->updateMenu();
+}
+
+void ChooseProtoWidget::updateMenu() {
 	int typeNum = this->protoNumMap.keys(this->proto->type).at(0);
 	auto button = this->clampType->button(typeNum);
 	if(button)
@@ -97,12 +103,27 @@ void ChooseProtoWidget::changeProto(Protocol* newProto, bool raise) {
 
 void ChooseProtoWidget::on_cellType_currentIndexChanged(QString name) {
     this->proto->pars["celltype"].set(name.toStdString());
-    emit cell_type_changed();
+    emit cellChanged(proto->cell);
 }
 
-void ChooseProtoWidget::cellChangedSlot() {
+void ChooseProtoWidget::changeCell(Cell* cell) {
+	if(cell != proto->cell) {
+		qWarning("ChooseProtoWidget: Protocol cell does not match new cell");
+	}
     int index = ui->cellType->findText(this->proto->pars["celltype"].get().c_str());
     if(index != -1) {
         ui->cellType->setCurrentIndex(index);
     }
+}
+
+void ChooseProtoWidget::on_readSettings_clicked() {
+    QString fileName = QFileDialog::getOpenFileName(this,"Choose Settings file",proto->datadir.c_str());
+    if (!fileName.isEmpty()){ 
+		SettingsIO* settingsMgr = SettingsIO::getInstance();
+		settingsMgr->readSettings(this->proto,fileName);
+		this ->proto = settingsMgr->lastProto;
+		emit protocolChanged(this->proto);
+		emit cellChanged(proto->cell);
+		this->updateMenu();
+	}
 }

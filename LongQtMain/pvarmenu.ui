@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PvarsMenu</class>
+ <class>PvarMenu</class>
  <widget class="QWidget" name="PvarsMenu">
   <property name="geometry">
    <rect>

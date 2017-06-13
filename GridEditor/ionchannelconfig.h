@@ -29,16 +29,11 @@ private:
 	GridModel* model = 0;
 	GridProtocol* proto = 0;
 	QTableView* view = 0;
-	set<pair<int,int>> current;
-	set<pair<int,int>> visited;
 
-	void setIonChannels(int maxDist, double maxVal, GridProtocol::MIonChanParam& ionConf);
-	void getInitial();
-	void getNext();
-	void add(pair<int,int> e, set<pair<int,int>>& next);
+	set<pair<int,int>> getInitial();
 
 public slots:
-	void cellChanged();
+	void cellChanged(Cell*);
 
 private slots:
 	void on_randomize_stateChanged(int state);

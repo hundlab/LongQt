@@ -8,7 +8,6 @@
 
 #include <QWidget>
 #include <QGridLayout>
-#include <QDir>
 #include <QMap>
 #include <QDebug>
 #include <QMessageBox>

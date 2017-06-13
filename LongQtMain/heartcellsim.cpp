@@ -28,6 +28,8 @@
 #include "graph.h"
 #include "runwidget.h"
 #include "chooseprotowidget.h"
+#include "settingsIO.h"
+
 Simulation::Simulation(QString simvarFile, QWidget* parent){
 	//setup class variables
 	this->parent = parent;
@@ -48,10 +50,10 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 
 	proto->datadir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time).toStdString();
 	proto->cellStateDir = proto->datadir;
-	simvarMenu* sims = new simvarMenu(proto,QDir(proto->datadir.c_str()), this);
+	simvarMenu* sims = new simvarMenu(proto, this);
 	dvarMenu* dvars = new dvarMenu(proto->cell, this);
 	mvarMenu* mvars =  new mvarMenu(proto, this);
-	pvarMenu* pvars =  new pvarMenu(proto, this);
+	PvarMenu* pvars =  new PvarMenu(proto, this);
 	RunWidget* run = new RunWidget(proto,QDir(proto->datadir.c_str()));
 	//add items menu_list
 	menu_list.append(choose);
@@ -67,31 +69,22 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), run, SLOT(setProto(Protocol*)));
 	connect(choose, SIGNAL(protocolChanged(Protocol*)), this, SLOT(changeProto(Protocol*)));
 
-	connect(choose, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
-	connect(this, SIGNAL(cell_type_changed()), choose, SLOT(cellChangedSlot()));
-	connect(sims, SIGNAL(working_dir_changed(QDir&)), this, SIGNAL(working_dir_changed(QDir&)));
-	connect(sims, SIGNAL(cell_type_changed()), this, SIGNAL(cell_type_changed()));
-	connect(this, SIGNAL(working_dir_changed(QDir&)), sims, SLOT(setWorkingDir(QDir&)));
+	connect(choose, SIGNAL(cellChanged(Cell*)), this, SIGNAL(cellChanged(Cell*)));
+	connect(this, SIGNAL(cellChanged(Cell*)), choose, SLOT(changeCell(Cell*)));
+	connect(sims, SIGNAL(cellChanged(Cell*)), this, SIGNAL(cellChanged(Cell*)));
 	connect(this, SIGNAL(working_dir_changed(QDir&)), run, SLOT(setWorkingDir(QDir&)));
-	connect(this, SIGNAL(cell_type_changed()), sims, SLOT(changeCellType()));
-	connect(this, &Simulation::cell_type_changed,
-			[this,dvars] () {
-				dvars->changeCell(this->proto->cell);
-			});
-	connect(this, SIGNAL(cell_type_changed()), mvars, SLOT(reset()));
-	connect(this, SIGNAL(cell_type_changed()), pvars, SLOT(reset()));
+	connect(this, SIGNAL(cellChanged(Cell*)), sims, SLOT(changeCell(Cell*)));
+	connect(this, &Simulation::cellChanged,dvars,&dvarMenu::changeCell);
+	connect(this, SIGNAL(cellChanged(Cell*)), mvars, SLOT(reset()));
+	connect(this, &Simulation::cellChanged,pvars,&PvarMenu::changeCell);
 	connect(run, SIGNAL(canceled()), this, SLOT(canceled()));
 	//    connect(run, SIGNAL(finished()), choose, SLOT(resetProto()));
 	connect(run, SIGNAL(finished()), this, SLOT(finished()));
 	connect(run, SIGNAL(running()), this, SLOT(running()));
 	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running),
 			[this] () {
-				this->settingsMgmt.writeSettings(this->proto,(this->proto->datadir+"/"+this->proto->simvarfile).c_str());
+			SettingsIO::getInstance()->writeSettings(this->proto,(this->proto->datadir+"/"+this->proto->simvarfile).c_str());
 			});
-/*	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), sims ,static_cast<void(simvarMenu::*)()>(&simvarMenu::write_file));
-	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), dvars ,static_cast<void(dvarMenu::*)()>(&dvarMenu::write_file));
-	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running), pvars ,static_cast<void(pvarMenu::*)()>(&pvarMenu::write_file));
-	*/
 	connect(cancel_button, SIGNAL(clicked()),run, SLOT(cancel()));
 	//set button/combo box inital values
 	cancel_button->hide();
@@ -150,7 +143,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
 	//read in simvars file if passed in
 	if(simvarFile != "") {
-		settingsMgmt.readSettings(proto,simvarFile);
+		SettingsIO::getInstance()->readSettings(proto,simvarFile);
 	}
 };
 Simulation::~Simulation(){};
@@ -168,7 +161,7 @@ void Simulation::next_button_aciton () {
 		menu_options->setCurrentRow(current_row +1);
 	}
 	date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
-	QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
+//	QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
 
 }
 void Simulation::canceled() {

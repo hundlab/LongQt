@@ -7,7 +7,6 @@
 
 #include <QWidget>
 #include <QGridLayout>
-#include <QDir>
 #include <QDebug>
 #include <QMessageBox>
 #include <QDoubleSpinBox>

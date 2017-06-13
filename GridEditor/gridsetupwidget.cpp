@@ -16,15 +16,13 @@
 //##############################
 GridSetupWidget::GridSetupWidget(QWidget* parent) : GridSetupWidget(
 		new GridProtocol(), 
-		QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first(),
 		parent) {}
 
 GridSetupWidget::GridSetupWidget(GridProtocol* initial_proto, 
-		QDir workingDir, QWidget* parent) : QWidget(parent), 
+		QWidget* parent) : QWidget(parent), 
 		ui(new Ui::GridSetupWidget) {
     ui->setupUi(this);
     this->proto = initial_proto;
-    this->workingDir = workingDir;
     this->parent = parent;
     this->grid = ((GridCell*)proto->cell)->getGrid();
 	this->model = new GridModel(this->proto,this);
@@ -62,7 +60,7 @@ void GridSetupWidget::createMenu() {
 			this->ui->chooseType->blockSignals(oldState);
         }
     });
-	connect(this->model, &GridModel::cell_type_changed, this, &GridSetupWidget::cell_type_changed);
+	connect(this->model, &GridModel::cellChanged, this, &GridSetupWidget::cellChanged);
 }
 
 void GridSetupWidget::setGrid(Grid* grid) {

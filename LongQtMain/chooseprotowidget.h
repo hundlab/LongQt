@@ -27,7 +27,7 @@ Q_OBJECT
     void Initialize();
   signals:
     void protocolChanged(Protocol*);
-    void cell_type_changed();
+    void cellChanged(Cell*);
   private:
 	Ui::ChooseProtoWidget* ui;
     Protocol* proto;
@@ -36,14 +36,16 @@ Q_OBJECT
 //    QComboBox* ui::cellType;
     QString defaultCell;
 	QMap<int,string> protoNumMap;
+	void updateMenu();
   private slots:
     void on_cellType_currentIndexChanged(QString name);
   public slots:
     void changeProto(int value);
   	void changeProto(string name);
-	void changeProto(Protocol*, bool preserve = false);
-    void cellChangedSlot();
+	void changeProto(Protocol*, bool raise = false);
+    void changeCell(Cell*);
     void resetProto();
+	void on_readSettings_clicked();
 };
 
 #endif

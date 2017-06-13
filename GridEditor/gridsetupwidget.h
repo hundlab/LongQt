@@ -5,7 +5,6 @@
 #define gridSetupWidget_H
 
 #include <QWidget>
-#include <QDir>
 #include <QTableView>
 #include <QPushButton>
 #include <QComboBox>
@@ -28,7 +27,7 @@ class GridSetupWidget : public QWidget {
 Q_OBJECT
   public:
     explicit GridSetupWidget(QWidget* parent = 0);
-    explicit GridSetupWidget(GridProtocol* initial_proto, QDir workingDir, QWidget* parent = 0);
+    explicit GridSetupWidget(GridProtocol* initial_proto, QWidget* parent = 0);
     ~GridSetupWidget() {}
     void setGrid(Grid* grid);
     Grid* getGrid();
@@ -36,14 +35,13 @@ Q_OBJECT
 	QTableView* view();
 	GridModel* getModel();
   signals:
-    void cell_type_changed();
+    void cellChanged(Cell*);
   private:
     void createMenu();
 
 	Ui::GridSetupWidget *ui;
     
     GridProtocol* proto;
-    QDir workingDir;
     QWidget* parent;
     Grid* grid;
 

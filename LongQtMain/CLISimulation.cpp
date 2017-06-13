@@ -9,7 +9,7 @@
 
 CLISimulation::CLISimulation(QString simvarFile) {
     this->proto = new CurrentClamp();
-	SettingsIO* settingsMgr = new SettingsIO();
+	SettingsIO* settingsMgr = SettingsIO::getInstance();
 	settingsMgr->readSettings(proto, simvarFile);
 	this->proto = settingsMgr->lastProto;
     QString dateTime = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");

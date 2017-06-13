@@ -1,6 +1,7 @@
 #include "lqgrideditor.h"
 #include "ui_lqgrideditor.h"
 #include "simvarmenu.h"
+#include "settingsIO.h"
 
 #include <QStatusBar>
 #include <QFileDialog>
@@ -14,7 +15,7 @@ LQGridEditor::LQGridEditor(QWidget *parent) :
 	this->setStatusBar(new QStatusBar());
 	this->gridView = this->ui->centralWidget->view();
 	this->proto = this->ui->centralWidget->getProtocol();
-	this->settingsMgr.allowProtoChange = false;
+	SettingsIO::getInstance()->allowProtoChange = false;
 }
 
 LQGridEditor::~LQGridEditor()
@@ -29,7 +30,7 @@ void LQGridEditor::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this,"Open Grid File",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
 		Protocol* proto = this->ui->centralWidget->getProtocol();
-		settingsMgr.readSettings(proto,fileName);
+		SettingsIO::getInstance()->readSettings(proto,fileName);
     }
 	this->ui->centralWidget->getModel()->reloadModel();
 }
@@ -37,7 +38,7 @@ void LQGridEditor::on_actionSave_triggered() {
 	if(this->saveFile == "") {
 		this->on_actionSave_As_triggered();
 	} else {
-		settingsMgr.writeSettings(this->ui->centralWidget->getProtocol(),this->saveFile);
+		SettingsIO::getInstance()->writeSettings(this->ui->centralWidget->getProtocol(),this->saveFile);
 	}
 }
 void LQGridEditor::on_actionSave_As_triggered() {
@@ -45,7 +46,7 @@ void LQGridEditor::on_actionSave_As_triggered() {
     if (!fileName.isEmpty()){
 		this->saveFile = fileName;
 		Protocol* proto = this->ui->centralWidget->getProtocol();
-		settingsMgr.writeSettings(proto,fileName);
+		SettingsIO::getInstance()->writeSettings(proto,fileName);
     }
 }
 void LQGridEditor::on_actionSet_Conductivities_triggered()
@@ -80,6 +81,6 @@ void LQGridEditor::on_actionToggle_Second_Stim_triggered() {
 }
 
 void LQGridEditor::on_actionSet_Sim_Parameters_triggered() {
-    simvarMenu* menu = new simvarMenu(this->proto,QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
+    simvarMenu* menu = new simvarMenu(this->proto);
     menu->show();
 }

@@ -30,10 +30,11 @@
 /*########################
   begin simvarMenu class
 ##########################*/
-simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
+simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)  
+: QWidget(parent)
+{
 //setup class variables
     proto = initial_proto;
-    this->working_dir = working_dir;
     descriptions = GuiUtils::readMap(":/hoverText/parsDescriptions.txt");
     this->createMenu();
 }
@@ -77,19 +78,16 @@ void simvarMenu::createMenu()  {
     temp->setLayout(central_layouts.last());
     tabs->addTab(temp,"Simulation files");
     if(string(proto->type) == "Grid Protocol") {
-        this->grid = new GridSetupWidget((GridProtocol*)this->proto,working_dir);
+        this->grid = new GridSetupWidget((GridProtocol*)this->proto);
         tabs->addTab(grid, "Grid Setup");
-        connect(grid, &GridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
+        connect(grid, &GridSetupWidget::cellChanged, this, &simvarMenu::cellChanged);
 //        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
     }
     }
 //main_layout
     main_layout->addWidget(tabs , 1,0,10 ,19 ); 
-    main_layout->addWidget(close_button, 11, 20);
     setWindowTitle(tr("Simulation Variables Menu"));
     setLayout(main_layout);
-//connect buttons   
-    connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
     update_menu();
 }
@@ -170,7 +168,6 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         cell_type->addItems(cell_options);
         string name = it->first;
         string type = it->second.type;
-        set_default_vals(proto->pars[it->first].get());
         simvars.insert(it->first.c_str(),cell_type);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, cell_type);
         connect((QComboBox*)simvars.last(), static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
@@ -237,32 +234,18 @@ void simvarMenu::changeProto(Protocol* proto) {
     this->reset();
 }
 void simvarMenu::setWorkingDir(QDir& dir) {
-    working_dir = dir;
     update_menu();
 }
-/*
-bool simvarMenu::read_simvars(){
-	if(changed) {
-		this->setCellDefaults = false;
-		this->reset();
-		this->setCellDefaults = true;
-	}
-}*/
-
 void simvarMenu::update_pvars(pair<string,double> p){
     proto->pars.at(p.first).set(to_string(p.second));
 }
 void simvarMenu::update_pvars(pair<string,string> p, string type){
      if(type == "cell") {
         proto->pars[p.first].set(p.second);
-        set_default_vals(p.second);
-        emit cell_type_changed();
+		CellUtils::set_default_vals(this->proto);
+        emit cellChanged(this->proto->cell);
      } else {
         proto->pars[p.first].set(p.second);
-     }
-     if(p.first == "datadir") {
-        working_dir = QString(p.second.c_str());
-        emit working_dir_changed(working_dir);
      }
 }
 void simvarMenu::update_pvars(pair<string,int> p, string type) {
@@ -277,20 +260,9 @@ void simvarMenu::update_pvars(pair<string,int> p, string type) {
         proto->pars[p.first].set(to_string(p.second));
     }
 }
-void simvarMenu::changeCellType() {
-    update_menu(); 
-}
-void simvarMenu::set_default_vals(string name) {
-	if(!this->setCellDefaults) {
-		return;
+void simvarMenu::changeCell(Cell* cell) {
+	if(cell != this->proto->cell) {
+		qWarning("SimvarMenu: Cell does not match protocol cell");
 	}
-    auto cellDefaultsList = CellUtils::protocolCellDefaults[name];
-    for(auto val : cellDefaultsList) {
-        try {
-            proto->pars.at(val.first).set(val.second);
-        } catch(bad_function_call) {
-        } catch(out_of_range) {
-            qDebug("SimvarMenu: %s not in proto pars", val.first.c_str());
-        };
-    }
+    update_menu(); 
 }
