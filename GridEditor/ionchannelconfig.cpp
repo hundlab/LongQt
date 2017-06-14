@@ -27,24 +27,9 @@ IonChannelConfig::~IonChannelConfig()
 
 void IonChannelConfig::updateList() {
 	QStringList toAdd;
-	string info;
 	this->ui->listWidget->clear();
 	for(auto& pvar : *this->proto->pvars) {
-		switch(pvar.second->dist) {
-			case CellPvars::Distribution::none:
-				info = (pvar.first + "\tIncrementing\tInitial Value: "+to_string(pvar.second->val[0])+
-						"\tIncrement Amount: "+to_string(pvar.second->val[1]));
-				break;
-			case CellPvars::Distribution::normal:
-				info = (pvar.first + "\tNormal Distribution\t Mean: "+to_string(pvar.second->val[0])+
-						"\tStandard Deviation: "+to_string(pvar.second->val[1]));
-				break;
-			case CellPvars::Distribution::lognormal:
-				info = (pvar.first + "\tLognormal Distribution\t Mean: "+to_string(pvar.second->val[0])+
-						"\tStandard Deviation: "+to_string(pvar.second->val[1]));
-				break;
-		}
-		toAdd += info.c_str();
+		toAdd += pvar.second->IonChanParam::str(pvar.first).c_str();
 	}
 	this->ui->listWidget->addItems(toAdd);
 }

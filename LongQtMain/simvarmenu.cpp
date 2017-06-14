@@ -40,14 +40,11 @@ simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)
 }
 
 void simvarMenu::createMenu()  {
-//setup useful constants and aliases
-    QString end_op = "Next";
 //initialize layouts
     main_layout = new QGridLayout(this);
     QList<QHBoxLayout*> central_layouts;
 //initialize buttons &lables
     QTabWidget* tabs = new QTabWidget();
-//    QCheckBox readflag = new QCheckBox("Read in variable files", this);
 //do all the work for simvars setup
     for(map<string,GetSetRef>::iterator it = proto->pars.begin(); it!=proto->pars.end(); it++) {
         if(simvars_layouts.find(it->second.type.c_str()) == simvars_layouts.end()) {
