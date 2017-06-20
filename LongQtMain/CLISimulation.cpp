@@ -28,15 +28,14 @@ void CLISimulation::runSim() {
     QDir().mkpath(proto->datadir.c_str());
     for( i = 0; i < proto->numtrials; i++) {
         proto->setTrial(i);
-        proto->readfile = "r"+ to_string(i) + ".dat"; // File to read SV ICs
+/*        proto->readfile = "r"+ to_string(i) + ".dat"; // File to read SV ICs
         proto->savefile = "s"+ to_string(i) + ".dat"; // File to save final SV
         proto->propertyoutfile = "dt%d_%s" + string(".dat");
         proto->dvarsoutfile = "dt%d_dvars" + string(".dat");
         proto->finalpropertyoutfile = "dss%d_%s" + string(".dat");
-        proto->finaldvarsoutfile = "dss%d_pvars" + string(".dat");
+        proto->finaldvarsoutfile = "dss%d_pvars" + string(".dat");*/
         vector.append(proto->clone());
     }
-   
     QFuture<void> next = QtConcurrent::map(vector,[] (Protocol* p) {
         if(p != NULL) {
             p->runTrial();
