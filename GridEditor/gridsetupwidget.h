@@ -40,7 +40,7 @@ Q_OBJECT
     void createMenu();
 
 	Ui::GridSetupWidget *ui;
-    
+
     GridProtocol* proto;
     QWidget* parent;
     Grid* grid;

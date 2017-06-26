@@ -8,21 +8,20 @@
 
 
 class AppParser {
-	QCommandLineParser parser;
-	QCoreApplication* app;
+    QCommandLineParser parser;
+    QCoreApplication* app;
 
-	QCommandLineOption GUIOption;
-	QCommandLineOption licenseOption;
-	QCommandLineOption simvarsFileOption;
+    QCommandLineOption GUIOption;
+    QCommandLineOption licenseOption;
 
-	public:
-	AppParser(QCoreApplication* app);
-	~AppParser() {};
-	void process();
-	void showLicense();
-	void start();
+    public:
+    AppParser(QCoreApplication* app);
+    ~AppParser() {};
+    void process();
+    void showLicense();
+    void start();
 
-	QString simvarsFile;
+    QStringList simvarsFiles;
 };
 
 #endif

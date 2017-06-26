@@ -30,7 +30,7 @@
 /*########################
   begin simvarMenu class
 ##########################*/
-simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)  
+simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)
 : QWidget(parent)
 {
 //setup class variables
@@ -82,7 +82,7 @@ void simvarMenu::createMenu()  {
     }
     }
 //main_layout
-    main_layout->addWidget(tabs , 1,0,10 ,19 ); 
+    main_layout->addWidget(tabs , 1,0,10 ,19 );
     setWindowTitle(tr("Simulation Variables Menu"));
     setLayout(main_layout);
 //make menu match proto

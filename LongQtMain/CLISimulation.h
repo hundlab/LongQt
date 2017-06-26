@@ -10,10 +10,11 @@
 class CLISimulation : QObject {
     Q_OBJECT
   public:
-    CLISimulation(QString simvarFile = "");
+    CLISimulation();
     ~CLISimulation() {};
     bool runTrial(int trialnum);
     void runSim();
+    void runSims(QStringList simvarFiles);
   private:
     Protocol* proto;
     int low = 0;
