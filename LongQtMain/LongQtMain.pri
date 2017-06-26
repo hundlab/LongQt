@@ -9,6 +9,7 @@ SOURCES +=\
   $$PWD/heartcellsim.cpp \
 	$$PWD/CLISimulation.cpp \
 	$$PWD/appparser.cpp \
+    $$PWD/addsinglecellpvar.cpp \
   $$PWD/chooseprotowidget.cpp
 
 HEADERS  +=\
@@ -20,10 +21,12 @@ HEADERS  +=\
   $$PWD/heartcellsim.h \
 	$$PWD/CLISimulation.h \
 	$$PWD/appparser.h \
+    $$PWD/addsinglecellpvar.h\
   $$PWD/chooseprotowidget.h
 
 FORMS += \
     $$PWD/runwidget.ui \
     $$PWD/chooseprotowidget.ui\
+    $$PWD/addsinglecellpvar.ui\
 	$$PWD/pvarmenu.ui
 
