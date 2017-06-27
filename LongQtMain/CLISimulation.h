@@ -11,15 +11,15 @@ class CLISimulation : QObject {
     Q_OBJECT
   public:
     CLISimulation();
-    ~CLISimulation() {};
+    ~CLISimulation();
     bool runTrial(int trialnum);
     void runSim();
     void runSims(QStringList simvarFiles);
   private:
-    Protocol* proto;
+    Protocol* proto = 0;
     int low = 0;
     int high = 0;
-    QVector<Protocol*> vector;
+    QVector<QSharedPointer<Protocol>> vector;
     QFutureWatcher<void> watcher;
     QFuture<void> next;
   private slots:

@@ -14,6 +14,7 @@
 #include <QFuture>
 #include <QTextEdit>
 #include <QLineEdit>
+#include <QSharedPointer>
 
 #include "protocol.h"
 
@@ -51,6 +52,6 @@ Q_OBJECT
     QDir working_dir;
     QFutureWatcher<void> watcher;
     QFuture<void> next;
-    QVector<Protocol*> vector;
+    QVector<QSharedPointer<Protocol>> vector;
 };
 #endif

@@ -24,6 +24,8 @@ namespace GuiUtils {
             QString value = fileStream.readLine();
             map.insert(key,value);
         }
+        file->close();
+        delete file;
         return map;
     }
 		//also for hoverTexts (add units &etc)

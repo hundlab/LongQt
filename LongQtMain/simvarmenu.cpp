@@ -92,7 +92,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     QMap<QString,function<void(const map<string,GetSetRef>::iterator)>> initializers;
     initializers["double"] = [this] (const map<string, GetSetRef>::iterator it) {
         QDoubleSpinBox* new_simvar = new QDoubleSpinBox();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         new_simvar->setRange(/*std::numeric_limits<double>::min()*/ -100000,std::numeric_limits<double>::max());
@@ -102,7 +102,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     };
     initializers["int"] = [this] (const map<string, GetSetRef>::iterator it) {
         QSpinBox* new_simvar = new QSpinBox();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         new_simvar->setRange(/*std::numeric_limits<int>::min()*/-100000, std::numeric_limits<int>::max());
@@ -112,7 +112,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     };
     initializers["bool"] = [this] (const map<string, GetSetRef>::iterator it) {
         QCheckBox* new_simvar = new QCheckBox();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         string type = it->second.type;
@@ -122,7 +122,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     };
     initializers["file"] = [this] (const map<string, GetSetRef>::iterator it) {
         QLineEdit* new_simvar = new QLineEdit();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         string type = it->second.type;
@@ -136,7 +136,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         QPushButton* setDir = new QPushButton("Choose");
         QWidget* layoutWidget = new QWidget();
         QHBoxLayout* layout = new QHBoxLayout(layoutWidget);
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         layout->setContentsMargins(0,0,0,0);
         layout->addWidget(new_simvar);
         layout->addWidget(setDir);
@@ -157,7 +157,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     initializers["cell"] = [this]  (const map<string, GetSetRef>::iterator it) {
         QStringList cell_options;
         auto cell_type = new QComboBox();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         auto cell_opitons_stl = proto->cellOptions();
         for(auto im = cell_opitons_stl.begin(); im != cell_opitons_stl.end(); im++) {
             cell_options << im->c_str();

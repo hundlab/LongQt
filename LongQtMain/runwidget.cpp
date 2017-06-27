@@ -3,6 +3,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QtConcurrent>
+#include <QScopedPointer>
 
 RunWidget::RunWidget(Protocol* proto, QDir working_dir, QWidget* parent) :
     QWidget(parent),
@@ -25,14 +26,15 @@ void RunWidget::on_runButton_clicked() {
     int i = 0;
     ui->runButton->setEnabled(false);
     working_dir.mkpath(working_dir.absolutePath());
-    QFile* note_file = new QFile(working_dir.absolutePath()+ "/" + ui->noteBoxName->text() + ".txt");
+    QScopedPointer<QFile> note_file(new QFile(working_dir.absolutePath()+ "/" + ui->noteBoxName->text() + ".txt"));
     note_file->open(QIODevice::WriteOnly|QIODevice::Text);
     if(note_file->isOpen()) {
-        QTextStream out(note_file);
+        QTextStream out(note_file.data());
         out << ui->noteBox->toPlainText();
     } else {
-        cerr << "note file could not be opened";
+        qWarning() << "note file could not be opened";
     }
+    note_file->close();
     vector.clear();
 
     for( i = 0; i < proto->numtrials; i++) {
@@ -43,10 +45,10 @@ void RunWidget::on_runButton_clicked() {
         proto->dvarsoutfile = "dt%d_dvars" + string(".dat");
         proto->finalpropertyoutfile = "dss%d_%s" + string(".dat");
         proto->finaldvarsoutfile = "dss%d_pvars" + string(".dat");*/
-        vector.append(proto->clone());
+        vector.append(QSharedPointer<Protocol>(proto->clone()));
     }
 
-    QFuture<void> next = QtConcurrent::map(vector,[] (Protocol* p) {
+    QFuture<void> next = QtConcurrent::map(vector,[] (QSharedPointer<Protocol> p) {
             if(p != NULL) {
             p->runTrial();
             }
@@ -65,5 +67,6 @@ void RunWidget::cancel() {
 }
 void RunWidget::finish() {
     ui->runButton->setEnabled(true);
+    this->vector.clear();
     emit finished();
 }

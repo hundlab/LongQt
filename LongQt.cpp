@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
 	AppParser parser(app);
 	parser.process();
 	parser.start();
-	
 	return app->exec();
 }
 

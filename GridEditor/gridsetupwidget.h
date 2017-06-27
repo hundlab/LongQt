@@ -28,7 +28,7 @@ Q_OBJECT
   public:
     explicit GridSetupWidget(QWidget* parent = 0);
     explicit GridSetupWidget(GridProtocol* initial_proto, QWidget* parent = 0);
-    ~GridSetupWidget() {}
+    ~GridSetupWidget();
     void setGrid(Grid* grid);
     Grid* getGrid();
 	GridProtocol* getProtocol();

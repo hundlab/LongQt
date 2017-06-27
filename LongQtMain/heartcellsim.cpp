@@ -40,7 +40,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	//organizational widgets
 	menu = new QStackedWidget();
 	menu_options = new QListWidget();
-	//create Widgets 
+	//create Widgets
 	QSplitter* main_splitter = new QSplitter();
 	about_button = new QPushButton(QIcon::fromTheme("help-about"),"About");
 	next_button = new QPushButton("Next");
@@ -146,7 +146,10 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 		SettingsIO::getInstance()->readSettings(proto,simvarFile);
 	}
 };
-Simulation::~Simulation(){};
+Simulation::~Simulation(){
+    if(this->proto)
+        delete proto;
+};
 void Simulation::changeProto(Protocol* proto) {
 	this->proto = proto;
 }

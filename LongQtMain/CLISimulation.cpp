@@ -13,6 +13,11 @@ CLISimulation::CLISimulation() {
     connect(&watcher,SIGNAL(progressRangeChanged(int,int)),this,SLOT(setRange(int,int)));
     connect(&watcher,SIGNAL(progressValueChanged(int)),this,SLOT(setValue(int)));
 }
+CLISimulation::~CLISimulation() {
+    if(this->proto) {
+        delete proto;
+    }
+}
 
 void CLISimulation::runSims(QStringList simvarFiles) {
     SettingsIO* settingsMgr = SettingsIO::getInstance();
@@ -45,9 +50,9 @@ void CLISimulation::runSim() {
                   proto->dvarsoutfile = "dt%d_dvars" + string(".dat");
                   proto->finalpropertyoutfile = "dss%d_%s" + string(".dat");
                   proto->finaldvarsoutfile = "dss%d_pvars" + string(".dat");*/
-        vector.append(proto->clone());
+        vector.append(QSharedPointer<Protocol>(proto->clone()));
     }
-    this->next = QtConcurrent::map(vector,[] (Protocol* p) {
+    this->next = QtConcurrent::map(vector,[] (QSharedPointer<Protocol> p) {
             if(p != NULL) {
             p->runTrial();
             }
@@ -58,6 +63,7 @@ void CLISimulation::runSim() {
 }
 void CLISimulation::finish() {
     QTextStream(stdout) << "\nFinished!\n";
+    this->vector.clear();
     exit(0);
 }
 void CLISimulation::setRange(int low, int high) {

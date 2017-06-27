@@ -72,7 +72,7 @@ void dvarMenu::createMenu()  {
     for(i = 0; it!=vars.end(); it++,i++) {
         bool found = false;
         string p =  *it;
-        dvars[i] = new QCheckBox(*(new QString(it->c_str())), this);
+        dvars[i] = new QCheckBox(it->c_str(), this);
         for(auto im = dvars_groups.begin(); im != dvars_groups.end(); im++) {
             if(im->indexIn(p.c_str()) != -1) {
                 found = true;

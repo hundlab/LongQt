@@ -20,11 +20,11 @@ AddSingleCellPvar::~AddSingleCellPvar()
 }
 
 void AddSingleCellPvar::updateIonChannelType() {
-    QRegExp* allowed_vars = new QRegExp("Factor");
+    QRegExp allowed_vars = QRegExp("Factor");
     QStringList toAdd;
     ui->ionChannelType->clear();
     for(auto& pvarName : this->proto->cell->getConstants()) {
-        if(allowed_vars->indexIn(pvarName.c_str()) != -1) {
+        if(allowed_vars.indexIn(pvarName.c_str()) != -1) {
             toAdd += pvarName.c_str();
         }
     }

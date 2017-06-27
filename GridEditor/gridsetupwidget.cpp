@@ -29,11 +29,16 @@ GridSetupWidget::GridSetupWidget(GridProtocol* initial_proto,
 
     this->createMenu();
 }
+GridSetupWidget::~GridSetupWidget() {
+    delete this->ui;
+}
+
 void GridSetupWidget::createMenu() {
 //setup view
 	this->ui->cellGrid->setModel(this->model);
-	this->ui->cellGrid->setItemDelegate(new GridDelegate);
-	this->ui->cellGrid->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	ui->cellGrid->setItemDelegate(new GridDelegate(this->ui->cellGrid));
+	ui->cellGrid->horizontalHeader()->
+        setSectionResizeMode(QHeaderView::ResizeToContents);
     auto cellMap = CellUtils::cellMap;
     cellMap["Inexcitable Cell"] = [] () {return new Cell;};
     for(auto it : cellMap) {

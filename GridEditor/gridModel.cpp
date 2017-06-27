@@ -45,8 +45,7 @@ QVariant GridModel::data(const QModelIndex& index, int role) const {
 }
 QVariant GridModel::dataDisplay(const QModelIndex & index) const {
     if(index.internalPointer() == 0) {
-        pair<int,int> p = make_pair(index.row(), index.column());
-        Node* n = this->grid->findNode(p);
+        Node* n = this->grid->operator ()(index.row(), index.column());
         if(n == NULL) {
             return QVariant();
         }
@@ -93,28 +92,28 @@ QVariant GridModel::dataStatusTip(const QModelIndex & index) const {
 bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) {
     bool success = false;
     if(index.internalPointer() == 0) {
-        CellInfo* info = new CellInfo;
-        info->X = index.row();
-        info->Y = index.column();
+        CellInfo info;
+        info.X = index.row();
+        info.Y = index.column();
         try {
-            info->cell = this->cellMap.at(value.toString().toStdString())();
-            info->dx = *proto->cell->pars["dx"];
-            info->dy = *proto->cell->pars["dy"];
-            info->np = *proto->cell->pars["np"];
-            if(*info->cell->pars["dtmin"] < *proto->cell->pars["dtmin"]) {
-                *proto->cell->pars["dtmin"] = *info->cell->pars["dtmin"];
+            info.cell = this->cellMap.at(value.toString().toStdString())();
+            info.dx = *proto->cell->pars["dx"];
+            info.dy = *proto->cell->pars["dy"];
+            info.np = *proto->cell->pars["np"];
+            if(*info.cell->pars["dtmin"] < *proto->cell->pars["dtmin"]) {
+                *proto->cell->pars["dtmin"] = *info.cell->pars["dtmin"];
             }
-            if(*info->cell->pars["dtmed"] < *proto->cell->pars["dtmed"]) {
-                *proto->cell->pars["dtmed"] = *info->cell->pars["dtmed"];
+            if(*info.cell->pars["dtmed"] < *proto->cell->pars["dtmed"]) {
+                *proto->cell->pars["dtmed"] = *info.cell->pars["dtmed"];
             }
-            if(*info->cell->pars["dtmax"] < *proto->cell->pars["dtmax"]) {
-                *proto->cell->pars["dtmax"] = *info->cell->pars["dtmax"];
+            if(*info.cell->pars["dtmax"] < *proto->cell->pars["dtmax"]) {
+                *proto->cell->pars["dtmax"] = *info.cell->pars["dtmax"];
             }
-            this->grid->setCellTypes(*info);
+            this->grid->setCellTypes(info);
             emit cellChanged(proto->cell);
             emit dataChanged(index, index);
         } catch(const std::out_of_range&) {
-            qWarning("%s not a valid cell type or (%i,%i) out of range",qUtf8Printable(value.toString()),info->Y,info->X);
+            qWarning("%s not a valid cell type or (%i,%i) out of range",qUtf8Printable(value.toString()),info.Y,info.X);
         }
         success = true;
     } else {

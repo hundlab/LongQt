@@ -74,6 +74,7 @@ void ChooseProtoWidget::changeProto(Protocol* newProto, bool raise) {
 		ui->cellType->setEnabled(true);
 		ui->cellType->removeItem(ui->cellType->count() -1);
 	}
+    delete this->proto;
 	this->proto = newProto;
 
 	if(raise) {
@@ -83,6 +84,7 @@ void ChooseProtoWidget::changeProto(Protocol* newProto, bool raise) {
 		ui->cellType->addItem("");
 		ui->cellType->setEnabled(false);
 		emit cellChanged(proto->cell);
+
 	} else {
 		this->proto->cell = old_cell;
 	}

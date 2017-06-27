@@ -12,12 +12,12 @@ GridDelegate::GridDelegate(QWidget *parent) : QStyledItemDelegate(parent), size(
 	cellMap["Inexcitable Cell"] = [] () {return new Cell;};	
 	int i = 0;
 	for(auto& pair : cellMap) {
-		QPalette* palette = new QPalette();
-        palette->setColor(QPalette::Base, GuiUtils::genColor(i));
-        palette->setColor(QPalette::Highlight, GuiUtils::genColor(i,80));
-        palette->setColor(QPalette::HighlightedText, GuiUtils::genColor(i,80));
+        QPalette palette;
+        palette.setColor(QPalette::Base, GuiUtils::genColor(i));
+        palette.setColor(QPalette::Highlight, GuiUtils::genColor(i,80));
+        palette.setColor(QPalette::HighlightedText, GuiUtils::genColor(i,80));
 
-		this->colors.insert(pair.first.c_str(), *palette);
+        this->colors.insert(pair.first.c_str(), palette);
 		i++;
 	}
 }

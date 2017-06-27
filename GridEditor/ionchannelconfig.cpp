@@ -38,11 +38,11 @@ void IonChannelConfig::cellChanged(Cell* cell) {
 	if(cell != proto->cell) {
 		qWarning("IonChannelConfig: Cell does not match proto cell");
 	}
-	QRegExp* allowed_vars = new QRegExp("Factor");
+	QRegExp allowed_vars = QRegExp("Factor");
 	QStringList toAdd;
 	ui->ionChannelType->clear();
 	for(auto& pvarName : this->proto->cell->getConstants()) {
-		if(allowed_vars->indexIn(pvarName.c_str()) != -1) {
+		if(allowed_vars.indexIn(pvarName.c_str()) != -1) {
 			toAdd += pvarName.c_str();
 		}
 	}
@@ -107,10 +107,10 @@ void IonChannelConfig::on_addButton_clicked()
 	if(ui->multiple->isChecked()) {
 		maxDist = ui->maxDist->value();
 		maxVal = ui->maxVal->value();
-		((PvarsGrid*)proto->pvars)->setMaxDistAndVal(type,maxDist,maxVal);
+        ((PvarsGrid*)proto->pvars.get())->setMaxDistAndVal(type,maxDist,maxVal);
 	}
 	auto startCells = this->getInitial();
-	((PvarsGrid*)proto->pvars)->setStartCells(type,startCells);
+    ((PvarsGrid*)proto->pvars.get())->setStartCells(type,startCells);
 	this->updateList();
 }
 set<pair<int,int>> IonChannelConfig::getInitial() {
