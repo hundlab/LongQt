@@ -26,7 +26,10 @@ void CLISimulation::runSims(QStringList simvarFiles) {
     int i = 0;
     for(QString& simvarFile: simvarFiles) {
         settingsMgr->readSettings(proto, simvarFile);
-        this->proto = settingsMgr->lastProto;
+        if(settingsMgr->lastProto != this->proto) {
+            delete proto;
+            proto = settingsMgr->lastProto;
+        }
         proto->datadir = (QStandardPaths::standardLocations(
             QStandardPaths::DocumentsLocation).first()
             +"/data"+dateTime+"_"+QString::number(i)).toStdString();

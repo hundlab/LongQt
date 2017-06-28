@@ -80,16 +80,17 @@ void ChooseProtoWidget::changeProto(Protocol* newProto, bool raise) {
 	if(raise) {
     	emit protocolChanged(this->proto);
 	}
+    if(old_cell->type == string("gridCell")) {
+        on_cellType_currentIndexChanged(defaultCell);
+    }
 	if(this->proto->cell->type == string("gridCell")) {
 		ui->cellType->addItem("");
 		ui->cellType->setEnabled(false);
 		emit cellChanged(proto->cell);
-
+        delete old_cell;
 	} else {
-		this->proto->cell = old_cell;
-	}
-	if(old_cell->type == string("gridCell")) {
-		on_cellType_currentIndexChanged(defaultCell);
+        delete this->proto->cell;
+        proto->cell = old_cell;
 	}
 	this->proto->cellStateDir = cellStateDir;
 	this->proto->datadir = datadir;

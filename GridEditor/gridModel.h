@@ -4,6 +4,8 @@
 #ifndef GRID_MODEL_H
 #define GRID_MODEL_H
 #include <QAbstractTableModel>
+#include <QSet>
+#include <QPair>
 #include "grid.h"
 #include "gridProtocol.h"
 #include "cellutils.h"

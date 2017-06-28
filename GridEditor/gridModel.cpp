@@ -224,10 +224,9 @@ QModelIndex GridModel::index(int row, int column, const QModelIndex & parent) co
     if(!parent.isValid()) {
         return QAbstractTableModel::index(row, column, parent);
     }
-    //	if(row > 0 || column > 1) {
-    //		return QModelIndex();
-    //	}
-    return QAbstractTableModel::createIndex(row, column, new QPair<int,int>(parent.row(), parent.column()));
+    auto pos = new QPair<int,int>(parent.row(), parent.column());
+    connect(this,&QObject::destroyed, [pos](){delete pos;});
+    return QAbstractTableModel::createIndex(row, column, pos);
 }
 QModelIndex GridModel::parent(const QModelIndex & index) const {
     QPair<int,int>* p = 0;
