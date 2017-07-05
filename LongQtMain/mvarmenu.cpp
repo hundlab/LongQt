@@ -6,6 +6,7 @@
 #include <QScopedPointer>
 #include <QTreeWidget>
 #include <QSpinBox>
+#include <QRegExp>
 
 /*#################################
   begin mvarMenu class
@@ -46,7 +47,7 @@ void MvarMenu::setupMenu()  {
         this->cellVars.append(cellVar.first.c_str());
         auto cellItem = new QTreeWidgetItem(
             ui->measView,
-            {QString(cellVar.first.c_str())},
+            {cellVar.first.c_str(), this->getType(cellVar.first.c_str())},
             cellType);
         cellItem->setData(0,Qt::ToolTipRole,this->dvarsDescriptions[cellVar.first.c_str()]);
         set<string> measOptions;
@@ -66,7 +67,7 @@ void MvarMenu::setupMenu()  {
             }
             auto measItem = new QTreeWidgetItem(
                 cellItem,
-                {QString(measVar.c_str())},
+                {measVar.c_str()},
                 measIds[measVar]);
                 measItem->setData(0,Qt::ToolTipRole,this->measDescriptions[measVar.c_str()]);
             if(selection.count(cellVar.first)>0 &&
@@ -150,4 +151,17 @@ void MvarMenu::setChildrenCheckedStates(QTreeWidgetItem* item, int column, Qt::C
     for(int i = 0; i < item->childCount(); ++i) {
         item->child(i)->setCheckState(column, state);
     }
+}
+
+QString MvarMenu::getType(QString name) {
+    QMap<QString,QRegExp> groups =
+        {{"Gates",QRegExp("^Gate.",Qt::CaseInsensitive)},
+        {"Currents",QRegExp("^i")},
+        {"Calcium Concentrations", QRegExp("^ca")}};
+    for(auto group = groups.begin(); group != groups.end(); ++group) {
+        if(group->indexIn(name) != -1) {
+            return group.key();
+        }
+    }
+    return "Other";
 }

@@ -27,6 +27,7 @@ Q_OBJECT
 
   private:
     void setupMenu();
+    QString getType(QString name);
 
     shared_ptr<Protocol> proto;
     QMap<QString,QString> dvarsDescriptions;
