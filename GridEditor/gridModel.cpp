@@ -5,20 +5,20 @@
 
 using namespace std;
 
-GridModel::GridModel(GridProtocol* proto, QObject* parent) : QAbstractTableModel(parent) {
+GridModel::GridModel(shared_ptr<GridProtocol> proto, QObject* parent) : QAbstractTableModel(parent) {
     if(proto) {
         this->proto = proto;
     } else {
-        this->proto = new GridProtocol();
+        this->proto.reset(new GridProtocol());
     }
-    this->grid = ((GridCell*)proto->cell)->getGrid();
+    this->grid = ((GridCell*)proto->cell())->getGrid();
     cellMap = CellUtils::cellMap;
     cellMap["Inexcitable Cell"] = [] () {return new Cell;};
 
 }
-bool GridModel::setProtocol(GridProtocol* proto) {
+bool GridModel::setProtocol(shared_ptr<GridProtocol> proto) {
     this->proto = proto;
-    this->grid = ((GridCell*)proto->cell)->getGrid();
+    this->grid = ((GridCell*)proto->cell())->getGrid();
     QAbstractItemModel::resetInternalData();
     return true;
 }
@@ -45,7 +45,7 @@ QVariant GridModel::data(const QModelIndex& index, int role) const {
 }
 QVariant GridModel::dataDisplay(const QModelIndex & index) const {
     if(index.internalPointer() == 0) {
-        Node* n = this->grid->operator ()(index.row(), index.column());
+        Node* n = (*this->grid)(index.row(), index.column());
         if(n == NULL) {
             return QVariant();
         }
@@ -56,7 +56,7 @@ QVariant GridModel::dataDisplay(const QModelIndex & index) const {
             if(index.column() == 0) {
                 return this->proto->getStimNodes().count(p) > 0;
             } else if(index.column() == 1) {
-                return this->proto->gridMeasureMgr()->dataNodes().count(p) > 0;
+                return this->proto-> gridMeasureMgr().dataNodes().count(p) > 0;
             }
         } else if(index.row() == 1) {
             switch(index.column()) {
@@ -97,20 +97,20 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
         info.Y = index.column();
         try {
             info.cell = this->cellMap.at(value.toString().toStdString())();
-            info.dx = *proto->cell->pars["dx"];
-            info.dy = *proto->cell->pars["dy"];
-            info.np = *proto->cell->pars["np"];
-            if(*info.cell->pars["dtmin"] < *proto->cell->pars["dtmin"]) {
-                *proto->cell->pars["dtmin"] = *info.cell->pars["dtmin"];
+            info.dx = *proto->cell()->pars["dx"];
+            info.dy = *proto->cell()->pars["dy"];
+            info.np = *proto->cell()->pars["np"];
+            if(*info.cell->pars["dtmin"] < *proto->cell()->pars["dtmin"]) {
+                *proto->cell()->pars["dtmin"] = *info.cell->pars["dtmin"];
             }
-            if(*info.cell->pars["dtmed"] < *proto->cell->pars["dtmed"]) {
-                *proto->cell->pars["dtmed"] = *info.cell->pars["dtmed"];
+            if(*info.cell->pars["dtmed"] < *proto->cell()->pars["dtmed"]) {
+                *proto->cell()->pars["dtmed"] = *info.cell->pars["dtmed"];
             }
-            if(*info.cell->pars["dtmax"] < *proto->cell->pars["dtmax"]) {
-                *proto->cell->pars["dtmax"] = *info.cell->pars["dtmax"];
+            if(*info.cell->pars["dtmax"] < *proto->cell()->pars["dtmax"]) {
+                *proto->cell()->pars["dtmax"] = *info.cell->pars["dtmax"];
             }
             this->grid->setCellTypes(info);
-            emit cellChanged(proto->cell);
+            emit cellChanged(proto->cell());
             emit dataChanged(index, index);
         } catch(const std::out_of_range&) {
             qWarning("%s not a valid cell type or (%i,%i) out of range",qUtf8Printable(value.toString()),info.Y,info.X);
@@ -128,13 +128,13 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
                 success = true;
             } else if(index.column() == 1) {
                 if(value.toBool()) {
-                    auto nodes = this->proto->gridMeasureMgr()->dataNodes();
+                    auto nodes = this->proto-> gridMeasureMgr().dataNodes();
                     nodes.insert(p);
-                    this->proto->gridMeasureMgr()->dataNodes(nodes);
+                    this->proto-> gridMeasureMgr().dataNodes(nodes);
                 } else {
-                    auto nodes = this->proto->gridMeasureMgr()->dataNodes();
+                    auto nodes = this->proto-> gridMeasureMgr().dataNodes();
                     nodes.erase(p);
-                    this->proto->gridMeasureMgr()->dataNodes(nodes);
+                    this->proto-> gridMeasureMgr().dataNodes(nodes);
                 }
                 success = true;
             }
@@ -142,9 +142,9 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
             CellInfo u;
             u.X = index.parent().row();
             u.Y = index.parent().column();
-            u.dx = *proto->cell->pars["dx"];
-            u.dy = *proto->cell->pars["dy"];
-            u.np = *proto->cell->pars["np"];
+            u.dx = *proto->cell()->pars["dx"];
+            u.dy = *proto->cell()->pars["dy"];
+            u.np = *proto->cell()->pars["np"];
             //this works because column is setup follow cellutils_side.h:Side
             double val = value.toDouble();
             if(this->percent) {
@@ -234,6 +234,13 @@ QModelIndex GridModel::parent(const QModelIndex & index) const {
         return this->index(p->first, p->second, QModelIndex());
     }
     return QModelIndex();
+}
+
+QVariant GridModel::headerData(int section, Qt::Orientation o, int role) const {
+    if(role == 0) {
+        return section;
+    }
+    return QAbstractTableModel::headerData(section,o,role);
 }
 
 void GridModel::reloadModel() {

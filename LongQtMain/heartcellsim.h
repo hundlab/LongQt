@@ -31,7 +31,7 @@ class Simulation : public QWidget {
 
   private:
     QWidget* parent;
-    Protocol* proto;
+    shared_ptr<Protocol> proto;
     QString date_time;
     QList<QWidget*> menu_list;
 //utility functions & classes
@@ -52,7 +52,7 @@ class Simulation : public QWidget {
     void canceled();
     void finished();
     void running();
-    void changeProto(Protocol* proto);
+    void changeProto(shared_ptr<Protocol> proto);
   signals:
     void cellChanged(Cell*);
     void working_dir_changed(QDir& dir);

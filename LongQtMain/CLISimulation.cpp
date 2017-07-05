@@ -8,16 +8,12 @@
 #include "settingsIO.h"
 
 CLISimulation::CLISimulation() {
-    this->proto = new CurrentClamp();
+    this->proto.reset(new CurrentClamp());
     connect(&watcher,SIGNAL(finished()),this,SLOT(finish()));
     connect(&watcher,SIGNAL(progressRangeChanged(int,int)),this,SLOT(setRange(int,int)));
     connect(&watcher,SIGNAL(progressValueChanged(int)),this,SLOT(setValue(int)));
 }
-CLISimulation::~CLISimulation() {
-    if(this->proto) {
-        delete proto;
-    }
-}
+CLISimulation::~CLISimulation() {}
 
 void CLISimulation::runSims(QStringList simvarFiles) {
     SettingsIO* settingsMgr = SettingsIO::getInstance();
@@ -26,10 +22,7 @@ void CLISimulation::runSims(QStringList simvarFiles) {
     int i = 0;
     for(QString& simvarFile: simvarFiles) {
         settingsMgr->readSettings(proto, simvarFile);
-        if(settingsMgr->lastProto != this->proto) {
-            delete proto;
-            proto = settingsMgr->lastProto;
-        }
+        proto = settingsMgr->lastProto;
         proto->datadir = (QStandardPaths::standardLocations(
             QStandardPaths::DocumentsLocation).first()
             +"/data"+dateTime+"_"+QString::number(i)).toStdString();
@@ -38,7 +31,7 @@ void CLISimulation::runSims(QStringList simvarFiles) {
     }
 }
 bool CLISimulation::runTrial(int trialnum) {
-    proto->setTrial(trialnum);
+    proto->trial(trialnum);
     return proto->runTrial();
 }
 void CLISimulation::runSim() {
@@ -46,7 +39,7 @@ void CLISimulation::runSim() {
     vector.clear();
     QDir().mkpath(proto->datadir.c_str());
     for( i = 0; i < proto->numtrials; i++) {
-        proto->setTrial(i);
+        proto->trial(i);
         /*        proto->readfile = "r"+ to_string(i) + ".dat"; // File to read SV ICs
                   proto->savefile = "s"+ to_string(i) + ".dat"; // File to save final SV
                   proto->propertyoutfile = "dt%d_%s" + string(".dat");

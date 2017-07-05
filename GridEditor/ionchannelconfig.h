@@ -20,14 +20,14 @@ class IonChannelConfig : public QWidget
     Q_OBJECT
 
 public:
-    explicit IonChannelConfig(QTableView* view, GridProtocol* proto, QWidget *parent = 0);
+    explicit IonChannelConfig(QTableView* view, shared_ptr<GridProtocol> proto, QWidget *parent = 0);
     ~IonChannelConfig();
 	void updateList();
 
 private:
     Ui::IonChannelConfig *ui;
 	GridModel* model = 0;
-	GridProtocol* proto = 0;
+	shared_ptr<GridProtocol> proto = 0;
 	QTableView* view = 0;
 
 	set<pair<int,int>> getInitial();

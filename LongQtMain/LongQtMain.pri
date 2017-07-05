@@ -28,5 +28,6 @@ FORMS += \
     $$PWD/runwidget.ui \
     $$PWD/chooseprotowidget.ui\
     $$PWD/addsinglecellpvar.ui\
-	$$PWD/pvarmenu.ui
+	$$PWD/pvarmenu.ui \
+    $$PWD/mvarmenu.ui
 

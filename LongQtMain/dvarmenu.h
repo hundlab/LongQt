@@ -6,18 +6,7 @@
 #define DVARMENU_H
 
 #include <QWidget>
-#include <QGridLayout>
-#include <QDebug>
-#include <QMessageBox>
-#include <QDoubleSpinBox>
-#include <QSignalMapper>
-#include <QListWidget>
-#include <QVector>
-#include <QStringList>
-#include <QComboBox>
-#include <QTableWidget>
-#include <QLineEdit>
-#include <set>
+#include <QCheckBox>
 
 #include "cell.h"
 

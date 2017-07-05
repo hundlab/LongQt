@@ -3,7 +3,7 @@
 #include "cellpvars.h"
 #include "guiUtils.h"
 
-AddSingleCellPvar::AddSingleCellPvar(Protocol* proto, QWidget *parent) :
+AddSingleCellPvar::AddSingleCellPvar(shared_ptr<Protocol> proto, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddSingleCellPvar)
 {
@@ -23,7 +23,7 @@ void AddSingleCellPvar::updateIonChannelType() {
     QRegExp allowed_vars = QRegExp("Factor");
     QStringList toAdd;
     ui->ionChannelType->clear();
-    for(auto& pvarName : this->proto->cell->getConstants()) {
+    for(auto& pvarName : this->proto->cell()->getConstants()) {
         if(allowed_vars.indexIn(pvarName.c_str()) != -1) {
             toAdd += pvarName.c_str();
         }
@@ -73,11 +73,11 @@ void AddSingleCellPvar::on_addButton_clicked()
             toAdd.dist = CellPvars::Distribution::lognormal;
         }
     }
-    this->proto->pvars->insert(type,toAdd);
+    this->proto->pvars().insert(type,toAdd);
     emit pvarsChanged();
 }
 
-void AddSingleCellPvar::changeProto(Protocol* proto) {
+void AddSingleCellPvar::changeProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
 }
 

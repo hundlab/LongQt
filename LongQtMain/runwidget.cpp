@@ -5,7 +5,7 @@
 #include <QtConcurrent>
 #include <QScopedPointer>
 
-RunWidget::RunWidget(Protocol* proto, QDir working_dir, QWidget* parent) :
+RunWidget::RunWidget(shared_ptr<Protocol> proto, QDir working_dir, QWidget* parent) :
     QWidget(parent),
     ui(new Ui::RunWidget)
 {
@@ -19,7 +19,7 @@ RunWidget::RunWidget(Protocol* proto, QDir working_dir, QWidget* parent) :
     connect(&watcher,SIGNAL(progressRangeChanged(int,int)),ui->progressBar,SLOT(setRange(int,int)));
     connect(&watcher,SIGNAL(progressValueChanged(int)),ui->progressBar,SLOT(setValue(int)));
 }
-void RunWidget::setProto(Protocol* proto) {
+void RunWidget::setProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
 }
 void RunWidget::on_runButton_clicked() {
@@ -38,7 +38,7 @@ void RunWidget::on_runButton_clicked() {
     vector.clear();
 
     for( i = 0; i < proto->numtrials; i++) {
-        proto->setTrial(i);
+        proto->trial(i);
 /*        proto->readfile = "r"+ to_string(i) + ".dat"; // File to read SV ICs
         proto->savefile = "s"+ to_string(i) + ".dat"; // File to save final SV
         proto->propertyoutfile = "dt%d_%s" + string(".dat");

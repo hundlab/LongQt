@@ -11,20 +11,21 @@
 #include <QPen>
 #include <QStandardPaths>
 #include <QHeaderView>
+#include <memory>
 //##############################
 //gridSetupWidget
 //##############################
 GridSetupWidget::GridSetupWidget(QWidget* parent) : GridSetupWidget(
-		new GridProtocol(), 
+        shared_ptr<GridProtocol>(new GridProtocol()),
 		parent) {}
 
-GridSetupWidget::GridSetupWidget(GridProtocol* initial_proto, 
+GridSetupWidget::GridSetupWidget(shared_ptr<GridProtocol> initial_proto, 
 		QWidget* parent) : QWidget(parent), 
 		ui(new Ui::GridSetupWidget) {
     ui->setupUi(this);
     this->proto = initial_proto;
     this->parent = parent;
-    this->grid = ((GridCell*)proto->cell)->getGrid();
+    this->grid = ((GridCell*)proto->cell())->getGrid();
 	this->model = new GridModel(this->proto,this);
 
     this->createMenu();
@@ -77,7 +78,7 @@ void GridSetupWidget::setGrid(Grid* grid) {
 Grid* GridSetupWidget::getGrid() {
     return this->grid;
 }
-GridProtocol* GridSetupWidget::getProtocol() {
+shared_ptr<GridProtocol> GridSetupWidget::getProtocol() {
 	return this->proto;
 }
 void GridSetupWidget::on_chooseType_currentIndexChanged(QString type) {

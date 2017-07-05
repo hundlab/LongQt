@@ -23,14 +23,14 @@ class ChooseProtoWidget : public QWidget {
 Q_OBJECT
   public:
     ChooseProtoWidget(QWidget* parent = 0);
-    Protocol* getCurrentProto();
+    shared_ptr<Protocol> getCurrentProto();
     void Initialize();
   signals:
-    void protocolChanged(Protocol*);
+    void protocolChanged(shared_ptr<Protocol>);
     void cellChanged(Cell*);
   private:
 	Ui::ChooseProtoWidget* ui;
-    Protocol* proto;
+    shared_ptr<Protocol> proto;
     QWidget* parent;
     QButtonGroup* clampType;
 //    QComboBox* ui::cellType;
@@ -42,7 +42,7 @@ Q_OBJECT
   public slots:
     void changeProto(int value);
   	void changeProto(string name);
-	void changeProto(Protocol*, bool raise = false);
+	void changeProto(shared_ptr<Protocol>, bool raise = false);
     void changeCell(Cell*);
     void resetProto();
 	void on_readSettings_clicked();

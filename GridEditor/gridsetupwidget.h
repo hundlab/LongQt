@@ -27,11 +27,11 @@ class GridSetupWidget : public QWidget {
 Q_OBJECT
   public:
     explicit GridSetupWidget(QWidget* parent = 0);
-    explicit GridSetupWidget(GridProtocol* initial_proto, QWidget* parent = 0);
+    explicit GridSetupWidget(shared_ptr<GridProtocol> initial_proto, QWidget* parent = 0);
     ~GridSetupWidget();
     void setGrid(Grid* grid);
     Grid* getGrid();
-	GridProtocol* getProtocol();
+	shared_ptr<GridProtocol> getProtocol();
 	QTableView* view();
 	GridModel* getModel();
   signals:
@@ -41,7 +41,7 @@ Q_OBJECT
 
 	Ui::GridSetupWidget *ui;
 
-    GridProtocol* proto;
+    shared_ptr<GridProtocol> proto;
     QWidget* parent;
     Grid* grid;
 

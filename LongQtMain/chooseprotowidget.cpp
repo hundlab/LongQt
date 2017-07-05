@@ -20,20 +20,17 @@ ChooseProtoWidget::ChooseProtoWidget(QWidget* parent) : QWidget(parent),
 }
 
 void ChooseProtoWidget::Initialize() {
-    this->proto = new CurrentClamp();
-    this->defaultCell = this->proto->cell->type;
+    this->proto.reset(new CurrentClamp());
+    this->defaultCell = this->proto->cell()->type;
 
-    QStringList cell_options;
-    auto cell_opitons_stl = proto->cellOptions();
-    for(auto im = cell_opitons_stl.begin(); im != cell_opitons_stl.end(); im++) {
-        cell_options << im->c_str();
+    for(auto& opt: proto->cellOptions()) {
+        ui->cellType->addItem(opt.c_str());
     }
-    ui->cellType->addItems(cell_options);
-    this->changeCell(proto->cell);
+    this->changeCell(proto->cell());
 
     clampType = new QButtonGroup();
 	int i = 3;
-	for(auto& protocol: CellUtils::protoMap) { 
+	for(auto& protocol: CellUtils::protoMap) {
 		if(protocol.first == string("Current Clamp Protocol")) {
 			clampType->addButton(ui->currentClamp,0);
 			this->protoNumMap.insert(0,protocol.first);
@@ -54,63 +51,59 @@ void ChooseProtoWidget::Initialize() {
 
     connect(clampType, SIGNAL(buttonPressed(int)), this, SLOT(changeProto(int)));
 }
-Protocol* ChooseProtoWidget::getCurrentProto() {
+shared_ptr<Protocol> ChooseProtoWidget::getCurrentProto() {
     return proto;
 }
 void ChooseProtoWidget::resetProto() {
     this->changeProto(0);
 }
 void ChooseProtoWidget::changeProto(int value) {
-	this->changeProto(CellUtils::protoMap.at(this->protoNumMap[value])(),true);
+	this->changeProto(
+        shared_ptr<Protocol>(CellUtils::protoMap.at(this->protoNumMap[value])())
+        ,true);
 }
 void ChooseProtoWidget::changeProto(string name) {
-	this->changeProto(CellUtils::protoMap.at(name)(),true);
+	this->changeProto(shared_ptr<Protocol>(CellUtils::protoMap.at(name)()),
+        true);
 }
-void ChooseProtoWidget::changeProto(Protocol* newProto, bool raise) {
-    string datadir = this->proto->datadir;
-	Cell* old_cell = this->proto->cell->clone();
-	string cellStateDir = this->proto->cellStateDir;
-	if(old_cell->type == string("gridCell")) {
-		ui->cellType->setEnabled(true);
-		ui->cellType->removeItem(ui->cellType->count() -1);
-	}
-    delete this->proto;
+void ChooseProtoWidget::changeProto(shared_ptr<Protocol> newProto, bool raise) {
+    if(newProto == this->proto)
+        return;
+    newProto->cellStateDir = this->proto->cellStateDir;
+    newProto->datadir = this->proto->datadir;
+    string old_cell = this->proto->cell()->type;
+    newProto->cell(old_cell);
+
 	this->proto = newProto;
 
 	if(raise) {
     	emit protocolChanged(this->proto);
+        emit cellChanged(proto->cell());
 	}
-    if(old_cell->type == string("gridCell")) {
-        on_cellType_currentIndexChanged(defaultCell);
-    }
-	if(this->proto->cell->type == string("gridCell")) {
-		ui->cellType->addItem("");
-		ui->cellType->setEnabled(false);
-		emit cellChanged(proto->cell);
-        delete old_cell;
-	} else {
-        delete this->proto->cell;
-        proto->cell = old_cell;
-	}
-	this->proto->cellStateDir = cellStateDir;
-	this->proto->datadir = datadir;
+
 	this->updateMenu();
 }
-
 void ChooseProtoWidget::updateMenu() {
+    bool oldState = ui->cellType->blockSignals(true);
 	int typeNum = this->protoNumMap.keys(this->proto->type).at(0);
 	auto button = this->clampType->button(typeNum);
 	if(button)
 		button->setChecked(true);
+    ui->cellType->clear();
+    for(auto& opt: proto->cellOptions()) {
+        ui->cellType->addItem(opt.c_str());
+    }
+    ui->cellType->setCurrentText(this->proto->cell()->type);
+    ui->cellType->blockSignals(oldState);
 }
 
 void ChooseProtoWidget::on_cellType_currentIndexChanged(QString name) {
     this->proto->pars["celltype"].set(name.toStdString());
-    emit cellChanged(proto->cell);
+    emit cellChanged(proto->cell());
 }
 
 void ChooseProtoWidget::changeCell(Cell* cell) {
-	if(cell != proto->cell) {
+    if(cell != proto->cell()) {
 		qWarning("ChooseProtoWidget: Protocol cell does not match new cell");
 	}
     int index = ui->cellType->findText(this->proto->pars["celltype"].get().c_str());
@@ -126,7 +119,7 @@ void ChooseProtoWidget::on_readSettings_clicked() {
 		settingsMgr->readSettings(this->proto,fileName);
 		this ->proto = settingsMgr->lastProto;
 		emit protocolChanged(this->proto);
-		emit cellChanged(proto->cell);
+        emit cellChanged(proto->cell());
 		this->updateMenu();
 	}
 }

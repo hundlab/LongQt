@@ -5,7 +5,7 @@
 #include "ui_ionchannelconfig.h"
 #include "pvarsgrid.h"
 
-IonChannelConfig::IonChannelConfig(QTableView* view, GridProtocol* proto, QWidget *parent) :
+IonChannelConfig::IonChannelConfig(QTableView* view, shared_ptr<GridProtocol> proto, QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::IonChannelConfig)
 {
@@ -13,7 +13,7 @@ IonChannelConfig::IonChannelConfig(QTableView* view, GridProtocol* proto, QWidge
 	this->view = view;
 	this->model = (GridModel*)view->model();
 	this->proto = proto;
-	this->cellChanged(proto->cell);
+	this->cellChanged(proto->cell());
 	this->updateList();
     ui->listWidget->addAction(ui->actionDelete);
     ui->listWidget->addAction(ui->actionShow_Cells);
@@ -28,20 +28,20 @@ IonChannelConfig::~IonChannelConfig()
 void IonChannelConfig::updateList() {
 	QStringList toAdd;
 	this->ui->listWidget->clear();
-	for(auto& pvar : *this->proto->pvars) {
+    for(auto& pvar : this->proto->pvars()) {
 		toAdd += pvar.second->IonChanParam::str(pvar.first).c_str();
 	}
 	this->ui->listWidget->addItems(toAdd);
 }
 
 void IonChannelConfig::cellChanged(Cell* cell) {
-	if(cell != proto->cell) {
+	if(cell != proto->cell()) {
 		qWarning("IonChannelConfig: Cell does not match proto cell");
 	}
 	QRegExp allowed_vars = QRegExp("Factor");
 	QStringList toAdd;
 	ui->ionChannelType->clear();
-	for(auto& pvarName : this->proto->cell->getConstants()) {
+	for(auto& pvarName : this->proto->cell()->getConstants()) {
 		if(allowed_vars.indexIn(pvarName.c_str()) != -1) {
 			toAdd += pvarName.c_str();
 		}
@@ -103,14 +103,14 @@ void IonChannelConfig::on_addButton_clicked()
 			toAdd.dist = CellPvars::Distribution::lognormal;
 		}
 	}
-	proto->pvars->insert(type,toAdd);
+    proto->pvars().insert(type,toAdd);
 	if(ui->multiple->isChecked()) {
 		maxDist = ui->maxDist->value();
 		maxVal = ui->maxVal->value();
-        ((PvarsGrid*)proto->pvars.get())->setMaxDistAndVal(type,maxDist,maxVal);
+        ((PvarsGrid*)&proto->pvars())->setMaxDistAndVal(type,maxDist,maxVal);
 	}
 	auto startCells = this->getInitial();
-    ((PvarsGrid*)proto->pvars.get())->setStartCells(type,startCells);
+    ((PvarsGrid*)&proto->pvars())->setStartCells(type,startCells);
 	this->updateList();
 }
 set<pair<int,int>> IonChannelConfig::getInitial() {
@@ -126,7 +126,7 @@ void IonChannelConfig::on_actionDelete_triggered() {
     QList<QListWidgetItem *> items = ui->listWidget->selectedItems();
     for(auto item: items) {
         QString name = item->data(Qt::DisplayRole).toString().split("\t")[0];
-        this->proto->pvars->erase(name.toStdString());
+        this->proto->pvars().erase(name.toStdString());
         int row = ui->listWidget->row(item);
         ui->listWidget->takeItem(row);
         delete item;
@@ -137,7 +137,7 @@ void IonChannelConfig::on_actionShow_Cells_triggered() {
     QString text;
     for(auto item: items) {
         QString name = item->data(Qt::DisplayRole).toString().split("\t")[0];
-		text += this->proto->pvars->at(name.toStdString())->str(name.toStdString()).c_str();
+        text += this->proto->pvars().at(name.toStdString())->str(name.toStdString()).c_str();
     }
     QMessageBox msgBox;
     msgBox.setText(text);

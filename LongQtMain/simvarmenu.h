@@ -30,12 +30,12 @@ using namespace std;
 class simvarMenu :public QWidget {
 Q_OBJECT
   public:
-    simvarMenu(Protocol* initial_proto, QWidget* parent = 0);
+    simvarMenu(shared_ptr<Protocol> initial_proto, QWidget* parent = 0);
     void createMenu();
     ~simvarMenu();
 
   private:
-    Protocol* proto;
+    shared_ptr<Protocol> proto;
 //Buttons & their labels
     QGridLayout* main_layout;
     QMap<QString, QString> descriptions;
@@ -53,7 +53,7 @@ Q_OBJECT
     void update_pvars(pair<string, string> p, string type);
     void update_pvars(pair<string, int> p, string type = "int");
   public slots:
-    void changeProto(Protocol* proto);
+    void changeProto(shared_ptr<Protocol> proto);
     void changeCell(Cell*);
     void reset();
     void setWorkingDir(QDir& dir);

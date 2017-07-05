@@ -29,7 +29,7 @@ void LQGridEditor::on_actionNew_triggered() {
 void LQGridEditor::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this,"Open Grid File",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
-		Protocol* proto = this->ui->centralWidget->getProtocol();
+		shared_ptr<Protocol> proto = this->ui->centralWidget->getProtocol();
 		SettingsIO::getInstance()->readSettings(proto,fileName);
     }
 	this->ui->centralWidget->getModel()->reloadModel();
@@ -45,7 +45,7 @@ void LQGridEditor::on_actionSave_As_triggered() {
     QString fileName = QFileDialog::getSaveFileName(this,"Save As",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
 		this->saveFile = fileName;
-		Protocol* proto = this->ui->centralWidget->getProtocol();
+		shared_ptr<Protocol> proto = this->ui->centralWidget->getProtocol();
 		SettingsIO::getInstance()->writeSettings(proto,fileName);
     }
 }

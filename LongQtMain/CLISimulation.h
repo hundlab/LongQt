@@ -16,7 +16,7 @@ class CLISimulation : QObject {
     void runSim();
     void runSims(QStringList simvarFiles);
   private:
-    Protocol* proto = 0;
+    shared_ptr<Protocol> proto = 0;
     int low = 0;
     int high = 0;
     QVector<QSharedPointer<Protocol>> vector;

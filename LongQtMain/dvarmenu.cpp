@@ -23,6 +23,7 @@
 #include <QFormLayout>
 #include <QTabWidget>
 #include <QList>
+#include "ui_pvarmenu.h"
 
 #include "guiUtils.h"
 #include "dvarmenu.h"

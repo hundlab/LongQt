@@ -15,18 +15,18 @@ class AddSingleCellPvar : public QDialog
     Q_OBJECT
 
     public:
-        explicit AddSingleCellPvar(Protocol* proto, QWidget *parent = 0);
+        explicit AddSingleCellPvar(shared_ptr<Protocol> proto, QWidget *parent = 0);
         ~AddSingleCellPvar();
 
     private:
         void updateIonChannelType();
 
         Ui::AddSingleCellPvar *ui;
-        Protocol* proto = 0;
+        shared_ptr<Protocol> proto = 0;
         QMap<QString,QString> pvarsDescriptions;
 
     public slots:
-        void changeProto(Protocol* proto);
+        void changeProto(shared_ptr<Protocol> proto);
         void changeCell(Cell* cell);
 
     signals:

@@ -51,8 +51,8 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	proto->datadir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time).toStdString();
 	proto->cellStateDir = proto->datadir;
 	simvarMenu* sims = new simvarMenu(proto, this);
-	dvarMenu* dvars = new dvarMenu(proto->cell, this);
-	mvarMenu* mvars =  new mvarMenu(proto, this);
+	dvarMenu* dvars = new dvarMenu(proto->cell(), this);
+	MvarMenu* mvars =  new MvarMenu(proto, this);
 	PvarMenu* pvars =  new PvarMenu(proto, this);
 	RunWidget* run = new RunWidget(proto,QDir(proto->datadir.c_str()));
 	//add items menu_list
@@ -63,11 +63,11 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	menu_list.append(mvars);
 	menu_list.append(run);
 
-	connect(choose, SIGNAL(protocolChanged(Protocol*)), sims, SLOT(changeProto(Protocol*)));
-	connect(choose, SIGNAL(protocolChanged(Protocol*)), pvars, SLOT(changeProto(Protocol*)));
-	connect(choose, SIGNAL(protocolChanged(Protocol*)), mvars, SLOT(changeProto(Protocol*)));
-	connect(choose, SIGNAL(protocolChanged(Protocol*)), run, SLOT(setProto(Protocol*)));
-	connect(choose, SIGNAL(protocolChanged(Protocol*)), this, SLOT(changeProto(Protocol*)));
+	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), sims, SLOT(changeProto(shared_ptr<Protocol>)));
+	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), pvars, SLOT(changeProto(shared_ptr<Protocol>)));
+	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), mvars, SLOT(changeProto(shared_ptr<Protocol>)));
+	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), run, SLOT(setProto(shared_ptr<Protocol>)));
+	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), this, SLOT(changeProto(shared_ptr<Protocol>)));
 
 	connect(choose, SIGNAL(cellChanged(Cell*)), this, SIGNAL(cellChanged(Cell*)));
 	connect(this, SIGNAL(cellChanged(Cell*)), choose, SLOT(changeCell(Cell*)));
@@ -77,6 +77,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	connect(this, &Simulation::cellChanged,dvars,&dvarMenu::changeCell);
 	connect(this, SIGNAL(cellChanged(Cell*)), mvars, SLOT(reset()));
 	connect(this, &Simulation::cellChanged,pvars,&PvarMenu::changeCell);
+	connect(this, &Simulation::cellChanged,mvars,&MvarMenu::changeCell);
 	connect(run, SIGNAL(canceled()), this, SLOT(canceled()));
 	//    connect(run, SIGNAL(finished()), choose, SLOT(resetProto()));
 	connect(run, SIGNAL(finished()), this, SLOT(finished()));
@@ -145,12 +146,10 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	if(simvarFile != "") {
 		SettingsIO::getInstance()->readSettings(proto,simvarFile);
 	}
-};
-Simulation::~Simulation(){
-    if(this->proto)
-        delete proto;
-};
-void Simulation::changeProto(Protocol* proto) {
+}
+Simulation::~Simulation(){}
+
+void Simulation::changeProto(shared_ptr<Protocol> proto) {
 	this->proto = proto;
 }
 void Simulation::list_click_aciton (int next_row) {

@@ -30,7 +30,7 @@
 /*########################
   begin simvarMenu class
 ##########################*/
-simvarMenu::simvarMenu(Protocol* initial_proto, QWidget *parent)
+simvarMenu::simvarMenu(shared_ptr<Protocol> initial_proto, QWidget *parent)
 : QWidget(parent)
 {
 //setup class variables
@@ -75,7 +75,7 @@ void simvarMenu::createMenu()  {
     temp->setLayout(central_layouts.last());
     tabs->addTab(temp,"Simulation files");
     if(string(proto->type) == "Grid Protocol") {
-        this->grid = new GridSetupWidget((GridProtocol*)this->proto);
+        this->grid = new GridSetupWidget(static_pointer_cast<GridProtocol>(this->proto));
         tabs->addTab(grid, "Grid Setup");
         connect(grid, &GridSetupWidget::cellChanged, this, &simvarMenu::cellChanged);
 //        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
@@ -221,12 +221,14 @@ void simvarMenu::update_menu() {
     emit updated();
 }
 void simvarMenu::reset() {
+    this->signalCellTypeChange = false;
     simvars.clear();
     simvars_layouts.clear();
     qDeleteAll(this->children());
     createMenu();
+    this->signalCellTypeChange = true;
 }
-void simvarMenu::changeProto(Protocol* proto) {
+void simvarMenu::changeProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
     this->reset();
 }
@@ -239,8 +241,8 @@ void simvarMenu::update_pvars(pair<string,double> p){
 void simvarMenu::update_pvars(pair<string,string> p, string type){
      if(type == "cell") {
         proto->pars[p.first].set(p.second);
-		CellUtils::set_default_vals(this->proto);
-        emit cellChanged(this->proto->cell);
+        CellUtils::set_default_vals(*this->proto);
+        emit cellChanged(this->proto->cell());
      } else {
         proto->pars[p.first].set(p.second);
      }
@@ -258,7 +260,7 @@ void simvarMenu::update_pvars(pair<string,int> p, string type) {
     }
 }
 void simvarMenu::changeCell(Cell* cell) {
-	if(cell != this->proto->cell) {
+	if(cell != this->proto->cell()) {
 		qWarning("SimvarMenu: Cell does not match protocol cell");
 	}
     update_menu(); 

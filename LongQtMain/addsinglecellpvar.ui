@@ -145,7 +145,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="buttonsLayout">
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
