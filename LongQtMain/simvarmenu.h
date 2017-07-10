@@ -34,6 +34,8 @@ Q_OBJECT
     void createMenu();
     ~simvarMenu();
 
+    void removeGrid();
+
   private:
     shared_ptr<Protocol> proto;
 //Buttons & their labels
@@ -41,7 +43,7 @@ Q_OBJECT
     QMap<QString, QString> descriptions;
     QMap<QString, QWidget*> simvars;
     QMap<QString,QFormLayout*> simvars_layouts;
-	GridSetupWidget* grid = 0;
+    GridSetupWidget* grid = 0;
 //initalizer
     void initialize(const map<string,GetSetRef>::iterator it);
 //screen functions

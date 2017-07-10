@@ -78,7 +78,6 @@ void simvarMenu::createMenu()  {
         this->grid = new GridSetupWidget(static_pointer_cast<GridProtocol>(this->proto));
         tabs->addTab(grid, "Grid Setup");
         connect(grid, &GridSetupWidget::cellChanged, this, &simvarMenu::cellChanged);
-//        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
     }
     }
 //main_layout
@@ -130,7 +129,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         simvars.insert(it->first.c_str(),new_simvar);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
         connect((QLineEdit*)simvars.last(), static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
-    };   
+    };
     initializers["directory"] = [this] (const map<string, GetSetRef>::iterator it) {
         QLineEdit* new_simvar = new QLineEdit();
         QPushButton* setDir = new QPushButton("Choose");
@@ -177,6 +176,11 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     }
 }
 simvarMenu::~simvarMenu(){}
+
+void simvarMenu::removeGrid() {
+    this->grid->deleteLater();
+    this->grid = 0;
+}
 void simvarMenu::update_menu() {
     QMap<QString,function<void(const map<string, GetSetRef>::iterator)>> updaters;
     updaters["double"] = [this] (const map<string, GetSetRef>::iterator it)
@@ -232,7 +236,7 @@ void simvarMenu::changeProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
     this->reset();
 }
-void simvarMenu::setWorkingDir(QDir& dir) {
+void simvarMenu::setWorkingDir(QDir&) {
     update_menu();
 }
 void simvarMenu::update_pvars(pair<string,double> p){

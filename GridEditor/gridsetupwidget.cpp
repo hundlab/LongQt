@@ -24,7 +24,6 @@ GridSetupWidget::GridSetupWidget(shared_ptr<GridProtocol> initial_proto,
 		ui(new Ui::GridSetupWidget) {
     ui->setupUi(this);
     this->proto = initial_proto;
-    this->parent = parent;
     this->grid = ((GridCell*)proto->cell())->getGrid();
 	this->model = new GridModel(this->proto,this);
 

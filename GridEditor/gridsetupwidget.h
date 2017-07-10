@@ -42,7 +42,6 @@ Q_OBJECT
 	Ui::GridSetupWidget *ui;
 
     shared_ptr<GridProtocol> proto;
-    QWidget* parent;
     Grid* grid;
 
 	GridModel* model;
