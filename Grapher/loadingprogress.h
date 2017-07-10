@@ -24,9 +24,12 @@ class LoadingProgressDialog : public QDialog
 public:
     explicit LoadingProgressDialog(QFileInfoList files, QWidget *parent = 0);
     ~LoadingProgressDialog();
-    QFileInfoList getFilesToLoad();
+    QFileInfoList getFilesToLoad() const;
     bool multiCell();
     void setMultiCell(bool value);
+
+protected slots:
+    virtual void closeEvent(QCloseEvent* e);
 
 private:
     Ui::LoadingProgressDialog *ui;
@@ -36,7 +39,6 @@ private:
     QFileInfoList files;
     void createOptions();
 private slots:
-    void on_continueButton_clicked();
     void on_skipButton_clicked();
     void on_loadAll_clicked();
     void on_loadFreqButton_clicked();

@@ -67,7 +67,7 @@
         <x>0</x>
         <y>0</y>
         <width>78</width>
-        <height>93</height>
+        <height>95</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -91,15 +91,9 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="done">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Done</string>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -108,18 +102,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>done</sender>
-   <signal>clicked()</signal>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
    <receiver>ChooseGraphs</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>394</x>
-     <y>382</y>
+     <x>48</x>
+     <y>123</y>
     </hint>
     <hint type="destinationlabel">
-     <x>394</x>
-     <y>201</y>
+     <x>48</x>
+     <y>71</y>
     </hint>
    </hints>
   </connection>
