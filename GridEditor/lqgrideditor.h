@@ -7,6 +7,7 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include <QPointer>
 #include "conductivityeditor.h"
 #include "ionchannelconfig.h"
 
@@ -24,9 +25,9 @@ public:
 
 private:
     Ui::LQGridEditor *ui;
-	QTableView* gridView;
-	ConductivityEditor* condEdit = 0; 
-	IonChannelConfig* ionConfig = 0;
+	QPointer<QTableView> gridView;
+	QPointer<ConductivityEditor> condEdit;
+	QPointer<IonChannelConfig> ionConfig;
 	shared_ptr<GridProtocol> proto = 0;
 	QString saveFile = "";
 private slots:

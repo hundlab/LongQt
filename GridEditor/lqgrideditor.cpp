@@ -51,27 +51,23 @@ void LQGridEditor::on_actionSave_As_triggered() {
 }
 void LQGridEditor::on_actionSet_Conductivities_triggered()
 {
-	if(this->condEdit == 0) {
-		this->condEdit = new ConductivityEditor(this->gridView);
-		this->condEdit->show();
-		connect(this->condEdit, &QObject::destroyed, [this] () {
-			this->condEdit = 0;
-		});
+	if(!this->condEdit) {
+		condEdit = new ConductivityEditor(this->gridView, this);
+        condEdit->setWindowFlags(Qt::Dialog);
+		condEdit->show();
 	} else {
-		this->condEdit->show();
-		this->condEdit->raise();
+		condEdit->show();
+		condEdit->raise();
 	}
 }
 void LQGridEditor::on_actionConfigure_Ion_Channels_triggered() {
-	if(this->ionConfig == 0) {
-		this->ionConfig = new IonChannelConfig(this->gridView, this->proto, this);
-		this->ionConfig->show();
-		connect(this->ionConfig, &QObject::destroyed, [this] () {
-			this->ionConfig = 0;
-		});
+	if(!this->ionConfig) {
+		ionConfig = new IonChannelConfig(this->gridView, this->proto, this);
+        ionConfig->setWindowFlags(Qt::Dialog);
+		ionConfig->show();
 	} else {
-		this->ionConfig->show();
-		this->ionConfig->raise();
+		ionConfig->show();
+		ionConfig->raise();
 	}
 }
 
