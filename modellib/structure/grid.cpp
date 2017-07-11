@@ -7,7 +7,7 @@ Grid::Grid(const Grid& other) {
     for(unsigned int i = 0; i < fiber.size();i++) {
         fiber[i].B = other.fiber[i].B;
         for(unsigned int j = 0; j < fibery.size(); j++) {
-            Node* n = new Node(*other.fiber[i].nodes[j]);
+            shared_ptr<Node> n(new Node(*other.fiber[i].nodes[j]));
             fiber[i].nodes[j] = n;
             fibery[j].nodes[i] = n;
         }
@@ -61,7 +61,7 @@ void Grid::removeRow(int pos) {
     if(pos < 0) {
         pos = fiber.size()-1;
     }
-	if(pos < 0 || pos >= fiber.size()) {
+	if(pos < 0 || (unsigned int)pos >= fiber.size()) {
 		return;
 	}
     fiber.erase(fiber.begin()+pos);
@@ -79,7 +79,7 @@ void Grid::removeColumn(int pos) {
     if(pos < 0) {
         pos = fibery.size()-1;
     }
-	if(pos < 0 || pos >= fibery.size()) {
+	if(pos < 0 || (unsigned int)pos >= fibery.size()) {
 		return;
 	}
     fibery.erase(fibery.begin()+pos);
@@ -88,16 +88,16 @@ void Grid::removeColumn(int pos) {
         it->B.erase(it->B.begin() +pos);
     }
 }
-void Grid::setCellTypes(set<CellInfo*>& cells) {
-    for(auto it : cells) {
-        setCellTypes(*it);
+void Grid::setCellTypes(list<CellInfo>& cells) {
+    for(auto& c : cells) {
+        setCellTypes(c);
     }
 }
 void Grid::setCellTypes(const CellInfo& singleCell) {
     try {
-        Node* n = this->findNode({singleCell.X,singleCell.Y});
+        Node* n = (*this)(singleCell.X,singleCell.Y);
 		if(singleCell.cell) {
-	        n->cell = singleCell.cell;
+            n->cell.reset(singleCell.cell);
 		}
 		n->np = singleCell.np;
 //        n->x = singleCell.X*singleCell.dx;
@@ -141,7 +141,7 @@ pair<int,int> Grid::findNode(const Node* node) {
     i = j = 0;
     for(auto it : fiber) {
         for(auto iv : it.nodes) {
-            if(iv == node) {
+            if(iv.get() == node) {
                 p = make_pair(i,j);
                 return p;
             }
@@ -152,10 +152,15 @@ pair<int,int> Grid::findNode(const Node* node) {
     }
     return p;
 }
-Node* Grid::findNode(const pair<int,int>& p) {
+Node* Grid::operator()(const pair<int,int>& p) {
+    return (*this)(p.first,p.second);
+}
+
+Node* Grid::operator()(const int x, const int y) {
     try {
-        return fiber.at(p.first).nodes.at(p.second);
+        return fiber.at(x).nodes.at(y).get();
     } catch(const std::out_of_range&) {
+        qDebug("Grid: (%i,%i) not in grid", x,y);
         return NULL;
     }
 }
@@ -168,7 +173,7 @@ void Grid::reset() {
 void Grid::updateB(CellInfo node, CellUtils::Side s) {
 	int x = node.X;
 	int y = node.Y;
-	Node* nc = findNode({x,y});
+    Node* nc = (*this)(x,y);
 	double condOther;
 	double xo = x;
 	double yo = y;
@@ -207,7 +212,7 @@ void Grid::updateB(CellInfo node, CellUtils::Side s) {
 		so = CellUtils::right;
 		break;
 	}
-	n = findNode({xo,yo});
+    n = (*this)(xo,yo);
 	if(n == NULL) {
 		return;
 	}

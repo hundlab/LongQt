@@ -4,15 +4,17 @@
 #ifndef GRID_MODEL_H
 #define GRID_MODEL_H
 #include <QAbstractTableModel>
+#include <QSet>
+#include <QPair>
 #include "grid.h"
-#include "cellUtils.h"
 #include "gridProtocol.h"
+#include "cellutils.h"
 
 class GridModel : public QAbstractTableModel {
 	Q_OBJECT
 	public:
-		GridModel(GridProtocol* grid = 0, QObject* parent = 0);
-		bool setProtocol(GridProtocol* grid);
+		GridModel(shared_ptr<GridProtocol> grid = 0, QObject* parent = 0);
+		bool setProtocol(shared_ptr<GridProtocol> grid);
 		//implemented and reimplemented functions from QAbstractTableModel
 		int rowCount(const QModelIndex & parent = QModelIndex()) const;
 		int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -28,15 +30,16 @@ class GridModel : public QAbstractTableModel {
 		bool removeColumns(int column, int count, const QModelIndex & parent = QModelIndex());
 		QModelIndex index(int row, int column, const QModelIndex & parent) const;
 		QModelIndex parent(const QModelIndex & index) const;
+        QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 		void reloadModel();
 		void clear();
 		bool getPercent();
 		void setPercent(bool percent);
 
 	signals:
-   		void cell_type_changed();
+   		void cellChanged(Cell*);
 	private:
-		GridProtocol* proto;
+		shared_ptr<GridProtocol> proto;
 		Grid* grid;
         map<string, CellUtils::CellInitializer> cellMap;
 		bool percent = false;

@@ -1,6 +1,7 @@
 #include "lqgrideditor.h"
 #include "ui_lqgrideditor.h"
 #include "simvarmenu.h"
+#include "settingsIO.h"
 
 #include <QStatusBar>
 #include <QFileDialog>
@@ -14,6 +15,7 @@ LQGridEditor::LQGridEditor(QWidget *parent) :
 	this->setStatusBar(new QStatusBar());
 	this->gridView = this->ui->centralWidget->view();
 	this->proto = this->ui->centralWidget->getProtocol();
+	SettingsIO::getInstance()->allowProtoChange = false;
 }
 
 LQGridEditor::~LQGridEditor()
@@ -27,7 +29,8 @@ void LQGridEditor::on_actionNew_triggered() {
 void LQGridEditor::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this,"Open Grid File",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
-        this->ui->centralWidget->getProtocol()->readpars(fileName.toStdString());
+		shared_ptr<Protocol> proto = this->ui->centralWidget->getProtocol();
+		SettingsIO::getInstance()->readSettings(proto,fileName);
     }
 	this->ui->centralWidget->getModel()->reloadModel();
 }
@@ -35,14 +38,15 @@ void LQGridEditor::on_actionSave_triggered() {
 	if(this->saveFile == "") {
 		this->on_actionSave_As_triggered();
 	} else {
-		this->ui->centralWidget->getProtocol()->writepars(this->saveFile.toStdString());
+		SettingsIO::getInstance()->writeSettings(this->ui->centralWidget->getProtocol(),this->saveFile);
 	}
 }
 void LQGridEditor::on_actionSave_As_triggered() {
     QString fileName = QFileDialog::getSaveFileName(this,"Save As",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
 		this->saveFile = fileName;
-	    this->ui->centralWidget->getProtocol()->writepars(fileName.toStdString());
+		shared_ptr<Protocol> proto = this->ui->centralWidget->getProtocol();
+		SettingsIO::getInstance()->writeSettings(proto,fileName);
     }
 }
 void LQGridEditor::on_actionSet_Conductivities_triggered()
@@ -60,7 +64,7 @@ void LQGridEditor::on_actionSet_Conductivities_triggered()
 }
 void LQGridEditor::on_actionConfigure_Ion_Channels_triggered() {
 	if(this->ionConfig == 0) {
-		this->ionConfig = new IonChannelConfig(this->gridView, this->proto);
+		this->ionConfig = new IonChannelConfig(this->gridView, this->proto, this);
 		this->ionConfig->show();
 		connect(this->ionConfig, &QObject::destroyed, [this] () {
 			this->ionConfig = 0;
@@ -77,6 +81,7 @@ void LQGridEditor::on_actionToggle_Second_Stim_triggered() {
 }
 
 void LQGridEditor::on_actionSet_Sim_Parameters_triggered() {
-    simvarMenu* menu = new simvarMenu(this->proto,QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
+    simvarMenu* menu = new simvarMenu(this->proto);
+    menu->removeGrid();
     menu->show();
 }

@@ -1,8 +1,8 @@
 #include "gridsetupwidget.h"
 #include "ui_gridsetupwidget.h"
-#include "cellUtils.h"
 #include "guiUtils.h"
 #include "gridDelegate.h"
+#include "cellutils.h"
 
 #include <QHBoxLayout>
 #include <QDebug>
@@ -11,31 +11,34 @@
 #include <QPen>
 #include <QStandardPaths>
 #include <QHeaderView>
+#include <memory>
 //##############################
 //gridSetupWidget
 //##############################
 GridSetupWidget::GridSetupWidget(QWidget* parent) : GridSetupWidget(
-		new GridProtocol(), 
-		QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first(),
+        shared_ptr<GridProtocol>(new GridProtocol()),
 		parent) {}
 
-GridSetupWidget::GridSetupWidget(GridProtocol* initial_proto, 
-		QDir workingDir, QWidget* parent) : QWidget(parent), 
+GridSetupWidget::GridSetupWidget(shared_ptr<GridProtocol> initial_proto, 
+		QWidget* parent) : QWidget(parent), 
 		ui(new Ui::GridSetupWidget) {
     ui->setupUi(this);
     this->proto = initial_proto;
-    this->workingDir = workingDir;
-    this->parent = parent;
-    this->grid = ((GridCell*)proto->cell)->getGrid();
+    this->grid = ((GridCell*)proto->cell())->getGrid();
 	this->model = new GridModel(this->proto,this);
 
     this->createMenu();
 }
+GridSetupWidget::~GridSetupWidget() {
+    delete this->ui;
+}
+
 void GridSetupWidget::createMenu() {
 //setup view
 	this->ui->cellGrid->setModel(this->model);
-	this->ui->cellGrid->setItemDelegate(new GridDelegate);
-	this->ui->cellGrid->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	ui->cellGrid->setItemDelegate(new GridDelegate(this->ui->cellGrid));
+	ui->cellGrid->horizontalHeader()->
+        setSectionResizeMode(QHeaderView::ResizeToContents);
     auto cellMap = CellUtils::cellMap;
     cellMap["Inexcitable Cell"] = [] () {return new Cell;};
     for(auto it : cellMap) {
@@ -62,7 +65,7 @@ void GridSetupWidget::createMenu() {
 			this->ui->chooseType->blockSignals(oldState);
         }
     });
-	connect(this->model, &GridModel::cell_type_changed, this, &GridSetupWidget::cell_type_changed);
+	connect(this->model, &GridModel::cellChanged, this, &GridSetupWidget::cellChanged);
 }
 
 void GridSetupWidget::setGrid(Grid* grid) {
@@ -74,7 +77,7 @@ void GridSetupWidget::setGrid(Grid* grid) {
 Grid* GridSetupWidget::getGrid() {
     return this->grid;
 }
-GridProtocol* GridSetupWidget::getProtocol() {
+shared_ptr<GridProtocol> GridSetupWidget::getProtocol() {
 	return this->proto;
 }
 void GridSetupWidget::on_chooseType_currentIndexChanged(QString type) {

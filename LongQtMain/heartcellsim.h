@@ -21,24 +21,20 @@
 #include <QDir>
 
 #include "protocol.h"
-#include "simvarmenu.h"
-#include "dvarmenu.h"
-#include "mvarmenu.h"
-#include "pvarmenu.h"
 
 class Simulation : public QWidget {
     Q_OBJECT
 
   public:
-    Simulation(QWidget* parent = 0);
+    Simulation(QString simvarFile = "", QWidget* parent = 0);
     ~Simulation();
 
   private:
     QWidget* parent;
-    Protocol* proto;
+    shared_ptr<Protocol> proto;
     QString date_time;
     QList<QWidget*> menu_list;
-//utility functions
+//utility functions & classes
     void leave_current(int current);
 //buttons
     QPushButton* next_button;
@@ -47,11 +43,6 @@ class Simulation : public QWidget {
 //organizational widgets
     QListWidget* menu_options;
     QStackedWidget* menu;
-//varmenu widgets
-    simvarMenu* edit_simvars_menu;
-    dvarMenu* edit_dvars_menu;
-    mvarMenu* edit_mvars_menu;
-    pvarMenu* edit_pvars_menu;
 //layouts
     QGridLayout* main_layout;
 
@@ -61,9 +52,9 @@ class Simulation : public QWidget {
     void canceled();
     void finished();
     void running();
-    void changeProto(Protocol* proto);
+    void changeProto(shared_ptr<Protocol> proto);
   signals:
-    void cell_type_changed();
+    void cellChanged(Cell*);
     void working_dir_changed(QDir& dir);
 };
 

@@ -27,7 +27,7 @@ private:
 	QTableView* gridView;
 	ConductivityEditor* condEdit = 0; 
 	IonChannelConfig* ionConfig = 0;
-	GridProtocol* proto = 0;
+	shared_ptr<GridProtocol> proto = 0;
 	QString saveFile = "";
 private slots:
 	void on_actionNew_triggered();

@@ -8,11 +8,12 @@
 #define CELLGRID_H
 
 #include <set>
+#include <list>
 #include <string>
 #include <cmath>
 
 #include "fiber.h"
-#include "side.h"
+#include "cellutils.h"
 
 struct CellInfo {
 	//necessary
@@ -43,12 +44,13 @@ class Grid {
     virtual void removeRows(unsigned int num, int position = 0);
     virtual void removeColumn(int pos);
     virtual void removeColumns(unsigned int num, int position = 0);
-    virtual void setCellTypes(set<CellInfo*>& cells);
+    virtual void setCellTypes(list<CellInfo>& cells);
     virtual void setCellTypes(const CellInfo& singleCell);
     virtual int rowCount();
     virtual int columnCount();
     virtual pair<int,int> findNode(const Node* node);
-    virtual Node* findNode(const pair<int,int>& p);
+    virtual Node* operator()(const pair<int,int>& p);
+    virtual Node* operator()(const int x, const int y);
 	virtual void reset();
 	virtual void updateB(CellInfo node, CellUtils::Side s);
 

@@ -11,6 +11,8 @@
 #include <QMap>
 #include <QProgressDialog>
 #include <exception>
+#include <QPointer>
+#include <QScopedPointer>
 
 Grapher::Grapher(QDir read_location, QWidget *parent) :
     QDialog(parent),
@@ -70,16 +72,18 @@ void Grapher::buildLineGraphs(QFileInfoList files){
     }
     QMap<QString, LineGraph*> graphMap;
     int progressCounter = 0;
+    QScopedPointer<LoadingProgressDialog> loadingOptions(new LoadingProgressDialog(files, this));
     if(files.length() > 10) {
-        LoadingProgressDialog* loadingOptions = new LoadingProgressDialog(files, this);
         if(QDialog::Accepted == loadingOptions->exec()) {
             files = loadingOptions->getFilesToLoad();
+        } else {
+            files.clear();
         }
-    }
-    QProgressDialog* progressDisp = new QProgressDialog("Opening Files", "Skip", 0, files.size(), this);
-    progressDisp->setRange(0,files.size());
+        }
+    QScopedPointer<QProgressDialog> progressDisp(new QProgressDialog("Opening Files", "Skip", 0, files.size(), this));
     progressDisp->setValue(0);
     progressDisp->show();
+
     for(QFileInfo fileInfo : files) {
         progressDisp->setValue(progressCounter);
         QCoreApplication::processEvents();
@@ -126,7 +130,6 @@ void Grapher::buildLineGraphs(QFileInfoList files){
         }
         progressCounter++;
     }
-    progressDisp->deleteLater();
 }
 void Grapher::buildBarGraphs(int trial) {
     QFileInfoList fileInfos = this->getFileNamesBar(this->read_location, trial);
@@ -145,7 +148,9 @@ void Grapher::buildBarGraphs(int trial) {
             ui->tabWidget->addTab(new barGraph(*name, value->toDouble(), var , read_location), var +":"+QString(*name));
         }
     }
+
 }
+
 void Grapher::on_loadNew_clicked()
 {
     QFileDialog getDirOrFile(0,tr("Open File"));

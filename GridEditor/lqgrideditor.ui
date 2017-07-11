@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>LQGridEditor</string>
   </property>
   <widget class="GridSetupWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menubar">

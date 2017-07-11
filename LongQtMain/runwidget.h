@@ -14,6 +14,7 @@
 #include <QFuture>
 #include <QTextEdit>
 #include <QLineEdit>
+#include <QSharedPointer>
 
 #include "protocol.h"
 
@@ -27,10 +28,10 @@ class RunWidget;
 class RunWidget : public QWidget {
 Q_OBJECT
   public:
-    RunWidget(Protocol* proto, QDir working_dir, QWidget* parent = 0);
+    RunWidget(shared_ptr<Protocol> proto, QDir working_dir, QWidget* parent = 0);
   public slots:
     void setWorkingDir(QDir& dir);
-    void setProto(Protocol* proto);
+    void setProto(shared_ptr<Protocol> proto);
     void cancel();
   signals:
     void canceled();
@@ -42,7 +43,7 @@ Q_OBJECT
   private:
 	Ui::RunWidget *ui;
     QWidget* parent;
-    Protocol* proto;
+    shared_ptr<Protocol> proto;
 /*    QTextEdit* note_box;
     QLineEdit* note_box_name;
     QPushButton* run_button;
@@ -51,6 +52,6 @@ Q_OBJECT
     QDir working_dir;
     QFutureWatcher<void> watcher;
     QFuture<void> next;
-    QVector<Protocol*> vector;
+    QVector<QSharedPointer<Protocol>> vector;
 };
 #endif

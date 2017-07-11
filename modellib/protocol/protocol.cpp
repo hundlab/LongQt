@@ -11,6 +11,7 @@
 
 #include "protocol.h"
 #include "hrd09.h"
+#include "cellutils.h"
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #include <QFile>
@@ -23,592 +24,249 @@
 #define strncasecmp _strnicmp
 #endif
 
-
-
 //######################################################
-// Default Constructor 
+// Default Constructor
 //######################################################
 Protocol::Protocol()
 {
-	//##### Assign default parameters ##################
-	cell = new Cell();
-	doneflag = 1;       // set to 0 to end simulation
+    //##### Assign default parameters ##################
+    doneflag = 1;       // set to 0 to end simulation
 
-	tMax = 10000;   // max simulation time, ms
+    tMax = 10000;   // max simulation time, ms
 
-	datadir = "./data/";
-	cellStateDir = datadir;
+    datadir = "./data/";
+    cellStateDir = datadir;
 
-	readfile = "r.txt"; // File to read SV ICs
-	savefile = "s.txt"; // File to save final SV
+    readfile = "r.txt"; // File to read SV ICs
+    savefile = "s.txt"; // File to save final SV
 
-	trial = 0;
+    __trial = 0;
 
-	writestd = 0; 
-	writeflag = 1;      // 1 to write data to file during sim
-	dvarfile = "dvars.txt";  // File with SV to write.
-	writetime = 0;      // time to start writing.
-	writeint = 20;     // interval for writing.
+    writestd = 0;
+    writeflag = 1;      // 1 to write data to file during sim
+    dvarfile = "dvars.txt";  // File with SV to write.
+    writetime = 0;      // time to start writing.
+    writeint = 20;     // interval for writing.
 
-	pvarfile = "pvars.txt"; // File to specify cell params
-	simvarfile = "simvars.txt";  // File to specify sim params
+    pvarfile = "pvars.txt"; // File to specify cell params
+    simvarfile = "simvars.xml";  // File to specify sim params
 
-	propertyoutfile = "dt%d_%s.dat";
-	dvarsoutfile = "dt%d_dvars.dat";
-	finalpropertyoutfile = "dss%d_%s.dat";
-	finaldvarsoutfile = "dss%d_pvars.dat";
-	cellStateFile = "simvars.txt";//"dss%d_state.dat";
-
-
-	measflag = 1;       // 1 to track SV props during sim
-	measfile = "mvars.txt"; // File containing property names to track
-	meastime = 0;       // time to start tracking props
-
-	numtrials = 1;
-	writeCellState = readCellState = false;
-	//######## Params for pacing protocol #########################
+    propertyoutfile = "dt%d.tsv";
+    dvarsoutfile = "dt%d_dvars.tsv";
+    finalpropertyoutfile = "dss%d.tsv";
+    finaldvarsoutfile = "dss%d_pvars.tsv";
+    cellStateFile = "cellstate.xml";//"dss%d_state.dat";
 
 
-	//##### Initialize variables ##################
-	time=0.0;
-	vM =  -88.0;
-	//type = "Cell";  // class name
+    measflag = 1;       // 1 to track SV props during sim
+    measfile = "mvars.txt"; // File containing property names to track
+    meastime = 0;       // time to start tracking props
 
-	// make map of params
-	GetSetRef toInsert;
-	pars["tMax"] = toInsert.Initialize("double",[this] () {return std::to_string(tMax);},[this] (const string& value) {tMax = std::stod(value);});
-	pars["numtrials"]= toInsert.Initialize("int", [this] () {return std::to_string(numtrials);}, [this] (const string& value) {numtrials = std::stoi(value);});
-	pars["writeint"]= toInsert.Initialize("int", [this] () {return std::to_string(writeint);}, [this] (const string& value) {writeint = std::stoi(value);});
-	pars["writetime"]= toInsert.Initialize("double", [this] () {return std::to_string(writetime);}, [this] (const string& value) {writetime = std::stod(value);});
-	pars["meastime"]= toInsert.Initialize("double", [this] () {return std::to_string(meastime);}, [this] (const string& value) {meastime = std::stod(value);});
+    numtrials = 1;
+    writeCellState = readCellState = false;
+    //######## Params for pacing protocol #########################
+
+
+    //##### Initialize variables ##################
+    time=0.0;
+    vM =  -88.0;
+    //type = "Cell";  // class name
+
+    // make map of params
+    GetSetRef toInsert;
+    pars["tMax"] = toInsert.Initialize("double",[this] () {return std::to_string(tMax);},[this] (const string& value) {tMax = std::stod(value);});
+    pars["numtrials"]= toInsert.Initialize("int", [this] () {return std::to_string(numtrials);}, [this] (const string& value) {numtrials = std::stoi(value);});
+    pars["writeint"]= toInsert.Initialize("int", [this] () {return std::to_string(writeint);}, [this] (const string& value) {writeint = std::stoi(value);});
+    pars["writetime"]= toInsert.Initialize("double", [this] () {return std::to_string(writetime);}, [this] (const string& value) {writetime = std::stod(value);});
+    pars["meastime"]= toInsert.Initialize("double", [this] () {return std::to_string(meastime);}, [this] (const string& value) {meastime = std::stod(value);});
     pars["writeCellState"]= toInsert.Initialize("bool", [this] () {return CellUtils::to_string(writeCellState);}, [this] (const string& value) {writeCellState = CellUtils::stob(value);});
     pars["readCellState"]= toInsert.Initialize("bool", [this] () {return CellUtils::to_string(readCellState);}, [this] (const string& value) {readCellState = CellUtils::stob(value);});
-	pars["datadir"]= toInsert.Initialize("directory", [this] () {return datadir;}, [this] (const string& value) {datadir = value;});
-	//    pars["cellStateDir"]= toInsert.Initialize("directory", [this] () {return cellStateDir;}, [this] (const string& value) {cellStateDir = value;});
-	pars["pvarfile"]= toInsert.Initialize("file", [this] () {return pvarfile;}, [this] (const string& value) {pvarfile = value;});
-	pars["dvarfile"]= toInsert.Initialize("file", [this] () {return dvarfile;}, [this] (const string& value) {dvarfile = value;});
-	pars["measfile"]= toInsert.Initialize("file", [this] () {return measfile;}, [this] (const string& value) {measfile = value;});
-	pars["simvarfile"]= toInsert.Initialize("file", [this] () {return simvarfile;}, [this] (const string& value) {simvarfile = value;});
-	pars["cellStateFile"]= toInsert.Initialize("file", [this] () {return cellStateFile;}, [this] (const string& value) {cellStateFile = value;});
-	pars["celltype"]= toInsert.Initialize("cell", [this] () {return cell->type;}, [this] (const string& value) {this->setCell(value);}); 
+    pars["datadir"]= toInsert.Initialize("directory", [this] () {return datadir;}, [this] (const string& value) {datadir = value;});
+    pars["cellStateDir"]= toInsert.Initialize("directory", [this] () {return cellStateDir;}, [this] (const string& value) {cellStateDir = value;});
+    //	pars["pvarfile"]= toInsert.Initialize("file", [this] () {return pvarfile;}, [this] (const string& value) {pvarfile = value;});
+    //	pars["dvarfile"]= toInsert.Initialize("file", [this] () {return dvarfile;}, [this] (const string& value) {dvarfile = value;});
+    //	pars["measfile"]= toInsert.Initialize("file", [this] () {return measfile;}, [this] (const string& value) {measfile = value;});
+    pars["simvarfile"]= toInsert.Initialize("file", [this] () {return simvarfile;}, [this] (const string& value) {simvarfile = value;});
+    pars["cellStateFile"]= toInsert.Initialize("file", [this] () {return cellStateFile;}, [this] (const string& value) {cellStateFile = value;});
+    pars["celltype"]= toInsert.Initialize("cell", [this] () {return cell()->type;}, [this] (const string& value) {this->cell(value);});
 
-    cellMap = CellUtils::cellMap;
-	this->setCell(HRD09Control().type);
 };
 
-
-
-//######################################################
-// Destructor for parent cell class.
-//#####################################################
-Protocol::~Protocol(){};
+Protocol::~Protocol() {}
 
 //######################################################
-// Deep Copy Constructor 
+// Deep Copy Constructor
 //######################################################
 Protocol::Protocol(const Protocol& toCopy) {
-	this->copy(toCopy);
+    this->copy(toCopy);
 };
 
 Protocol::Protocol(Protocol&& toCopy) {
-	this->copy(toCopy); 
+    this->copy(toCopy);
 };
 
 Protocol& Protocol::operator=(const Protocol& toCopy) {
-	this->copy(toCopy);
-	return *this;
+    this->copy(toCopy);
+    return *this;
 };
 
-Protocol* Protocol::clone() {//public copy function
-	return new Protocol(*this);
-};
+/*Protocol* Protocol::clone() {//public copy function
+  return new Protocol(*this);
+  };*/
 
 
 void Protocol::copy(const Protocol& toCopy) {
-	unsigned int i = 0;
-	std::map<string, double*>::iterator it;
+    //##### Assign default parameters ##################
 
-	//##### Assign default parameters ##################
+    datadir = toCopy.datadir;
+    cellStateDir = toCopy.cellStateDir;
 
-	datadir = toCopy.datadir;
-	cellStateDir = toCopy.cellStateDir;
+    doneflag = toCopy.doneflag;       // set to 0 to end simulation
 
-	doneflag = toCopy.doneflag;       // set to 0 to end simulation
+    tMax = toCopy.tMax;   // max simulation time, ms
 
-	tMax = toCopy.tMax;   // max simulation time, ms
+    readfile = toCopy.readfile; // File to read SV ICs
+    savefile = toCopy.savefile; // File to save final SV
 
-	readfile = toCopy.readfile; // File to read SV ICs
-	savefile = toCopy.savefile; // File to save final SV
+    __trial = toCopy.__trial;
+    writestd = toCopy.writestd;
+    writeflag = toCopy.writeflag;      // 1 to write data to file during sim
+    dvarfile = toCopy.dvarfile;  // File with SV to write.
+    writetime = toCopy.writetime;      // time to start writing.
+    writeint = toCopy.writeint;     // interval for writing.
 
-	trial = toCopy.trial;   
-	writestd = toCopy.writestd; 
-	writeflag = toCopy.writeflag;      // 1 to write data to file during sim
-	dvarfile = toCopy.dvarfile;  // File with SV to write.
-	writetime = toCopy.writetime;      // time to start writing.
-	writeint = toCopy.writeint;     // interval for writing.
+    pvarfile = toCopy.pvarfile; // File to specify cell params
+    simvarfile = toCopy.simvarfile;  // File to specify sim params
 
-	pvarfile = toCopy.pvarfile; // File to specify cell params
-	simvarfile = toCopy.simvarfile;  // File to specify sim params
+    propertyoutfile = toCopy.propertyoutfile;
+    dvarsoutfile = toCopy.dvarsoutfile;
+    finalpropertyoutfile = toCopy.finalpropertyoutfile;
+    finaldvarsoutfile = toCopy.finaldvarsoutfile;
+    cellStateFile = toCopy.cellStateFile;
 
-	propertyoutfile = toCopy.propertyoutfile;
-	dvarsoutfile = toCopy.dvarsoutfile;
-	finalpropertyoutfile = toCopy.finalpropertyoutfile;
-	finaldvarsoutfile = toCopy.finaldvarsoutfile;
-	cellStateFile = toCopy.cellStateFile;
+    measflag = toCopy.measflag;       // 1 to track SV props during sim
+    measfile = toCopy.measfile; // File containing property names to track
+    meastime = toCopy.meastime;       // time to start tracking props
 
-	measflag = toCopy.measflag;       // 1 to track SV props during sim
-	measfile = toCopy.measfile; // File containing property names to track
-	meastime = toCopy.meastime;       // time to start tracking props
+    numtrials = toCopy.numtrials;
+    writeCellState = toCopy.writeCellState;
+    readCellState = toCopy.readCellState;
 
-	numtrials = toCopy.numtrials;
-	writeCellState = toCopy.writeCellState;
-	readCellState = toCopy.readCellState;
+    //##### Initialize variables ##################
+    time= toCopy.time;
+    vM = toCopy.vM;
 
-	//##### Initialize variables ##################
-	time= toCopy.time;
-	vM = toCopy.vM;
+    // make map of params
+    pars = toCopy.pars;
 
-	// make map of params
-	pars = toCopy.pars;
-
-	pnames = vector<string>(toCopy.pnames);
-	for(i = 0; i < toCopy.pvals.size(); i++) {
-		pvals.push_back(vector<string>(toCopy.pvals.at(i)));
-	}
-	//###### Duplicate cells, measures outputs and maps######
-	cell = toCopy.cell->clone();
-
-	measures = toCopy.measures;
-
+    //###### Duplicate cells, measures outputs and maps######
 }
-
-//############################################################
-// Assign parameter values based on pnames and 2D vector pvals
-//############################################################
-
-int Protocol::assign_cell_pars(vector<string> pnames, vector< vector<string> > pvals, int trialnum)
-{
-	unsigned int j;
-	double logmean = 0.0;
-	double logstdev = 0.2;
-	double mean = 1.0;
-	double stdev = 0.2;
-	double increment;
-
-	lognormal_distribution<double> logdistribution(logmean,logstdev);
-	normal_distribution<double> distribution(mean,stdev);
-
-	for (j=0; j<pnames.size(); j++) {
-		if (pvals[j][0] == "random" ) {  // if first arg is "random" = choose rand val
-			if(pvals[j].size()>1){
-				if (pvals[j][1] == "lognormal"){
-					if (pvals[j].size()>3) {
-						logmean = atof(pvals[j][2].c_str());
-						logstdev = atof(pvals[j][3].c_str());
-						lognormal_distribution<double> logdistribution(logmean,logstdev);
-						*cell->pars[pnames[j]] = logdistribution(generator) ;
-					}
-					else
-						*cell->pars[pnames[j]] = logdistribution(generator) ;
-				}
-				else
-					*cell->pars[pnames[j]] = distribution(generator) ;
-			}
-			else
-				*cell->pars[pnames[j]] = distribution(generator) ;
-		}
-
-		else if (pvals[j][0] == "iter"){  // if first arg is "iter" = iterate
-			if (pvals[j].size()>2) {     // if 3 args, 2nd arg is initial val, 3rd arg is inc
-				if (trialnum>0){
-					increment = atof(pvals[j][2].c_str());
-					*cell->pars[pnames[j]] = *cell->pars[pnames[j]] + increment;
-				}
-				else
-					*cell->pars[pnames[j]] = atof(pvals[j][1].c_str());
-			}
-			else if (pvals[j].size()>1){  // if only two args, 2nd arg is inc
-				if (trialnum>0){
-					increment = atof(pvals[j][1].c_str());
-					*cell->pars[pnames[j]] = *cell->pars[pnames[j]] + increment;
-				}
-			}
-			else {
-				if (trialnum>0){     // if only one arg, set incr to vary param over range
-					increment = *cell->pars[pnames[j]]/(numtrials-trialnum);
-					*cell->pars[pnames[j]] = *cell->pars[pnames[j]] + increment;
-				}
-			}
-		}
-
-		else                  // if first arg is just a number
-			*cell->pars[pnames[j]]=atof(pvals[j][0].c_str());
-	}
-
-	return 1;
-};
-
-bool Protocol::write2Dmap(vector<string> vnames, vector< vector<string> > twoDmnames, string file) {
-	bool ret = true;
-	unsigned int i,j;
-	ofstream out;
-	out.open(file);
-	if(!out.is_open()){
-		cout << "Error opening " << file << endl;
-		return false;
-	}
-
-	for(i = 0; i < vnames.size(); i++) {
-		out << vnames[i] << "\t";
-		for(j = 0; j < twoDmnames[i].size(); j++){
-			out << twoDmnames[i][j] << "\t";
-		}
-		out << endl;
-	}
-
-	return ret;
-}
-
-
 //############################################################
 // Run the cell simulation
 //############################################################
 int Protocol::runSim() {
-	int return_val = 0;
+    int return_val = 0;
 
-	//###############################################################
-	// Loop over number of trials
-	//###############################################################
-	for(;trial<numtrials;setTrial(getTrial() +1))
-	{
-		return_val = (int)runTrial(); 
-	}
-	return return_val;
+    //###############################################################
+    // Loop over number of trials
+    //###############################################################
+    for(;__trial<numtrials;trial(trial() +1))
+    {
+        return_val = (int)runTrial();
+    }
+    return return_val;
 };
 
-bool Protocol::runTrial() { return true;}
+void Protocol::setupTrial() {};
 
 //#############################################################
 // Read values of variables in varmap from file.
 // Format of file should be "variable name" tab "value"
 //#############################################################
-int Protocol::readpars(QXmlStreamReader& xml, set<string> varnames) {
-	bool useVarnames = false;
-	string name = "";
-	if(varnames.size() > 0) {
-		useVarnames = true;
-	}
+int Protocol::readpars(QXmlStreamReader& xml) {
+    string name = "";
     if(!CellUtils::readNext(xml, "pars")) return 1;
-	while(!xml.atEnd() && xml.readNextStartElement()){
-		name = xml.attributes().value("name").toString().toStdString();
-		try {
-			if(useVarnames&&varnames.find(name)==varnames.end()) {
-				throw std::out_of_range(name+" not in varnames");
-			}
-			xml.readNext();
-			pars.at(name).set(xml.text().toString().toStdString());
-		} catch (const std::out_of_range&) {}
-		xml.readNext();
-	}
-	return 0;
+    while(!xml.atEnd() && xml.readNextStartElement()){
+        name = xml.attributes().value("name").toString().toStdString();
+        try {
+            xml.readNext();
+            if(name != "datadir")
+                pars.at(name).set(xml.text().toString().toStdString());
+        } catch (const std::out_of_range&) {
+            qWarning("Protocol: %s not in pars", name.c_str());
+        }
+        xml.readNext();
+    }
+    return 0;
 }
-int Protocol::readpars(string file, set<string> varnames)
-{
-	QFile ifile(file.c_str());
-
-	map<string, double*>::iterator p;
-
-	if(!ifile.open(QIODevice::ReadOnly)){
-		cout << "Error opening " << file << endl;
-		return 1;
-	}
-	QXmlStreamReader xml(&ifile);
-	//		xml.readNext();
-	this->readpars(xml, varnames);
-	ifile.close();
-	return 0;
-};
-
-//#############################################################
-// Create vectors based on mixed list in file.  First row element is checked in varmap
-// and gets stored in vector, rest of row used to create row in 2D vector.
-// Writes paramiter names into cnames and paramiter values into twoDrnames.
-//#############################################################
-int Protocol::parsemixedmap(map<string,double*> varmap, string file, vector<string>* cnames, vector<vector<string>>* twoDrnames)
-{
-	ifstream ifile;
-	string line, name;
-
-	vector<string> rnames;
-
-	ifile.open(file);
-	if(!ifile.is_open()){
-		cout << "Error opening " << file << endl;
-		return 1;
-	}
-
-	int counter = 0;
-
-	while(!ifile.eof()){
-		getline(ifile,line);
-		stringstream linestream(line);
-		linestream >> name;
-		if(varmap.count(name)>0){
-			(*cnames).push_back(name);
-
-			while (!linestream.eof()) {
-				linestream >> name;
-				rnames.push_back(name);
-			}
-			if (rnames.size()>0)
-				(*twoDrnames).push_back(rnames);
-			else
-				(*cnames).pop_back();
-
-			rnames.clear();
-		}
-		counter++;
-
-	}
-	ifile.close();
-
-	return 0;
-};
-
-//############################################################
-// write a mvars file for the measures list
-//############################################################
-bool Protocol::writeMVarsFile(string file) {
-	ofstream out;
-	bool ret = false;
-
-	out.open(file);
-	if(!out.good()){
-		cout << "Error opening " << file << endl;
-		return ret;
-	}
-
-	if(measures.size() > 0) {
-		out << "percrepol\t";
-		out << measures.begin()->second.getPercrepol();
-		out << "\n";
-	}
-	for(auto im = measures.begin(); im != measures.end(); im++) {
-		out << im->second.varname << " \t";
-		set<string> selection = im->second.Selection;
-		for(set<string>::iterator it = selection.begin(); it != selection.end(); it++){
-			out << *it << " \t";
-		}
-		out << endl;
-	}
-	out.close();
-	ret = true;
-	return ret;
-}
-
-bool Protocol::addMeasure(Measure toInsert) {
-	set<string> vars = cell->getVariables();
-	if(vars.find(toInsert.varname) != vars.end()) {
-		return measures.insert(pair<string,Measure>(toInsert.varname, toInsert)).second;
-	}
-	return false;
-}
-
-void Protocol::removeMeasure(string measureName) {
-	measures.erase(measureName);
-}
-
-bool Protocol::setMeasures(map<string,Measure> newMeasures) {
-	bool toReturn = true;
-	measures.clear();
-	measures.insert(newMeasures.begin(), newMeasures.end());
-	for(auto it = measures.begin(); it != measures.end(); it++) {
-		if(cell->vars.find(it->first) == cell->vars.end()) {
-			measures.erase(it);
-			toReturn = false;
-		}
-	}
-	return toReturn;
-}
-
-bool Protocol::addToMeasreSelection(string measureName, string property) {
-	try {
-		return measures.at(measureName).addToMeasureSelection(property);
-	} catch (const std::out_of_range&) {
-		return false;
-	}
-}
-
-void Protocol::removeFromMeasureSelection(string measureName, string property) {
-	try {
-		measures.at(measureName).removeFromSelection(property);
-	} catch ( const std::out_of_range&) {
-
-	}
-}
-
-
-//#############################################################
-//read and mvars style file and use it to set measures list 
-//where varname is the first word on the line
-//and all sequential words are properties to measure (the selection)
-//#############################################################
-bool Protocol::readMvarsFile(string filename)
-{
-	ifstream ifile;
-	string line, name;
-	set<string> possible_vars = cell->getVariables();
-	double percrepol = 50;
-
-
-	ifile.open(filename);
-	if(!ifile.good()){
-		cout << "Error opening " << filename << endl;
-		return false;
-	}
-
-	while(!ifile.eof()) {
-		getline(ifile,line);
-		stringstream linestream(line);
-		string varname;
-		linestream >> varname;
-		if(varname == "percrepol") {
-			linestream >> percrepol;
-			continue;
-		}
-		Measure temp(varname,percrepol);
-		while(!linestream.eof()) {
-			linestream >> name;
-			temp.addToMeasureSelection(name);
-		}
-		if(possible_vars.find(temp.varname) != possible_vars.end()) {
-			measures.insert(pair<string,Measure>(temp.varname,temp));
-		}
-	}
-
-	ifile.close();
-	return true;
-};
-
-//#############################################################
-// Set params for reading/saving model params.
-//#############################################################
-int Protocol::readpvars(){
-
-	int ret = 0;
-	ret = parsemixedmap(cell->pars, pvarfile ,&pnames, &pvals);
-	return ret;
-};
-
 //############################################################
 // Write the contents of varmap to a file
 //############################################################
 bool Protocol::writepars(QXmlStreamWriter& xml) {
-	xml.writeStartElement("pars");
-	for(auto it = pars.begin(); it != pars.end(); it++){
-		xml.writeStartElement("par");
-		xml.writeAttribute("name",it->first.c_str());
-		xml.writeCharacters(it->second.get().c_str());
-		xml.writeEndElement();
-	}
-	xml.writeEndElement();
-	return 0;
+    xml.writeStartElement("pars");
+    for(auto it = pars.begin(); it != pars.end(); it++){
+        xml.writeStartElement("par");
+        xml.writeAttribute("name",it->first.c_str());
+        xml.writeCharacters(it->second.get().c_str());
+        xml.writeEndElement();
+    }
+    xml.writeEndElement();
+    return 0;
 }
-bool Protocol::writepars(string file)
+void Protocol::trial(unsigned int current_trial) {
+    __trial = current_trial;
+    //	assign_cell_pars(pnames,pvals,trial);   // Assign cell pars
+}
+
+unsigned int Protocol::trial() const {
+    return __trial;
+}
+
+bool Protocol::cell(const string& type) {
+    if(cell() != NULL && type == cell()->type) {
+        return false;
+    }
+    try {
+        this->cell((CellUtils::cellMap.at(type))());
+        return true;
+    } catch(const std::out_of_range&) {
+        qDebug("Protocol: %s is not a valid cell type",type.c_str());
+        return false;
+    }
+}
+
+/*void Protocol::cell(Cell* cell) {
+    if(measureMgr) {
+        measureMgr().clear();
+        measureMgr().cell(cell);
+    }
+
+    pvars().clear();
+    this->__cell.reset(cell);
+}
+
+Cell* Protocol::cell() const
 {
-	QFile ofile(file.c_str());
-	string name;
-
-	bool exists = ofile.exists();
-	if(!ofile.open(QIODevice::WriteOnly|QIODevice::Truncate|QIODevice::Text)){
-		cout << "Error opening " << file << endl;
-		return 1;
-	}
-	QXmlStreamWriter xml(&ofile);
-	xml.setAutoFormatting(true);
-	if(!exists) {
-		xml.writeStartDocument();
-	}
-	bool success = this->writepars(xml);
-	xml.writeEndDocument();
-    ofile.close();
-    return success;
-};
-//############################################################
-//Wirte the keys from varmap to a file
-//############################################################
-bool Protocol::writedvars(string file)
-{
-	set<string> selection = cell->getVariableSelection();
-	ofstream ofile;
-	string name;
-
-	if(!ofile.is_open())
-		ofile.open(file, ios_base::trunc);
-	if(!ofile.is_open()){
-		cout << "Error opening " << file << endl;
-		return false;
-	}
-
-	for(auto it = selection.begin(); it != selection.end(); it++){
-		ofile << *it << endl;
-	}
-
-	ofile.close();
-	return true;
-
-}
-bool Protocol::readdvars(string file) {
-	bool toReturn = true;
-	ifstream ifile;
-	string name;
-	set<string> selection;
-
-	if(!ifile.is_open()) {
-		ifile.open(file);
-	}
-	if(!ifile.good()){
-		cout << "Error opening " << file << endl;
-		return false;
-	}
-
-	while(!ifile.eof()) {
-		ifile >> name;
-		if(!selection.insert(name).second) {
-			toReturn = false;
-		}
-	}
-	cell->setVariableSelection(selection);
-	return toReturn;
-}
-void Protocol::setTrial(unsigned int current_trial) {
-	trial = current_trial;
-	assign_cell_pars(pnames,pvals,trial);   // Assign cell pars
-}
-
-unsigned int Protocol::getTrial() {
-	return trial;
-}
-
-bool Protocol::setCell(const string& type, bool reset) {
-	if(cell != NULL && type == cell->type && !reset) {
-		return false;
-	}
-	try {
-		cell = (cellMap.at(type))();
-		measures.clear();
-		pvals.clear();
-		pnames.clear();
-		return true;
-	} catch(const std::out_of_range&) {
-		return false;
-	}
-}
+    return __cell.get();
+}*/
 
 list<string> Protocol::cellOptions() {
-	list<string> options;
-	for(auto it = cellMap.begin(); it != cellMap.end(); it++) {
-		options.push_back(it->first);
-	}
-	return options;
+    list<string> options;
+    for(auto& cellOpt : CellUtils::cellMap) {
+        options.push_back(cellOpt.first);
+    }
+    return options;
+}
+
+void Protocol::readInCellState(bool read) {
+    if(read) {
+        cell()->readCellState(cellStateDir+"/"+cellStateFile+std::to_string(__trial)+".xml");
+        this->tMax += this->cell()->t;
+    }
+}
+
+void Protocol::writeOutCellState(bool write) {
+    if(write) {
+        cell()->writeCellState(datadir+"/"+cellStateFile+std::to_string(__trial)+".xml");
+    }
 }

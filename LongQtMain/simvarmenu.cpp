@@ -30,37 +30,21 @@
 /*########################
   begin simvarMenu class
 ##########################*/
-simvarMenu::simvarMenu(Protocol* initial_proto, QDir working_dir, QWidget *parent)  {
+simvarMenu::simvarMenu(shared_ptr<Protocol> initial_proto, QWidget *parent)
+: QWidget(parent)
+{
 //setup class variables
     proto = initial_proto;
-    this->parent = parent;
-    this->working_dir = working_dir;
-    write_close = true;
     descriptions = GuiUtils::readMap(":/hoverText/parsDescriptions.txt");
     this->createMenu();
 }
 
 void simvarMenu::createMenu()  {
-//setup useful constants and aliases
-    QString end_op = "Exit";
-    if(parent != NULL) {
-        end_op = "Next";
-    }
 //initialize layouts
     main_layout = new QGridLayout(this);
     QList<QHBoxLayout*> central_layouts;
 //initialize buttons &lables
     QTabWidget* tabs = new QTabWidget();
-    get_vars = new QPushButton(tr("Import Simulation settings"), this);
-    set_vars = new QCheckBox(QString("Write File on ") += end_op, this);
-    close_button = new QPushButton(QString("Save and ") +=end_op, this);
-//    QCheckBox readflag = new QCheckBox("Read in variable files", this);
-//set button inital states
-    if(this->parent != NULL) {
-        close_button->hide();
-    }
-    set_vars->setChecked(write_close);
-    
 //do all the work for simvars setup
     for(map<string,GetSetRef>::iterator it = proto->pars.begin(); it!=proto->pars.end(); it++) {
         if(simvars_layouts.find(it->second.type.c_str()) == simvars_layouts.end()) {
@@ -91,23 +75,15 @@ void simvarMenu::createMenu()  {
     temp->setLayout(central_layouts.last());
     tabs->addTab(temp,"Simulation files");
     if(string(proto->type) == "Grid Protocol") {
-        this->grid = new GridSetupWidget((GridProtocol*)this->proto,working_dir);
+        this->grid = new GridSetupWidget(static_pointer_cast<GridProtocol>(this->proto));
         tabs->addTab(grid, "Grid Setup");
-        connect(grid, &GridSetupWidget::cell_type_changed, this, &simvarMenu::cell_type_changed);
-//        connect(this, &simvarMenu::updated, grid, &gridSetupWidget::updateMenu);
+        connect(grid, &GridSetupWidget::cellChanged, this, &simvarMenu::cellChanged);
     }
     }
 //main_layout
-    main_layout->addWidget(get_vars, 0,0);
-    main_layout->addWidget(set_vars, 0,1);
-    main_layout->addWidget(tabs , 1,0,10 ,19 ); 
-    main_layout->addWidget(close_button, 11, 20);
+    main_layout->addWidget(tabs , 1,0,10 ,19 );
     setWindowTitle(tr("Simulation Variables Menu"));
     setLayout(main_layout);
-//connect buttons   
-    connect(get_vars, SIGNAL(clicked()), this, SLOT(read_simvars())); 
-    connect(set_vars, SIGNAL(stateChanged(int)), this, SLOT(set_write_close(int)));
-    connect(close_button, SIGNAL(clicked()), this, SLOT(close())); 
 //make menu match proto
     update_menu();
 }
@@ -115,7 +91,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     QMap<QString,function<void(const map<string,GetSetRef>::iterator)>> initializers;
     initializers["double"] = [this] (const map<string, GetSetRef>::iterator it) {
         QDoubleSpinBox* new_simvar = new QDoubleSpinBox();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         new_simvar->setRange(/*std::numeric_limits<double>::min()*/ -100000,std::numeric_limits<double>::max());
@@ -125,7 +101,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     };
     initializers["int"] = [this] (const map<string, GetSetRef>::iterator it) {
         QSpinBox* new_simvar = new QSpinBox();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         new_simvar->setRange(/*std::numeric_limits<int>::min()*/-100000, std::numeric_limits<int>::max());
@@ -135,7 +111,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     };
     initializers["bool"] = [this] (const map<string, GetSetRef>::iterator it) {
         QCheckBox* new_simvar = new QCheckBox();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         string type = it->second.type;
@@ -145,7 +121,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     };
     initializers["file"] = [this] (const map<string, GetSetRef>::iterator it) {
         QLineEdit* new_simvar = new QLineEdit();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         simvars_label->setToolTip(descriptions[(it->first).c_str()]);
         string name = it->first;
         string type = it->second.type;
@@ -153,13 +129,13 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         simvars.insert(it->first.c_str(),new_simvar);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, new_simvar);
         connect((QLineEdit*)simvars.last(), static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textEdited), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
-    };   
+    };
     initializers["directory"] = [this] (const map<string, GetSetRef>::iterator it) {
         QLineEdit* new_simvar = new QLineEdit();
         QPushButton* setDir = new QPushButton("Choose");
         QWidget* layoutWidget = new QWidget();
         QHBoxLayout* layout = new QHBoxLayout(layoutWidget);
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         layout->setContentsMargins(0,0,0,0);
         layout->addWidget(new_simvar);
         layout->addWidget(setDir);
@@ -180,7 +156,7 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
     initializers["cell"] = [this]  (const map<string, GetSetRef>::iterator it) {
         QStringList cell_options;
         auto cell_type = new QComboBox();
-        QLabel* simvars_label = new QLabel(*(new QString((it->first).c_str())));
+        QLabel* simvars_label = new QLabel((it->first).c_str());
         auto cell_opitons_stl = proto->cellOptions();
         for(auto im = cell_opitons_stl.begin(); im != cell_opitons_stl.end(); im++) {
             cell_options << im->c_str();
@@ -188,7 +164,6 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
         cell_type->addItems(cell_options);
         string name = it->first;
         string type = it->second.type;
-        set_default_vals(proto->pars[it->first].get());
         simvars.insert(it->first.c_str(),cell_type);
         simvars_layouts[it->second.type.c_str()]->addRow(simvars_label, cell_type);
         connect((QComboBox*)simvars.last(), static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged), [=] (QString value) {update_pvars(pair<string,string>(name, value.toStdString()), type);});
@@ -196,9 +171,16 @@ void simvarMenu::initialize(const map<string,GetSetRef>::iterator it) {
 
     try {
         initializers[it->second.type.c_str()](it);
-    } catch(std::bad_function_call e){}
+    } catch(std::bad_function_call e){
+        qDebug("SimvarMenu: %s not a valid initializer type",it->second.type.c_str());
+    }
 }
 simvarMenu::~simvarMenu(){}
+
+void simvarMenu::removeGrid() {
+    this->grid->deleteLater();
+    this->grid = 0;
+}
 void simvarMenu::update_menu() {
     QMap<QString,function<void(const map<string, GetSetRef>::iterator)>> updaters;
     updaters["double"] = [this] (const map<string, GetSetRef>::iterator it)
@@ -236,68 +218,26 @@ void simvarMenu::update_menu() {
     for(auto it = proto->pars.begin(); it != proto->pars.end(); it++){
         try {
             updaters[it->second.type.c_str()](it);
-        } catch(std::bad_function_call e){}
+        } catch(std::bad_function_call){
+            qDebug("SimvarMenu: %s not a valid updater type",it->second.type.c_str());
+        }
     }
     emit updated();
 }
 void simvarMenu::reset() {
+    this->signalCellTypeChange = false;
     simvars.clear();
     simvars_layouts.clear();
     qDeleteAll(this->children());
     createMenu();
+    this->signalCellTypeChange = true;
 }
-void simvarMenu::changeProto(Protocol* proto) {
+void simvarMenu::changeProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
     this->reset();
 }
-void simvarMenu::closeEvent(QCloseEvent* event){
-    write_file();
-    event->accept();
-}
-void simvarMenu::write_file() {
-    if(write_close) {
-        working_dir.mkpath(working_dir.absolutePath());
-        proto->writepars(working_dir.absolutePath().toStdString() + string("/") + proto->simvarfile);
-    }
-}
-void simvarMenu::setWorkingDir(QDir& dir) {
-    working_dir = dir;
+void simvarMenu::setWorkingDir(QDir&) {
     update_menu();
-}
-bool simvarMenu::read_simvars(){
-    bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this,"Simulation Settings",working_dir.absolutePath());
-    if (!fileName.isEmpty()){
-        ret = !(bool)proto->readpars(fileName.toStdString());
-		try {
-			if(proto->pars.at("writeCellState").get() == "true") {
-				proto->pars.at("cellStateFile").set(fileName.toStdString());
-				proto->pars.at("readCellState").set("true");
-				proto->pars.at("writeCellState").set("false");
-			}
-		} catch (const std::out_of_range&) {
-		}
-    }
-    proto->datadir = working_dir.absolutePath().toStdString();
-	if(this->grid) {
-		this->grid->reset();
-	}
-	this->signalCellTypeChange = false;
-    update_menu();
-	this->signalCellTypeChange = true;
-	emit cell_type_changed();
-    return ret;
-}
-bool simvarMenu::write_simvars(){
-    
-    bool ret = false;
-    QString fileName = QFileDialog::getOpenFileName(this);
-    if (!fileName.isEmpty()){
-        proto->simvarfile = fileName.toStdString();
-    ret = !(bool)proto->writepars(proto->simvarfile);
-    }
-    return ret;
-
 }
 void simvarMenu::update_pvars(pair<string,double> p){
     proto->pars.at(p.first).set(to_string(p.second));
@@ -305,14 +245,10 @@ void simvarMenu::update_pvars(pair<string,double> p){
 void simvarMenu::update_pvars(pair<string,string> p, string type){
      if(type == "cell") {
         proto->pars[p.first].set(p.second);
-        set_default_vals(p.second);
-        emit cell_type_changed();
+        CellUtils::set_default_vals(*this->proto);
+        emit cellChanged(this->proto->cell());
      } else {
         proto->pars[p.first].set(p.second);
-     }
-     if(p.first == "datadir") {
-        working_dir = QString(p.second.c_str());
-        emit working_dir_changed(working_dir);
      }
 }
 void simvarMenu::update_pvars(pair<string,int> p, string type) {
@@ -327,19 +263,9 @@ void simvarMenu::update_pvars(pair<string,int> p, string type) {
         proto->pars[p.first].set(to_string(p.second));
     }
 }
-void simvarMenu::set_write_close(int state) {
-    write_close = (bool) state;
-    set_vars->setChecked(write_close);
-}
-void simvarMenu::changeCellType() {
+void simvarMenu::changeCell(Cell* cell) {
+	if(cell != this->proto->cell()) {
+		qWarning("SimvarMenu: Cell does not match protocol cell");
+	}
     update_menu(); 
-}
-void simvarMenu::set_default_vals(string name) {
-    auto cellDefaultsList = CellUtils::protocolCellDefaults[name];
-    for(auto val : cellDefaultsList) {
-        try {
-            proto->pars.at(val.first).set(val.second);
-        } catch(bad_function_call) {
-        } catch(out_of_range) {};
-    }
 }

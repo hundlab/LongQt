@@ -1,5 +1,5 @@
 #include "gridDelegate.h"
-#include "cellUtils.h"
+#include "cellutils.h"
 #include "guiUtils.h"
 
 #include <QPen>
@@ -12,12 +12,12 @@ GridDelegate::GridDelegate(QWidget *parent) : QStyledItemDelegate(parent), size(
 	cellMap["Inexcitable Cell"] = [] () {return new Cell;};	
 	int i = 0;
 	for(auto& pair : cellMap) {
-		QPalette* palette = new QPalette();
-        palette->setColor(QPalette::Base, GuiUtils::genColor(i));
-        palette->setColor(QPalette::Highlight, GuiUtils::genColor(i,80));
-        palette->setColor(QPalette::HighlightedText, GuiUtils::genColor(i,80));
+        QPalette palette;
+        palette.setColor(QPalette::Base, GuiUtils::genColor(i));
+        palette.setColor(QPalette::Highlight, GuiUtils::genColor(i,80));
+        palette.setColor(QPalette::HighlightedText, GuiUtils::genColor(i,80));
 
-		this->colors.insert(pair.first.c_str(), *palette);
+        this->colors.insert(pair.first.c_str(), palette);
 		i++;
 	}
 }
@@ -54,6 +54,6 @@ void GridDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	painter->restore();
 }
 
-QSize GridDelegate::sizeHint(const QStyleOptionViewItem &option,const QModelIndex &index) const {
+QSize GridDelegate::sizeHint(const QStyleOptionViewItem&,const QModelIndex&) const {
 	return this->size;	
 }

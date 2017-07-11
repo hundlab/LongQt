@@ -11,6 +11,7 @@
 #include <QLabel>
 
 #include "protocol.h"
+#include "cellutils.h"
 
 using namespace std;
 
@@ -22,24 +23,29 @@ class ChooseProtoWidget : public QWidget {
 Q_OBJECT
   public:
     ChooseProtoWidget(QWidget* parent = 0);
-    Protocol* getCurrentProto();
+    shared_ptr<Protocol> getCurrentProto();
     void Initialize();
   signals:
-    void protocolChanged(Protocol*);
-    void cell_type_changed();
+    void protocolChanged(shared_ptr<Protocol>);
+    void cellChanged(Cell*);
   private:
 	Ui::ChooseProtoWidget* ui;
-    Protocol* proto;
+    shared_ptr<Protocol> proto;
     QWidget* parent;
     QButtonGroup* clampType;
 //    QComboBox* ui::cellType;
     QString defaultCell;
+	QMap<int,string> protoNumMap;
+	void updateMenu();
   private slots:
-    void changeProto(int value);
     void on_cellType_currentIndexChanged(QString name);
   public slots:
-    void cellChangedSlot();
+    void changeProto(int value);
+  	void changeProto(string name);
+	void changeProto(shared_ptr<Protocol>, bool raise = false);
+    void changeCell(Cell*);
     void resetProto();
+	void on_readSettings_clicked();
 };
 
 #endif

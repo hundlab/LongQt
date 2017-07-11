@@ -1,8 +1,9 @@
 #include "linegraph.h"
 #include "ui_linegraph.h"
 #include "choosegraphs.h"
-#include "protocol.h"
+#include "currentClampProtocol.h"
 #include "guiUtils.h"
+#include "cellutils.h"
 
 LineGraph::LineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
     QWidget(parent),
@@ -122,9 +123,8 @@ bool LineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
     return false;
 }
 void LineGraph::populateList(int trial) {
-    char filename[1500];
-    sprintf(filename, Protocol().finalpropertyoutfile.c_str(), trial, yLabel.toStdString().c_str());
-    QFile file(saveDir.absolutePath() +"/"+ QString(filename));
+    string filename = CellUtils::strprintf(CurrentClamp().finalpropertyoutfile.c_str(), trial);
+    QFile file(saveDir.absolutePath() +"/"+ QString(filename.c_str()));
     if(!file.open(QIODevice::ReadOnly)){
         return;
     }
@@ -134,7 +134,13 @@ void LineGraph::populateList(int trial) {
     auto it = names.begin();
     auto iv = values.begin();
     for(;it != names.end()&& iv != values.end(); it++,iv++) {
-        ui->listWidget->insertItem(ui->listWidget->count(),*it+"\t"+*iv);
+        QStringList nameParts = it->split("/");
+        if(nameParts[0] == yLabel) {
+            ui->listWidget->insertItem(ui->listWidget->count(),nameParts[1]+"\t"+*iv);
+        }
+    }
+    if(names.size() > 0) {
+        ui->listWidget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
     }
 }
 void LineGraph::on_chooseGraphs_clicked() {
