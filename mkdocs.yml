@@ -1,0 +1,5 @@
+site_name: LongQt
+pages:
+- Home: index.md
+- About: README.md
+theme: readthedocs
