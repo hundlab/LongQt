@@ -29,3 +29,6 @@ defaultTrials/
 
 #precompiled version
 versions
+
+#docs
+_build/
