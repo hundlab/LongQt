@@ -7,41 +7,45 @@
 
 #include <QWidget>
 #include <QTableView>
+#include <QPointer>
 
-#include <gridProtocol.h>
-#include <gridModel.h>
+#include "gridProtocol.h"
+#include "gridModel.h"
+#include "addgridcellpvar.h"
 
 namespace Ui {
-class IonChannelConfig;
+    class PvarMenu;
 }
 
 class IonChannelConfig : public QWidget
 {
     Q_OBJECT
 
-public:
-    explicit IonChannelConfig(QTableView* view, shared_ptr<GridProtocol> proto, QWidget *parent = 0);
-    ~IonChannelConfig();
-	void updateList();
+    public:
+        explicit IonChannelConfig(QTableView* view, shared_ptr<GridProtocol> proto, QWidget *parent = 0);
+        ~IonChannelConfig();
+        void updateList();
 
-private:
-    Ui::IonChannelConfig *ui;
-	GridModel* model = 0;
-	shared_ptr<GridProtocol> proto = 0;
-	QTableView* view = 0;
+    private:
+        Ui::PvarMenu *ui;
+        GridModel* model = 0;
+        shared_ptr<GridProtocol> proto = 0;
+        QTableView* view = 0;
+        QPointer<AddGridCellPvar> addmenu;
 
-	set<pair<int,int>> getInitial();
 
-public slots:
-	void cellChanged(Cell*);
+    public slots:
+        void changeCell(Cell*);
+        void changeProto(shared_ptr<GridProtocol> proto);
 
-private slots:
-	void on_randomize_stateChanged(int state);
-	void on_multiple_stateChanged(int state);
-	void on_normalDist_toggled(bool checked);
-	void on_addButton_clicked();
-    void on_actionDelete_triggered();
-    void on_actionShow_Cells_triggered();
+
+    private slots:
+        void on_actionDelete_triggered();
+        void on_actionShow_Cells_triggered();
+        void on_addButton_triggered();
+        void on_removeButton_triggered();
+        void on_infoButton_triggered();
+        void on_refreshButton_triggered();
 };
 
 #endif // IONCHANNELCONFIG_H

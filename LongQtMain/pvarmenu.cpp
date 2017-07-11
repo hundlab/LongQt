@@ -67,7 +67,7 @@ void PvarMenu::on_actionShow_Cells_triggered() {
 }
 
 void PvarMenu::on_addButton_triggered() {
-    this->addmenu = new AddSingleCellPvar(this->proto);
+    this->addmenu = new AddSingleCellPvar(this->proto,this);
     connect(addmenu, &AddSingleCellPvar::pvarsChanged, [this] () {
         this->updateList();
     });

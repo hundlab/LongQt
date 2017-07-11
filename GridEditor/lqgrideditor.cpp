@@ -64,7 +64,7 @@ void LQGridEditor::on_actionSet_Conductivities_triggered()
 }
 void LQGridEditor::on_actionConfigure_Ion_Channels_triggered() {
 	if(this->ionConfig == 0) {
-		this->ionConfig = new IonChannelConfig(this->gridView, this->proto);
+		this->ionConfig = new IonChannelConfig(this->gridView, this->proto, this);
 		this->ionConfig->show();
 		connect(this->ionConfig, &QObject::destroyed, [this] () {
 			this->ionConfig = 0;

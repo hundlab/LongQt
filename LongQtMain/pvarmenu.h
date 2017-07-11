@@ -25,13 +25,16 @@ class PvarMenu : public QWidget
 
     public:
         explicit PvarMenu(shared_ptr<Protocol> proto, QWidget *parent = 0);
-        ~PvarMenu();
-    private:
-        void updateList();
-        Ui::PvarMenu *ui;
-        shared_ptr<Protocol> proto = 0;
-        QPointer<AddSingleCellPvar> addmenu;
+        virtual ~PvarMenu();
 
+    protected:
+        void updateList();
+
+        shared_ptr<Protocol> proto = 0;
+        Ui::PvarMenu *ui;
+
+    private:
+        QPointer<AddSingleCellPvar> addmenu;
 
     public slots:
         void changeProto(shared_ptr<Protocol> proto);
