@@ -2,4 +2,5 @@ site_name: LongQt
 pages:
 - Home: index.md
 - About: README.md
+- Test: test.md
 theme: readthedocs
