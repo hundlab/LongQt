@@ -2,5 +2,14 @@ site_name: LongQt
 pages:
 - Home: index.md
 - About: README.md
-- Test: test.md
+- Document Preface and Scope: PrefaceandScope.md
+- Introduction: Introduction.md
+- Downloading LongQT and LongQT Grapher: Downloading.md
+- LongQT Models: Models.md
+- LongQT Menus: LongQTMenus.md
+- LongQT Grapher: LongQTGrapher.md
+- Adding a cell physiology model: AddingModels.md
+- Appendix Examples: appendix.md
+
+
 theme: readthedocs
