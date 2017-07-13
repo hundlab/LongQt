@@ -60,8 +60,7 @@ void dvarMenu::createMenu()  {
     QGridLayout* main_layout = new QGridLayout(this);
     QGridLayout* central_layout = new QGridLayout;
 //initialize buttons &lables
-    dvars = (QCheckBox**)malloc(vars.size()*sizeof(QCheckBox*));
-//    QCheckBox readflag = new QCheckBox("Read in variable files", this);
+    dvars.resize(vars.size());
 //do all the work for dvars setup
     QMap<QString,QList<QCheckBox*>> widgets;
     for(auto it = dvars_groups.begin(); it != dvars_groups.end(); it++) {
@@ -135,7 +134,7 @@ void dvarMenu::update_menu() {
     }
 }
 void dvarMenu::reset() {
-    free(dvars);
+    dvars.clear();
     qDeleteAll(this->children());
     createMenu();
 }

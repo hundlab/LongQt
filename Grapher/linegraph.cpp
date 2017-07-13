@@ -30,8 +30,6 @@ void LineGraph::Initialize() {
     connect(right, &QShortcut::activated, this, &LineGraph::shiftRight);
     connect(up, &QShortcut::activated, this, &LineGraph::shiftUp);
     connect(down, &QShortcut::activated, this, &LineGraph::shiftDown);
-//should not just be 0!!
-     populateList(0);
      ui->plot->xAxis->grid()->setVisible(false);
      ui->plot->yAxis->grid()->setVisible(false);
      ui->plot->xAxis->setLabelFont(QFont(font().family(), 16));
@@ -122,26 +120,32 @@ bool LineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
     }
     return false;
 }
-void LineGraph::populateList(int trial) {
-    string filename = CellUtils::strprintf(CurrentClamp().finalpropertyoutfile.c_str(), trial);
-    QFile file(saveDir.absolutePath() +"/"+ QString(filename.c_str()));
-    if(!file.open(QIODevice::ReadOnly)){
-        return;
+void LineGraph::populateList(QVector<std::tuple<QString,QString,QString,double>> dssData) {
+    for(auto val: dssData) {
+        if(get<1>(val)!= yLabel) continue;
+        new QTreeWidgetItem(ui->treeWidget,
+            {get<0>(val),get<2>(val),
+            QString::number(get<3>(val))});
     }
-    QTextStream in(&file);
-    QStringList names = in.readLine().split("\t");
-    QStringList values = in.readLine().split("\t");
-    auto it = names.begin();
-    auto iv = values.begin();
-    for(;it != names.end()&& iv != values.end(); it++,iv++) {
-        QStringList nameParts = it->split("/");
-        if(nameParts[0] == yLabel) {
-            ui->listWidget->insertItem(ui->listWidget->count(),nameParts[1]+"\t"+*iv);
-        }
-    }
-    if(names.size() > 0) {
-        ui->listWidget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
-    }
+
+//    string filename = CellUtils::strprintf(CurrentClamp().finalpropertyoutfile.c_str(), trial);
+////    filename = CellUtils::strprintf(filename.c_str(),
+//    QFile file(saveDir.absolutePath() +"/"+ QString(filename.c_str()));
+//    if(!file.open(QIODevice::ReadOnly)){
+//        return;
+//    }
+//    QTextStream in(&file);
+//    QStringList names = in.readLine().trimmed().split("\t");
+//    QStringList values = in.readLine().trimmed().split("\t");
+//    auto it = names.begin();
+//    auto iv = values.begin();
+//    for(;it != names.end()&& iv != values.end(); it++,iv++) {
+//        QStringList nameParts = it->split("/");
+//        if(nameParts[0] == yLabel
+//            && nameParts.size()>1) {
+//            new QTreeWidgetItem(ui->treeWidget,{nameParts[1],*iv});
+//        }
+//    }
 }
 void LineGraph::on_chooseGraphs_clicked() {
     ChooseGraphs* choose = new ChooseGraphs(ui->plot, this);

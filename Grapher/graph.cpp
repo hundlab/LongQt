@@ -23,8 +23,9 @@ Grapher::Grapher(QDir read_location, QWidget *parent) :
     this->Initialize();
 }
 void Grapher::Initialize() {
-    this->buildLineGraphs(this->getFileNames());
-    this->buildBarGraphs(0);
+    auto dssData = this->dssData();
+    this->buildLineGraphs(this->getFileNames(),dssData);
+    this->buildBarGraphs(dssData);
 }
 QFileInfoList Grapher::getFileNames() {
     return this->getFileNames(this->read_location);
@@ -38,10 +39,10 @@ QFileInfoList Grapher::getFileNames(QDir location) {
     }
     return toReturn;
 }
-QFileInfoList Grapher::getFileNamesBar(QDir location, int trial) {
+QFileInfoList Grapher::getFileNamesBar(QDir location) {
     QFileInfoList toReturn;
-    for(QFileInfo file : location.entryInfoList()) {
-        if(QRegExp(QString("dss")+QString::number(trial)+QString("_.+")).exactMatch(file.baseName())
+    for(QFileInfo file: location.entryInfoList(QDir::Files)) {
+        if(QRegExp("\\S*dss\\d+").exactMatch(file.baseName())
             && !QRegExp("dss\\d+_state").exactMatch(file.baseName())
             && !QRegExp("dss\\d+_pvars").exactMatch(file.baseName())){
             toReturn << file;
@@ -64,7 +65,7 @@ Grapher::~Grapher()
 {
     delete ui;
 }
-void Grapher::buildLineGraphs(QFileInfoList files){
+void Grapher::buildLineGraphs(QFileInfoList files, DssD dssData){
     QString xName = "t";
     if(files.isEmpty()) {
         QMessageBox::warning(0,"error", "No Files Found");
@@ -125,14 +126,17 @@ void Grapher::buildLineGraphs(QFileInfoList files){
                 auto graph = new LineGraph(split_line[xIndex],split_line[i],this->read_location);
                 graphMap.insert(split_line[i],graph);
                 ui->tabWidget->addTab(graph,split_line[i]);
+                graph->populateList(dssData);
             }
             graphMap[split_line[i]]->addData(y[xIndex],y[i],this->getName(fileInfo));
         }
         progressCounter++;
     }
 }
-void Grapher::buildBarGraphs(int trial) {
-    QFileInfoList fileInfos = this->getFileNamesBar(this->read_location, trial);
+Grapher::DssD Grapher::dssData() {
+    QFileInfoList fileInfos = this->getFileNamesBar(this->read_location);
+    DssD dssDat;
+
     for(auto fileInfo : fileInfos) {
         QFile file(fileInfo.absoluteFilePath());
         if(!file.open(QIODevice::ReadOnly)){
@@ -143,12 +147,34 @@ void Grapher::buildBarGraphs(int trial) {
         QStringList values = in.readLine().split("\t", QString::SkipEmptyParts);
         auto name = names.begin();
         auto value = values.begin();
-        auto var = fileInfo.baseName().split("_").last();
         for(;name != names.end()&& value != values.end(); name++,value++) {
-            ui->tabWidget->addTab(new barGraph(*name, value->toDouble(), var , read_location), var +":"+QString(*name));
+            auto splitName = name->split("/");
+            if(splitName.size() < 2) continue;
+            auto var = splitName[splitName.size()-2];
+            auto property = splitName.last();
+            auto instance =
+            splitName.size() > 2?
+                splitName[splitName.size()-3]
+                :"trail"+fileInfo.baseName().split('s').last();
+            dssDat.append({instance,var,property,value->toDouble()});
         }
     }
-
+    return dssDat;
+}
+void Grapher::buildBarGraphs(DssD dssData) {
+    QMap<QString,barGraph*> bars;
+    for(auto value: dssData) {
+        auto instance = get<0>(value);
+        auto var = get<1>(value);
+        auto property = get<2>(value);
+        if(!bars.contains(var+":"+property)) {
+             auto bar = new barGraph(instance, get<3>(value), var, read_location);
+             ui->tabWidget->addTab(bar, var +":"+property);
+             bars.insert(var+":"+property,bar);
+         } else {
+             bars[var+":"+property]->addBar(instance,get<3>(value));
+         }
+    }
 }
 
 void Grapher::on_loadNew_clicked()

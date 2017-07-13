@@ -66,7 +66,14 @@ void barGraph::on_loadOtherTrial_clicked() {
         }
     }
 
-    this->newBar(newBar);    
+    this->newBar(newBar);
+}
+void barGraph::addBar(QString name, double value) {
+    bar newBar;
+    labels.append(name);
+    newBar.data.append(value);
+
+    this->newBar(newBar);
 }
 void barGraph::setRange(bar newBar) {
     QCPRange oldRange = ui->plot->yAxis->range();

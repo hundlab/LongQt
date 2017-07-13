@@ -27,7 +27,7 @@ class Grapher;
 class Grapher : public QDialog
 {
     Q_OBJECT
-
+typedef QVector<std::tuple<QString,QString,QString,double>> DssD;
 public:
 	// a directory is specified instead of files so that all
 	// the files can be loaded for ex in the case of multiple
@@ -38,12 +38,13 @@ private:
     void Initialize();
     QFileInfoList getFileNames(QDir location);
     QFileInfoList getFileNames();
-    QFileInfoList getFileNamesBar(QDir location, int trial);
+    QFileInfoList getFileNamesBar(QDir location);
     QString getName(QFileInfo file);
     QDir read_location;
 private slots:
-    void buildLineGraphs(QFileInfoList files);
-    void buildBarGraphs(int trial);
+    void buildLineGraphs(QFileInfoList files,DssD dssData = {});
+    void buildBarGraphs(DssD dssData);
+    DssD dssData();
     void on_loadNew_clicked();
 
 private:

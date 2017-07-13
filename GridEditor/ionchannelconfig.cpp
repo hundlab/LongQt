@@ -15,8 +15,8 @@ IonChannelConfig::IonChannelConfig(QTableView* view, shared_ptr<GridProtocol> pr
     this->model = (GridModel*)view->model();
     this->proto = proto;
     this->updateList();
-    ui->listWidget->addAction(ui->actionDelete);
-    ui->listWidget->addAction(ui->actionShow_Cells);
+    ui->treeWidget->addAction(ui->actionDelete);
+    ui->treeWidget->addAction(ui->actionShow_Cells);
     connect(this->model, &GridModel::cellChanged, this, &IonChannelConfig::changeCell);
 }
 
@@ -27,11 +27,11 @@ IonChannelConfig::~IonChannelConfig()
 
 void IonChannelConfig::updateList() {
     QStringList toAdd;
-    this->ui->listWidget->clear();
+    this->ui->treeWidget->clear();
     for(auto& pvar : this->proto->pvars()) {
-        toAdd += pvar.second->IonChanParam::str(pvar.first).c_str();
+        new QTreeWidgetItem(ui->treeWidget,
+            QString(pvar.second->IonChanParam::str(pvar.first).c_str()).split("\t"));
     }
-    this->ui->listWidget->addItems(toAdd);
 }
 
 void IonChannelConfig::changeCell(Cell* cell) {
@@ -49,21 +49,21 @@ void IonChannelConfig::changeProto(shared_ptr<GridProtocol> proto) {
 
 
 void IonChannelConfig::on_actionDelete_triggered() {
-    QList<QListWidgetItem *> items = ui->listWidget->selectedItems();
+    QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
     for(auto item: items) {
-        QString name = item->data(Qt::DisplayRole).toString().split("\t")[0];
+        QString name = item->data(0,Qt::DisplayRole).toString();
         this->proto->pvars().erase(name.toStdString());
-        int row = ui->listWidget->row(item);
-        ui->listWidget->takeItem(row);
+        int row = ui->treeWidget->indexOfTopLevelItem(item);
+        ui->treeWidget->takeTopLevelItem(row);
         delete item;
     }
 }
 
 void IonChannelConfig::on_actionShow_Cells_triggered() {
-    QList<QListWidgetItem *> items = ui->listWidget->selectedItems();
+    QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
     QString text;
     for(auto item: items) {
-        QString name = item->data(Qt::DisplayRole).toString().split("\t")[0];
+        QString name = item->data(0,Qt::DisplayRole).toString();
         text += this->proto->pvars().at(name.toStdString())->str(name.toStdString()).c_str();
     }
     QMessageBox msgBox;

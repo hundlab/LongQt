@@ -43,16 +43,16 @@ void MvarMenu::setupMenu()  {
     int cellType = 0;
     QMap<string,int> measIds;
     set<string> measOptionsDefault = Measure().variables();
-    for(auto& cellVar: this->proto->cell()->vars) {
-        this->cellVars.append(cellVar.first.c_str());
+    for(auto& cellVar: this->proto->cell()->getVariables()) {
+        this->cellVars.append(cellVar.c_str());
         auto cellItem = new QTreeWidgetItem(
             ui->measView,
-            {cellVar.first.c_str(), this->getType(cellVar.first.c_str())},
+            {cellVar.c_str(), this->getType(cellVar.c_str())},
             cellType);
-        cellItem->setData(0,Qt::ToolTipRole,this->dvarsDescriptions[cellVar.first.c_str()]);
+        cellItem->setData(0,Qt::ToolTipRole,this->dvarsDescriptions[cellVar.c_str()]);
         set<string> measOptions;
-        if(proto->measureMgr().varsMeas.count(cellVar.first)>0) {
-            string measureName = proto->measureMgr().varsMeas.at(cellVar.first);
+        if(proto->measureMgr().varsMeas.count(cellVar)>0) {
+            string measureName = proto->measureMgr().varsMeas.at(cellVar);
             QScopedPointer<Measure> m(
                 proto->measureMgr().varMeasCreator.at(measureName)({}));
             measOptions = m->variables();
@@ -70,8 +70,8 @@ void MvarMenu::setupMenu()  {
                 {measVar.c_str()},
                 measIds[measVar]);
                 measItem->setData(0,Qt::ToolTipRole,this->measDescriptions[measVar.c_str()]);
-            if(selection.count(cellVar.first)>0 &&
-                selection.at(cellVar.first).count(measVar)>0) {
+            if(selection.count(cellVar)>0 &&
+                selection.at(cellVar).count(measVar)>0) {
                 measItem->setCheckState(0,Qt::Checked);
             } else {
                 measItem->setCheckState(0,Qt::Unchecked);

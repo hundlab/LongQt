@@ -27,6 +27,8 @@ public:
 	// constructs the bar graph with one bar
     explicit barGraph(QString name, double value, QString var, QDir saveDir, QWidget *parent = 0);
     ~barGraph();
+
+    void addBar(QString name, double value);
 private:
 	// prepares bar graph 
     void Initialize();

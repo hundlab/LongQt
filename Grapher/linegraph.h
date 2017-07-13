@@ -23,9 +23,9 @@ public:
     explicit LineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget *parent = 0);
     ~LineGraph();
     void addData(QVector<double>& x, QVector<double>& y, QString name);
+    void populateList(QVector<std::tuple<QString,QString,QString,double>> dssData);
 private:
     void Initialize();
-    void populateList(int trial);
 
     Ui::LineGraph *ui;
     QList<QVector<double>> y;

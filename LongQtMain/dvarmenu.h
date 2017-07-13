@@ -7,6 +7,7 @@
 
 #include <QWidget>
 #include <QCheckBox>
+#include <QVector>
 
 #include "cell.h"
 
@@ -23,7 +24,7 @@ Q_OBJECT
 	Cell* cell;
 
 //Buttons & their labels
-    QCheckBox** dvars;
+    QVector<QCheckBox*> dvars;
 //screen functions
     void update_menu(); //make menu match pars
 
