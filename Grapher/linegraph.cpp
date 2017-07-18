@@ -47,7 +47,7 @@ void LineGraph::Initialize() {
      if(ui->plot->plotLayout()->elementAt(0) != 0) {
         ui->plot->plotLayout()->removeAt(0);
      }
-     ui->plot->plotLayout()->addElement(0,0, new QCPPlotTitle(ui->plot, this->yLabel +" vs "+ this->xLabel));
+     ui->plot->plotLayout()->addElement(0,0, new QCPTextElement(ui->plot, this->yLabel +" vs "+ this->xLabel));
 }
 
 LineGraph::~LineGraph()

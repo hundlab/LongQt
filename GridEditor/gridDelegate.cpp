@@ -1,6 +1,7 @@
 #include "gridDelegate.h"
 #include "cellutils.h"
 #include "guiUtils.h"
+#include "inexcitablecell.h"
 
 #include <QPen>
 #include <QPainter>
@@ -9,7 +10,7 @@
 
 GridDelegate::GridDelegate(QWidget *parent) : QStyledItemDelegate(parent), size(30,30) {
     map<string, CellUtils::CellInitializer> cellMap = CellUtils::cellMap;
-	cellMap["Inexcitable Cell"] = [] () {return new Cell;};	
+    cellMap["Inexcitable Cell"] = [] () {return (Cell*) new InexcitableCell;};
 	int i = 0;
 	for(auto& pair : cellMap) {
         QPalette palette;

@@ -21,7 +21,7 @@ ChooseProtoWidget::ChooseProtoWidget(QWidget* parent) : QWidget(parent),
 
 void ChooseProtoWidget::Initialize() {
     this->proto.reset(new CurrentClamp());
-    this->defaultCell = this->proto->cell()->type;
+    this->defaultCell = this->proto->cell()->type();
 
     for(auto& opt: proto->cellOptions()) {
         ui->cellType->addItem(opt.c_str());
@@ -71,7 +71,7 @@ void ChooseProtoWidget::changeProto(shared_ptr<Protocol> newProto, bool raise) {
         return;
     newProto->cellStateDir = this->proto->cellStateDir;
     newProto->datadir = this->proto->datadir;
-    string old_cell = this->proto->cell()->type;
+    string old_cell = this->proto->cell()->type();
     newProto->cell(old_cell);
 
 	this->proto = newProto;
@@ -93,7 +93,7 @@ void ChooseProtoWidget::updateMenu() {
     for(auto& opt: proto->cellOptions()) {
         ui->cellType->addItem(opt.c_str());
     }
-    ui->cellType->setCurrentText(this->proto->cell()->type);
+    ui->cellType->setCurrentText(this->proto->cell()->type());
     ui->cellType->blockSignals(oldState);
 }
 

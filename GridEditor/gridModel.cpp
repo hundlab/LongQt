@@ -1,6 +1,7 @@
 #include "gridModel.h"
 #include "cellutils.h"
 #include "gridCell.h"
+#include "inexcitablecell.h"
 #include <QDebug>
 
 using namespace std;
@@ -13,7 +14,7 @@ GridModel::GridModel(shared_ptr<GridProtocol> proto, QObject* parent) : QAbstrac
     }
     this->grid = ((GridCell*)proto->cell())->getGrid();
     cellMap = CellUtils::cellMap;
-    cellMap["Inexcitable Cell"] = [] () {return new Cell;};
+    cellMap["Inexcitable Cell"] = [] () {return (Cell*) new InexcitableCell;};
 
 }
 bool GridModel::setProtocol(shared_ptr<GridProtocol> proto) {
@@ -49,7 +50,7 @@ QVariant GridModel::dataDisplay(const QModelIndex & index) const {
         if(n == NULL) {
             return QVariant();
         }
-        return QString(n->cell->type);
+        return QString(n->cell->type());
     } else {
         pair<int,int> p = make_pair(index.parent().row(), index.parent().column());
         if(index.row() == 0) {

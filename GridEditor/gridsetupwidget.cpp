@@ -3,6 +3,7 @@
 #include "guiUtils.h"
 #include "gridDelegate.h"
 #include "cellutils.h"
+#include "inexcitablecell.h"
 
 #include <QHBoxLayout>
 #include <QDebug>
@@ -40,7 +41,7 @@ void GridSetupWidget::createMenu() {
 	ui->cellGrid->horizontalHeader()->
         setSectionResizeMode(QHeaderView::ResizeToContents);
     auto cellMap = CellUtils::cellMap;
-    cellMap["Inexcitable Cell"] = [] () {return new Cell;};
+    cellMap["Inexcitable Cell"] = [] () {return (Cell*) new InexcitableCell;};
     for(auto it : cellMap) {
         ui->chooseType->addItem(it.first.c_str());
     }
