@@ -23,7 +23,7 @@ RESOURCES = LongQt.qrc
 
 linux {
     debug {
-        QMAKE_CXXFLAGS += -g
+        QMAKE_CXXFLAGS += -g -O0
         QMAKE_CXXFLAGS_RELEASE -= -O2
         TARGET =$$TARGET"-debug"
     }

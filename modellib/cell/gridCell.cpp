@@ -8,38 +8,40 @@
 #include <iostream>
 #include <sstream>
 #include <set>
+#include <functional>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+#include <QFile>
+#include <QDebug>
 
 #include "gridCell.h"
-#include "cellUtils.h"
+#include "cellutils.h"
+#include "inexcitablecell.h"
 
-gridCell::gridCell() {
+GridCell::GridCell() {
     this->Initialize();
 }
-void gridCell::Initialize() {
+void GridCell::Initialize() {
     dx = 0.01;
     dy = 0.01;
     np = 1;
-    type = "gridCell";
     gridfileName = "grid.txt";
     tcount = 0;
     makeMap();
 }
-gridCell::gridCell(gridCell& toCopy) : Cell(toCopy) {
-    this->Initialize(); 
+GridCell::GridCell(GridCell& toCopy) : Cell(toCopy) {
+    this->Initialize();
     this->gridfileName = toCopy.gridfileName;
     this->grid = Grid(toCopy.grid);
 }
-gridCell* gridCell::clone() {
-    return new gridCell(*this);
+GridCell* GridCell::clone() {
+    return new GridCell(*this);
 }
-gridCell::~gridCell() {}
-Grid* gridCell::getGrid() {
+GridCell::~GridCell() {}
+Grid* GridCell::getGrid() {
     return &grid;
 }
-void gridCell::addBuffer() {
-    grid.addBuffer();
-}
-bool gridCell::setOutputfileConstants(string filename) {
+bool GridCell::setOutputfileConstants(string filename) {
     int i = 0;
     bool toReturn = true;
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++, i++) {
@@ -51,7 +53,7 @@ bool gridCell::setOutputfileConstants(string filename) {
     }
     return toReturn;
 }
-bool gridCell::setOuputfileVariables(string filename) {
+bool GridCell::setOuputfileVariables(string filename) {
     int i = 0;
     bool toReturn = true;
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++, i++) {
@@ -63,7 +65,7 @@ bool gridCell::setOuputfileVariables(string filename) {
     }
     return toReturn;
 }
-set<string> gridCell::getVariables() {
+set<string> GridCell::getVariables() {
     set<string> toReturn = Cell::getVariables();
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++) {
         for(auto iv = it->nodes.begin(); iv != it->nodes.end(); iv++) {
@@ -73,7 +75,7 @@ set<string> gridCell::getVariables() {
     }
     return toReturn;
 }
-set<string> gridCell::getConstants() {
+set<string> GridCell::getConstants() {
     set<string> toReturn = Cell::getConstants();
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++) {
         for(auto iv = it->nodes.begin(); iv != it->nodes.end(); iv++) {
@@ -84,7 +86,7 @@ set<string> gridCell::getConstants() {
     return toReturn;
 }
 
-bool gridCell::setConstantSelection(set<string> new_selection) {
+bool GridCell::setConstantSelection(set<string> new_selection) {
     bool toReturn = true;
     parsSelection = new_selection;
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++) {
@@ -94,7 +96,7 @@ bool gridCell::setConstantSelection(set<string> new_selection) {
     }
     return toReturn;
 }
-bool gridCell::setVariableSelection(set<string> new_selection) {
+bool GridCell::setVariableSelection(set<string> new_selection) {
     bool toReturn = true;
     varsSelection = new_selection;
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++) {
@@ -104,74 +106,57 @@ bool gridCell::setVariableSelection(set<string> new_selection) {
     }
     return toReturn;
 }
-void gridCell::writeConstants() {
+void GridCell::writeConstants() {
     for(auto it : grid.fiber) {
         for(auto iv : it.nodes) {
             iv->cell->writeConstants();
         }
     }
 }
-void gridCell::writeVariables() {
+void GridCell::writeVariables() {
     for(auto it : grid.fiber) {
         for(auto iv : it.nodes) {
             iv->cell->writeVariables();
         }
     }
 }
-void gridCell::closeFiles() {
-     for(auto it : grid.fiber) {
-        for(auto iv : it.nodes) {
+void GridCell::closeFiles() {
+    for(auto& it : grid.fiber) {
+        for(auto& iv : it.nodes) {
             iv->cell->closeFiles();
         }
     }   
 }
-double gridCell::updateV() {
-    int i,j;
+double GridCell::updateV() {
+    int i;
     int xLen = static_cast<int>(grid.fibery.size());
     int yLen = static_cast<int>(grid.fiber.size());
     if((tcount%2==0)){
         for(i=0;i<yLen;i++){
-            for(j=0;j<xLen&&yLen>1;j++){
-                if(i>0&&i<(yLen-1))
-                    grid.fiber[i].nodes[j]->cell->iTot-=grid.fibery[j].B[i]*(grid.fiber[i-1].nodes[j]->cell->vOld-grid.fiber[i].nodes[j]->cell->vOld)-grid.fibery[j].B[i+1]*(grid.fiber[i].nodes[j]->cell->vOld-grid.fiber[i+1].nodes[j]->cell->vOld);
-                else if(i==0)
-                    grid.fiber[i].nodes[j]->cell->iTot-=-grid.fibery[j].B[i+1]*(grid.fiber[i].nodes[j]->cell->vOld-grid.fiber[i+1].nodes[j]->cell->vOld);
-                else if(i==yLen-1)
-                    grid.fiber[i].nodes[j]->cell->iTot-=grid.fibery[j].B[i]*(grid.fiber[i-1].nodes[j]->cell->vOld-grid.fiber[i].nodes[j]->cell->vOld);
-            }
             grid.fiber[i].updateVm(dt);
         }
-    }
-    else{
+    } else {
         for(i=0;i<xLen;i++){
-            for(j=0;j<yLen&&xLen>1;j++){
-                if(i>0&&i<(xLen-1))
-                    grid.fibery[i].nodes[j]->cell->iTot-=grid.fiber[j].B[i]*(grid.fibery[i-1].nodes[j]->cell->vOld-grid.fibery[i].nodes[j]->cell->vOld)-grid.fiber[j].B[i+1]*(grid.fibery[i].nodes[j]->cell->vOld-grid.fibery[i+1].nodes[j]->cell->vOld);
-                else if(i==0)
-                    grid.fibery[i].nodes[j]->cell->iTot-=-grid.fiber[j].B[i+1]*(grid.fibery[i].nodes[j]->cell->vOld-grid.fibery[i+1].nodes[j]->cell->vOld);
-                else if(i==xLen-1)
-                    grid.fibery[i].nodes[j]->cell->iTot-=grid.fiber[j].B[i]*(grid.fibery[i-1].nodes[j]->cell->vOld-grid.fibery[i].nodes[j]->cell->vOld);
-            }
             grid.fibery[i].updateVm(dt);
         }
     }
     return 0.0;
 }
-void gridCell::updateConc() {
+void GridCell::updateConc() {
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++) {
         for(auto iv = it->nodes.begin(); iv != it->nodes.end(); iv++) {
             (*iv)->cell->updateConc();
         }
     }
 }
-void gridCell::updateCurr() {
+void GridCell::updateCurr() {
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++) {
         for(auto iv = it->nodes.begin(); iv != it->nodes.end(); iv++) {
             (*iv)->cell->updateCurr();
         }
     }
 }
-int gridCell::externalStim(double stimval) {
+int GridCell::externalStim(double stimval) {
     for(auto it = grid.fiber.begin(); it != grid.fiber.end(); it++) {
         for(auto iv = it->nodes.begin(); iv != it->nodes.end(); iv++) {
             (*iv)->cell->externalStim(stimval);
@@ -179,7 +164,7 @@ int gridCell::externalStim(double stimval) {
     }
     return 1;
 }
-double gridCell::tstep(double stimt)
+double GridCell::tstep(double stimt)
 {
     unsigned int i,j;
     int vmflag=0;
@@ -190,159 +175,253 @@ double gridCell::tstep(double stimt)
         for(j=0;j<grid.fibery.size();j++){
             grid.fiber[i].nodes[j]->cell->t=t;
             grid.fiber[i].nodes[j]->cell->dt = dt;
-                if(tcount%2==0){  // used to prevent time step change in middle of ADI	
-                    if(grid.fiber[i].nodes[j]->cell->dVdt>grid.fiber[i].nodes[j]->cell->dvcut||(t>(stimt-2.0)&&t<stimt+10)||(apTime<5.0))
-                        vmflag = 2;
-                    else if((apTime<40)&&vmflag!=2)
-                        vmflag = 1;
-                }
+            if(tcount%2==0){  // used to prevent time step change in middle of ADI	
+                if(grid.fiber[i].nodes[j]->cell->dVdt>grid.fiber[i].nodes[j]->cell->dvcut||(t>(stimt-2.0)&&t<stimt+10)||(apTime<5.0))
+                    vmflag = 2;
+                else if((apTime<40)&&vmflag!=2)
+                    vmflag = 1;
+            }
         }
     }
     if(tcount%2==0){
         if(vmflag==2)
-	        dt = dtmin;
+            dt = dtmin;
         else if(vmflag==1)
-	        dt = dtmed;
+            dt = dtmed;
         else  
-	        dt = dtmax;
+            dt = dtmax;
     }
-    
+
     return t;
 }
-void gridCell::makeMap() {//only aply to cells added after the change?
+void GridCell::makeMap() {//only aply to cells added after the change?
     pars["dx"] = &dx;
     pars["dy"] = &dy;
     pars["np"] = &np;
 }
-void gridCell::setGridfile(string name) {
+
+const char *GridCell::type() const
+{
+    return "gridCell";
+}
+void GridCell::setGridfile(string name) {
     gridfileName = name;
 }
-string gridCell::gridfile() {
+string GridCell::gridfile() {
     return gridfileName;
 }
-bool gridCell::writeGridfile(string fileName) {
-    bool succes = true;
-    ofstream ofile;
+bool GridCell::writeGridfile(QXmlStreamWriter& xml) {
     int i = 0;
     int j = 0;
-    if(fileName == "") {
-        fileName = this->gridfileName;
-    }
+    xml.writeStartElement("grid");
+    xml.writeAttribute("rows", QString::number(grid.rowCount()));
+    xml.writeAttribute("columns", QString::number(grid.columnCount()));
+    xml.writeAttribute("np", QString::number(np));
+    xml.writeAttribute("dx", QString::number(dx));
+    xml.writeAttribute("dy", QString::number(dy));
 
-    ofile.open(fileName);
-    succes = ofile.good();
-    if(!succes) {
-        return succes;
-    }
-    ofile << "##BEGIN GRID\n";
-    ofile << grid.rowCount() << " " << grid.columnCount() << endl;
-    ofile << np << " " << dx << " " << dy << endl;
-    for(auto it : grid.fiber) {
-        for(auto iv : it.nodes) {
-            ofile <<"\t"<<iv->cell->type<<"| "<<i<<" "<<j;
+    for(auto& it : grid.fiber) {
+        xml.writeStartElement("row");
+        xml.writeAttribute("pos",QString::number(j));
+        for(auto& iv : it.nodes) {
+            xml.writeStartElement("node");
+            xml.writeAttribute("pos",QString::number(i));
+            xml.writeTextElement("type",iv->cell->type());
+            xml.writeStartElement("conductance");
+            xml.writeTextElement("left", QString::number(it.B[i]));
+            xml.writeTextElement("right", QString::number(it.B[i+1]));
+            xml.writeTextElement("top", QString::number(grid.fibery[i].B[j]));
+            xml.writeTextElement("bottom", QString::number(grid.fibery[i].B[j+1]));
+            xml.writeEndElement();
+            xml.writeEndElement();
             i++;
         }
-        ofile << endl;
+        xml.writeEndElement();
         i=0;
         j++;
     }
-    ofile << "##END GRID\n";
-    return succes;    
+
+    xml.writeEndElement();
+    return true;    
 }
-bool gridCell::readGridfile(string filename) {
-    bool succes = true;
-    ifstream ifile;
-    cellInfo* info;
-    double dx, dy;
-    int np;
-    set<cellInfo*> cells;
-    string type;
-    stringstream line;
-    string temp;
-    
-    ifile.open(filename);
-    if(!(succes = ifile.good())) return succes;
-    while(!ifile.eof() && line.str() != "##BEGIN GRID") {
-        getline(ifile,temp);
-        line.clear();
-        line.str(temp);
+bool GridCell::writeGridfile(string fileName) {
+    if(fileName == "") {
+        fileName = this->gridfileName;
     }
-    int rows, columns;
-    ifile >> rows >> columns;
-    grid.addRows(rows);
-    grid.addColumns(columns);
-    ifile >> np >> dx >> dy;
-    if(ifile.eof()) {
-        return succes = false;
-    }
- 
-    getline(ifile,temp);
-    getline(ifile,temp);
-    line.clear();
-    line.str(temp);
-    while(!ifile.eof() && line.str() != "##END GRID"){
-        while(!line.eof()) {
-            info = new cellInfo;
-            info->dx = dx;
-            info->dy = dy;
-            info->np = np;
-            char nextChar;
-            bool firstCharFound =false;
-            line.get(nextChar);
-            type = "";
-            while(!line.eof() && nextChar != '|') {
-                if(firstCharFound||!isspace(nextChar)) {
-                    type = type + nextChar;
-                    firstCharFound = true;
-                }
-                line.get(nextChar);
-            }
-            line >> info->Y >> info->X;
-            try {
-                info->cell = cellUtils().cellMap.at(type)();
-            } catch(const std::out_of_range&) {
-                succes = false;
-                info->cell = new Cell();
-            }
-            cells.insert(info);
-        }
-        getline(ifile,temp);
-        line.clear();
-        line.str(temp);
-    }
-    grid.setCellTypes(cells);
-    return succes;
-}
-bool gridCell:: readCellState(string filename) {
-    ifstream ifile;
-    ifile.open(filename);
-    if(!ifile.good()) {
-        cout << "Error Opening " << filename << "\n";
+    QFile ofile(fileName.c_str());
+
+    if(!ofile.open(QIODevice::Append)){
+        qCritical() << "Error opening " << fileName.c_str();
         return false;
     }
-    bool succes = true;
-    succes &= Cell::readCellState(ifile);
-    for(auto fiber : grid.fiber) {
-        for(auto node : fiber.nodes) {
-            succes &= node->cell->readCellState(ifile);
+
+    QXmlStreamWriter xml(&ofile);
+    xml.setAutoFormatting(true);
+    if(ofile.exists()){
+        xml.writeStartDocument();
+    }
+    bool success = this->writeGridfile(xml);
+    xml.writeEndElement();
+    return success;
+}
+bool GridCell::readGridfile(QXmlStreamReader& xml) {
+    xml.readNext();
+    while(!xml.atEnd() && xml.name() != "grid") {
+        xml.readNext();
+    }
+    return this->handleGrid(xml);
+}
+bool GridCell::handleGrid(QXmlStreamReader& xml) {
+    if(xml.atEnd()) return false;
+    bool success = true;
+    list<CellInfo> cells;
+
+    grid.addRows(xml.attributes().value("rows").toInt());
+    grid.addColumns(xml.attributes().value("columns").toInt());
+    this->np =  xml.attributes().value("np").toDouble();
+    this->dx =  xml.attributes().value("dx").toDouble();
+    this->dy =  xml.attributes().value("dy").toDouble();
+
+    CellInfo info;
+    info.dx = dx;
+    info.dy = dy;
+    info.np = np;
+
+    while(xml.readNextStartElement() && xml.name()=="row"){
+        success = this->handleRow(xml, cells, info);
+    }
+
+    grid.setCellTypes(cells);
+    return success;
+}
+bool GridCell::handleRow(QXmlStreamReader& xml, list<CellInfo>& cells, CellInfo& info) {
+    if(xml.atEnd()) return false;
+    bool success = true;
+    info.X = xml.attributes().value("pos").toInt();
+    while(xml.readNextStartElement() && xml.name() == "node") {
+        success &= this->handleNode(xml, cells, info);
+    }
+    return success;
+}
+bool GridCell::handleNode(QXmlStreamReader& xml, list<CellInfo>& cells, CellInfo& info) {
+    if(xml.atEnd()) return false;
+    auto cellMap = CellUtils::cellMap;
+    cellMap[InexcitableCell().type()] = [] () {return (Cell*) new InexcitableCell;};
+    map<QString,function<bool(QXmlStreamReader& xml)>> handlers; 
+    handlers["type"] = [&info,cellMap] (QXmlStreamReader& xml) {
+        bool success = true;
+        string cell_type;
+        try {
+            xml.readNext();
+            cell_type = xml.text().toString().toStdString();
+            info.cell = cellMap.at(cell_type)();
+        } catch(const std::out_of_range&) {
+            success = false;
+            qWarning("%s not a valid cell type", cell_type.c_str());
+            info.cell = new InexcitableCell();
         }
+        xml.skipCurrentElement();
+        return success;
+    };
+    handlers["conductance"] = [&info,this] (QXmlStreamReader& xml) {
+        while(xml.readNextStartElement()) {
+            if(xml.name() == "top") {
+                xml.readNext();
+                info.c[CellUtils::top] = xml.text().toDouble();
+                xml.skipCurrentElement();
+            } else if(xml.name() == "bottom") {
+                xml.readNext();
+                info.c[CellUtils::bottom] = xml.text().toDouble();
+                xml.skipCurrentElement();
+            } else if(xml.name() == "right") {
+                xml.readNext();
+                info.c[CellUtils::right] = xml.text().toDouble();
+                xml.skipCurrentElement();
+            } else if(xml.name() == "left") {
+                xml.readNext();
+                info.c[CellUtils::left] = xml.text().toDouble();
+                xml.skipCurrentElement();
+            }
+        }
+        return true;
+    };
+
+    bool success = true;
+    info.Y = xml.attributes().value("pos").toInt();
+    while(xml.readNextStartElement()) {
+        try {
+            success &= handlers.at(xml.name().toString())(xml);
+        } catch(const std::out_of_range&) {
+            qWarning("GridCell: xml type %s not recognized",qUtf8Printable(xml.name().toString()));
+        }
+    }
+    cells.push_back(info);
+    return success;
+}
+bool GridCell::readGridfile(string filename) {
+    QFile ifile(filename.c_str());
+    if(!ifile.open(QIODevice::ReadOnly|QIODevice::Text)){
+        qCritical() << "Error opening " << filename.c_str();
+        return false;
+    }
+    QXmlStreamReader xml(&ifile);
+    return this->readGridfile(xml);
+}
+bool GridCell::readCellState(string file) {
+    QFile ifile(file.c_str());
+
+    if(!ifile.open(QIODevice::ReadOnly)){
+        qCritical() << "Error opening " << file.c_str();
+        return false;
+    }
+    QXmlStreamReader xml(&ifile);
+    if(!CellUtils::readNext(xml, "grid")) return false;
+    Cell::readCellState(xml);
+    while(!xml.atEnd() && xml.readNextStartElement()){
+        int row = xml.attributes().value("row").toInt();
+        int col = xml.attributes().value("col").toInt();
+        Node* n = this->grid(row,col);
+        if(n == NULL) {
+            qWarning("Warning: (%i,%i) not a cell in grid",col,row);	
+            xml.skipCurrentElement();
+            continue;
+        }
+        n->cell->readCellState(xml);
+        xml.readNext();
     }
     ifile.close();
-    return succes;
+    return true;
 }
-bool gridCell::writeCellState(string filename) {
-    ofstream ofile;
-    ofile.open(filename,ios_base::app);
-    if(!ofile.good()) {
-        cout << "Error Opening " << filename << "\n";
+bool GridCell::writeCellState(string file) {
+    QFile ofile(file.c_str());
+    string name;
+
+    if(!ofile.open(QIODevice::WriteOnly|QIODevice::Text)){
+        qCritical() << "Error opening " << file.c_str();
         return false;
     }
-    bool succes = true;
-    succes &= Cell::writeCellState(ofile);
-    for(auto fiber : grid.fiber) {
-        for(auto node : fiber.nodes) {
-            succes &= node->cell->writeCellState(ofile);
+    QXmlStreamWriter xml(&ofile);
+    xml.setAutoFormatting(true);
+    xml.writeStartDocument();
+    xml.writeStartElement("grid");
+    bool success = true;
+    success &= Cell::writeCellState(xml);
+    int row = 0;
+    int col = 0;
+    for(auto& fiber : grid.fiber) {
+        for(auto& node : fiber.nodes) {
+            xml.writeStartElement("pos");
+            xml.writeAttribute("row",QString::number(row));
+            xml.writeAttribute("col",QString::number(col));
+            success &= node->cell->writeCellState(xml);
+            xml.writeEndElement();
+            col++;
         }
+        row++;
+        col = 0;
     }
-    return succes;
+    xml.writeEndElement();
+    xml.writeEndDocument();
+    ofile.close();
+    return success;
 }

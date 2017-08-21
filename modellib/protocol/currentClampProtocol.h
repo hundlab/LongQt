@@ -12,6 +12,9 @@
 #define CurrentClampProtocol_H
 
 #include "protocol.h"
+#include <vector>
+#include "pvarscurrentclamp.h"
+#include "hrd09.h"
 
 class CurrentClamp : public Protocol {
   public:
@@ -19,8 +22,19 @@ class CurrentClamp : public Protocol {
     CurrentClamp(const CurrentClamp& toCopy);
     CurrentClamp* clone();
     CurrentClamp& operator=(const CurrentClamp& toCopy);
+    virtual ~CurrentClamp();
 
-    bool runTrial() override;
+    virtual Cell* cell() const override;
+    virtual void cell(Cell* cell) override;
+
+    virtual CellPvars& pvars() override;
+
+    virtual MeasureManager& measureMgr() override;
+
+    virtual void setupTrial() override;
+    virtual bool runTrial() override;
+    void readInCellState(bool read) override;
+
   protected:
     double bcl,stimval,stimdur,stimt;
     int numstims;   //variables for pacing.
@@ -30,5 +44,12 @@ class CurrentClamp : public Protocol {
     virtual int stim();
   private:
     void CCcopy(const CurrentClamp& toCopy);
+
+    unique_ptr<Cell> __cell = unique_ptr<Cell>(new HRD09Control);        // pointer to cell class
+    unique_ptr<PvarsCurrentClamp> __pvars
+        = unique_ptr<PvarsCurrentClamp>(new PvarsCurrentClamp(this));
+    unique_ptr<MeasureManager> __measureMgr; // set of measure class for measuring SV props.
+
+
 };
 #endif

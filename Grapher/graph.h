@@ -1,3 +1,6 @@
+/*
+ * the master grapher widget responsible for creating all necessary graphs
+ */
 #ifndef DIALOG_H
 #define DIALOG_H
 
@@ -8,7 +11,7 @@
 
 #include "qcustomplot.h"
 
-class badFile : public std::exception
+class BadFile : public std::exception
 {
   public:
   virtual const char* what() const throw()
@@ -18,30 +21,34 @@ class badFile : public std::exception
 };
 
 namespace Ui {
-class Dialog;
+class Grapher;
 }
 
-class Dialog : public QDialog
+class Grapher : public QDialog
 {
     Q_OBJECT
-
+typedef QVector<std::tuple<QString,QString,QString,double>> DssD;
 public:
-    explicit Dialog(QDir read_locaiton, QWidget *parent = 0);
-    ~Dialog();
+	// a directory is specified instead of files so that all
+	// the files can be loaded for ex in the case of multiple
+	// trials
+    explicit Grapher(QDir read_locaiton, QWidget *parent = 0);
+    ~Grapher();
 private:
     void Initialize();
     QFileInfoList getFileNames(QDir location);
     QFileInfoList getFileNames();
-    QFileInfoList getFileNamesBar(QDir location, int trial);
+    QFileInfoList getFileNamesBar(QDir location);
     QString getName(QFileInfo file);
     QDir read_location;
 private slots:
-    void buildLineGraphs(QFileInfoList files);
-    void buildBarGraphs(int trial);
+    void buildLineGraphs(QFileInfoList files,DssD dssData = {});
+    void buildBarGraphs(DssD dssData);
+    DssD dssData();
     void on_loadNew_clicked();
 
 private:
-    Ui::Dialog *ui;
+    Ui::Grapher *ui;
 };
 
 #endif // DIALOG_H

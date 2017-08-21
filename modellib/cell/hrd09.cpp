@@ -9,6 +9,8 @@
 
 #include "hrd09.h"
 
+#include <QDebug>
+
 //######################################################
 // Constructor for control canine epicardial
 // ventricular model.
@@ -32,7 +34,6 @@ HRD09Control::~HRD09Control()
 
 //##### Initialize variables ##################
 void HRD09Control::Initialize() {
-        type = "Canine Ventricular (Hund-Rudy 2009)";
         dVdt=dVdtmax=5.434230843e-10;//check
         Cm = 1.0; //uF/cm2  must be defined for fiber...default = 1.
 	t=0.0;//check
@@ -548,7 +549,7 @@ void HRD09Control::updateIrel()
 	  if(sponRelflag==0){
 	    tRel=0.0;
 	    sponRelflag=1;
-	    cout << "Spontaneous release at t = " << t << endl;
+        qInfo() << "Spontaneous release at t = " << t << endl;
 	    ryRopen = irelinf = 6.0;
 	  }
 	  tRel=tRel+dt;
@@ -871,3 +872,8 @@ void HRD09Control::makemap()
   pars["IupFactor"] = &Iupfactor;
   pars["IleakFactor"] = &Ileakfactor;
 }
+
+const char *HRD09Control::type() const
+{
+    return "Canine Ventricular (Hund-Rudy 2009)";
+};

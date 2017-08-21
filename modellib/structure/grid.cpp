@@ -7,7 +7,7 @@ Grid::Grid(const Grid& other) {
     for(unsigned int i = 0; i < fiber.size();i++) {
         fiber[i].B = other.fiber[i].B;
         for(unsigned int j = 0; j < fibery.size(); j++) {
-            Node* n = new Node(*other.fiber[i].nodes[j]);
+            shared_ptr<Node> n(new Node(*other.fiber[i].nodes[j]));
             fiber[i].nodes[j] = n;
             fibery[j].nodes[i] = n;
         }
@@ -61,7 +61,7 @@ void Grid::removeRow(int pos) {
     if(pos < 0) {
         pos = fiber.size()-1;
     }
-	if(pos < 0 || pos >= fiber.size()) {
+	if(pos < 0 || (unsigned int)pos >= fiber.size()) {
 		return;
 	}
     fiber.erase(fiber.begin()+pos);
@@ -79,7 +79,7 @@ void Grid::removeColumn(int pos) {
     if(pos < 0) {
         pos = fibery.size()-1;
     }
-	if(pos < 0 || pos >= fibery.size()) {
+	if(pos < 0 || (unsigned int)pos >= fibery.size()) {
 		return;
 	}
     fibery.erase(fibery.begin()+pos);
@@ -88,31 +88,43 @@ void Grid::removeColumn(int pos) {
         it->B.erase(it->B.begin() +pos);
     }
 }
-void Grid::setCellTypes(set<cellInfo*>& cells) {
-    for(auto it : cells) {
-        setCellTypes(*it);
+void Grid::setCellTypes(list<CellInfo>& cells) {
+    for(auto& c : cells) {
+        setCellTypes(c);
     }
 }
-void Grid::setCellTypes(const cellInfo& singleCell) {
+void Grid::setCellTypes(const CellInfo& singleCell) {
     try {
-        Node* n = fiber.at(singleCell.X).nodes.at(singleCell.Y);
-        n->cell = singleCell.cell;
-        n->x = singleCell.X*singleCell.dx;
-        n->y = singleCell.Y*singleCell.dy;
-        if((singleCell.np==1)||((singleCell.X%singleCell.np)==0)) {
-            fiber.at(singleCell.X).B.at(singleCell.Y) = fibery.at(singleCell.Y).B.at(singleCell.X) = 1000*n->cell->cellRadius/(2*n->cell->Rcg*(n->Rmyo*singleCell.dx+n->rd)*n->cell->Cm*singleCell.dx);
-        } else {
-            fiber.at(singleCell.X).B.at(singleCell.Y) = fibery.at(singleCell.Y).B.at(singleCell.X) = 1001*n->cell->cellRadius/(2*n->cell->Rcg*n->Rmyo*n->cell->Cm*singleCell.dx*singleCell.dx);
+        Node* n = (*this)(singleCell.X,singleCell.Y);
+		if(singleCell.cell) {
+            n->cell.reset(singleCell.cell);
+		}
+		n->np = singleCell.np;
+//        n->x = singleCell.X*singleCell.dx;
+//        n->y = singleCell.Y*singleCell.dy;
+
+		bool update = !(isnan(singleCell.c[0])&&isnan(singleCell.c[1])
+				&&isnan(singleCell.c[2])&&isnan(singleCell.c[3]));
+		if(!(update&&isnan(singleCell.c[CellUtils::top]))) {
+			this->updateB(singleCell, CellUtils::top);
+		}
+		if(!(update&&isnan(singleCell.c[CellUtils::bottom]))) {
+			this->updateB(singleCell, CellUtils::bottom);
+		}
+		if(!(update&&isnan(singleCell.c[CellUtils::left]))) {
+			this->updateB(singleCell, CellUtils::left);
+		}
+		if(!(update&&isnan(singleCell.c[CellUtils::right]))) {
+			this->updateB(singleCell, CellUtils::right);
+		}
+        if(singleCell.X == 0 ||
+				static_cast<unsigned int>(singleCell.X) == fiber.size()) {
+//            fibery.at(singleCell.Y).B.at(singleCell.X) = 0.0;
         }
-        if(singleCell.cell->type == string("Cell")) {
-            fiber.at(singleCell.X).B.at(singleCell.Y) = fibery.at(singleCell.Y).B.at(singleCell.X) = 0.0;
-        }
-        if(singleCell.X == 0 ||static_cast<unsigned int>(singleCell.X) == fiber.size()) {
-            fibery.at(singleCell.Y).B.at(singleCell.X) = 0.0;
-        }
-        if(static_cast<unsigned int>(singleCell.Y) == fibery.size() || singleCell.Y == 0) {
-            fiber.at(singleCell.X).B.at(singleCell.Y) = 0.0;
-        }
+		if(static_cast<unsigned int>(singleCell.Y) == fibery.size() ||
+				singleCell.Y == 0) {
+//			fiber.at(singleCell.X).B.at(singleCell.Y) = 0.0;
+		}
     } catch(const std::out_of_range& oor) {
         throw new std::out_of_range(string(oor.what())+string(": new cell was not in range of grid"));
     }
@@ -123,15 +135,13 @@ int Grid::rowCount() {
 int Grid::columnCount() {
     return static_cast<int>(fibery.size());
 }
-void Grid::addBuffer() {
-}
 pair<int,int> Grid::findNode(const Node* node) {
     pair<int,int> p(-1,-1);
     int i,j;
     i = j = 0;
     for(auto it : fiber) {
         for(auto iv : it.nodes) {
-            if(iv == node) {
+            if(iv.get() == node) {
                 p = make_pair(i,j);
                 return p;
             }
@@ -142,10 +152,15 @@ pair<int,int> Grid::findNode(const Node* node) {
     }
     return p;
 }
-Node* Grid::findNode(const pair<int,int>& p) {
+Node* Grid::operator()(const pair<int,int>& p) {
+    return (*this)(p.first,p.second);
+}
+
+Node* Grid::operator()(const int x, const int y) {
     try {
-        return fiber.at(p.first).nodes.at(p.second);
+        return fiber.at(x).nodes.at(y).get();
     } catch(const std::out_of_range&) {
+        qDebug("Grid: (%i,%i) not in grid", x,y);
         return NULL;
     }
 }
@@ -153,4 +168,64 @@ Node* Grid::findNode(const pair<int,int>& p) {
 void Grid::reset() {
 	this->fiber.clear();
 	this->fibery.clear();
+}
+
+void Grid::updateB(CellInfo node, CellUtils::Side s) {
+	int x = node.X;
+	int y = node.Y;
+    Node* nc = (*this)(x,y);
+	double condOther;
+	double xo = x;
+	double yo = y;
+	double bpx = x;
+	double bpy = y;
+	bool lr = true;
+	Node* n = NULL;
+	CellUtils::Side so;
+
+	if(!isnan(node.c[s]))
+		nc->setCondConst(x, node.dx, s, node.c_perc, node.c[s]);
+	else
+		nc->setCondConst(x, node.dx, s);
+
+	double cond = nc->condConst[s];
+
+	switch(s) {
+	case CellUtils::top:
+		xo = x-1;
+		lr = false;
+		so = CellUtils::bottom;
+		break;
+	case CellUtils::bottom:
+		xo = x+1;
+		bpx = x+1;
+		lr = false;
+		so = CellUtils::top;
+		break;
+	case CellUtils::right:
+		yo = y+1;
+		bpy = y+1;
+		so = CellUtils::left;
+		break;
+	case CellUtils::left:
+		yo = y-1;
+		so = CellUtils::right;
+		break;
+	}
+    n = (*this)(xo,yo);
+	if(n == NULL) {
+		return;
+	}
+	if(!isnan(node.c[s]))
+		n->setCondConst(xo, node.dx, so, node.c_perc, node.c[s]);
+	condOther = n->condConst[so];
+	try {
+		if(lr) {
+			fiber.at(bpx).B.at(bpy) = (cond+condOther)/2;
+		} else {
+			fibery.at(bpy).B.at(bpx) = (cond+condOther)/2;
+		}
+	} catch(const std::out_of_range& oor) {
+        throw new std::out_of_range(string(oor.what())+string(": new cell was not in range of grid"));
+    }
 }

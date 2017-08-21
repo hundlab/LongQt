@@ -1,3 +1,7 @@
+/*
+ * This is the checkbox widget for choosegrpahs
+ * it acctually intreacts with the graph to toggle its visiablity
+ */
 #ifndef CHOOSEGRAPHSTOGGLE_H
 #define CHOOSEGRAPHSTOGGLE_H
 

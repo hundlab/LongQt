@@ -8,6 +8,8 @@
 
 #include "br04.h"
 
+#include <QDebug>
+
 //######################################################
 // Constructor for control canine epicardial
 // ventricular model.
@@ -25,7 +27,6 @@ void Br04::Initialize() {
    	TEMP = 298.0;
  	FDAY=96485.0;
 	//##### Initialize variables ###################
-        type = "Canine Border Zone Epicardial (Hund-Rudy 08)";
 	dVdt=dVdtmax=-7.293176907E-7;
         t=0.0;
  	dt=0.0005;
@@ -499,7 +500,7 @@ void Br04::updateCaFlux() {
           if(sponRelflag==0){
             sponRelflag = 1;
             tRel = 0.0;
-            cout << "Spontaneous release at t = " << t << endl;
+            qInfo() << "Spontaneous release at t = " << t;
           }
           PO1 = 0.6;
           PRyr = 1.0;
@@ -752,5 +753,10 @@ void Br04::makemap()
   vars["caTrpn_low"]=&caTrpn_low;
   vars["caTrpn_high"]=&caTrpn_high;
   
+}
+
+const char *Br04::type() const
+{
+    return "Canine Border Zone Epicardial (Hund-Rudy 08)";
 };
 

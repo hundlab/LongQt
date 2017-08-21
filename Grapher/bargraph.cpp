@@ -2,14 +2,15 @@
 #include "ui_bargraph.h"
 #include <QInputDialog>
 #include "guiUtils.h"
+#include "labelaxisticker.h"
 
 barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::barGraph)
+    ui(new Ui::BarGraph)
 {
     ui->setupUi(this);
     this->saveDir = saveDir;
-    this->unitsMap = GuiUtils().readMap(":/hoverText/dvarsUnits.txt");
+    this->unitsMap = GuiUtils::readMap(":/hoverText/dvarsUnits.txt");
     bar newBar;
     newBar.data.append(value);
     labels.append(name);
@@ -22,10 +23,10 @@ barGraph::barGraph(QString name, double value, QString var, QDir saveDir, QWidge
     ui->plot->yAxis->setRange(range);
 }
 void barGraph::Initialize() {
-    ui->plot->plotLayout()->addElement(1,0, new QCPPlotTitle(ui->plot, var + " (" + this->unitsMap[var] + ")"));
+    ui->plot->plotLayout()->addElement(1,0, new QCPTextElement(ui->plot, var + " (" + this->unitsMap[var] + ")"));
 //    valueBar->setName(name);
-    ui->plot->xAxis->setAutoTicks(false);
-    ui->plot->xAxis->setAutoTickLabels(false);
+    //    ui->plot->xAxis->setSubTicks(false);
+    //    ui->plot->xAxis->setAutoTickLabels(false);
 //    QPen gridPen;
 //    gridPen.setStyle(Qt::SolidLine);
 //    gridPen.setColor(QColor(0, 0, 0, 25));
@@ -66,7 +67,14 @@ void barGraph::on_loadOtherTrial_clicked() {
         }
     }
 
-    this->newBar(newBar);    
+    this->newBar(newBar);
+}
+void barGraph::addBar(QString name, double value) {
+    bar newBar;
+    labels.append(name);
+    newBar.data.append(value);
+
+    this->newBar(newBar);
 }
 void barGraph::setRange(bar newBar) {
     QCPRange oldRange = ui->plot->yAxis->range();
@@ -82,15 +90,19 @@ void barGraph::newBar(bar& newBar) {
     newBar.valueBar->setPen(QPen(barColor));
     barColor.setAlpha(150);
     newBar.valueBar->setBrush(barColor);
-    ui->plot->addPlottable(newBar.valueBar);
+    //    ui->plot->addPlottable(newBar.valueBar);
     ticks << ticks.size()+1;
-    ui->plot->xAxis->setTickVector(ticks);
-    ui->plot->xAxis->setTickVectorLabels(labels);
+
+//    ui->plot->xAxis->setTickVector(ticks);
+//    ui->plot->xAxis->setTickVectorLabels(labels);
     ui->plot->xAxis->setTickLabelRotation(60);
-    ui->plot->xAxis->setSubTickCount(0);
+//    ui->plot->xAxis->setSubTickCount(0);
     ui->plot->xAxis->setTickLength(0, 4);
 //    ui->plot->xAxis->grid()->setVisible(true);
     ui->plot->xAxis->setRange(0, ticks.size()+1);
+    QSharedPointer<LabelAxisTicker> ticker(new LabelAxisTicker());
+    ticker->labels(labels);
+    ui->plot->xAxis->setTicker(ticker);
     this->setRange(newBar);
     ui->plot->yAxis->setPadding(5); // a bit more space to the left border
 //    ui->plot->yAxis->setLabel("Power Consumption in\nKilowatts per Capita (2007)");

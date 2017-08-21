@@ -1,3 +1,9 @@
+/*
+ * for large sims it can take a while to load
+ * this allows for someone to see the progress and select which parts should be 
+ * graphed
+ *
+ */
 #ifndef LOADINGPROGRESS_H
 #define LOADINGPROGRESS_H
 
@@ -18,9 +24,12 @@ class LoadingProgressDialog : public QDialog
 public:
     explicit LoadingProgressDialog(QFileInfoList files, QWidget *parent = 0);
     ~LoadingProgressDialog();
-    QFileInfoList getFilesToLoad();
+    QFileInfoList getFilesToLoad() const;
     bool multiCell();
     void setMultiCell(bool value);
+
+protected slots:
+    virtual void closeEvent(QCloseEvent* e);
 
 private:
     Ui::LoadingProgressDialog *ui;
@@ -30,7 +39,6 @@ private:
     QFileInfoList files;
     void createOptions();
 private slots:
-    void on_continueButton_clicked();
     void on_skipButton_clicked();
     void on_loadAll_clicked();
     void on_loadFreqButton_clicked();

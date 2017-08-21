@@ -1,9 +1,15 @@
+/*
+ * The main window for the LQGridEditor.pro
+ * contains the other widgets which alow for configuring the grid
+ */
 #ifndef LQGRIDEDITOR_H
 #define LQGRIDEDITOR_H
 
 #include <QMainWindow>
 #include <QTableView>
+#include <QPointer>
 #include "conductivityeditor.h"
+#include "ionchannelconfig.h"
 
 namespace Ui {
 class LQGridEditor;
@@ -19,10 +25,20 @@ public:
 
 private:
     Ui::LQGridEditor *ui;
-	QTableView* gridView;
-	ConductivityEditor* condEdit = 0; 
+	QPointer<QTableView> gridView;
+	QPointer<ConductivityEditor> condEdit;
+	QPointer<IonChannelConfig> ionConfig;
+	shared_ptr<GridProtocol> proto = 0;
+	QString saveFile = "";
 private slots:
+	void on_actionNew_triggered();
+	void on_actionOpen_triggered();
+	void on_actionSave_triggered();
+	void on_actionSave_As_triggered();
 	void on_actionSet_Conductivities_triggered();
+	void on_actionConfigure_Ion_Channels_triggered();
+    void on_actionToggle_Second_Stim_triggered();
+    void on_actionSet_Sim_Parameters_triggered();
 };
 
 #endif // LQGRIDEDITOR_H

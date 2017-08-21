@@ -1,3 +1,7 @@
+/*
+ * the delegate class for qt's MV design
+ * this delegate is for the GridModel
+ */
 #ifndef GRID_DELEGATE_H
 #define GRID_DELEGATE_H
 #include <QStyledItemDelegate>

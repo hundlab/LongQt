@@ -10,14 +10,17 @@
 // Constructor for centrol rabbit sinoatrial node
 // cell model.
 //######################################################
-ControlSa::ControlSa()
+ControlSa::ControlSa() :Cell()
 {
+    this->Initialize();
+}
+
+void ControlSa::Initialize() {
     //##### Assign default parameters ##################
     dt=dtmin = 0.005;
     dtmed = 0.05;
     dtmax = 0.05;
     dvcut = 1.0;
-    type = "Rabbit Sinus Node (Kurata 2008)";
     apTime = 0.0;
      
     naO = 140;
@@ -184,7 +187,6 @@ ControlSa::ControlSa(const ControlSa& toCopy ) : Cell(toCopy)
     dtmed = toCopy.dtmed;
     dtmax = toCopy.dtmax;
     dvcut = toCopy.dvcut;
-    type = "ControlSa";
     apTime = toCopy.apTime;
      
     naO = toCopy.naO;
@@ -362,7 +364,8 @@ ControlSa::~ControlSa()
 };
 //overriden deep copy funtion
 ControlSa* ControlSa::clone(){
-    return new ControlSa(*this);
+    auto temp =  new ControlSa(*this);
+    return temp;
 };
 //L-type Ca2+ current
 void ControlSa::updateIcal()
@@ -767,5 +770,10 @@ int ControlSa::externalStim(double stimval)
     iTot = iTot + stimval;
 
     return 1;
-  
-};
+
+}
+
+const char *ControlSa::type() const
+{
+    return "Rabbit Sinus Node (Kurata 2008)";
+}

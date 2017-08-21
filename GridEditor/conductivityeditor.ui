@@ -11,10 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Conductivity Editor</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
-   <item row="0" column="0">
+   <item row="2" column="0">
     <widget class="QLabel" name="startingValueLabel">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The value that will be assigned to the selected nodes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -24,20 +24,20 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="2" column="1">
     <widget class="QDoubleSpinBox" name="startingValueDoubleSpinBox"/>
    </item>
-   <item row="1" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="incrementAmountLabel">
      <property name="text">
       <string>Increment Amount</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="3" column="1">
     <widget class="QDoubleSpinBox" name="incrementAmountDoubleSpinBox"/>
    </item>
-   <item row="2" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="distanceLabel">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The starting value will be incremented by Increment Amount for each distance.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -47,10 +47,17 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QSpinBox" name="distanceSpinBox"/>
+   <item row="4" column="1">
+    <widget class="QSpinBox" name="distanceSpinBox">
+     <property name="maximum">
+      <number>999</number>
+     </property>
+     <property name="value">
+      <number>999</number>
+     </property>
+    </widget>
    </item>
-   <item row="3" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="valueMaximumLabel">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;After this value has been reached all cells farther away will have this conductivity&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -60,13 +67,37 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QDoubleSpinBox" name="valueMaximumDoubleSpinBox"/>
+   <item row="5" column="1">
+    <widget class="QDoubleSpinBox" name="valueMaximumDoubleSpinBox">
+     <property name="maximum">
+      <double>100.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>99.989999999999995</double>
+     </property>
+    </widget>
    </item>
-   <item row="4" column="0">
+   <item row="6" column="0">
     <widget class="QPushButton" name="applyButton">
      <property name="text">
       <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="percValuesCheckBox">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Gap Junction in %</string>
      </property>
     </widget>
    </item>
