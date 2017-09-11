@@ -35,7 +35,7 @@ Q_OBJECT
 	QTableView* view();
 	GridModel* getModel();
   signals:
-    void cellChanged(Cell*);
+    void cellChanged(shared_ptr<Cell>);
   private:
     void createMenu();
 

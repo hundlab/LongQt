@@ -25,7 +25,7 @@ void RunWidget::setProto(shared_ptr<Protocol> proto) {
 void RunWidget::on_runButton_clicked() {
     int i = 0;
     ui->runButton->setEnabled(false);
-    working_dir.mkpath(working_dir.absolutePath());
+    proto->mkDirs();
     QScopedPointer<QFile> note_file(new QFile(working_dir.absolutePath()+ "/" + ui->noteBoxName->text() + ".txt"));
     note_file->open(QIODevice::WriteOnly|QIODevice::Text);
     if(note_file->isOpen()) {

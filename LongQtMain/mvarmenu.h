@@ -43,7 +43,7 @@ Q_OBJECT
     void setChildrenCheckedStates(QTreeWidgetItem* item, int column, Qt::CheckState state);
   public slots:
     void changeProto(shared_ptr<Protocol> proto);
-    void changeCell(Cell* cell);
+    void changeCell(shared_ptr<Cell> cell);
     void reset();
 };
 

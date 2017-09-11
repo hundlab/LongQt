@@ -31,7 +31,7 @@ class AddGridCellPvar : public QDialog
 
         public slots:
             void changeProto(shared_ptr<GridProtocol> proto);
-        void changeCell(Cell* cell);
+        void changeCell(shared_ptr<Cell> cell);
 
 signals:
         void pvarsChanged();

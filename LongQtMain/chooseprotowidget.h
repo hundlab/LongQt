@@ -27,7 +27,7 @@ Q_OBJECT
     void Initialize();
   signals:
     void protocolChanged(shared_ptr<Protocol>);
-    void cellChanged(Cell*);
+    void cellChanged(shared_ptr<Cell>);
   private:
 	Ui::ChooseProtoWidget* ui;
     shared_ptr<Protocol> proto;
@@ -43,7 +43,7 @@ Q_OBJECT
     void changeProto(int value);
   	void changeProto(string name);
 	void changeProto(shared_ptr<Protocol>, bool raise = false);
-    void changeCell(Cell*);
+    void changeCell(shared_ptr<Cell>);
     void resetProto();
 	void on_readSettings_clicked();
 };

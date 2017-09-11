@@ -62,7 +62,8 @@ void MvarMenu::setupMenu()  {
         auto selection = proto->measureMgr().selection();
         for(auto& measVar: measOptions) {
             if(!measIds.contains(measVar.c_str())) {
-                measIds[measVar] = measIds.size()-1;
+                int id =measIds.size();
+                measIds[measVar] = id;
                 this->measVars.append(measVar);
             }
             auto measItem = new QTreeWidgetItem(
@@ -94,7 +95,7 @@ void MvarMenu::changeProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
     this->reset();
 }
-void MvarMenu::changeCell(Cell* cell) {
+void MvarMenu::changeCell(shared_ptr<Cell> cell) {
     if(cell != proto->cell()) {
         qWarning("DvarMenu: Cell is not the same as proto's cell");
     }

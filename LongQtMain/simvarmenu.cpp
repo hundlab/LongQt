@@ -263,7 +263,7 @@ void simvarMenu::update_pvars(pair<string,int> p, string type) {
         proto->pars[p.first].set(to_string(p.second));
     }
 }
-void simvarMenu::changeCell(Cell* cell) {
+void simvarMenu::changeCell(shared_ptr<Cell> cell) {
 	if(cell != this->proto->cell()) {
 		qWarning("SimvarMenu: Cell does not match protocol cell");
 	}

@@ -36,7 +36,7 @@ void PvarMenu::changeProto(shared_ptr<Protocol> proto) {
     this->updateList();
 }
 
-void PvarMenu::changeCell(Cell* cell) {
+void PvarMenu::changeCell(shared_ptr<Cell> cell) {
     if(this->addmenu)
         addmenu->changeCell(cell);
     this->updateList();

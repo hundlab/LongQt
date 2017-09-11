@@ -27,7 +27,7 @@ class AddSingleCellPvar : public QDialog
 
     public slots:
         void changeProto(shared_ptr<Protocol> proto);
-        void changeCell(Cell* cell);
+        void changeCell(shared_ptr<Cell> cell);
 
     signals:
         void pvarsChanged();

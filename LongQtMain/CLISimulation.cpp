@@ -17,15 +17,11 @@ CLISimulation::~CLISimulation() {}
 
 void CLISimulation::runSims(QStringList simvarFiles) {
     SettingsIO* settingsMgr = SettingsIO::getInstance();
-    QString dateTime = QDate::currentDate().toString("MMddyy")+
-        "-"+QTime::currentTime().toString("hhmm");
     int i = 0;
     for(QString& simvarFile: simvarFiles) {
         settingsMgr->readSettings(proto, simvarFile);
         proto = settingsMgr->lastProto;
-        proto->datadir = (QStandardPaths::standardLocations(
-            QStandardPaths::DocumentsLocation).first()
-            +"/data"+dateTime+"_"+QString::number(i)).toStdString();
+        proto->setDataDir();
         this->runSim();
         i++;
     }
@@ -37,7 +33,7 @@ bool CLISimulation::runTrial(int trialnum) {
 void CLISimulation::runSim() {
     int i = 0;
     vector.clear();
-    QDir().mkpath(proto->datadir.c_str());
+    QDir().mkpath(proto->datadir.absolutePath());
     for( i = 0; i < proto->numtrials; i++) {
         proto->trial(i);
         /*        proto->readfile = "r"+ to_string(i) + ".dat"; // File to read SV ICs

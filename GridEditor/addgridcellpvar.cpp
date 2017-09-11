@@ -104,6 +104,6 @@ void AddGridCellPvar::changeProto(shared_ptr<GridProtocol> proto) {
     this->proto = proto;
 }
 
-void AddGridCellPvar::changeCell(Cell*) {
+void AddGridCellPvar::changeCell(shared_ptr<Cell>) {
     this->updateIonChannelType();
 }

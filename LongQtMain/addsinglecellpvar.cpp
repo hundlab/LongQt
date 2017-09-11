@@ -81,6 +81,6 @@ void AddSingleCellPvar::changeProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
 }
 
-void AddSingleCellPvar::changeCell(Cell*) {
+void AddSingleCellPvar::changeCell(shared_ptr<Cell>) {
     this->updateIonChannelType();
 }

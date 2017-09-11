@@ -31,7 +31,7 @@
 /*#################################
     begin dvarMenu class
 ###################################*/
-dvarMenu::dvarMenu(Cell* cell, QWidget *parent): QWidget(parent) {
+dvarMenu::dvarMenu(shared_ptr<Cell> cell, QWidget *parent): QWidget(parent) {
 //setup class variables
     this->cell = cell;
  
@@ -138,7 +138,7 @@ void dvarMenu::reset() {
     qDeleteAll(this->children());
     createMenu();
 }
-void dvarMenu::changeCell(Cell* cell) {
+void dvarMenu::changeCell(shared_ptr<Cell> cell) {
     this->cell = cell;
     this->reset();
 }

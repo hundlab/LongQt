@@ -48,13 +48,11 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	ChooseProtoWidget* choose = new ChooseProtoWidget(this);
 	this->proto = choose->getCurrentProto();
 
-	proto->datadir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time).toStdString();
-	proto->cellStateDir = proto->datadir;
 	simvarMenu* sims = new simvarMenu(proto, this);
 	dvarMenu* dvars = new dvarMenu(proto->cell(), this);
 	MvarMenu* mvars =  new MvarMenu(proto, this);
 	PvarMenu* pvars =  new PvarMenu(proto, this);
-	RunWidget* run = new RunWidget(proto,QDir(proto->datadir.c_str()));
+	RunWidget* run = new RunWidget(proto,proto->datadir);
 	//add items menu_list
 	menu_list.append(choose);
 	menu_list.append(sims);
@@ -69,13 +67,13 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), run, SLOT(setProto(shared_ptr<Protocol>)));
 	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), this, SLOT(changeProto(shared_ptr<Protocol>)));
 
-	connect(choose, SIGNAL(cellChanged(Cell*)), this, SIGNAL(cellChanged(Cell*)));
-	connect(this, SIGNAL(cellChanged(Cell*)), choose, SLOT(changeCell(Cell*)));
-	connect(sims, SIGNAL(cellChanged(Cell*)), this, SIGNAL(cellChanged(Cell*)));
+	connect(choose, SIGNAL(cellChanged(shared_ptr<Cell>)), this, SIGNAL(cellChanged(shared_ptr<Cell>)));
+	connect(this, SIGNAL(cellChanged(shared_ptr<Cell>)), choose, SLOT(changeCell(shared_ptr<Cell>)));
+	connect(sims, SIGNAL(cellChanged(shared_ptr<Cell>)), this, SIGNAL(cellChanged(shared_ptr<Cell>)));
 	connect(this, SIGNAL(working_dir_changed(QDir&)), run, SLOT(setWorkingDir(QDir&)));
-	connect(this, SIGNAL(cellChanged(Cell*)), sims, SLOT(changeCell(Cell*)));
+	connect(this, SIGNAL(cellChanged(shared_ptr<Cell>)), sims, SLOT(changeCell(shared_ptr<Cell>)));
 	connect(this, &Simulation::cellChanged,dvars,&dvarMenu::changeCell);
-	connect(this, SIGNAL(cellChanged(Cell*)), mvars, SLOT(reset()));
+	connect(this, SIGNAL(cellChanged(shared_ptr<Cell>)), mvars, SLOT(reset()));
 	connect(this, &Simulation::cellChanged,pvars,&PvarMenu::changeCell);
 	connect(this, &Simulation::cellChanged,mvars,&MvarMenu::changeCell);
 	connect(run, SIGNAL(canceled()), this, SLOT(canceled()));
@@ -84,7 +82,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	connect(run, SIGNAL(running()), this, SLOT(running()));
 	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running),
 			[this] () {
-			SettingsIO::getInstance()->writeSettings(this->proto,(this->proto->datadir+"/"+this->proto->simvarfile).c_str());
+			SettingsIO::getInstance()->writeSettings(this->proto,(this->proto->getDataDir()+"/"+this->proto->simvarfile).c_str());
 			});
 	connect(cancel_button, SIGNAL(clicked()),run, SLOT(cancel()));
 	//set button/combo box inital values
@@ -162,41 +160,28 @@ void Simulation::next_button_aciton () {
 		menu->setCurrentIndex(current_row +1);
 		menu_options->setCurrentRow(current_row +1);
 	}
-	date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
-//	QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
-
 }
 void Simulation::canceled() {
 	qDebug()<<"canceled!";
 	QMessageBox::critical(this,"Cancel","Simulation canceled!");
-	date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
-	QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
-	for(int i = 1; working_dir.exists(); i++) {
-		working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time + "_" + QString::number(i));
-	}
-	proto->datadir = working_dir.absolutePath().toStdString();
-	proto->cellStateDir = proto->datadir;
-	emit working_dir_changed(working_dir);
+    proto->setDataDir();
+    proto->cellStateDir = proto->datadir;
+	emit working_dir_changed(proto->datadir);
 	cancel_button->hide();
 	next_button->show();
 }
 void Simulation::finished() {
-	QMessageBox::information(0,"Folder", "Simulation is finished!\n The folder is named: " + QString(proto->datadir.c_str()));
+	QMessageBox::information(0,"Folder", "Simulation is finished!\n The folder is named: " + proto->datadir.absolutePath());
 	try {
-		menu_list.append(new Grapher(QDir(proto->datadir.c_str()), this));        
+		menu_list.append(new Grapher(proto->datadir, this));
 		menu->addWidget(menu_list.last());
-		menu_options->addItem("Graph " + QFileInfo(proto->datadir.c_str()).baseName());
+		menu_options->addItem("Graph " + QFileInfo(proto->datadir.absolutePath()).baseName());
 	} catch(BadFile& e) {
 		qCritical() << e.what() << ": " << "data files not readable";
 	}
-	date_time = QDate::currentDate().toString("MMddyy") + "-" + QTime::currentTime().toString("hhmm");
-	QDir working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time);
-	for(int i = 1; working_dir.exists(); i++) {
-		working_dir = (QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first() + "/data" + date_time + "_" + QString::number(i));
-	}
-	proto->datadir = working_dir.absolutePath().toStdString();
+    proto->setDataDir();
 	proto->cellStateDir = proto->datadir;
-	emit working_dir_changed(working_dir);
+	emit working_dir_changed(proto->datadir);
 	cancel_button->hide();
 	next_button->show();
 }

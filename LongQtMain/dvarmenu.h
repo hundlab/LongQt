@@ -16,12 +16,12 @@ using namespace std;
 class dvarMenu :public QWidget {
 Q_OBJECT
   public:
-    dvarMenu(Cell* cell, QWidget* parent = 0);
+    dvarMenu(shared_ptr<Cell> cell, QWidget* parent = 0);
     void createMenu();
     ~dvarMenu();
 
   private:
-	Cell* cell;
+	shared_ptr<Cell> cell;
 
 //Buttons & their labels
     QVector<QCheckBox*> dvars;
@@ -31,7 +31,7 @@ Q_OBJECT
   private slots:
     void update_datamap(string p, int state); //make a Protocol::pars entry match the screen
   public slots:
-    void changeCell(Cell* cell);
+    void changeCell(shared_ptr<Cell> cell);
     void reset();
 };
 

@@ -35,7 +35,7 @@ class IonChannelConfig : public QWidget
 
 
     public slots:
-        void changeCell(Cell*);
+        void changeCell(shared_ptr<Cell>);
         void changeProto(shared_ptr<GridProtocol> proto);
 
 

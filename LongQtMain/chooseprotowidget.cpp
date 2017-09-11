@@ -59,7 +59,7 @@ void ChooseProtoWidget::resetProto() {
 }
 void ChooseProtoWidget::changeProto(int value) {
 	this->changeProto(
-        shared_ptr<Protocol>(CellUtils::protoMap.at(this->protoNumMap[value])())
+        CellUtils::protoMap.at(this->protoNumMap[value])()
         ,true);
 }
 void ChooseProtoWidget::changeProto(string name) {
@@ -102,7 +102,7 @@ void ChooseProtoWidget::on_cellType_currentIndexChanged(QString name) {
     emit cellChanged(proto->cell());
 }
 
-void ChooseProtoWidget::changeCell(Cell* cell) {
+void ChooseProtoWidget::changeCell(shared_ptr<Cell> cell) {
     if(cell != proto->cell()) {
 		qWarning("ChooseProtoWidget: Protocol cell does not match new cell");
 	}
@@ -113,7 +113,7 @@ void ChooseProtoWidget::changeCell(Cell* cell) {
 }
 
 void ChooseProtoWidget::on_readSettings_clicked() {
-    QString fileName = QFileDialog::getOpenFileName(this,"Choose Settings file",proto->datadir.c_str());
+    QString fileName = QFileDialog::getOpenFileName(this,"Choose Settings file",proto->datadir.absolutePath());
     if (!fileName.isEmpty()){ 
 		SettingsIO* settingsMgr = SettingsIO::getInstance();
 		settingsMgr->readSettings(this->proto,fileName);

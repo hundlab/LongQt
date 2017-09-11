@@ -54,7 +54,7 @@ class Simulation : public QWidget {
     void running();
     void changeProto(shared_ptr<Protocol> proto);
   signals:
-    void cellChanged(Cell*);
+    void cellChanged(shared_ptr<Cell>);
     void working_dir_changed(QDir& dir);
 };
 

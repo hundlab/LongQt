@@ -56,11 +56,11 @@ Q_OBJECT
     void update_pvars(pair<string, int> p, string type = "int");
   public slots:
     void changeProto(shared_ptr<Protocol> proto);
-    void changeCell(Cell*);
+    void changeCell(shared_ptr<Cell>);
     void reset();
     void setWorkingDir(QDir& dir);
   signals:
-    void cellChanged(Cell*);
+    void cellChanged(shared_ptr<Cell>);
     void updated();
 };
 

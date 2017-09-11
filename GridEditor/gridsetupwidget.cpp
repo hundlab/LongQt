@@ -25,7 +25,7 @@ GridSetupWidget::GridSetupWidget(shared_ptr<GridProtocol> initial_proto,
 		ui(new Ui::GridSetupWidget) {
     ui->setupUi(this);
     this->proto = initial_proto;
-    this->grid = ((GridCell*)proto->cell())->getGrid();
+    this->grid = static_pointer_cast<GridCell>(proto->cell())->getGrid();
 	this->model = new GridModel(this->proto,this);
 
     this->createMenu();
@@ -41,7 +41,7 @@ void GridSetupWidget::createMenu() {
 	ui->cellGrid->horizontalHeader()->
         setSectionResizeMode(QHeaderView::ResizeToContents);
     auto cellMap = CellUtils::cellMap;
-    cellMap["Inexcitable Cell"] = [] () {return (Cell*) new InexcitableCell;};
+    cellMap["Inexcitable Cell"] = [] () {return make_shared<InexcitableCell>();};
     for(auto it : cellMap) {
         ui->chooseType->addItem(it.first.c_str());
     }

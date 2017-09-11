@@ -34,7 +34,7 @@ void IonChannelConfig::updateList() {
     }
 }
 
-void IonChannelConfig::changeCell(Cell* cell) {
+void IonChannelConfig::changeCell(shared_ptr<Cell> cell) {
     if(this->addmenu)
         addmenu->changeCell(cell);
     this->updateList();

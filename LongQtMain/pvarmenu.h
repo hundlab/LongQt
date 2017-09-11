@@ -38,7 +38,7 @@ class PvarMenu : public QWidget
 
     public slots:
         void changeProto(shared_ptr<Protocol> proto);
-        void changeCell(Cell* cell);
+        void changeCell(shared_ptr<Cell> cell);
 
     private slots:
         void on_actionDelete_triggered();

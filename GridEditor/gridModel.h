@@ -37,7 +37,7 @@ class GridModel : public QAbstractTableModel {
 		void setPercent(bool percent);
 
 	signals:
-   		void cellChanged(Cell*);
+        void cellChanged(shared_ptr<Cell>);
 	private:
 		shared_ptr<GridProtocol> proto;
 		Grid* grid;

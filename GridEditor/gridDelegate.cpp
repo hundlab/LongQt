@@ -10,7 +10,7 @@
 
 GridDelegate::GridDelegate(QWidget *parent) : QStyledItemDelegate(parent), size(30,30) {
     map<string, CellUtils::CellInitializer> cellMap = CellUtils::cellMap;
-    cellMap["Inexcitable Cell"] = [] () {return (Cell*) new InexcitableCell;};
+    cellMap["Inexcitable Cell"] = [] () {return make_shared<InexcitableCell>();};
 	int i = 0;
 	for(auto& pair : cellMap) {
         QPalette palette;
