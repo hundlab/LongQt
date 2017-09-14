@@ -62,16 +62,16 @@ QVariant GridModel::dataDisplay(const QModelIndex & index) const {
         } else if(index.row() == 1) {
             switch(index.column()) {
                 case 0: //top
-                    return grid->fibery.at(p.second).B.at(p.first);
+                    return grid->columns.at(p.second).B.at(p.first);
                     break;
                 case 1: //right
-                    return grid->fiber.at(p.first).B.at(p.second+1);
+                    return grid->rows.at(p.first).B.at(p.second+1);
                     break;
                 case 2: //bottom
-                    return  grid->fibery.at(p.second).B.at(p.first+1);
+                    return  grid->columns.at(p.second).B.at(p.first+1);
                     break;
                 case 3: //left
-                    return  grid->fiber.at(p.first).B.at(p.second);
+                    return  grid->rows.at(p.first).B.at(p.second);
                     break;
             }
         }
@@ -94,8 +94,8 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
     bool success = false;
     if(index.internalPointer() == 0) {
         CellInfo info;
-        info.X = index.row();
-        info.Y = index.column();
+        info.row = index.row();
+        info.col = index.column();
         try {
             info.cell = this->cellMap.at(value.toString().toStdString())();
             info.dx = *proto->cell()->pars["dx"];
@@ -114,7 +114,7 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
             emit cellChanged(proto->cell());
             emit dataChanged(index, index);
         } catch(const std::out_of_range&) {
-            qWarning("%s not a valid cell type or (%i,%i) out of range",qUtf8Printable(value.toString()),info.Y,info.X);
+            qWarning("%s not a valid cell type or (%i,%i) out of range",qUtf8Printable(value.toString()),info.col,info.row);
         }
         success = true;
     } else {
@@ -141,8 +141,8 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
             }
         } else if(index.row() == 1) {
             CellInfo u;
-            u.X = index.parent().row();
-            u.Y = index.parent().column();
+            u.row = index.parent().row();
+            u.col = index.parent().column();
             u.dx = *proto->cell()->pars["dx"];
             u.dy = *proto->cell()->pars["dy"];
             u.np = *proto->cell()->pars["np"];
@@ -157,7 +157,7 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
                 grid->setCellTypes(u);
                 success = true;
             } catch(std::out_of_range) {
-                qWarning("(%i,%i) out of range", u.Y,u.X);
+                qWarning("(%i,%i) out of range", u.col,u.row);
                 success = false;
             }
         }
