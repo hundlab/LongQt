@@ -1,0 +1,4 @@
+[submodule "modellib"]
+	path = modellib
+	url = git@github.com:hundlab/LongQt-model.git
+	branch = master
