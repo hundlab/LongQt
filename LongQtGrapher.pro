@@ -17,25 +17,20 @@ CONFIG += c++11
 include(modellib/model.pri)
 include(Grapher/Grapher.pri)
 
-RESOURCES = LongQtGrapher.qrc 
+RESOURCES = LongQtGrapher.qrc
 
 linux {
 
     debug {
         QMAKE_CXXFLAGS += -g
         QMAKE_CXXFLAGS_RELEASE -= -O2
-        TARGET =$$TARGET"-debug"
     }
     relase {
         QMAKE_CXXFLAGS += -static
-        TARGET =$$TARGET"-relase"
-    }
-    profile {
-        TARGET =$$TARGET"-profile"
     }
 
     TARGET = $$TARGET".out"
-    DESTDIR = ./build 
+    DESTDIR = ./build
     OBJECTS_DIR = ./build/obj
     MOC_DIR = ./build/obj
     RCC_DIR = ./build/obj
