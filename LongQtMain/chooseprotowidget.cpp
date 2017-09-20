@@ -85,7 +85,7 @@ void ChooseProtoWidget::changeProto(shared_ptr<Protocol> newProto, bool raise) {
 }
 void ChooseProtoWidget::updateMenu() {
     bool oldState = ui->cellType->blockSignals(true);
-	int typeNum = this->protoNumMap.keys(this->proto->type).at(0);
+	int typeNum = this->protoNumMap.keys(this->proto->type()).at(0);
 	auto button = this->clampType->button(typeNum);
 	if(button)
 		button->setChecked(true);

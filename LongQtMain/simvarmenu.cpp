@@ -74,7 +74,7 @@ void simvarMenu::createMenu()  {
     temp = new QWidget();
     temp->setLayout(central_layouts.last());
     tabs->addTab(temp,"Simulation files");
-    if(string(proto->type) == "Grid Protocol") {
+    if(string(proto->type()) == "Grid Protocol") {
         this->grid = new GridSetupWidget(static_pointer_cast<GridProtocol>(this->proto));
         tabs->addTab(grid, "Grid Setup");
         connect(grid, &GridSetupWidget::cellChanged, this, &simvarMenu::cellChanged);
