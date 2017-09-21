@@ -127,7 +127,9 @@ void LineGraph::populateList(QVector<std::tuple<QString,QString,QString,double>>
             {get<0>(val),get<2>(val),
             QString::number(get<3>(val))});
     }
-
+    for(int i=0;i<ui->treeWidget->columnCount();++i) {
+        ui->treeWidget->resizeColumnToContents(i);
+    }
 //    string filename = CellUtils::strprintf(CurrentClamp().finalpropertyoutfile.c_str(), trial);
 ////    filename = CellUtils::strprintf(filename.c_str(),
 //    QFile file(saveDir.absolutePath() +"/"+ QString(filename.c_str()));
