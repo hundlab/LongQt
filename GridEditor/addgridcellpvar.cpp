@@ -96,7 +96,7 @@ set<pair<int,int>> AddGridCellPvar::getInitial() {
     set<pair<int,int>> startCells;
     auto selected = this->view->selectionModel()->selectedIndexes();
     for(auto toAdd : selected) {
-        startCells.insert({toAdd.column(),toAdd.row()});
+        startCells.insert({toAdd.row(),toAdd.column()});
     }
     return startCells;
 }

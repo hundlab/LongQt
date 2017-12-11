@@ -60,19 +60,9 @@ QVariant GridModel::dataDisplay(const QModelIndex & index) const {
                 return this->proto-> gridMeasureMgr().dataNodes().count(p) > 0;
             }
         } else if(index.row() == 1) {
-            switch(index.column()) {
-                case 0: //top
-                    return grid->columns.at(p.second).B.at(p.first);
-                    break;
-                case 1: //right
-                    return grid->rows.at(p.first).B.at(p.second+1);
-                    break;
-                case 2: //bottom
-                    return  grid->columns.at(p.second).B.at(p.first+1);
-                    break;
-                case 3: //left
-                    return  grid->rows.at(p.first).B.at(p.second);
-                    break;
+            auto n = (*grid)(p);
+            if(n) {
+                return n->getCondConst(CellUtils::Side(index.column()));
             }
         }
     }
@@ -98,9 +88,6 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
         info.col = index.column();
         try {
             info.cell = this->cellMap.at(value.toString().toStdString())();
-            info.dx = *proto->cell()->pars["dx"];
-            info.dy = *proto->cell()->pars["dy"];
-            info.np = *proto->cell()->pars["np"];
             if(*info.cell->pars["dtmin"] < *proto->cell()->pars["dtmin"]) {
                 *proto->cell()->pars["dtmin"] = *info.cell->pars["dtmin"];
             }
@@ -140,24 +127,15 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
                 success = true;
             }
         } else if(index.row() == 1) {
-            CellInfo u;
-            u.row = index.parent().row();
-            u.col = index.parent().column();
-            u.dx = *proto->cell()->pars["dx"];
-            u.dy = *proto->cell()->pars["dy"];
-            u.np = *proto->cell()->pars["np"];
-            //this works because column is setup follow cellutils_side.h:Side
-            double val = value.toDouble();
-            if(this->percent) {
-                val /= 100;
-            }
-            u.c[index.column()] = val;
-            u.c_perc = this->percent;
-            try {
-                grid->setCellTypes(u);
+            auto n = (*grid)(index.parent().row(),index.parent().column());
+            if(n) {
+                double val = value.toDouble();
+                if(this->percent) {
+                    val /= 100;
+                }
+                n->setCondConst(CellUtils::Side(index.column()),percent,val);
                 success = true;
-            } catch(std::out_of_range) {
-                qWarning("(%i,%i) out of range", u.col,u.row);
+            } else {
                 success = false;
             }
         }
@@ -175,7 +153,7 @@ Qt::ItemFlags GridModel::flags(const QModelIndex & index) const {
 }
 bool GridModel::insertRows(int row, int count, const QModelIndex & parent) {
     this->beginInsertRows(parent, row, row+count-1);
-    this->grid->addRows(static_cast<unsigned int>(count), parent.column());
+    this->grid->addRows(static_cast<unsigned int>(count));
     this->endInsertRows();
     return true;
 }
@@ -199,7 +177,7 @@ bool GridModel::removeRows(int row, int count, const QModelIndex & parent) {
 }
 bool GridModel::insertColumns(int column, int count, const QModelIndex & parent) {
     this->beginInsertColumns(parent, column, column+count-1);
-    this->grid->addColumns(static_cast<unsigned int>(count), column);
+    this->grid->addColumns(static_cast<unsigned int>(count));
     this->endInsertColumns();
     return true;
 }

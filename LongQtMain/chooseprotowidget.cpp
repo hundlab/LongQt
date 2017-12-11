@@ -116,7 +116,7 @@ void ChooseProtoWidget::on_readSettings_clicked() {
     QString fileName = QFileDialog::getOpenFileName(this,"Choose Settings file",proto->datadir.absolutePath());
     if (!fileName.isEmpty()){ 
 		SettingsIO* settingsMgr = SettingsIO::getInstance();
-		settingsMgr->readSettings(this->proto,fileName);
+        settingsMgr->readSettings(fileName,this->proto);
 		this ->proto = settingsMgr->lastProto;
 		emit protocolChanged(this->proto);
         emit cellChanged(proto->cell());

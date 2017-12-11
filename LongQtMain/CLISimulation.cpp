@@ -19,7 +19,7 @@ void CLISimulation::runSims(QStringList simvarFiles) {
     SettingsIO* settingsMgr = SettingsIO::getInstance();
     int i = 0;
     for(QString& simvarFile: simvarFiles) {
-        settingsMgr->readSettings(proto, simvarFile);
+        settingsMgr->readSettings(simvarFile, proto);
         proto = settingsMgr->lastProto;
         proto->setDataDir();
         this->runSim();
