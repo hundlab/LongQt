@@ -1,4 +1,3 @@
-# Getting LongQt
 # Downloading LongQT, Grapher and Grid Editor
 Downloads for Mac and Windows can be found at https://hundlab.engineering.osu.edu/research/LongQt. The downloads should contain (.app)s or (.exe)s for each of the different LongQt components.
 
