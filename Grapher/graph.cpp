@@ -156,7 +156,7 @@ Grapher::DssD Grapher::dssData() {
             splitName.size() > 2?
                 splitName[splitName.size()-3]
                 :"trail"+fileInfo.baseName().split('s').last();
-            dssDat.append({instance,var,property,value->toDouble()});
+            dssDat.append(std::make_tuple(instance,var,property,value->toDouble()));
         }
     }
     return dssDat;
