@@ -1,4 +1,5 @@
-# Downloading LongQT, Grapher and Grid Editor
+#Getting LongQt
+#Downloading LongQT, Grapher and Grid Editor
 Downloads for Mac and Windows can be found at https://hundlab.engineering.osu.edu/research/LongQt. The downloads should contain (.app)s or (.exe)s for each of the different LongQt components.
 
 #Installation
@@ -22,10 +23,10 @@ To use simply open QtCreator and select open existing project and open the .pro 
 There should be a .pro file for LongQt, Grapher and Grid Editor.
 
 ## Linux
-Install git and qt5 from your distributions repository.
+Install git, gcc or clang, make and qt5 from your distributions repository.
 On ubuntu to do this just run
 ```bash
-apt-get install qt5-default git
+apt-get install qt5-default git build-essential
 ```
 Then clone recursively from https://github.com/hundlab/LongQt
 ```bash
