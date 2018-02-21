@@ -13,7 +13,7 @@ To install drag LongQt (and Grapher and Grid Editor) into the Apps folder. Insta
 allow LongQt to be run from a finder search.
 
 # Installation from source
-LongQt depends on the [Qt Application Framework] (https://www.qt.io/ ""). There is an open source version of Qt that can
+LongQt depends on the [Qt Application Framework](https://www.qt.io/). There is an open source version of Qt that can
 be used for free from their website, the commercial version should not be necessary. Any version of Qt beyond 5 should
 work (version 5.9 was used for development). It is best to install QtCreator (which should be a part of the Qt downlaod).
 

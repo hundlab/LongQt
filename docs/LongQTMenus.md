@@ -3,6 +3,7 @@
 Throughout LongQt hovering the mouse over various names will often provide more information about that name.
 
 ![LongQt Screen 1](./LQ1.png)
+
 The first screen of LongQt is for choosing the cell type and protocol type. Cell types are the different mathematical
 models LongQt has for running simulations. Models are named by the type of cell they represent so no knowledge of the
 workings of the models is required to use them. All models have been validated and published in peer-reviewed journals.
@@ -10,6 +11,7 @@ Further information on their validation and the details of the models workings c
 listed under the models tab.
 Protocols represent the type of experiment that will be simulated. At the moment there are 3 types of protocols which
 LongQt can run:
+
 1. Current Clamp - in this simulation the cell is stimulated at regular intervals. This is similar to how the cell
 would act in beating tissue.
 2. Voltage Clamp - in this simulation the cell's membrane voltage is held at a specific value and the cells response
@@ -60,6 +62,7 @@ so there is no harm in closing longqt at this point as the results can always be
 
 All simulation files are stored in the datadir. datadir can be viewed or changed before running the simulaiton by
 navigating to Set Sim. Parameters->Simulation files ->datadir.
+
 * simvars.xml - All settings from the simulation are stored in this file. This is the file which
 can be loaded later to rerun a simulation. It can also be edited (with care) to make changes to a simulation.
 * dt0_dvars.tsv - This is the file where variables selected in Select Output are written to. This is a tab separated
@@ -70,7 +73,7 @@ trial number.
 are also written to simvars.xml.
 * dss0.tsv - The values from the Measured Properties at the end of the simulation.
 
-Note: the file naming structure is mostly the same for grid simulations except that cell_0_1 is prepended to the output
+__Note__: the file naming structure is mostly the same for grid simulations except that cell_0_1 is prepended to the output
 of each file, where 0 would be the cells row number and 1 would be the cells column number.
 
 e.      Include important notes – ex, run simulation goes from 0 to 100 when there’s only one trial

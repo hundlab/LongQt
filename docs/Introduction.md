@@ -12,7 +12,7 @@ and experiments. To this end there are four components of LongQt.
 	run grid simulations GridEditor provides more control over the cells and how they are connected.
 4. PyLongQt - while PyLongQt is not apart of this project or documentation it is worth noting that LongQt has bindings
 	so simulations can be built and run in Python 3. It is very useful when more customization and control is 
-	required than is provided in LongQt. For more info see [PyLongQt's Github page] (https://github.com/hundlab/PyLongQt "")
+	required than is provided in LongQt. For more info see [PyLongQt's Github page](https://github.com/hundlab/PyLongQt)
 
 LongQt supports most major operating systems including Windows, Mac OSX and Linux. Instructions for installing can be found under
 the getting tab.
