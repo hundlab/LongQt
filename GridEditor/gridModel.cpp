@@ -175,7 +175,7 @@ Qt::ItemFlags GridModel::flags(const QModelIndex & index) const {
 }
 bool GridModel::insertRows(int row, int count, const QModelIndex & parent) {
     this->beginInsertRows(parent, row, row+count-1);
-    this->grid->addRows(static_cast<unsigned int>(count), parent.column());
+    this->grid->addRows(static_cast<unsigned int>(count));
     this->endInsertRows();
     return true;
 }
@@ -199,7 +199,7 @@ bool GridModel::removeRows(int row, int count, const QModelIndex & parent) {
 }
 bool GridModel::insertColumns(int column, int count, const QModelIndex & parent) {
     this->beginInsertColumns(parent, column, column+count-1);
-    this->grid->addColumns(static_cast<unsigned int>(count), column);
+    this->grid->addColumns(static_cast<unsigned int>(count));
     this->endInsertColumns();
     return true;
 }
