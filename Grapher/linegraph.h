@@ -42,7 +42,7 @@ private:
     QShortcut* left;
     QShortcut* right;
 private slots:
-    bool control_on_graph(QVector<double> &x, QVector<double> &y);
+    bool control_on_graph(QVector<double> &x, QVector<double> &y, QString& name);
     void on_save_clicked();
     void on_loadControl_clicked();
     void on_chooseGraphs_clicked();

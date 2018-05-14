@@ -24,8 +24,10 @@ Grapher::Grapher(QDir read_location, QWidget *parent) :
 }
 void Grapher::Initialize() {
     auto dssData = this->dssData();
-    this->buildLineGraphs(this->getFileNames(),dssData);
+    auto fileNames = this->getFileNames();
+    this->buildLineGraphs(fileNames,dssData);
     this->buildBarGraphs(dssData);
+    this->setWindowTitle(this->read_location.dirName());
 }
 QFileInfoList Grapher::getFileNames() {
     return this->getFileNames(this->read_location);
@@ -196,6 +198,7 @@ void Grapher::on_loadNew_clicked()
     QFileInfoList fileInfos;
     for(auto filename : filenames) {
         QFileInfo file(filename);
+        this->setWindowTitle(file.fileName());
         if(file.isDir()) {
             fileInfos.append(this->getFileNames(QDir(file.absoluteFilePath())));
         } else {

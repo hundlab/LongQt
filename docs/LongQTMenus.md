@@ -18,29 +18,40 @@ would act in beating tissue.
 can be seen.
 3. 2D Grid Protocol - the protocol for larger grids. Cells in this protocol are coupled together so they can interact.
 The tissue can also be stimulated at regular intervals as in Current Clamp.
+
 ![LongQt Screen 2_1](./LQ2_1.png)
+
 In this window there are options for customizing the protocol. For example bcl controls the amount of time in between
 stimulations, while stimt sets the time at which the first stimulus happens. For further information about any of the
 options hover the mouse over that option and a short description with units will display.
+
 ![LongQt Screen 2_2](./LQ2_2.png)
+
 If grid protocol is selected then under Set Sim. Parameters there will be a tab for Grid Setup where cells can be added
 and their cell types set. In order to stimulate the grid at lease one cell must be set as a stimulus cell. Similarly
 in order for the Select Measured Props menu to have an effect at lease one cell must have measuring enabled. 
 Conversely, the Select Output and Set Model Parameters menus always operates on all cells and requires no selection to
 be made in Grid Setup.
-Note: LongQt GridEditor has these options as well as further options for customizing the grid.
+
+__Note__: LongQt GridEditor has these options as well as further options for customizing the grid.
+
 ![LongQt Screen 3](./LQ3.png)
+
 Set Model Parameters gives the user options to change how the ion channels function. It is not necessary to add any of
 these settings. It is however useful in order to add variability to the cells. Unlike real cells, modeled cells will
 always generate the same values given the same initial parameters. To fix this the user may want to add in some 
 randomness. For normal healthy cells the default log-normal distribution is best.
 When running multiple trials (a setting in Set Sim. Parameters) the generated values will change each trial. The values
 can also be set to increase or decrease from an initial value. In that case they will increment once before each trial.
+
 ![LongQt Screen 4](./LQ4.png)
+
 Select Output allows the user to choose which of the model's variables will be written to a file and graphed. Variables
 are not written at every time step however. They are instead written out every few time steps as determined by writeint (Set Sim Parameters). Setting writeint to 0 will cause LongQt to write every value of the variable, but may cause the
 simulation to run very slowly. Moving the mouse over any variable name will display information about it and its units.
+
 ![LongQt Screen 5](./LQ5.png)
+
 LongQt will also preform some basic analysis on the simulation as it is running. This functionality is accessed through
 the Select Measured Props menu. The variables are the same as the ones in Select Output, however the user need not
 only select variables which are selected in the Output window. Properties (e.g. minimum, maximum) will be measured at
@@ -50,10 +61,14 @@ Repolarization is where the cell's voltage is at relative to its maximum and min
 cell maximum whereas 0% would be the cell minimum. The other important aspect of the Measured Props is that while 
 Selected Outputs are written only every writeint, Measured Props are measured every time step and thus are more
 accurate.
+
 ![LongQt Screen 6](./LQ6.png)
+
 Finally the page to Run the Simulation. Optionally a note about the simulation can be saved along with the data and
 will be given the name specified by Filename. After writing the note run the simulation!
+
 ![LongQt Screen 7](./LQ7.png)
+
 When simulations are finished the variables selected for that simulation will be plotted vs time in their own tabs. Bar
 graphs of the measured properties are also produced. This is the same as the graphs which LongQt Grapher will produce
 so there is no harm in closing longqt at this point as the results can always be plotted later.
