@@ -48,7 +48,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	ChooseProtoWidget* choose = new ChooseProtoWidget(this);
 	this->proto = choose->getCurrentProto();
 
-	simvarMenu* sims = new simvarMenu(proto, this);
+    SimvarMenu* sims = new SimvarMenu(proto, this);
 	dvarMenu* dvars = new dvarMenu(proto->cell(), this);
 	MvarMenu* mvars =  new MvarMenu(proto, this);
 	PvarMenu* pvars =  new PvarMenu(proto, this);

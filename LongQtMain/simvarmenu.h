@@ -1,67 +1,52 @@
-/*
- * sim variables are in proto->pars and control how the simulation is run
- * this is a widget to edit those variables
- */
 #ifndef SIMVARMENU_H
 #define SIMVARMENU_H
 
+#include <simvar.h>
+
 #include <QWidget>
-#include <QGridLayout>
+
+#include <protocol.h>
+#include <gridsetupwidget.h>
 #include <QFormLayout>
-#include <QDir>
-#include <QMap>
-#include <QDebug>
-#include <QMessageBox>
-#include <QDoubleSpinBox>
-#include <QSignalMapper>
-#include <QListWidget>
-#include <QVector>
-#include <QStringList>
-#include <QComboBox>
-#include <QTableWidget>
-#include <QLineEdit>
-#include <set>
 
-#include "protocol.h"
-#include "gridsetupwidget.h"
+namespace Ui {
+class SimvarMenu;
+}
 
-using namespace std;
+class SimvarMenu : public QWidget
+{
+    Q_OBJECT
 
-class simvarMenu :public QWidget {
-Q_OBJECT
-  public:
-    simvarMenu(shared_ptr<Protocol> initial_proto, QWidget* parent = 0);
+public:
+    explicit SimvarMenu(shared_ptr<Protocol> initial_proto, QWidget *parent = 0);
     void createMenu();
-    ~simvarMenu();
+    ~SimvarMenu();
 
     void removeGrid();
 
-  private:
+private:
+    typedef function<Simvar*(shared_ptr<Protocol>, string)> SimvarInitializer;
+
+    Ui::SimvarMenu *ui;
     shared_ptr<Protocol> proto;
 //Buttons & their labels
-    QGridLayout* main_layout;
     QMap<QString, QString> descriptions;
-    QMap<QString, QWidget*> simvars;
-    QMap<QString,QFormLayout*> simvars_layouts;
+    QMap<QString, Simvar*> simvars;
     GridSetupWidget* grid = 0;
 //initalizer
     void initialize(const map<string,GetSetRef>::iterator it);
 //screen functions
     void update_menu(); //make menu match pars
-	bool signalCellTypeChange = true;
+    bool signalCellTypeChange = true;
 
-  private slots:
-    void update_pvars(pair<string, double> p); //make a Protocol::pars entry match the screen
-    void update_pvars(pair<string, string> p, string type);
-    void update_pvars(pair<string, int> p, string type = "int");
-  public slots:
+public slots:
     void changeProto(shared_ptr<Protocol> proto);
     void changeCell(shared_ptr<Cell>);
     void reset();
     void setWorkingDir(QDir& dir);
-  signals:
+signals:
     void cellChanged(shared_ptr<Cell>);
     void updated();
 };
 
-#endif
+#endif // SIMVARMENU_H

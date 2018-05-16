@@ -38,5 +38,6 @@ linux {
     UI_DIR = ./build/obj
 }
 
+#QMAKE_CXXFLAGS += -P
 SOURCES += LongQt.cpp
 
