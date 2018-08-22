@@ -17,6 +17,7 @@
 #include <QSharedPointer>
 
 #include "protocol.h"
+#include "runsim.h"
 
 using namespace std;
 namespace Ui {
@@ -29,7 +30,7 @@ class RunWidget : public QWidget {
 Q_OBJECT
   public:
     RunWidget(shared_ptr<Protocol> proto, QDir working_dir, QWidget* parent = 0);
-  public slots:
+public slots:
     void setWorkingDir(QDir& dir);
     void setProto(shared_ptr<Protocol> proto);
     void cancel();
@@ -41,17 +42,13 @@ Q_OBJECT
     void on_runButton_clicked();
     void finish();
   private:
+    void write_note();
+
 	Ui::RunWidget *ui;
     QWidget* parent;
     shared_ptr<Protocol> proto;
-/*    QTextEdit* note_box;
-    QLineEdit* note_box_name;
-    QPushButton* run_button;
-    QPushButton* cancel_button;
-    QProgressBar* pdialog;*/
     QDir working_dir;
     QFutureWatcher<void> watcher;
-    QFuture<void> next;
-    QVector<QSharedPointer<Protocol>> vector;
+    RunSim runner;
 };
 #endif

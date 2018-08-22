@@ -19,23 +19,15 @@ SimvCell::SimvCell(shared_ptr<Protocol> proto, string name, QWidget *parent) :
 
 void SimvCell::update_ui() {
     int index = widg->findText(proto->pars[this->name].get().c_str());
-    this->change_model = false;
     if(index != -1) {
-//        if(!this->signalCellTypeChange) {
-//            bool oldState = this->blockSignals(true);
-//            this->setCurrentIndex(index);
-//            this->blockSignals(oldState);
-//        } else {
+          bool state = widg->blockSignals(true);
           widg->setCurrentIndex(index);
-//        }
+          widg->blockSignals(state);
     }
-    this->change_model = true;
-
     emit updated();
 }
 
 void SimvCell::update_model(QString value) {
-    if(!this->change_model) return;
     proto->pars.at(name).set(value.toStdString());
     CellUtils::set_default_vals(*this->proto);
     emit cellChanged(this->proto->cell());

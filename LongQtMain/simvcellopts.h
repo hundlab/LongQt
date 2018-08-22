@@ -15,7 +15,7 @@ public:
     void createMenu();
 private:
     virtual void update_ui();
-    void update_model(int value);
+    void update_model(bool value);
 
     QMap<string,QCheckBox*> checkMap;
     QGroupBox* widg;

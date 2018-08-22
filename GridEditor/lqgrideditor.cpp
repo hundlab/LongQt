@@ -30,7 +30,7 @@ void LQGridEditor::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this,"Open Grid File",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
 		shared_ptr<Protocol> proto = this->ui->centralWidget->getProtocol();
-		SettingsIO::getInstance()->readSettings(proto,fileName);
+        SettingsIO::getInstance()->readSettings(fileName,proto);
     }
 	this->ui->centralWidget->getModel()->reloadModel();
 }
@@ -38,7 +38,7 @@ void LQGridEditor::on_actionSave_triggered() {
 	if(this->saveFile == "") {
 		this->on_actionSave_As_triggered();
 	} else {
-		SettingsIO::getInstance()->writeSettings(this->ui->centralWidget->getProtocol(),this->saveFile);
+        SettingsIO::getInstance()->writeSettings(this->saveFile,this->ui->centralWidget->getProtocol());
 	}
 }
 void LQGridEditor::on_actionSave_As_triggered() {
@@ -46,7 +46,7 @@ void LQGridEditor::on_actionSave_As_triggered() {
     if (!fileName.isEmpty()){
 		this->saveFile = fileName;
 		shared_ptr<Protocol> proto = this->ui->centralWidget->getProtocol();
-		SettingsIO::getInstance()->writeSettings(proto,fileName);
+        SettingsIO::getInstance()->writeSettings(fileName,proto);
     }
 }
 void LQGridEditor::on_actionSet_Conductivities_triggered()

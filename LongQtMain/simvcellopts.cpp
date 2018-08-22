@@ -22,7 +22,7 @@ void SimvCellOpts::createMenu() {
         auto cbox = new QCheckBox(opt.first.c_str());
         vbox->addWidget(cbox);
         checkMap[opt.first] = cbox;
-        connect(cbox,&QCheckBox::stateChanged, this, &SimvCellOpts::update_model);
+        connect(cbox,&QCheckBox::clicked, this, &SimvCellOpts::update_model);
         if(first) {
             first = false;
         }
@@ -41,7 +41,7 @@ void SimvCellOpts::update_ui() {
     emit updated();
 }
 
-void SimvCellOpts::update_model(int) {
+void SimvCellOpts::update_model(bool) {
     string value;
     std::for_each(this->checkMap.keyBegin(),this->checkMap.keyEnd(),
                   [this,&value] (const string& checkbox) {
@@ -50,6 +50,7 @@ void SimvCellOpts::update_model(int) {
         }
     });
     proto->pars.at(name).set(value);
+    this->update_ui();
 }
 
 void SimvCellOpts::changeCell(shared_ptr<Cell>)

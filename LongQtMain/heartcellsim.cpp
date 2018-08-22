@@ -82,7 +82,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	connect(run, SIGNAL(running()), this, SLOT(running()));
 	connect(run, static_cast<void(RunWidget::*)()>(&RunWidget::running),
 			[this] () {
-			SettingsIO::getInstance()->writeSettings(this->proto,(this->proto->getDataDir()+"/"+this->proto->simvarfile).c_str());
+            SettingsIO::getInstance()->writeSettings((this->proto->getDataDir()+"/"+this->proto->simvarfile).c_str(),this->proto);
 			});
 	connect(cancel_button, SIGNAL(clicked()),run, SLOT(cancel()));
 	//set button/combo box inital values
@@ -142,7 +142,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	connect(next_button, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
 	//read in simvars file if passed in
 	if(simvarFile != "") {
-		SettingsIO::getInstance()->readSettings(proto,simvarFile);
+        SettingsIO::getInstance()->readSettings(simvarFile,proto);
 	}
 }
 Simulation::~Simulation(){}

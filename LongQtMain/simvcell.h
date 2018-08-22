@@ -14,7 +14,6 @@ private:
     virtual void update_ui();
     void update_model(QString value);
 
-    bool change_model = true;
     QComboBox* widg;
 };
 
