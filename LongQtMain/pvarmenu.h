@@ -35,6 +35,7 @@ class PvarMenu : public QWidget
 
     private:
         QPointer<AddSingleCellPvar> addmenu;
+        QMap<QString,QString> pvarsDescriptions;
 
     public slots:
         void changeProto(shared_ptr<Protocol> proto);

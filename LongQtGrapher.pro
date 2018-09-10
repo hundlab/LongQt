@@ -14,7 +14,7 @@ QMAKE_MAC_SDK = macosx10.12
 
 CONFIG += c++11
 
-include(modellib/model.pri)
+include(../LongQt-model/model.pri)
 include(Grapher/Grapher.pri)
 
 RESOURCES = LongQtGrapher.qrc
