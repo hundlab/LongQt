@@ -21,7 +21,7 @@ void RunWidget::setProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
 }
 void RunWidget::write_note() {
-    QScopedPointer<QFile> note_file(new QFile(working_dir.absolutePath()+ "/" + ui->noteBoxName->text() + ".txt"));
+    QScopedPointer<QFile> note_file(new QFile(working_dir.absolutePath()+ "/" + ui->noteBoxName->text()));
     note_file->open(QIODevice::WriteOnly|QIODevice::Text);
     if(note_file->isOpen()) {
         QTextStream out(note_file.data());
