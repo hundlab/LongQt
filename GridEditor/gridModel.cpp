@@ -98,17 +98,17 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
         info.col = index.column();
         try {
             info.cell = this->cellMap.at(value.toString().toStdString())();
-            info.dx = *proto->cell()->pars["dx"];
-            info.dy = *proto->cell()->pars["dy"];
-            info.np = *proto->cell()->pars["np"];
-            if(*info.cell->pars["dtmin"] < *proto->cell()->pars["dtmin"]) {
-                *proto->cell()->pars["dtmin"] = *info.cell->pars["dtmin"];
+            info.dx = proto->cell()->par("dx");
+            info.dy = proto->cell()->par("dy");
+            info.np = proto->cell()->par("np");
+            if(info.cell->par("dtmin") < proto->cell()->par("dtmin")) {
+                proto->cell()->setPar("dtmin", info.cell->par("dtmin"));
             }
-            if(*info.cell->pars["dtmed"] < *proto->cell()->pars["dtmed"]) {
-                *proto->cell()->pars["dtmed"] = *info.cell->pars["dtmed"];
+            if(info.cell->par("dtmed") < proto->cell()->par("dtmed")) {
+                proto->cell()->setPar("dtmed", info.cell->par("dtmed"));
             }
-            if(*info.cell->pars["dtmax"] < *proto->cell()->pars["dtmax"]) {
-                *proto->cell()->pars["dtmax"] = *info.cell->pars["dtmax"];
+            if(info.cell->par("dtmax") < proto->cell()->par("dtmax")) {
+                proto->cell()->setPar("dtmax", info.cell->par("dtmax"));
             }
             this->grid->setCellTypes(info);
             emit cellChanged(proto->cell());
@@ -143,9 +143,9 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
             CellInfo u;
             u.row = index.parent().row();
             u.col = index.parent().column();
-            u.dx = *proto->cell()->pars["dx"];
-            u.dy = *proto->cell()->pars["dy"];
-            u.np = *proto->cell()->pars["np"];
+            u.dx = proto->cell()->par("dx");
+            u.dy = proto->cell()->par("dy");
+            u.np = proto->cell()->par("np");
             //this works because column is setup follow cellutils_side.h:Side
             double val = value.toDouble();
             if(this->percent) {

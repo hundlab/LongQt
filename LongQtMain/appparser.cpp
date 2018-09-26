@@ -5,6 +5,13 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QSettings>
+#include <QDebug>
+
+void noMessageOutput(QtMsgType type, const char *msg)
+{
+     Q_UNUSED(type);
+     Q_UNUSED(msg);
+}
 
 AppParser::AppParser(QCoreApplication* app):
     GUIOption("no-gui",
@@ -62,8 +69,17 @@ void AppParser::start() {
         Simulation* window = new Simulation(simvarsFile);
         window->show();
         QSettings settings;
-        if(settings.value("showHelp",true).toBool() &&QMessageBox::Discard == QMessageBox::information(0,"Welcome!", "LongQt is a program for modeling cardiac potentials. As you go through this program keep a few things in mind. First, if you would like more information about something hover your mouse above its name and information will pop up. Second, default values have been provided for all options so if you don't know what an option does it's ok to simply skip it. And finally have fun!\n If you would like to re-enable this text after discarding it use the Restore Defaults button in the About dialog.", QMessageBox::Ok|QMessageBox::Discard,QMessageBox::Ok)) {
-            settings.setValue("showHelp",false);
+        if(settings.value("showHelp",true).toBool()) {
+            QFile* helpFile = new QFile(":/startMessage.txt");
+            helpFile->open(QIODevice::ReadOnly|QIODevice::Text);
+            QString showHelpText;
+            if(helpFile->isOpen()) {
+                QTextStream helpStream(helpFile);
+                showHelpText = helpStream.readAll();
+            }
+            if(QMessageBox::Discard == QMessageBox::information(0,"Welcome!", showHelpText, QMessageBox::Ok|QMessageBox::Discard,QMessageBox::Ok)) {
+                settings.setValue("showHelp",false);
+            }
         }
     } else {
         CLISimulation* sim = new CLISimulation();

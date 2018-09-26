@@ -40,6 +40,7 @@ public slots:
     void running();
   private slots:
     void on_runButton_clicked();
+    void on_saveButton_clicked();
     void finish();
   private:
     void write_note();

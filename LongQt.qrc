@@ -5,6 +5,7 @@
         <file>hoverText/measDescriptions.txt</file>
         <file>hoverText/dvarsDescriptions.txt</file>
         <file>hoverText/dvarsUnits.txt</file>
-    	<file>hoverText/pvarsDescriptions.txt</file>
+        <file>hoverText/pvarsDescriptions.txt</file>
+        <file>startMessage.txt</file>
     </qresource>
 </RCC>

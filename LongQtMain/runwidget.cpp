@@ -2,6 +2,8 @@
 #include "ui_runwidget.h"
 #include <QGridLayout>
 #include <QLabel>
+#include <QFileDialog>
+#include <settingsIO.h>
 
 RunWidget::RunWidget(shared_ptr<Protocol> proto, QDir working_dir, QWidget* parent) :
     QWidget(parent),
@@ -38,6 +40,14 @@ void RunWidget::on_runButton_clicked() {
     runner.run();
     watcher.setFuture(runner.getFuture());
     emit running();
+}
+
+void RunWidget::on_saveButton_clicked()
+{
+    QString filename = QFileDialog::getSaveFileName(this, "Save Simulation Settings", QString(),"XML files (*.xml)");
+    if(filename != "") {
+        SettingsIO::getInstance()->writeSettings(filename,this->proto);
+    }
 }
 void RunWidget::setWorkingDir(QDir& dir) {
     working_dir = dir;
