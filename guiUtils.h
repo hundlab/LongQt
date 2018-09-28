@@ -8,24 +8,35 @@
 #include <QTextStream>
 #include <QFile>
 #include <QColor>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 namespace GuiUtils {
     //used to read in hoverTexts from thier files
-    inline QMap<QString, QString> readMap(QString fileName) {
-        QFile* file = new QFile(fileName);
+    inline QMap<QString, QString> readMap(QString fileName, QString cellType = "Default") {
         QMap<QString, QString> map;
+        QFile* file = new QFile(fileName);
         file->open(QIODevice::ReadOnly|QIODevice::Text);
-        if(!file->isOpen()) {
+        if(!file->isOpen())
             return map;
-        }
-        QTextStream fileStream(file);
-        while(!fileStream.atEnd()) {
-            QString key = fileStream.readLine();
-            QString value = fileStream.readLine();
-            map.insert(key,value);
-        }
+        QJsonDocument doc = QJsonDocument::fromJson(file->readAll());
+        if(doc.isNull())
+            return map;
         file->close();
         delete file;
+
+        QJsonObject jmap = doc.object();
+        auto vmap =  jmap["Default"].toObject().toVariantMap();
+        for(auto it = vmap.begin(); it != vmap.end(); ++it) {
+            map[it.key()] = it.value().toString();
+        }
+        if(!jmap.contains(cellType) || cellType == "Default")
+            return map;
+        vmap = jmap[cellType].toObject().toVariantMap();
+        for(auto it = vmap.begin(); it != vmap.end(); ++it) {
+            map[it.key()] = it.value().toString();
+        }
+
         return map;
     }
 		//also for hoverTexts (add units &etc)

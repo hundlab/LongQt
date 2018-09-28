@@ -1,6 +1,6 @@
 #include "addgridcellpvar.h"
 #include "ui_addgridcellpvar.h"
-#include "cellpvars.h"
+#include "pvarscell.h"
 #include "guiUtils.h"
 
 AddGridCellPvar::AddGridCellPvar(QTableView* view, shared_ptr<GridProtocol> proto, QWidget *parent) :
@@ -12,7 +12,7 @@ AddGridCellPvar::AddGridCellPvar(QTableView* view, shared_ptr<GridProtocol> prot
     this->view = view;
     this->proto = proto;
     this->updateIonChannelType();
-    this->pvarsDescriptions = GuiUtils::readMap(":/hoverText/pvarsDescriptions.txt");
+    this->pvarsDescriptions = GuiUtils::readMap(":/hoverText/pvarsDescriptions.json", proto->cell()->type());
 }
 
 AddGridCellPvar::~AddGridCellPvar()
@@ -68,18 +68,18 @@ void AddGridCellPvar::on_normalDist_toggled(bool checked) {
 }
 void AddGridCellPvar::on_addButton_clicked() {
     string type = ui->ionChannelType->currentText().toStdString();
-    CellPvars::IonChanParam toAdd = CellPvars::IonChanParam();
+    PvarsCell::IonChanParam toAdd = PvarsCell::IonChanParam();
     if(ui->randomize->checkState() == 0) {
-        toAdd.dist = CellPvars::Distribution::none;
+        toAdd.dist = PvarsCell::Distribution::none;
         toAdd.val[0] = ui->startVal->value();
         toAdd.val[1] = ui->incAmt->value();
     } else {
         toAdd.val[0] = ui->mean->value();
         toAdd.val[1] = ui->stdDev->value();
         if(ui->normalDist->isChecked()) {
-            toAdd.dist = CellPvars::Distribution::normal;
+            toAdd.dist = PvarsCell::Distribution::normal;
         } else {
-            toAdd.dist = CellPvars::Distribution::lognormal;
+            toAdd.dist = PvarsCell::Distribution::lognormal;
         }
     }
     proto->pvars().insert(type,toAdd);

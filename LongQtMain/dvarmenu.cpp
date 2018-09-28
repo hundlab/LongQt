@@ -39,7 +39,9 @@ dvarMenu::dvarMenu(shared_ptr<Cell> cell, QWidget *parent): QWidget(parent) {
 }
 
 void dvarMenu::createMenu()  {
-    QMap<QString, QString> definitions = GuiUtils::concatMaps(GuiUtils::readMap(":/hoverText/dvarsDescriptions.txt"),", ",GuiUtils::readMap(":/hoverText/dvarsUnits.txt"), "unitless");
+    auto type = cell->type();
+    QMap<QString, QString> definitions = GuiUtils::concatMaps(GuiUtils::readMap(":/hoverText/dvarsDescriptions.json",type),", ",
+                                                              GuiUtils::readMap(":/hoverText/dvarsUnits.json", type), "unitless");
 /*    for(auto temp = definitions.begin(); temp != definitions.end();temp++) {
     qInfo() << temp.key();
     qInfo() << temp.value();

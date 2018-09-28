@@ -44,7 +44,7 @@ SimvarMenu::SimvarMenu(shared_ptr<Protocol> initial_proto, QWidget *parent) :
     ui->setupUi(this);
     //setup class variables
         proto = initial_proto;
-        descriptions = GuiUtils::readMap(":/hoverText/parsDescriptions.txt");
+        descriptions = GuiUtils::readMap(":/hoverText/parsDescriptions.json", proto->cell()->type());
         this->createMenu();
 }
 

@@ -1,11 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>LICENSE</file>
-        <file>hoverText/parsDescriptions.txt</file>
-        <file>hoverText/measDescriptions.txt</file>
-        <file>hoverText/dvarsDescriptions.txt</file>
-        <file>hoverText/dvarsUnits.txt</file>
-        <file>hoverText/pvarsDescriptions.txt</file>
         <file>startMessage.txt</file>
+        <file>hoverText/dvarsDescriptions.json</file>
+        <file>hoverText/dvarsUnits.json</file>
+        <file>hoverText/measDescriptions.json</file>
+        <file>hoverText/parsDescriptions.json</file>
+        <file>hoverText/pvarsDescriptions.json</file>
     </qresource>
 </RCC>

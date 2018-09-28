@@ -19,7 +19,7 @@ include(LongQtMain/LongQtMain.pri)
 include(../LongQt-model/model.pri)
 include(Grapher/Grapher.pri)
 
-RESOURCES = LongQt.qrc
+RESOURCES += LongQt.qrc
 
 linux {
     debug {

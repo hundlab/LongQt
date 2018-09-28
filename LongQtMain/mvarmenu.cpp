@@ -19,10 +19,11 @@ ui(new Ui::MvarMenu)
     //setup class variables
     this->proto = proto;
 
+    auto type = proto->cell()->type();
     this->dvarsDescriptions = GuiUtils::concatMaps(
-            GuiUtils::readMap(":/hoverText/dvarsDescriptions.txt"),
-            ", ",GuiUtils::readMap(":/hoverText/dvarsUnits.txt"));
-    this->measDescriptions = GuiUtils::readMap(":/hoverText/measDescriptions.txt");
+            GuiUtils::readMap(":/hoverText/dvarsDescriptions.json", type),
+            ", ",GuiUtils::readMap(":/hoverText/dvarsUnits.json", type));
+    this->measDescriptions = GuiUtils::readMap(":/hoverText/measDescriptions.json", type);
     this->setupMenu();
     connect(ui->measView,
         static_cast<void(QTreeWidget::*)(QTreeWidgetItem*, int)>(

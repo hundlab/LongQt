@@ -1,7 +1,7 @@
 #include "guiUtils.h"
 #include "pvarmenu.h"
 #include "ui_pvarmenu.h"
-#include "cellpvars.h"
+#include "pvarscell.h"
 
 #include <QMessageBox>
 
@@ -11,7 +11,7 @@ PvarMenu::PvarMenu(shared_ptr<Protocol> proto, QWidget *parent) :
 {
     ui->setupUi(this);
     this->proto = proto;
-    this->pvarsDescriptions = GuiUtils::readMap(":/hoverText/pvarsDescriptions.txt");
+    this->pvarsDescriptions = GuiUtils::readMap(":/hoverText/pvarsDescriptions.json", proto->cell()->type());
     ui->treeWidget->addAction(ui->actionDelete);
     ui->treeWidget->addAction(ui->actionShow_Cells);
     this->updateList();
@@ -69,7 +69,7 @@ void PvarMenu::on_actionShow_Cells_triggered() {
 
 void PvarMenu::on_addButton_triggered() {
     QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
-    CellPvars::IonChanParam* param = NULL;
+    PvarsCell::IonChanParam* param = NULL;
     QString name;
     if(items.length()>0) {
         name = items[0]->data(0,0).toString();

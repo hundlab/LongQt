@@ -32,3 +32,6 @@ versions
 
 #docs
 site/
+
+#windows stuff
+Thumbs.db
