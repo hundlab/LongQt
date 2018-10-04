@@ -14,10 +14,11 @@ QMAKE_MAC_SDK = macosx10.12
 
 CONFIG += c++11 wayland-compositor
 
-include(GridEditor/GridEdit.pri)
-include(LongQtMain/LongQtMain.pri)
-include(../LongQt-model/model.pri)
-include(Grapher/Grapher.pri)
+include(src/GridEditor/GridEdit.pri)
+include(src/LongQtMain/LongQtMain.pri)
+include(../LongQt-model/src/model.pri)
+include(src/Grapher/Grapher.pri)
+include(src/Utils.pri)
 
 RESOURCES += LongQt.qrc
 
@@ -39,5 +40,5 @@ linux {
 }
 
 #QMAKE_CXXFLAGS += -P
-SOURCES += LongQt.cpp
+SOURCES += src/LongQt.cpp
 

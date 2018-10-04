@@ -48,7 +48,7 @@ void AddSingleCellPvar::setCurrentSelect(QString name, PvarsCell::IonChanParam* 
 }
 
 void AddSingleCellPvar::updateIonChannelType() {
-    QRegExp allowed_vars = QRegExp("[Factor|Conc]");
+    QRegExp allowed_vars = QRegExp("Factor|Conc");
     ui->ionChannelType->clear();
     for(auto& pvarName : this->proto->cell()->getConstants()) {
         if(allowed_vars.indexIn(pvarName.c_str()) != -1) {
