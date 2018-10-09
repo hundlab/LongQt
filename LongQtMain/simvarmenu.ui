@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SimvarMenu</class>
+ <widget class="QWidget" name="SimvarMenu">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>465</width>
+    <height>378</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Simulation Variables Menu</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabs">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="tabBarAutoHide">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="variables">
+      <property name="label" stdset="0">
+       <string>Simulation</string>
+      </property>
+      <attribute name="title">
+       <string>Simulation Variables</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="variablesLayout" stretch="">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="files">
+      <attribute name="title">
+       <string>Simulation files</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="filesLayout"/>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

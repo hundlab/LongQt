@@ -2,8 +2,6 @@
 #include "ui_runwidget.h"
 #include <QGridLayout>
 #include <QLabel>
-#include <QtConcurrent>
-#include <QScopedPointer>
 
 RunWidget::RunWidget(shared_ptr<Protocol> proto, QDir working_dir, QWidget* parent) :
     QWidget(parent),
@@ -22,11 +20,8 @@ RunWidget::RunWidget(shared_ptr<Protocol> proto, QDir working_dir, QWidget* pare
 void RunWidget::setProto(shared_ptr<Protocol> proto) {
     this->proto = proto;
 }
-void RunWidget::on_runButton_clicked() {
-    int i = 0;
-    ui->runButton->setEnabled(false);
-    proto->mkDirs();
-    QScopedPointer<QFile> note_file(new QFile(working_dir.absolutePath()+ "/" + ui->noteBoxName->text() + ".txt"));
+void RunWidget::write_note() {
+    QScopedPointer<QFile> note_file(new QFile(working_dir.absolutePath()+ "/" + ui->noteBoxName->text()));
     note_file->open(QIODevice::WriteOnly|QIODevice::Text);
     if(note_file->isOpen()) {
         QTextStream out(note_file.data());
@@ -35,26 +30,13 @@ void RunWidget::on_runButton_clicked() {
         qWarning() << "note file could not be opened";
     }
     note_file->close();
-    vector.clear();
-
-    for( i = 0; i < proto->numtrials; i++) {
-        proto->trial(i);
-/*        proto->readfile = "r"+ to_string(i) + ".dat"; // File to read SV ICs
-        proto->savefile = "s"+ to_string(i) + ".dat"; // File to save final SV
-        proto->propertyoutfile = "dt%d_%s" + string(".dat");
-        proto->dvarsoutfile = "dt%d_dvars" + string(".dat");
-        proto->finalpropertyoutfile = "dss%d_%s" + string(".dat");
-        proto->finaldvarsoutfile = "dss%d_pvars" + string(".dat");*/
-        vector.append(QSharedPointer<Protocol>(proto->clone()));
-    }
-
-    QFuture<void> next = QtConcurrent::map(vector,[] (QSharedPointer<Protocol> p) {
-            if(p != NULL) {
-            p->runTrial();
-            }
-            });  // pass vector of protocols to QtConcurrent
-
-    watcher.setFuture(next);
+}
+void RunWidget::on_runButton_clicked() {
+    ui->runButton->setEnabled(false);
+    runner.setSims(this->proto);
+    this->write_note();
+    runner.run();
+    watcher.setFuture(runner.getFuture());
     emit running();
 }
 void RunWidget::setWorkingDir(QDir& dir) {
@@ -67,6 +49,6 @@ void RunWidget::cancel() {
 }
 void RunWidget::finish() {
     ui->runButton->setEnabled(true);
-    this->vector.clear();
+    runner.clear();
     emit finished();
 }

@@ -16,7 +16,7 @@ CONFIG += c++11 wayland-compositor
 
 include(GridEditor/GridEdit.pri)
 include(LongQtMain/LongQtMain.pri)
-include(modellib/model.pri)
+include(../LongQt-model/model.pri)
 include(Grapher/Grapher.pri)
 
 RESOURCES = LongQt.qrc
@@ -38,5 +38,6 @@ linux {
     UI_DIR = ./build/obj
 }
 
+#QMAKE_CXXFLAGS += -P
 SOURCES += LongQt.cpp
 

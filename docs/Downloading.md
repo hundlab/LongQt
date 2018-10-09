@@ -1,1 +1,0 @@
-# Downloading LongQT and LongQT Grapher

@@ -48,7 +48,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	ChooseProtoWidget* choose = new ChooseProtoWidget(this);
 	this->proto = choose->getCurrentProto();
 
-	simvarMenu* sims = new simvarMenu(proto, this);
+    SimvarMenu* sims = new SimvarMenu(proto, this);
 	dvarMenu* dvars = new dvarMenu(proto->cell(), this);
 	MvarMenu* mvars =  new MvarMenu(proto, this);
 	PvarMenu* pvars =  new PvarMenu(proto, this);
@@ -125,7 +125,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 			if(QMessageBox::RestoreDefaults == 
 					QMessageBox::information(NULL,tr("LongQt Information"),
 						tr(("Copyright© 2016 Thomas J. Hund\n"
-							"License: Revised BSD License\n"
+                            "License: GNU General Public License\n"
 							"Email: thomas.hund@osumc.edu\n"
 							"Version: "+QApplication::applicationVersion()+"\n"
 							"Contributers:\n"

@@ -24,6 +24,7 @@ class GridModel : public QAbstractTableModel {
 		QVariant dataStatusTip(const QModelIndex & index) const;
 		bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 		Qt::ItemFlags flags(const QModelIndex & index) const;
+        //row & column positions are ignored for inserts but respected for removals
 		bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
 		bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
 		bool insertColumns(int column, int count, const QModelIndex & parent = QModelIndex());

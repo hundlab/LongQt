@@ -16,46 +16,21 @@ CLISimulation::CLISimulation() {
 CLISimulation::~CLISimulation() {}
 
 void CLISimulation::runSims(QStringList simvarFiles) {
+    runner.clear();
     SettingsIO* settingsMgr = SettingsIO::getInstance();
-    int i = 0;
     for(QString& simvarFile: simvarFiles) {
         settingsMgr->readSettings(simvarFile, proto);
         proto = settingsMgr->lastProto;
         proto->setDataDir();
-        this->runSim();
-        i++;
+        runner.appendSims(proto);
     }
-}
-bool CLISimulation::runTrial(int trialnum) {
-    proto->trial(trialnum);
-    return proto->runTrial();
-}
-void CLISimulation::runSim() {
-    int i = 0;
-    vector.clear();
-    QDir().mkpath(proto->datadir.absolutePath());
-    for( i = 0; i < proto->numtrials; i++) {
-        proto->trial(i);
-        /*        proto->readfile = "r"+ to_string(i) + ".dat"; // File to read SV ICs
-                  proto->savefile = "s"+ to_string(i) + ".dat"; // File to save final SV
-                  proto->propertyoutfile = "dt%d_%s" + string(".dat");
-                  proto->dvarsoutfile = "dt%d_dvars" + string(".dat");
-                  proto->finalpropertyoutfile = "dss%d_%s" + string(".dat");
-                  proto->finaldvarsoutfile = "dss%d_pvars" + string(".dat");*/
-        vector.append(QSharedPointer<Protocol>(proto->clone()));
-    }
-    this->next = QtConcurrent::map(vector,[] (QSharedPointer<Protocol> p) {
-            if(p != NULL) {
-            p->runTrial();
-            }
-            });  // pass vector of protocols to QtConcurrent
-
-    watcher.setFuture(next);
+    runner.run();
+    watcher.setFuture(runner.getFuture());
     QTextStream(stdout) << "Running Simulation...\n";
 }
 void CLISimulation::finish() {
     QTextStream(stdout) << "\nFinished!\n";
-    this->vector.clear();
+    this->runner.clear();
     exit(0);
 }
 void CLISimulation::setRange(int low, int high) {

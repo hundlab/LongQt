@@ -31,7 +31,6 @@ void LQGridEditor::on_actionOpen_triggered() {
     if (!fileName.isEmpty()){
 		shared_ptr<Protocol> proto = this->ui->centralWidget->getProtocol();
         SettingsIO::getInstance()->readSettings(fileName,proto);
-        this->saveFile = fileName;
     }
 	this->ui->centralWidget->getModel()->reloadModel();
 }
@@ -78,7 +77,7 @@ void LQGridEditor::on_actionToggle_Second_Stim_triggered() {
 }
 
 void LQGridEditor::on_actionSet_Sim_Parameters_triggered() {
-    simvarMenu* menu = new simvarMenu(this->proto);
+    SimvarMenu* menu = new SimvarMenu(this->proto);
     menu->removeGrid();
     menu->show();
 }

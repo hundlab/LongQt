@@ -11,6 +11,7 @@ PvarMenu::PvarMenu(shared_ptr<Protocol> proto, QWidget *parent) :
 {
     ui->setupUi(this);
     this->proto = proto;
+    this->pvarsDescriptions = GuiUtils::readMap(":/hoverText/pvarsDescriptions.txt");
     ui->treeWidget->addAction(ui->actionDelete);
     ui->treeWidget->addAction(ui->actionShow_Cells);
     this->updateList();
@@ -24,8 +25,9 @@ PvarMenu::~PvarMenu()
 void PvarMenu::updateList() {
     this->ui->treeWidget->clear();
     for(auto& pvar : this->proto->pvars()) {
-        new QTreeWidgetItem(ui->treeWidget,
+        auto temp = new QTreeWidgetItem(ui->treeWidget,
             QString(pvar.second->IonChanParam::str(pvar.first).c_str()).split("\t"));
+        temp->setData(0,Qt::ToolTipRole,pvarsDescriptions[pvar.first.c_str()]);
     }
 }
 
@@ -66,7 +68,14 @@ void PvarMenu::on_actionShow_Cells_triggered() {
 }
 
 void PvarMenu::on_addButton_triggered() {
-    this->addmenu = new AddSingleCellPvar(this->proto,this);
+    QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
+    CellPvars::IonChanParam* param = NULL;
+    QString name;
+    if(items.length()>0) {
+        name = items[0]->data(0,0).toString();
+        param = this->proto->pvars().at(name.toStdString());
+    }
+    this->addmenu = new AddSingleCellPvar(this->proto,{name,param},this);
     connect(addmenu, &AddSingleCellPvar::pvarsChanged, [this] () {
         this->updateList();
     });

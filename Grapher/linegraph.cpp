@@ -4,6 +4,7 @@
 #include "currentClampProtocol.h"
 #include "guiUtils.h"
 #include "cellutils.h"
+#include <QFileInfo>
 
 LineGraph::LineGraph(QString xLabel, QString yLabel, QDir saveDir, QWidget* parent) :
     QWidget(parent),
@@ -76,8 +77,9 @@ void LineGraph::on_save_clicked() {
 }
 void LineGraph::on_loadControl_clicked() {
     QVector<double> x, y;
+    QString name;
 
-    if (control_on_graph(x, y)){
+    if (control_on_graph(x, y, name)){
         if(controlLocation >= 0 && controlLocation < x.size()) {
             if(ui->plot->graph(controlLocation) != 0) {
                 ui->plot->removeGraph(controlLocation);
@@ -85,11 +87,11 @@ void LineGraph::on_loadControl_clicked() {
             this->x.removeAt(controlLocation);
             this->y.removeAt(controlLocation);
         }
-        this->addData(x,y,"Control");
+        this->addData(x,y,name);
         controlLocation = this->x.size()-1;
     }
 }
-bool LineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
+bool LineGraph::control_on_graph(QVector<double> &x, QVector<double> &y, QString& name){
     QString filename = QFileDialog::getOpenFileName(
                 this,
                 tr("Open File"),
@@ -99,24 +101,25 @@ bool LineGraph::control_on_graph(QVector<double> &x, QVector<double> &y){
     QFile file1(filename);
     if(!file1.open(QIODevice::ReadOnly)){
         QMessageBox::information(0,"error", file1.errorString());
-    }else{
-    QTextStream in(&file1);
-    int point = 0;
-    QString fline = in.readLine();
-    QStringList split_line = fline.split("\t");
-    int varpos = split_line.indexOf(yLabel);
-    if(varpos == -1){ QMessageBox::information(0,"Error", yLabel +" not found!"); return false;}
-    int timepos = split_line.indexOf(xLabel);
-    if(timepos == -1){ QMessageBox::information(0,"Error", xLabel +" not found!"); return false;}
-    while(!in.atEnd()){
-        QString line = in.readLine();
-        QStringList split_line = line.split("\t");
-        y.push_back(split_line[varpos].toDouble());
-        x.push_back(split_line[timepos].toDouble());
-        point++;
-    }
-    file1.close();
-    return true;
+    } else {
+        name = QFileInfo(filename).dir().dirName();
+        QTextStream in(&file1);
+        int point = 0;
+        QString fline = in.readLine();
+        QStringList split_line = fline.split("\t");
+        int varpos = split_line.indexOf(yLabel);
+        if(varpos == -1){ QMessageBox::information(0,"Error", yLabel +" not found!"); return false;}
+        int timepos = split_line.indexOf(xLabel);
+        if(timepos == -1){ QMessageBox::information(0,"Error", xLabel +" not found!"); return false;}
+        while(!in.atEnd()){
+            QString line = in.readLine();
+            QStringList split_line = line.split("\t");
+            y.push_back(split_line[varpos].toDouble());
+            x.push_back(split_line[timepos].toDouble());
+            point++;
+        }
+        file1.close();
+        return true;
     }
     return false;
 }
