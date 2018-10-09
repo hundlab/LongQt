@@ -80,13 +80,13 @@ void ConductivityEditor::setConductivity(pair<int,int> e, double val) {
 			continue;
 		}
 		//check for overlaping edges in current
-		if((current.count(make_pair(e.first -1, e.second)) == 1 && i == CellUtils::left) ||
+/*		if((current.count(make_pair(e.first -1, e.second)) == 1 && i == CellUtils::left) ||
 				(current.count(make_pair(e.first +1, e.second)) == 1 && i == CellUtils::right) ||
 				(current.count(make_pair(e.first, e.second +1)) == 1 && i == CellUtils::bottom) ||
 				(current.count(make_pair(e.first, e.second -1)) == 1 && i == CellUtils::top)) 
 		{
 			continue;
-		}
+        }*/
 		//check for overlaping edges in visited
 		if((visited.count(make_pair(e.first -1, e.second)) == 1 && i == CellUtils::left) ||
 				(visited.count(make_pair(e.first +1, e.second)) == 1 && i == CellUtils::right) ||
