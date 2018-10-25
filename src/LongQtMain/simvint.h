@@ -4,11 +4,12 @@
 #include "simvar.h"
 
 #include <QSpinBox>
+namespace LQ = LongQt;
 
 class SimvInt : public Simvar
 {
 public:
-    explicit SimvInt(shared_ptr<Protocol> proto, string name, QWidget *parent = 0);
+    explicit SimvInt(std::shared_ptr<LQ::Protocol> proto, std::string name, QWidget *parent = 0);
     ~SimvInt();
 private:
     virtual void update_ui();

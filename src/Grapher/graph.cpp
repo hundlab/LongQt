@@ -166,15 +166,15 @@ Grapher::DssD Grapher::dssData() {
 void Grapher::buildBarGraphs(DssD dssData) {
     QMap<QString,barGraph*> bars;
     for(auto value: dssData) {
-        auto instance = get<0>(value);
-        auto var = get<1>(value);
-        auto property = get<2>(value);
+        auto instance = std::get<0>(value);
+        auto var = std::get<1>(value);
+        auto property = std::get<2>(value);
         if(!bars.contains(var+":"+property)) {
-             auto bar = new barGraph(instance, get<3>(value), var, read_location);
+             auto bar = new barGraph(instance, std::get<3>(value), var, read_location);
              ui->tabWidget->addTab(bar, var +":"+property);
              bars.insert(var+":"+property,bar);
          } else {
-             bars[var+":"+property]->addBar(instance,get<3>(value));
+             bars[var+":"+property]->addBar(instance,std::get<3>(value));
          }
     }
 }

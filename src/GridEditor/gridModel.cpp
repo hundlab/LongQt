@@ -5,6 +5,7 @@
 #include <QDebug>
 
 using namespace std;
+using namespace LongQt;
 
 GridModel::GridModel(shared_ptr<GridProtocol> proto, QObject* parent) : QAbstractTableModel(parent) {
     if(proto) {

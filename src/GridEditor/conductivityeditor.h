@@ -7,6 +7,7 @@
 #include <QWidget>
 #include "gridModel.h"
 #include <QTableView>
+namespace LQ = LongQt;
 
 namespace Ui {
 class ConductivityEditor;
@@ -43,15 +44,15 @@ private:
     Ui::ConductivityEditor *ui;
 	GridModel* model = 0;
 	QTableView* view = 0;
-	set<pair<int,int>> current;
-	set<pair<int,int>> visited;
+    std::set<std::pair<int,int>> current;
+    std::set<std::pair<int,int>> visited;
 
 	void setConductivities(double startVal, double incAmount, int maxDist, double maxVal);
 	void getInitial();
 	void getNext();
-	void add(pair<int,int> e, set<pair<int,int>>& next);
+    void add(std::pair<int,int> e, std::set<std::pair<int,int>>& next);
 
-	void setConductivity(pair<int,int> e, double val);
+    void setConductivity(std::pair<int,int> e, double val);
 
 
 private slots:

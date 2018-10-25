@@ -2,6 +2,8 @@
 #include "simvfile.h"
 
 #include <protocol.h>
+using namespace std;
+using namespace LongQt;
 
 SimvFile::SimvFile(shared_ptr<Protocol> proto, string name, QWidget *parent) :
     Simvar(proto,name,parent)

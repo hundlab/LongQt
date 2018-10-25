@@ -10,6 +10,8 @@
 #include "cellutils.h"
 #include "currentClampProtocol.h"
 #include "settingsIO.h"
+using namespace std;
+using namespace LongQt;
 
 ChooseProtoWidget::ChooseProtoWidget(QWidget* parent) : QWidget(parent),
 	ui(new Ui::ChooseProtoWidget)

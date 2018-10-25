@@ -10,6 +10,7 @@
 #include <QPointer>
 #include "conductivityeditor.h"
 #include "ionchannelconfig.h"
+namespace LQ = LongQt;
 
 namespace Ui {
 class LQGridEditor;
@@ -28,7 +29,7 @@ private:
 	QPointer<QTableView> gridView;
 	QPointer<ConductivityEditor> condEdit;
 	QPointer<IonChannelConfig> ionConfig;
-	shared_ptr<GridProtocol> proto = 0;
+    std::shared_ptr<LQ::GridProtocol> proto = 0;
 	QString saveFile = "";
 private slots:
 	void on_actionNew_triggered();

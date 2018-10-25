@@ -2,8 +2,10 @@
 #include "simvdouble.h"
 
 #include <protocol.h>
+using namespace std;
+using namespace LongQt;
 
-SimvDouble::SimvDouble(shared_ptr<Protocol> proto, string name, QWidget *parent) :
+SimvDouble::SimvDouble(std::shared_ptr<LQ::Protocol> proto, std::string name, QWidget *parent) :
     Simvar(proto,name,parent)
 {
     this->widg = new QDoubleSpinBox(this);
@@ -21,7 +23,7 @@ void SimvDouble::update_ui() {
 }
 
 void SimvDouble::update_model(double value) {
-    proto->pars.at(name).set(to_string(value));
+    proto->pars.at(name).set(std::to_string(value));
 }
 
 SimvDouble::~SimvDouble()

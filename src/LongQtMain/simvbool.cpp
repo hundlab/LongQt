@@ -2,6 +2,8 @@
 #include "simvbool.h"
 
 #include <protocol.h>
+using namespace std;
+using namespace LongQt;
 
 SimvBool::SimvBool(shared_ptr<Protocol> proto, string name, QWidget *parent) :
     Simvar(proto,name,parent)

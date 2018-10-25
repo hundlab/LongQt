@@ -16,8 +16,7 @@
 #include "grid.h"
 #include "gridCell.h"
 #include "gridModel.h"
-
-using namespace std;
+namespace LQ = LongQt;
 
 namespace Ui {
 class GridSetupWidget;
@@ -27,22 +26,22 @@ class GridSetupWidget : public QWidget {
 Q_OBJECT
   public:
     explicit GridSetupWidget(QWidget* parent = 0);
-    explicit GridSetupWidget(shared_ptr<GridProtocol> initial_proto, QWidget* parent = 0);
+    explicit GridSetupWidget(std::shared_ptr<LQ::GridProtocol> initial_proto, QWidget* parent = 0);
     ~GridSetupWidget();
-    void setGrid(Grid* grid);
-    Grid* getGrid();
-	shared_ptr<GridProtocol> getProtocol();
+    void setGrid(LQ::Grid* grid);
+    LQ::Grid* getGrid();
+    std::shared_ptr<LQ::GridProtocol> getProtocol();
 	QTableView* view();
 	GridModel* getModel();
   signals:
-    void cellChanged(shared_ptr<Cell>);
+    void cellChanged(std::shared_ptr<LQ::Cell>);
   private:
     void createMenu();
 
 	Ui::GridSetupWidget *ui;
 
-    shared_ptr<GridProtocol> proto;
-    Grid* grid;
+    std::shared_ptr<LQ::GridProtocol> proto;
+    LQ::Grid* grid;
 
 	GridModel* model;
   private slots:

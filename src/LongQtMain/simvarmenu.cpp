@@ -36,6 +36,8 @@
 #include "simvcellopts.h"
 #include "simvarmenu.h"
 #include "ui_simvarmenu.h"
+using namespace std;
+using namespace LongQt;
 
 SimvarMenu::SimvarMenu(shared_ptr<Protocol> initial_proto, QWidget *parent) :
     QWidget(parent),

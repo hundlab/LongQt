@@ -4,11 +4,12 @@
 #include "simvar.h"
 
 #include <QDoubleSpinBox>
+namespace LQ = LongQt;
 
 class SimvDouble : public Simvar
 {
 public:
-    explicit SimvDouble(shared_ptr<Protocol> proto, string name, QWidget *parent = 0);
+    explicit SimvDouble(std::shared_ptr<LQ::Protocol> proto, std::string name, QWidget *parent = 0);
     ~SimvDouble();
 private:
     virtual void update_ui();

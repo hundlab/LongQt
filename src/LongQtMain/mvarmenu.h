@@ -12,28 +12,27 @@
 #include <QTreeWidgetItem>
 
 #include "protocol.h"
+namespace LQ = LongQt;
 
 namespace Ui {
     class MvarMenu;
 }
 
-using namespace std;
-
 class MvarMenu: public QWidget {
 Q_OBJECT
   public:
-    explicit MvarMenu(shared_ptr<Protocol> proto, QWidget* parent = 0);
+    explicit MvarMenu(std::shared_ptr<LQ::Protocol> proto, QWidget* parent = 0);
    ~MvarMenu();
 
   private:
     void setupMenu();
     QString getType(QString name);
 
-    shared_ptr<Protocol> proto;
+    std::shared_ptr<LQ::Protocol> proto;
     QMap<QString,QString> dvarsDescriptions;
     QMap<QString,QString> measDescriptions;
-    QVector<string> cellVars;
-    QVector<string> measVars;
+    QVector<std::string> cellVars;
+    QVector<std::string> measVars;
     Ui::MvarMenu *ui;
   private slots:
     void addMeas(QTreeWidgetItem * item, int column);
@@ -42,8 +41,8 @@ Q_OBJECT
     void setParentCheckedState(QTreeWidgetItem* item, int column);
     void setChildrenCheckedStates(QTreeWidgetItem* item, int column, Qt::CheckState state);
   public slots:
-    void changeProto(shared_ptr<Protocol> proto);
-    void changeCell(shared_ptr<Cell> cell);
+    void changeProto(std::shared_ptr<LQ::Protocol> proto);
+    void changeCell(std::shared_ptr<LQ::Cell> cell);
     void reset();
 };
 

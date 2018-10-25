@@ -3,6 +3,8 @@
 
 #include <protocol.h>
 #include <QGridLayout>
+using namespace std;
+using namespace LongQt;
 
 SimvInt::SimvInt(shared_ptr<Protocol> proto, string name, QWidget *parent) :
     Simvar(proto,name,parent)

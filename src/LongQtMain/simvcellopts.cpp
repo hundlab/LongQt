@@ -5,6 +5,8 @@
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <protocol.h>
+using namespace std;
+using namespace LongQt;
 
 SimvCellOpts::SimvCellOpts(shared_ptr<Protocol> proto, string name, QWidget *parent) :
     Simvar(proto,name,parent)

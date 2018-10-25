@@ -2,6 +2,8 @@
 #include "ui_addgridcellpvar.h"
 #include "pvarscell.h"
 #include "guiUtils.h"
+using namespace std;
+using namespace LongQt;
 
 AddGridCellPvar::AddGridCellPvar(QTableView* view, shared_ptr<GridProtocol> proto, QWidget *parent) :
     QDialog(parent),

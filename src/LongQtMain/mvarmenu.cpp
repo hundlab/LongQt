@@ -7,6 +7,8 @@
 #include <QTreeWidget>
 #include <QSpinBox>
 #include <QRegExp>
+using namespace std;
+using namespace LongQt;
 
 /*#################################
   begin mvarMenu class

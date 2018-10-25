@@ -3,6 +3,8 @@
 #include "pvarscell.h"
 #include "guiUtils.h"
 #include <QDebug>
+using namespace std;
+using namespace LongQt;
 
 AddSingleCellPvar::AddSingleCellPvar(shared_ptr<Protocol> proto, std::pair<QString, PvarsCell::IonChanParam*> parampair, QWidget *parent):
     QDialog(parent),

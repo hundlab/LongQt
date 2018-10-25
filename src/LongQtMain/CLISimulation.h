@@ -5,6 +5,7 @@
 #include "protocol.h"
 #include <QFutureWatcher>
 #include "runsim.h"
+namespace LQ = LongQt;
 
 class CLISimulation : QObject {
     Q_OBJECT
@@ -13,10 +14,10 @@ class CLISimulation : QObject {
     ~CLISimulation();
     void runSims(QStringList simvarFiles);
   private:
-    shared_ptr<Protocol> proto = 0;
+    std::shared_ptr<LQ::Protocol> proto = 0;
     int low = 0;
     int high = 0;
-    RunSim runner;
+    LQ::RunSim runner;
     QFutureWatcher<void> watcher;
   private slots:
     void finish();

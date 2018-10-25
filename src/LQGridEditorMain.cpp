@@ -1,9 +1,6 @@
-#include "lqgrideditor.h"
 #include <QApplication>
-#include <QStandardPaths> 
-#include <QFileDialog>
-#include <QDir>
-#include <QMessageBox>
+#include "lqgrideditor.h"
+
 
 int main(int argc, char *argv[])
 {

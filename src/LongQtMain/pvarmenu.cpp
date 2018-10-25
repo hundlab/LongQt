@@ -2,8 +2,9 @@
 #include "pvarmenu.h"
 #include "ui_pvarmenu.h"
 #include "pvarscell.h"
-
 #include <QMessageBox>
+using namespace std;
+using namespace LongQt;
 
 PvarMenu::PvarMenu(shared_ptr<Protocol> proto, QWidget *parent) :
     QWidget(parent),

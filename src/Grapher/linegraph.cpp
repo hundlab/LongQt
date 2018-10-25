@@ -125,10 +125,10 @@ bool LineGraph::control_on_graph(QVector<double> &x, QVector<double> &y, QString
 }
 void LineGraph::populateList(QVector<std::tuple<QString,QString,QString,double>> dssData) {
     for(auto val: dssData) {
-        if(get<1>(val)!= yLabel) continue;
+        if(std::get<1>(val)!= yLabel) continue;
         new QTreeWidgetItem(ui->treeWidget,
-            {get<0>(val),get<2>(val),
-            QString::number(get<3>(val))});
+            {std::get<0>(val),std::get<2>(val),
+            QString::number(std::get<3>(val))});
     }
     for(int i=0;i<ui->treeWidget->columnCount();++i) {
         ui->treeWidget->resizeColumnToContents(i);

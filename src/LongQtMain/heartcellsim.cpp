@@ -30,6 +30,9 @@
 #include "chooseprotowidget.h"
 #include "settingsIO.h"
 
+using namespace std;
+using namespace LongQt;
+
 Simulation::Simulation(QString simvarFile, QWidget* parent){
 	//setup class variables
 	this->parent = parent;
@@ -61,19 +64,19 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
 	menu_list.append(mvars);
 	menu_list.append(run);
 
-	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), sims, SLOT(changeProto(shared_ptr<Protocol>)));
-	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), pvars, SLOT(changeProto(shared_ptr<Protocol>)));
-	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), mvars, SLOT(changeProto(shared_ptr<Protocol>)));
-	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), run, SLOT(setProto(shared_ptr<Protocol>)));
-	connect(choose, SIGNAL(protocolChanged(shared_ptr<Protocol>)), this, SLOT(changeProto(shared_ptr<Protocol>)));
+    connect(choose, &ChooseProtoWidget::protocolChanged, sims, &SimvarMenu::changeProto);
+    connect(choose, &ChooseProtoWidget::protocolChanged, pvars, &PvarMenu::changeProto);
+    connect(choose, &ChooseProtoWidget::protocolChanged, mvars, &MvarMenu::changeProto);
+    connect(choose, &ChooseProtoWidget::protocolChanged, run, &RunWidget::setProto);
+    connect(choose, &ChooseProtoWidget::protocolChanged, this, &Simulation::changeProto);
 
-	connect(choose, SIGNAL(cellChanged(shared_ptr<Cell>)), this, SIGNAL(cellChanged(shared_ptr<Cell>)));
-	connect(this, SIGNAL(cellChanged(shared_ptr<Cell>)), choose, SLOT(changeCell(shared_ptr<Cell>)));
-	connect(sims, SIGNAL(cellChanged(shared_ptr<Cell>)), this, SIGNAL(cellChanged(shared_ptr<Cell>)));
-	connect(this, SIGNAL(working_dir_changed(QDir&)), run, SLOT(setWorkingDir(QDir&)));
-	connect(this, SIGNAL(cellChanged(shared_ptr<Cell>)), sims, SLOT(changeCell(shared_ptr<Cell>)));
+    connect(choose, &ChooseProtoWidget::cellChanged, this, &Simulation::cellChanged);
+    connect(this, &Simulation::cellChanged, choose, &ChooseProtoWidget::changeCell);
+    connect(sims, &SimvarMenu::cellChanged, this, &Simulation::cellChanged);
+    connect(this, &Simulation::working_dir_changed, run, &RunWidget::setWorkingDir);
+    connect(this, &Simulation::cellChanged, sims, &SimvarMenu::changeCell);
 	connect(this, &Simulation::cellChanged,dvars,&dvarMenu::changeCell);
-	connect(this, SIGNAL(cellChanged(shared_ptr<Cell>)), mvars, SLOT(reset()));
+    connect(this, &Simulation::cellChanged, mvars, &MvarMenu::reset);
 	connect(this, &Simulation::cellChanged,pvars,&PvarMenu::changeCell);
 	connect(this, &Simulation::cellChanged,mvars,&MvarMenu::changeCell);
 	connect(run, SIGNAL(canceled()), this, SLOT(canceled()));

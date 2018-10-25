@@ -1,5 +1,7 @@
 #include "oneitemlayout.h"
 #include "simvar.h"
+using namespace std;
+using namespace LongQt;
 
 Simvar::Simvar(shared_ptr<Protocol> proto, string name, QWidget *parent) :
     QWidget(parent)

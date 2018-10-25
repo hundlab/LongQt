@@ -12,7 +12,7 @@ TEMPLATE = app
 
 QMAKE_MAC_SDK = macosx10.12
 
-CONFIG += c++11 wayland-compositor
+CONFIG += c++11
 
 include(src/GridEditor/GridEdit.pri)
 include(src/LongQtMain/LongQtMain.pri)
@@ -39,5 +39,6 @@ linux {
     UI_DIR = ./build/obj
 }
 
-SOURCES += ./src/LQGridEditor.cpp
+SOURCES += \
+    src/LQGridEditorMain.cpp
 

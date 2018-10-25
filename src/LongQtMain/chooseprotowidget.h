@@ -12,8 +12,7 @@
 
 #include "protocol.h"
 #include "cellutils.h"
-
-using namespace std;
+namespace LQ = LongQt;
 
 namespace Ui {
 class ChooseProtoWidget;
@@ -23,27 +22,27 @@ class ChooseProtoWidget : public QWidget {
 Q_OBJECT
   public:
     ChooseProtoWidget(QWidget* parent = 0);
-    shared_ptr<Protocol> getCurrentProto();
+    std::shared_ptr<LQ::Protocol> getCurrentProto();
     void Initialize();
   signals:
-    void protocolChanged(shared_ptr<Protocol>);
-    void cellChanged(shared_ptr<Cell>);
+    void protocolChanged(std::shared_ptr<LQ::Protocol>);
+    void cellChanged(std::shared_ptr<LQ::Cell>);
   private:
 	Ui::ChooseProtoWidget* ui;
-    shared_ptr<Protocol> proto;
+    std::shared_ptr<LQ::Protocol> proto;
     QWidget* parent;
     QButtonGroup* clampType;
 //    QComboBox* ui::cellType;
     QString defaultCell;
-	QMap<int,string> protoNumMap;
+    QMap<int,std::string> protoNumMap;
 	void updateMenu();
   private slots:
     void on_cellType_currentIndexChanged(QString name);
   public slots:
     void changeProto(int value);
-  	void changeProto(string name);
-	void changeProto(shared_ptr<Protocol>, bool raise = false);
-    void changeCell(shared_ptr<Cell>);
+    void changeProto(std::string name);
+    void changeProto(std::shared_ptr<LQ::Protocol>, bool raise = false);
+    void changeCell(std::shared_ptr<LQ::Cell>);
     void resetProto();
 	void on_readSettings_clicked();
 };

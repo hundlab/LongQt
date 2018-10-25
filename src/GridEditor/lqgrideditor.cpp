@@ -6,6 +6,8 @@
 #include <QStatusBar>
 #include <QFileDialog>
 #include <QStandardPaths>
+using namespace std;
+using namespace LongQt;
 
 LQGridEditor::LQGridEditor(QWidget *parent) :
 	QMainWindow(parent),

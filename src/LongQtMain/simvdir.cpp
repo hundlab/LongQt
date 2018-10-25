@@ -5,6 +5,8 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <protocol.h>
+using namespace std;
+using namespace LongQt;
 
 SimvDir::SimvDir(shared_ptr<Protocol> proto, string name, QWidget *parent) :
     Simvar(proto,name,parent)

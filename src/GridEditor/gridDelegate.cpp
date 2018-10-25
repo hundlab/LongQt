@@ -7,6 +7,8 @@
 #include <QPainter>
 #include <QSizePolicy>
 #include <QDebug>
+using namespace std;
+using namespace LongQt;
 
 GridDelegate::GridDelegate(QWidget *parent) : QStyledItemDelegate(parent), size(30,30) {
     map<string, CellUtils::CellInitializer> cellMap = CellUtils::cellMap;

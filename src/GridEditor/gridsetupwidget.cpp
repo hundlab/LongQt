@@ -13,6 +13,9 @@
 #include <QStandardPaths>
 #include <QHeaderView>
 #include <memory>
+using namespace std;
+using namespace LongQt;
+
 //##############################
 //gridSetupWidget
 //##############################

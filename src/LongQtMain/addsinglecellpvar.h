@@ -6,6 +6,7 @@
 #include <QDialog>
 #include <pvarscell.h>
 #include "protocol.h"
+namespace LQ = LongQt;
 
 namespace Ui {
     class AddSingleCellPvar;
@@ -16,20 +17,20 @@ class AddSingleCellPvar : public QDialog
     Q_OBJECT
 
     public:
-        explicit AddSingleCellPvar(shared_ptr<Protocol> proto, std::pair<QString, PvarsCell::IonChanParam*> parampair, QWidget *parent = 0);
+        explicit AddSingleCellPvar(std::shared_ptr<LQ::Protocol> proto, std::pair<QString, LQ::PvarsCell::IonChanParam*> parampair, QWidget *parent = 0);
         ~AddSingleCellPvar();
 
 private:
         void updateIonChannelType();
-        void setCurrentSelect(QString name, PvarsCell::IonChanParam *param);
+        void setCurrentSelect(QString name, LQ::PvarsCell::IonChanParam *param);
 
         Ui::AddSingleCellPvar *ui;
-        shared_ptr<Protocol> proto = 0;
+        std::shared_ptr<LQ::Protocol> proto = 0;
         QMap<QString,QString> pvarsDescriptions;
 
     public slots:
-        void changeProto(shared_ptr<Protocol> proto);
-        void changeCell(shared_ptr<Cell> cell);
+        void changeProto(std::shared_ptr<LQ::Protocol> proto);
+        void changeCell(std::shared_ptr<LQ::Cell> cell);
 
     signals:
         void pvarsChanged();

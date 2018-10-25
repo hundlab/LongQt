@@ -7,6 +7,7 @@
 #include <QTableView>
 #include <QPointer>
 #include "gridProtocol.h"
+namespace LQ = LongQt;
 
 namespace Ui {
     class AddGridCellPvar;
@@ -17,21 +18,21 @@ class AddGridCellPvar : public QDialog
     Q_OBJECT
 
     public:
-        explicit AddGridCellPvar(QTableView* view, shared_ptr<GridProtocol> proto, QWidget *parent = 0);
+        explicit AddGridCellPvar(QTableView* view, std::shared_ptr<LQ::GridProtocol> proto, QWidget *parent = 0);
         ~AddGridCellPvar();
 
     private:
         void updateIonChannelType();
-        set<pair<int,int>> getInitial();
+        std::set<std::pair<int,int>> getInitial();
 
-        shared_ptr<GridProtocol> proto;
+        std::shared_ptr<LQ::GridProtocol> proto;
         QMap<QString,QString> pvarsDescriptions;
         Ui::AddGridCellPvar *ui;
         QPointer<QTableView> view = 0;
 
-        public slots:
-            void changeProto(shared_ptr<GridProtocol> proto);
-        void changeCell(shared_ptr<Cell> cell);
+    public slots:
+        void changeProto(std::shared_ptr<LQ::GridProtocol> proto);
+        void changeCell(std::shared_ptr<LQ::Cell> cell);
 
 signals:
         void pvarsChanged();

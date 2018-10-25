@@ -4,11 +4,12 @@
 #include "simvar.h"
 
 #include <QCheckBox>
+namespace LQ = LongQt;
 
 class SimvBool : public Simvar
 {
 public:
-    explicit SimvBool(shared_ptr<Protocol> proto, string name, QWidget *parent = 0);
+    explicit SimvBool(std::shared_ptr<LQ::Protocol> proto, std::string name, QWidget *parent = 0);
     ~SimvBool();
 private:
     virtual void update_ui();

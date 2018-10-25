@@ -5,6 +5,8 @@
 #include "ui_pvarmenu.h"
 
 #include "pvarsgrid.h"
+using namespace std;
+using namespace LongQt;
 
 IonChannelConfig::IonChannelConfig(QTableView* view, shared_ptr<GridProtocol> proto, QWidget *parent) :
     QWidget(parent),

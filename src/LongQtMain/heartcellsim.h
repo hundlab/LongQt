@@ -21,6 +21,7 @@
 #include <QDir>
 
 #include "protocol.h"
+namespace LQ = LongQt;
 
 class Simulation : public QWidget {
     Q_OBJECT
@@ -31,7 +32,7 @@ class Simulation : public QWidget {
 
   private:
     QWidget* parent;
-    shared_ptr<Protocol> proto;
+    std::shared_ptr<LQ::Protocol> proto;
     QString date_time;
     QList<QWidget*> menu_list;
 //utility functions & classes
@@ -52,9 +53,9 @@ class Simulation : public QWidget {
     void canceled();
     void finished();
     void running();
-    void changeProto(shared_ptr<Protocol> proto);
+    void changeProto(std::shared_ptr<LQ::Protocol> proto);
   signals:
-    void cellChanged(shared_ptr<Cell>);
+    void cellChanged(std::shared_ptr<LQ::Cell>);
     void working_dir_changed(QDir& dir);
 };
 

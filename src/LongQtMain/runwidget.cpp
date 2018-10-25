@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QFileDialog>
 #include <settingsIO.h>
+using namespace std;
+using namespace LongQt;
 
 RunWidget::RunWidget(shared_ptr<Protocol> proto, QDir working_dir, QWidget* parent) :
     QWidget(parent),

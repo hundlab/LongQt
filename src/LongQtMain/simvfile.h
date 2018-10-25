@@ -4,11 +4,12 @@
 #include "simvar.h"
 
 #include <QLineEdit>
+namespace LQ = LongQt;
 
 class SimvFile : public Simvar
 {
 public:
-    explicit SimvFile(shared_ptr<Protocol> proto, string name, QWidget *parent = 0);
+    explicit SimvFile(std::shared_ptr<LQ::Protocol> proto, std::string name, QWidget *parent = 0);
     ~SimvFile();
 private:
     virtual void update_ui();

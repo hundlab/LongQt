@@ -27,6 +27,8 @@
 
 #include "guiUtils.h"
 #include "dvarmenu.h"
+using namespace std;
+using namespace LongQt;
 
 /*#################################
     begin dvarMenu class

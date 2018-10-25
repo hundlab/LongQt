@@ -18,8 +18,8 @@
 
 #include "protocol.h"
 #include "runsim.h"
+namespace LQ = LongQt;
 
-using namespace std;
 namespace Ui {
 class RunWidget;
 }
@@ -29,10 +29,10 @@ class RunWidget;
 class RunWidget : public QWidget {
 Q_OBJECT
   public:
-    RunWidget(shared_ptr<Protocol> proto, QDir working_dir, QWidget* parent = 0);
+    RunWidget(std::shared_ptr<LQ::Protocol> proto, QDir working_dir, QWidget* parent = 0);
 public slots:
     void setWorkingDir(QDir& dir);
-    void setProto(shared_ptr<Protocol> proto);
+    void setProto(std::shared_ptr<LQ::Protocol> proto);
     void cancel();
   signals:
     void canceled();
@@ -47,9 +47,9 @@ public slots:
 
 	Ui::RunWidget *ui;
     QWidget* parent;
-    shared_ptr<Protocol> proto;
+    std::shared_ptr<LQ::Protocol> proto;
     QDir working_dir;
     QFutureWatcher<void> watcher;
-    RunSim runner;
+    LQ::RunSim runner;
 };
 #endif

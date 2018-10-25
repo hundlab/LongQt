@@ -1,6 +1,8 @@
 #include "conductivityeditor.h"
 #include "ui_conductivityeditor.h"
 #include "cellutils.h"
+using namespace std;
+using namespace LongQt;
 
 ConductivityEditor::ConductivityEditor(QTableView* view, QWidget *parent) :
     QWidget(parent),

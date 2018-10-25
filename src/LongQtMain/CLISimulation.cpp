@@ -6,6 +6,8 @@
 #include "voltageClampProtocol.h"
 #include "gridProtocol.h"
 #include "settingsIO.h"
+using namespace std;
+using namespace LongQt;
 
 CLISimulation::CLISimulation() {
     this->proto.reset(new CurrentClamp());

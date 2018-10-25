@@ -12,8 +12,7 @@
 #include "protocol.h"
 #include "grid.h"
 #include "addsinglecellpvar.h"
-
-using namespace std;
+namespace LQ = LongQt;
 
 namespace Ui {
     class PvarMenu;
@@ -24,13 +23,13 @@ class PvarMenu : public QWidget
     Q_OBJECT
 
     public:
-        explicit PvarMenu(shared_ptr<Protocol> proto, QWidget *parent = 0);
+        explicit PvarMenu(std::shared_ptr<LQ::Protocol> proto, QWidget *parent = 0);
         virtual ~PvarMenu();
 
     protected:
         void updateList();
 
-        shared_ptr<Protocol> proto = 0;
+        std::shared_ptr<LQ::Protocol> proto = 0;
         Ui::PvarMenu *ui;
 
     private:
@@ -38,8 +37,8 @@ class PvarMenu : public QWidget
         QMap<QString,QString> pvarsDescriptions;
 
     public slots:
-        void changeProto(shared_ptr<Protocol> proto);
-        void changeCell(shared_ptr<Cell> cell);
+        void changeProto(std::shared_ptr<LQ::Protocol> proto);
+        void changeCell(std::shared_ptr<LQ::Cell> cell);
 
     private slots:
         void on_actionDelete_triggered();

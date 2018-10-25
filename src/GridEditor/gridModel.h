@@ -9,12 +9,13 @@
 #include "grid.h"
 #include "gridProtocol.h"
 #include "cellutils.h"
+namespace LQ = LongQt;
 
 class GridModel : public QAbstractTableModel {
 	Q_OBJECT
 	public:
-		GridModel(shared_ptr<GridProtocol> grid = 0, QObject* parent = 0);
-		bool setProtocol(shared_ptr<GridProtocol> grid);
+        GridModel(std::shared_ptr<LQ::GridProtocol> grid = 0, QObject* parent = 0);
+        bool setProtocol(std::shared_ptr<LQ::GridProtocol> grid);
 		//implemented and reimplemented functions from QAbstractTableModel
 		int rowCount(const QModelIndex & parent = QModelIndex()) const;
 		int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -38,11 +39,11 @@ class GridModel : public QAbstractTableModel {
 		void setPercent(bool percent);
 
 	signals:
-        void cellChanged(shared_ptr<Cell>);
+        void cellChanged(std::shared_ptr<LQ::Cell>);
 	private:
-		shared_ptr<GridProtocol> proto;
-		Grid* grid;
-        map<string, CellUtils::CellInitializer> cellMap;
+        std::shared_ptr<LQ::GridProtocol> proto;
+        LQ::Grid* grid;
+        std::map<std::string, LQ::CellUtils::CellInitializer> cellMap;
 		bool percent = false;
 };
 #endif

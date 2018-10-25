@@ -10,18 +10,17 @@
 #include <QVector>
 
 #include "cell.h"
-
-using namespace std;
+namespace LQ = LongQt;
 
 class dvarMenu :public QWidget {
 Q_OBJECT
   public:
-    dvarMenu(shared_ptr<Cell> cell, QWidget* parent = 0);
+    dvarMenu(std::shared_ptr<LQ::Cell> cell, QWidget* parent = 0);
     void createMenu();
     ~dvarMenu();
 
   private:
-	shared_ptr<Cell> cell;
+    std::shared_ptr<LQ::Cell> cell;
 
 //Buttons & their labels
     QVector<QCheckBox*> dvars;
@@ -29,9 +28,9 @@ Q_OBJECT
     void update_menu(); //make menu match pars
 
   private slots:
-    void update_datamap(string p, int state); //make a Protocol::pars entry match the screen
+    void update_datamap(std::string p, int state); //make a Protocol::pars entry match the screen
   public slots:
-    void changeCell(shared_ptr<Cell> cell);
+    void changeCell(std::shared_ptr<LQ::Cell> cell);
     void reset();
 };
 
