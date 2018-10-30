@@ -10,8 +10,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = LQGridEditor
 TEMPLATE = app
 
-QMAKE_MAC_SDK = macosx10.12
-
 CONFIG += c++11
 
 include(src/GridEditor/GridEdit.pri)
@@ -22,6 +20,13 @@ include(../LongQt-model/src/model.pri)
 
 RESOURCES = LongQt.qrc
 
+windows {
+    RC_FILE = LongQt.rc
+}
+macx {
+    QMAKE_MAC_SDK = macosx10.12
+    ICON = LongQt.icns
+}
 linux {
     debug {
         QMAKE_CXXFLAGS += -g
