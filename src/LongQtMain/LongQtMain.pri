@@ -19,7 +19,8 @@ SOURCES +=\
     $$PWD/simvdir.cpp \
     $$PWD/simvcell.cpp \
     $$PWD/simvcellopts.cpp \
-    $$PWD/oneitemlayout.cpp
+    $$PWD/oneitemlayout.cpp \
+    $$PWD/voltageclampsetupwidget.cpp
 
 HEADERS  +=\
 	$$PWD/dvarmenu.h\
@@ -40,7 +41,8 @@ HEADERS  +=\
     $$PWD/simvdir.h \
     $$PWD/simvcell.h \
     $$PWD/simvcellopts.h \
-    $$PWD/oneitemlayout.h
+    $$PWD/oneitemlayout.h \
+    $$PWD/voltageclampsetupwidget.h
 
 FORMS += \
     $$PWD/runwidget.ui \
@@ -49,5 +51,6 @@ FORMS += \
     $$PWD/pvarmenu.ui \
     $$PWD/mvarmenu.ui \
     $$PWD/simvarmenu.ui \
-    $$PWD/simvint.ui
+    $$PWD/simvint.ui \
+    $$PWD/voltageclampsetupwidget.ui
 
