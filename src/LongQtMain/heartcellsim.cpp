@@ -131,7 +131,7 @@ Simulation::Simulation(QString simvarFile, QWidget* parent){
                             "License: GNU General Public License\n"
 							"Email: thomas.hund@osumc.edu\n"
 							"Version: "+QApplication::applicationVersion()+"\n"
-							"Contributers:\n"
+                            "Contributors:\n"
 							"\tThomas Hund\n"
 							"\tBirce Ela Onal\n"
 							"\tDanielle Beckley\n"

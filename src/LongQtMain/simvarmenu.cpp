@@ -52,8 +52,10 @@ SimvarMenu::SimvarMenu(shared_ptr<Protocol> initial_proto, QWidget *parent) :
 
 SimvarMenu::~SimvarMenu()
 {
-    this->grid->deleteLater();
-    this->grid = 0;
+    if(this->grid) {
+        this->grid->deleteLater();
+        this->grid = 0;
+    }
     delete ui;
 }
 
@@ -142,6 +144,8 @@ void SimvarMenu::changeCell(shared_ptr<Cell> cell) {
     update_menu();
 }
 void SimvarMenu::removeGrid() {
-    this->grid->deleteLater();
-    this->grid = 0;
+    if(this->grid) {
+        this->grid->deleteLater();
+        this->grid = 0;
+    }
 }
