@@ -25,6 +25,7 @@
 #include <QList>
 #include <QRadioButton>
 #include <gridsetupwidget.h>
+#include <voltageClampProtocol.h>
 
 #include "guiUtils.h"
 #include "simvdouble.h"
@@ -55,6 +56,10 @@ SimvarMenu::~SimvarMenu()
     if(this->grid) {
         this->grid->deleteLater();
         this->grid = 0;
+    }
+    if(this->voltageClamp) {
+        this->voltageClamp->deleteLater();
+        this->voltageClamp = 0;
     }
     delete ui;
 }
@@ -108,6 +113,10 @@ void SimvarMenu::createMenu()  {
         this->grid = new GridSetupWidget(static_pointer_cast<GridProtocol>(this->proto));
         ui->tabs->addTab(grid, "Grid Setup");
         connect(grid, &GridSetupWidget::cellChanged, this, &SimvarMenu::cellChanged);
+    } else if(string(proto->type()) == "Voltage Clamp Protocol") {
+        this->voltageClamp = new VoltageClampSetupWidget(static_pointer_cast<VoltageClamp>(this->proto),this);
+        ui->tabs->addTab(voltageClamp, "Voltage Clamp Setup");
+//        connect(voltageClamp, &GridSetupWidget::cellChanged, this, &SimvarMenu::cellChanged);
     }
 //make menu match proto
     update_menu();

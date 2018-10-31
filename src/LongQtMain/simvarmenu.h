@@ -1,6 +1,8 @@
 #ifndef SIMVARMENU_H
 #define SIMVARMENU_H
 
+#include "voltageclampsetupwidget.h"
+
 #include <simvar.h>
 
 #include <QWidget>
@@ -34,6 +36,7 @@ private:
     QMap<QString, QString> descriptions;
     QMap<QString, Simvar*> simvars;
     GridSetupWidget* grid = 0;
+    VoltageClampSetupWidget* voltageClamp = 0;
 //initalizer
     void initialize(const std::map<std::string,LQ::GetSetRef>::iterator it);
 //screen functions
