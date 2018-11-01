@@ -8,7 +8,7 @@ OneItemLayout::~OneItemLayout() {}
 
 void OneItemLayout::setGeometry(const QRect &r)
 {
-    item ? item->setGeometry(r): 0;
+    item ? item->setGeometry(r): (void)0;
 }
 
 QSize OneItemLayout::sizeHint() const
