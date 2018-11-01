@@ -16,6 +16,7 @@ SimvCellOpts::SimvCellOpts(shared_ptr<Protocol> proto, string name, QWidget *par
 
 void SimvCellOpts::createMenu() {
     this->widg = new QGroupBox(this);
+    widg->setFlat(true);
     auto layout = new OneItemLayout(this);
     layout->addWidget(widg);
     auto vbox = new QVBoxLayout(widg);
