@@ -40,7 +40,7 @@ class PvarMenu : public QWidget
         void changeProto(std::shared_ptr<LQ::Protocol> proto);
         void changeCell(std::shared_ptr<LQ::Cell> cell);
 
-    private slots:
+private slots:
         void on_actionDelete_triggered();
         void on_actionShow_Cells_triggered();
 
@@ -48,5 +48,7 @@ class PvarMenu : public QWidget
         void on_removeButton_triggered();
         void on_infoButton_triggered();
         void on_refreshButton_triggered();
+        void on_treeWidget_itemSelectionChanged();
+
 };
 #endif

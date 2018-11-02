@@ -92,7 +92,11 @@ void dvarMenu::createMenu()  {
         if(*it == "t" || *it == "vOld") {
             dvars[i]->setEnabled(false);
         }
-        dvars[i]->setToolTip(definitions[it->c_str()]);       //hover attribute
+        auto toolTip = definitions.value(it->c_str(), "");
+        if(toolTip == "") {
+            qDebug("DvarMenu: tool tip not found for %s",it->c_str());
+        }
+        dvars[i]->setToolTip(toolTip);       //hover attribute
     }
     }
     {

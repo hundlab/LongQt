@@ -12,7 +12,7 @@
 #include <QJsonObject>
 
 namespace GuiUtils {
-    //used to read in hoverTexts from thier files
+    //used to read in hoverTexts from their files
     inline QMap<QString, QString> readMap(QString fileName, QString cellType = "Default") {
         QMap<QString, QString> map;
         QFile* file = new QFile(fileName);

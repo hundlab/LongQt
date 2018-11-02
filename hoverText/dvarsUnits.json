@@ -1,7 +1,10 @@
 {
 	"Default": {
 		"Ca": "uA/uF",
-		"CaM": "",
+        "CaM": "mM",
+        "CaMKII": "",
+        "CaMI": "mM",
+        "CaMR": "mM",
 		"Csqnb": "mM",
 		"Gate.a": "",
 		"Gate.aa": "",
@@ -51,9 +54,6 @@
 		"cajI": "mmol/L",
 		"caslI": "mmol/L",
 		"clI": "mM",
-		"cmdn": "mM",
-		"cmdnI": "mM",
-		"cmdnR": "mM",
 		"csqn": "mM",
 		"dVdt": "mV/ms",
 		"fBlock": "",

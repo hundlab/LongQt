@@ -50,6 +50,8 @@ void GridSetupWidget::createMenu() {
     }
     connect(ui->addColumnButton, &QPushButton::clicked, [this] () {
 			this->model->insertColumns(this->model->columnCount(), this->ui->columnInt->value());
+            this->ui->cellGrid->clearSelection();
+            this->ui->chooseType->setCurrentText(InexcitableCell().type());
 			});
     connect(ui->removeColumnButton, &QPushButton::clicked, [this] () {
 			int num = this->ui->columnInt->value();
@@ -57,6 +59,8 @@ void GridSetupWidget::createMenu() {
 			});
     connect(ui->addRowButton, &QPushButton::clicked, [this] () {
 			this->model->insertRows(this->model->rowCount(), ui->rowInt->value());
+            this->ui->cellGrid->clearSelection();
+            this->ui->chooseType->setCurrentText(InexcitableCell().type());
 			});
     connect(ui->removeRowButton, &QPushButton::clicked, [this] () {
 			int num = ui->rowInt->value();
