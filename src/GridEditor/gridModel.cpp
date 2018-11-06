@@ -13,14 +13,14 @@ GridModel::GridModel(shared_ptr<GridProtocol> proto, QObject* parent) : QAbstrac
     } else {
         this->proto.reset(new GridProtocol());
     }
-    this->grid = static_pointer_cast<GridCell>(proto->cell())->getGrid();
+    this->grid = proto->gridCell()->getGrid();
     cellMap = CellUtils::cellMap;
     cellMap["Inexcitable Cell"] = [] () {return make_shared<InexcitableCell>();};
 
 }
 bool GridModel::setProtocol(shared_ptr<GridProtocol> proto) {
     this->proto = proto;
-    this->grid = static_pointer_cast<GridCell>(proto->cell())->getGrid();
+    this->grid = proto->gridCell()->getGrid();
     QAbstractItemModel::resetInternalData();
     return true;
 }
@@ -239,7 +239,7 @@ QModelIndex GridModel::parent(const QModelIndex & index) const {
 }
 
 QVariant GridModel::headerData(int section, Qt::Orientation o, int role) const {
-    if(role == 0) {
+    if(role == Qt::DisplayRole) {
         return section;
     }
     return QAbstractTableModel::headerData(section,o,role);
