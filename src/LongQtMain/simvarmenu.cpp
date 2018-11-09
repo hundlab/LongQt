@@ -76,18 +76,19 @@ void SimvarMenu::createMenu()  {
         {"cell_option",[] (shared_ptr<Protocol> proto,string name) {return new SimvCellOpts(proto,name);}}
     };
     //do all the work for simvars setup
-    for(auto& it : proto->pars) {
-        auto type = it.second.type;
-        if(simvars_layouts.find(type.c_str()) == simvars_layouts.end()) {
-            simvars_layouts.insert(type.c_str(), new QFormLayout());
+    for(auto par: proto->parsList()) {
+        auto name = par.first.c_str();
+        auto type = par.second.c_str();
+        if(simvars_layouts.find(type) == simvars_layouts.end()) {
+            simvars_layouts.insert(type, new QFormLayout());
         }
-        QLabel* simvars_label = new QLabel((it.first).c_str());
-        simvars_label->setToolTip(descriptions[(it.first).c_str()]);
+        QLabel* simvars_label = new QLabel(name);
+        simvars_label->setToolTip(descriptions[name]);
         try {
-            auto widg = initializers.at(type)(proto,it.first);
-            widg->setObjectName(it.first.c_str());
-            simvars.insert(it.first.c_str(), widg);
-            simvars_layouts[type.c_str()]->addRow(simvars_label, widg);
+            auto widg = initializers.at(type)(proto,name);
+            widg->setObjectName(name);
+            simvars.insert(name, widg);
+            simvars_layouts[type]->addRow(simvars_label, widg);
             connect(widg, &Simvar::cellChanged, this, &SimvarMenu::cellChanged);
         } catch(std::out_of_range) {
             qDebug(("SimvarsMenu: intializer for "+string(type)+" not found").c_str());

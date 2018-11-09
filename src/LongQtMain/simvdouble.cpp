@@ -17,13 +17,13 @@ SimvDouble::SimvDouble(std::shared_ptr<LQ::Protocol> proto, std::string name, QW
 }
 
 void SimvDouble::update_ui() {
-    string value = proto->pars[this->name].get();
+    string value = proto->parsStr(this->name);
     widg->setValue(std::stod(value));
     emit updated();
 }
 
 void SimvDouble::update_model(double value) {
-    proto->pars.at(name).set(std::to_string(value));
+    proto->parsStr(name, std::to_string(value));
 }
 
 SimvDouble::~SimvDouble()

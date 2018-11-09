@@ -32,7 +32,7 @@ void SimvCellOpts::createMenu() {
 }
 
 void SimvCellOpts::update_ui() {
-    QString model_line = QString(proto->pars[this->name].get().c_str());
+    QString model_line = QString(proto->parsStr(this->name).c_str());
     QStringList optsList = model_line.split("|", QString::SkipEmptyParts);
     for(auto& check: checkMap) {
         check->setChecked(false);
@@ -51,7 +51,7 @@ void SimvCellOpts::update_model(bool) {
             value += checkbox+"|";
         }
     });
-    proto->pars.at(name).set(value);
+    proto->parsStr(name, value);
     this->update_ui();
 }
 

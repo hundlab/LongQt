@@ -19,7 +19,7 @@ SimvDir::SimvDir(shared_ptr<Protocol> proto, string name, QWidget *parent) :
     layout->addWidget(setDir);
     connect(line, &QLineEdit::textEdited, this, &SimvDir::update_model);
     connect(setDir, &QPushButton::clicked, [=] () {
-        QString value = QFileDialog::getExistingDirectory(this,QString(name.c_str()),proto->pars[this->name].get().c_str());
+        QString value = QFileDialog::getExistingDirectory(this,QString(name.c_str()),proto->parsStr(this->name).c_str());
         if(value != "") {
             this->update_model(value);
             this->update_ui();
@@ -28,7 +28,7 @@ SimvDir::SimvDir(shared_ptr<Protocol> proto, string name, QWidget *parent) :
 }
 
 void SimvDir::update_ui() {
-    QString model_line = QString(proto->pars[this->name].get().c_str());
+    QString model_line = QString(proto->parsStr(this->name).c_str());
     if(line->text() != model_line) {
         line->setText(model_line);
     }
@@ -36,7 +36,7 @@ void SimvDir::update_ui() {
 }
 
 void SimvDir::update_model(QString value) {
-    proto->pars.at(name).set(value.toStdString());
+    proto->parsStr(name, value.toStdString());
 }
 
 SimvDir::~SimvDir()

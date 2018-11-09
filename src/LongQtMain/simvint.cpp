@@ -18,13 +18,13 @@ SimvInt::SimvInt(shared_ptr<Protocol> proto, string name, QWidget *parent) :
 }
 
 void SimvInt::update_ui() {
-    string value = proto->pars[this->name].get();
+    string value = proto->parsStr(this->name);
     widg->setValue(std::stoi(value));
     emit updated();
 }
 
 void SimvInt::update_model(int value) {
-    proto->pars.at(name).set(to_string(value));
+    proto->parsStr(name,to_string(value));
 }
 
 SimvInt::~SimvInt()

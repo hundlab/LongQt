@@ -15,15 +15,15 @@ SimvBool::SimvBool(shared_ptr<Protocol> proto, string name, QWidget *parent) :
 }
 
 void SimvBool::update_ui() {
-    string value = proto->pars[this->name].get();
+    string value = proto->parsStr(this->name);
     widg->setChecked(CellUtils::stob(value));
     emit updated();
 }
 
 void SimvBool::update_model(int value) {
     bool changed = !(((bool)value) ==
-            CellUtils::stob(proto->pars[name].get()));
-    proto->pars[name].set(CellUtils::to_string(value));
+            CellUtils::stob(proto->parsStr(name)));
+    proto->parsStr(name, CellUtils::to_string(value));
     if(name == "secondStim" && changed) {
         throw std::abort;
     }

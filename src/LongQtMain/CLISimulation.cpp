@@ -21,8 +21,7 @@ void CLISimulation::runSims(QStringList simvarFiles) {
     runner.clear();
     SettingsIO* settingsMgr = SettingsIO::getInstance();
     for(QString& simvarFile: simvarFiles) {
-        settingsMgr->readSettings(simvarFile, proto);
-        proto = settingsMgr->lastProto;
+        proto = settingsMgr->readSettings(simvarFile, proto);
         proto->setDataDir();
         runner.appendSims(proto);
     }

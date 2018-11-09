@@ -17,7 +17,6 @@ LQGridEditor::LQGridEditor(QWidget *parent) :
 	this->setStatusBar(new QStatusBar());
 	this->gridView = this->ui->centralWidget->view();
 	this->proto = this->ui->centralWidget->getProtocol();
-	SettingsIO::getInstance()->allowProtoChange = false;
 }
 
 LQGridEditor::~LQGridEditor()
@@ -32,7 +31,7 @@ void LQGridEditor::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this,"Open Grid File",QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first());
     if (!fileName.isEmpty()){
 		shared_ptr<Protocol> proto = this->ui->centralWidget->getProtocol();
-        SettingsIO::getInstance()->readSettings(fileName,proto);
+        SettingsIO::getInstance()->readSettings(fileName,proto); //if proto in file is differnt then no changes will be made
     }
 	this->ui->centralWidget->getModel()->reloadModel();
 }
@@ -74,8 +73,8 @@ void LQGridEditor::on_actionConfigure_Ion_Channels_triggered() {
 }
 
 void LQGridEditor::on_actionToggle_Second_Stim_triggered() {
-    this->proto->pars["secondStim"].set(CellUtils::to_string(
-				!CellUtils::stob(this->proto->pars["secondStim"].get())));
+    this->proto->parsStr("secondStim",CellUtils::to_string(
+                !CellUtils::stob(this->proto->parsStr("secondStim"))));
 }
 
 void LQGridEditor::on_actionSet_Sim_Parameters_triggered() {

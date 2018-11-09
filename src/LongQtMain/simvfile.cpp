@@ -16,7 +16,7 @@ SimvFile::SimvFile(shared_ptr<Protocol> proto, string name, QWidget *parent) :
 }
 
 void SimvFile::update_ui() {
-    QString model_line = QString(proto->pars[this->name].get().c_str());
+    QString model_line = QString(proto->parsStr(this->name).c_str());
     if(widg->text() != model_line) {
         widg->setText(model_line);
     }
@@ -24,7 +24,7 @@ void SimvFile::update_ui() {
 }
 
 void SimvFile::update_model(QString value) {
-    proto->pars.at(name).set(value.toStdString());
+    proto->parsStr(name,value.toStdString());
 }
 
 SimvFile::~SimvFile()
