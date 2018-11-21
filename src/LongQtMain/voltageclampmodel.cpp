@@ -1,9 +1,10 @@
 #include "voltageclampmodel.h"
 #include <vector>
 #include <utility>
-#include <QDebug>
+#include <logger.h>
+namespace LQ = LongQt;
 
-VoltageClampModel::VoltageClampModel(std::shared_ptr<LongQt::VoltageClamp> proto, QObject *parent) : QAbstractTableModel(parent)
+VoltageClampModel::VoltageClampModel(std::shared_ptr<LQ::VoltageClamp> proto, QObject *parent) : QAbstractTableModel(parent)
 {
     this->proto = proto;
     this->colHeaders = {"Time (ms)", "Voltage (mV)"};
@@ -45,7 +46,7 @@ QVariant VoltageClampModel::dataEdit(const QModelIndex &index) const
         auto tv = this->proto->clamps().at(index.row());
         return index.column() == 0 ? tv.first : tv.second;
     } catch (std::out_of_range) {
-        qDebug("VoltageClampModel: requested data is out of range");
+        LQ::Logger::getInstance()->write("VoltageClampModel: requested data is out of range");
     }
     return QVariant();
 }
@@ -61,7 +62,7 @@ QVariant VoltageClampModel::dataDisplay(const QModelIndex &index) const
             return QString::number(tv.second) + " mV";
         }
     } catch (std::out_of_range) {
-        qDebug("VoltageClampModel: requested data is out of range");
+        LQ::Logger::getInstance()->write("VoltageClampModel: requested data is out of range");
     }
     return QVariant();
 }
@@ -78,7 +79,7 @@ bool VoltageClampModel::setData(const QModelIndex &index, const QVariant &value,
         }
         return true;
     } catch (std::out_of_range) {
-        qDebug("VoltageClampModel: requested data is out of range");
+        LQ::Logger::getInstance()->write("VoltageClampModel: requested data is out of range");
     }
     return false;
 }

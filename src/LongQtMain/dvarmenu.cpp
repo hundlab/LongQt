@@ -1,5 +1,4 @@
 #include <QWidget>
-#include <QDebug>
 #include <QMessageBox>
 #include <QDoubleSpinBox>
 #include <QLabel>

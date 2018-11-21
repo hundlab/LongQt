@@ -13,6 +13,7 @@ class AppParser {
 
     QCommandLineOption GUIOption;
     QCommandLineOption licenseOption;
+    QCommandLineOption verboseOption;
 
     public:
     AppParser(QCoreApplication* app);

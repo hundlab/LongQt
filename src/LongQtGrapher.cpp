@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     try {
         window = new Grapher(location);
         window->showMaximized();
-    } catch (BadFile) {
+    } catch (std::runtime_error&) {
         return 0;
     }
 

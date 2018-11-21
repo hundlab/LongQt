@@ -2,7 +2,6 @@
 #include "cellutils.h"
 #include "gridCell.h"
 #include "inexcitablecell.h"
-#include <QDebug>
 
 using namespace std;
 using namespace LongQt;
@@ -115,7 +114,7 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
             emit cellChanged(proto->cell());
             emit dataChanged(index, index);
         } catch(const std::out_of_range&) {
-            qWarning("%s not a valid cell type or (%i,%i) out of range",qUtf8Printable(value.toString()),info.col,info.row);
+            Logger::getInstance()->write("{} not a valid cell type or ({},{}) out of range",qUtf8Printable(value.toString()),info.col,info.row);
         }
         success = true;
     } else {
@@ -158,7 +157,7 @@ bool GridModel::setData(const QModelIndex & index, const QVariant & value, int) 
                 grid->setCellTypes(u);
                 success = true;
             } catch(std::out_of_range) {
-                qWarning("(%i,%i) out of range", u.col,u.row);
+                Logger::getInstance()->write("({},{}) out of range", u.col,u.row);
                 success = false;
             }
         }

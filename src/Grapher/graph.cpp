@@ -71,7 +71,7 @@ void Grapher::buildLineGraphs(QFileInfoList files, DssD dssData){
     QString xName = "t";
     if(files.isEmpty()) {
         QMessageBox::warning(0,"error", "No Files Found");
-        throw BadFile();
+        throw std::runtime_error("No Files Found");
     }
     QMap<QString, LineGraph*> graphMap;
     int progressCounter = 0;
@@ -207,7 +207,7 @@ void Grapher::on_loadNew_clicked()
     }
     try {
         buildLineGraphs(fileInfos);
-    } catch(BadFile e) {
+    } catch(std::runtime_error& e) {
         QMessageBox::warning(0,tr("Error"),tr("Selected files could not be used"));
     }
 }

@@ -11,15 +11,6 @@
 
 #include "qcustomplot.h"
 
-class BadFile : public std::exception
-{
-  public:
-  virtual const char* what() const throw()
-  {
-    return "File could not be opened";
-  }
-};
-
 namespace Ui {
 class Grapher;
 }

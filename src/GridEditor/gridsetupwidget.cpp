@@ -6,7 +6,6 @@
 #include "inexcitablecell.h"
 
 #include <QHBoxLayout>
-#include <QDebug>
 #include <QLabel>
 #include <QPainter>
 #include <QPen>

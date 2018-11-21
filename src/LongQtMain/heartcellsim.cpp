@@ -165,7 +165,7 @@ void Simulation::next_button_aciton () {
 	}
 }
 void Simulation::canceled() {
-	qDebug()<<"canceled!";
+    Logger::getInstance()->write("HeartCellSim: Simulation Canceled");
 	QMessageBox::critical(this,"Cancel","Simulation canceled!");
     proto->setDataDir();
     proto->cellStateDir = proto->datadir;
@@ -179,8 +179,8 @@ void Simulation::finished() {
 		menu_list.append(new Grapher(proto->datadir, this));
 		menu->addWidget(menu_list.last());
 		menu_options->addItem("Graph " + QFileInfo(proto->datadir.absolutePath()).baseName());
-	} catch(BadFile& e) {
-		qCritical() << e.what() << ": " << "data files not readable";
+    } catch(std::runtime_error& e) {
+        Logger::getInstance()->write("HearCellSim: data files not readable {}",e.what());
 	}
     proto->setDataDir();
 	proto->cellStateDir = proto->datadir;

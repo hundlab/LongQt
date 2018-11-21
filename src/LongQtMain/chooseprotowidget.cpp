@@ -107,7 +107,7 @@ void ChooseProtoWidget::on_cellType_currentIndexChanged(QString name) {
 
 void ChooseProtoWidget::changeCell(shared_ptr<Cell> cell) {
     if(cell != proto->cell()) {
-		qWarning("ChooseProtoWidget: Protocol cell does not match new cell");
+        Logger::getInstance()->write("ChooseProtoWidget: Protocol cell does not match new cell");
 	}
     int index = ui->cellType->findText(this->proto->parsStr("celltype").c_str());
     if(index != -1 && ui->cellType->currentIndex() != index) {

@@ -2,7 +2,6 @@
 #include "ui_addsinglecellpvar.h"
 #include "pvarscell.h"
 #include "guiUtils.h"
-#include <QDebug>
 using namespace std;
 using namespace LongQt;
 

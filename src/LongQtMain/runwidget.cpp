@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QFileDialog>
 #include <settingsIO.h>
+#include <logger.h>
 using namespace std;
 using namespace LongQt;
 
@@ -31,7 +32,7 @@ void RunWidget::write_note() {
         QTextStream out(note_file.data());
         out << ui->noteBox->toPlainText();
     } else {
-        qWarning() << "note file could not be opened";
+        Logger::getInstance()->write("Note file could not be opened");
     }
     note_file->close();
 }

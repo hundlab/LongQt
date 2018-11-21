@@ -6,7 +6,6 @@
 #include <QPen>
 #include <QPainter>
 #include <QSizePolicy>
-#include <QDebug>
 using namespace std;
 using namespace LongQt;
 

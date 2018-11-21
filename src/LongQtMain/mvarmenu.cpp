@@ -2,11 +2,11 @@
 #include "ui_mvarmenu.h"
 #include "guiUtils.h"
 
-#include <QDebug>
 #include <QScopedPointer>
 #include <QTreeWidget>
 #include <QSpinBox>
 #include <QRegExp>
+#include <logger.h>
 using namespace std;
 using namespace LongQt;
 
@@ -100,7 +100,7 @@ void MvarMenu::changeProto(shared_ptr<Protocol> proto) {
 }
 void MvarMenu::changeCell(shared_ptr<Cell> cell) {
     if(cell != proto->cell()) {
-        qWarning("DvarMenu: Cell is not the same as proto's cell");
+        Logger::getInstance()->write("DvarMenu: Cell is not the same as proto's cell");
     }
     this->reset();
 }

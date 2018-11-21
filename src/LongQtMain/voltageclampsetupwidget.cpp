@@ -3,7 +3,6 @@
 #include "voltageclampdelegate.h"
 
 #include <QDoubleSpinBox>
-#include <QDebug>
 
 using namespace LongQt;
 

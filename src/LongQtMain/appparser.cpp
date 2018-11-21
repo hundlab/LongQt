@@ -1,11 +1,11 @@
 #include "heartcellsim.h"
 #include "CLISimulation.h"
 #include "appparser.h"
+#include "logger.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QSettings>
-#include <QDebug>
 
 void noMessageOutput(QtMsgType type, const char *msg)
 {
@@ -17,7 +17,8 @@ AppParser::AppParser(QCoreApplication* app):
     GUIOption("no-gui",
             QCoreApplication::translate("main", "Start LongQt in CLI mode")),
     licenseOption(QStringList() << "l" << "license",
-            QCoreApplication::translate("main", "Print the license and exit"))
+            QCoreApplication::translate("main", "Print the license and exit")),
+    verboseOption("verbose", "Print all info and error messages")
 {
     this->app = app;
     parser.setApplicationDescription(
@@ -34,18 +35,24 @@ AppParser::AppParser(QCoreApplication* app):
     parser.addVersionOption();
     parser.addOption(GUIOption);
     parser.addOption(licenseOption);
+    parser.addOption(verboseOption);
     parser.addPositionalArgument("simvars_files", QCoreApplication::translate("main", "Specify files to read settings from. They will be processes serially in the order listed. If --no-gui is not set only the first file will be read."), "[simvars.xml...]");
 }
 
 void AppParser::process() {
     parser.process(*app);
     bool license = parser.isSet(licenseOption);
+    bool verbose = parser.isSet(verboseOption);
 
     this->simvarsFiles = parser.positionalArguments();
 
     if(license) {
         this->showLicense();
         exit(0);
+    }
+    if(verbose) {
+        auto logger = LongQt::Logger::getInstance();
+        logger->STDOut(&std::cout);
     }
 }
 

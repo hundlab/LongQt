@@ -1,5 +1,4 @@
 #include <QWidget>
-#include <QDebug>
 #include <QMessageBox>
 #include <QDoubleSpinBox>
 #include <QLabel>
@@ -26,6 +25,7 @@
 #include <QRadioButton>
 #include <gridsetupwidget.h>
 #include <voltageClampProtocol.h>
+#include <logger.h>
 
 #include "guiUtils.h"
 #include "simvdouble.h"
@@ -91,7 +91,7 @@ void SimvarMenu::createMenu()  {
             simvars_layouts[type]->addRow(simvars_label, widg);
             connect(widg, &Simvar::cellChanged, this, &SimvarMenu::cellChanged);
         } catch(std::out_of_range) {
-            qDebug(("SimvarsMenu: intializer for "+string(type)+" not found").c_str());
+            Logger::getInstance()->write("SimvarsMenu: intializer for {} not found", type);
         }
     }
     if(simvars_layouts["double"] != NULL) {
@@ -146,7 +146,7 @@ void SimvarMenu::setWorkingDir(QDir&) {
 }
 void SimvarMenu::changeCell(shared_ptr<Cell> cell) {
     if(cell != this->proto->cell()) {
-        qWarning("SimvarMenu: Cell does not match protocol cell");
+        Logger::getInstance()->write("SimvarMenu: Cell does not match protocol cell");
     }
     for(auto& simv: this->simvars) {
         simv->changeCell(cell);
