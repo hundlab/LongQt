@@ -5,58 +5,58 @@
 #ifndef HEART_CELL_SIM_H
 #define HEART_CELL_SIM_H
 
-#include <QPushButton>
-#include <QLabel>
-#include <QSpinBox>
 #include <QComboBox>
-#include <QGridLayout>
-#include <QHBoxLayout>
-#include <QStackedWidget>
-#include <QListWidget>
-#include <QList>
-#include <QProgressBar>
+#include <QDir>
 #include <QFuture>
 #include <QFutureWatcher>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QLineEdit>
-#include <QDir>
+#include <QList>
+#include <QListWidget>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QStackedWidget>
 
 #include "protocol.h"
 namespace LQ = LongQt;
 
 class Simulation : public QWidget {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    Simulation(QString simvarFile = "", QWidget* parent = 0);
-    ~Simulation();
+ public:
+  Simulation(QString simvarFile = "", QWidget* parent = 0);
+  ~Simulation();
 
-  private:
-    QWidget* parent;
-    std::shared_ptr<LQ::Protocol> proto;
-    QString date_time;
-    QList<QWidget*> menu_list;
-//utility functions & classes
-    void leave_current(int current);
-//buttons
-    QPushButton* next_button;
-    QPushButton* cancel_button;
-    QPushButton* about_button;
-//organizational widgets
-    QListWidget* menu_options;
-    QStackedWidget* menu;
-//layouts
-    QGridLayout* main_layout;
+ private:
+  QWidget* parent;
+  std::shared_ptr<LQ::Protocol> proto;
+  QString date_time;
+  QList<QWidget*> menu_list;
+  // utility functions & classes
+  void leave_current(int current);
+  // buttons
+  QPushButton* next_button;
+  QPushButton* cancel_button;
+  QPushButton* about_button;
+  // organizational widgets
+  QListWidget* menu_options;
+  QStackedWidget* menu;
+  // layouts
+  QGridLayout* main_layout;
 
-  private slots:
-    void next_button_aciton();
-    void list_click_aciton (int next_row);
-    void canceled();
-    void finished();
-    void running();
-    void changeProto(std::shared_ptr<LQ::Protocol> proto);
-  signals:
-    void cellChanged(std::shared_ptr<LQ::Cell>);
-    void working_dir_changed(QDir& dir);
+ private slots:
+  void next_button_aciton();
+  void list_click_aciton(int next_row);
+  void canceled();
+  void finished();
+  void running();
+  void changeProto(std::shared_ptr<LQ::Protocol> proto);
+ signals:
+  void cellChanged(std::shared_ptr<LQ::Cell>);
+  void working_dir_changed(QDir& dir);
 };
 
-#endif // HEART_CELL_SIM_H
+#endif  // HEART_CELL_SIM_H

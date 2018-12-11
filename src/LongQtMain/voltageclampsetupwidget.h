@@ -3,27 +3,28 @@
 
 #include "voltageclampmodel.h"
 
-#include <QWidget>
 #include <voltageClampProtocol.h>
+#include <QWidget>
 namespace LQ = LongQt;
 
 namespace Ui {
 class VoltageClampSetupWidget;
 }
 
-class VoltageClampSetupWidget : public QWidget
-{
-    Q_OBJECT
+class VoltageClampSetupWidget : public QWidget {
+  Q_OBJECT
 
-public:
-    explicit VoltageClampSetupWidget(std::shared_ptr<LQ::VoltageClamp> initial_proto, QWidget *parent = 0);
-    ~VoltageClampSetupWidget();
-private:
-    void createMenu();
+ public:
+  explicit VoltageClampSetupWidget(
+      std::shared_ptr<LQ::VoltageClamp> initial_proto, QWidget *parent = 0);
+  ~VoltageClampSetupWidget();
 
-    VoltageClampModel* model;
-    std::shared_ptr<LQ::VoltageClamp> proto;
-    Ui::VoltageClampSetupWidget *ui;
+ private:
+  void createMenu();
+
+  VoltageClampModel *model;
+  std::shared_ptr<LQ::VoltageClamp> proto;
+  Ui::VoltageClampSetupWidget *ui;
 };
 
-#endif // VOLTAGECLAMPSETUPWIDGET_H
+#endif  // VOLTAGECLAMPSETUPWIDGET_H

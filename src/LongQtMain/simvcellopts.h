@@ -8,20 +8,21 @@
 #include <QMap>
 namespace LQ = LongQt;
 
-class SimvCellOpts : public Simvar
-{
-public:
-    explicit SimvCellOpts(std::shared_ptr<LQ::Protocol> proto, std::string name, QWidget *parent = 0);
-    ~SimvCellOpts();
-    void createMenu();
-private:
-    virtual void update_ui();
-    void update_model(bool value);
+class SimvCellOpts : public Simvar {
+ public:
+  explicit SimvCellOpts(std::shared_ptr<LQ::Protocol> proto, std::string name,
+                        QWidget* parent = 0);
+  ~SimvCellOpts();
+  void createMenu();
 
-    QMap<std::string,QCheckBox*> checkMap;
-    QGroupBox* widg;
-public slots:
-    virtual void changeCell(std::shared_ptr<LQ::Cell>);
+ private:
+  virtual void update_ui();
+  void update_model(bool value);
+
+  QMap<std::string, QCheckBox*> checkMap;
+  QGroupBox* widg;
+ public slots:
+  virtual void changeCell(std::shared_ptr<LQ::Cell>);
 };
 
-#endif // SimvCellOpts_H
+#endif  // SimvCellOpts_H

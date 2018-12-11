@@ -7,16 +7,15 @@ namespace Ui {
 class SetSecondStim;
 }
 
-class SetSecondStim : public QWidget
-{
-    Q_OBJECT
+class SetSecondStim : public QWidget {
+  Q_OBJECT
 
-public:
-    explicit SetSecondStim(QWidget *parent = 0);
-    ~SetSecondStim();
+ public:
+  explicit SetSecondStim(QWidget *parent = 0);
+  ~SetSecondStim();
 
-private:
-    Ui::SetSecondStim *ui;
+ private:
+  Ui::SetSecondStim *ui;
 };
 
-#endif // SETSECONDSTIM_H
+#endif  // SETSECONDSTIM_H

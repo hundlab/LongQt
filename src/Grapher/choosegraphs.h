@@ -11,17 +11,16 @@ namespace Ui {
 class ChooseGraphs;
 }
 
-class ChooseGraphs : public QDialog
-{
-    Q_OBJECT
+class ChooseGraphs : public QDialog {
+  Q_OBJECT
 
-public:
-    explicit ChooseGraphs(QCustomPlot* plot, QWidget *parent = 0);
-    ~ChooseGraphs();
+ public:
+  explicit ChooseGraphs(QCustomPlot* plot, QWidget* parent = 0);
+  ~ChooseGraphs();
 
-private:
-    Ui::ChooseGraphs *ui;
-    QCustomPlot* plot;
+ private:
+  Ui::ChooseGraphs* ui;
+  QCustomPlot* plot;
 };
 
-#endif // CHOOSEGRAPHS_H
+#endif  // CHOOSEGRAPHS_H
