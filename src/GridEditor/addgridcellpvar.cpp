@@ -26,7 +26,7 @@ void AddGridCellPvar::updateIonChannelType() {
     QRegExp allowed_vars = QRegExp("Factor");
     QStringList toAdd;
     ui->ionChannelType->clear();
-    for(auto& pvarName : this->proto->cell()->getConstants()) {
+    for(auto& pvarName : this->proto->cell()->pars()) {
         if(allowed_vars.indexIn(pvarName.c_str()) != -1) {
             toAdd += pvarName.c_str();
         }

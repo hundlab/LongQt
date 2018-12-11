@@ -54,7 +54,7 @@ void dvarMenu::createMenu()  {
  
  //setup useful constants and aliases
     unsigned int i, row_len = 6;
-    set<string> vars = cell->getVariables();
+    set<string> vars = cell->vars();
     QString end_op = "Exit";
     if(parent() != NULL) {
         end_op = "Next";
@@ -127,7 +127,7 @@ void dvarMenu::update_menu() {
     set<string>::iterator it;
     unsigned int i; 
     set<string> selection = cell->getVariableSelection();
-    set<string> variables = cell->getVariables();
+    set<string> variables = cell->vars();
     for(it = variables.begin(), i = 0; it != variables.end(); it++, i++)     {  
         if(selection.find(*it) != selection.end()) {
             dvars[i]->setChecked(true);

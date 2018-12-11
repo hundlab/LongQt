@@ -7,6 +7,7 @@
 #include <QSpinBox>
 #include <QRegExp>
 #include <logger.h>
+#include <measuredefault.h>
 using namespace std;
 using namespace LongQt;
 
@@ -45,8 +46,8 @@ MvarMenu::~MvarMenu(){}
 void MvarMenu::setupMenu()  {
     int cellType = 0;
     QMap<string,int> measIds;
-    set<string> measOptionsDefault = Measure().variables();
-    for(auto& cellVar: this->proto->cell()->getVariables()) {
+    set<string> measOptionsDefault = MeasureDefault().variables();
+    for(auto& cellVar: this->proto->cell()->vars()) {
         this->cellVars.append(cellVar.c_str());
         auto cellItem = new QTreeWidgetItem(
             ui->measView,
