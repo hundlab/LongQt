@@ -199,12 +199,9 @@ void Simulation::next_button_aciton() {
 }
 void Simulation::canceled() {
   Logger::getInstance()->write("HeartCellSim: Simulation Canceled");
-  QMessageBox::critical(this, "Cancel", "Simulation canceled!");
-  proto->setDataDir();
-  proto->cellStateDir = proto->datadir;
-  emit working_dir_changed(proto->datadir);
-  cancel_button->hide();
-  next_button->show();
+  QMessageBox::critical(this, "Cancel",
+                        "Simulation canceled!\n Wait for current "
+                        "simulations to stop running");
 }
 void Simulation::finished() {
   QMessageBox::information(0, "Folder",

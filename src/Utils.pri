@@ -1,3 +1,7 @@
 INCLUDEPATH += $$PWD
 
-HEADERS += $$PWD/guiUtils.h
+HEADERS += $$PWD/guiUtils.h \
+    $$PWD/runsimwatcher.h
+
+SOURCES += \
+    $$PWD/runsimwatcher.cpp

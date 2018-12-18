@@ -9,7 +9,8 @@
 using namespace std;
 using namespace LongQt;
 
-CLISimulation::CLISimulation() {
+CLISimulation::CLISimulation(QObject* parent)
+    : QObject(parent), watcher(&runner, this) {
   this->proto.reset(new CurrentClamp());
   connect(&watcher, SIGNAL(finished()), this, SLOT(finish()));
   connect(&watcher, SIGNAL(progressRangeChanged(int, int)), this,
@@ -28,7 +29,6 @@ void CLISimulation::runSims(QStringList simvarFiles) {
     runner.appendSims(proto);
   }
   runner.run();
-  watcher.setFuture(runner.getFuture());
   QTextStream(stdout) << "Running Simulation...\n";
 }
 void CLISimulation::finish() {

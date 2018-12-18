@@ -6,8 +6,6 @@
 #define runWidget_H
 
 #include <QDir>
-#include <QFuture>
-#include <QFutureWatcher>
 #include <QLineEdit>
 #include <QProgressBar>
 #include <QPushButton>
@@ -18,6 +16,7 @@
 
 #include "protocol.h"
 #include "runsim.h"
+#include "runsimwatcher.h"
 namespace LQ = LongQt;
 
 namespace Ui {
@@ -51,7 +50,7 @@ class RunWidget : public QWidget {
   QWidget* parent;
   std::shared_ptr<LQ::Protocol> proto;
   QDir working_dir;
-  QFutureWatcher<void> watcher;
   LQ::RunSim runner;
+  RunSimWatcher watcher;
 };
 #endif

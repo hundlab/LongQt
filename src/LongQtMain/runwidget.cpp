@@ -4,13 +4,15 @@
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QLabel>
+#include <QTextStream>
 #include "ui_runwidget.h"
+
 using namespace std;
 using namespace LongQt;
 
 RunWidget::RunWidget(shared_ptr<Protocol> proto, QDir working_dir,
                      QWidget* parent)
-    : QWidget(parent), ui(new Ui::RunWidget) {
+    : QWidget(parent), ui(new Ui::RunWidget), watcher(&runner, this) {
   ui->setupUi(this);
   this->parent = parent;
   this->proto = proto;
@@ -41,7 +43,6 @@ void RunWidget::on_runButton_clicked() {
   runner.setSims(this->proto);
   this->write_note();
   runner.run();
-  watcher.setFuture(runner.getFuture());
   emit running();
 }
 
@@ -52,10 +53,12 @@ void RunWidget::on_saveButton_clicked() {
     SettingsIO::getInstance()->writeSettings(filename, this->proto);
   }
 }
+
 void RunWidget::setWorkingDir(QDir& dir) { working_dir = dir; }
+
 void RunWidget::cancel() {
   watcher.cancel();
-  ui->runButton->setEnabled(true);
+//  ui->runButton->setEnabled(true);
   emit canceled();
 }
 void RunWidget::finish() {
