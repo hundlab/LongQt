@@ -87,7 +87,7 @@ Grapher::~Grapher() { delete ui; }
 void Grapher::buildLineGraphs(QFileInfoList files, DssD dssData) {
   QString xName = "t";
   if (files.isEmpty()) {
-    QMessageBox::warning(0, "error", "No Files Found");
+    QMessageBox::warning(0, "Error", "No Files Found");
     throw std::runtime_error("No Files Found");
   }
   QMap<QString, LineGraph*> graphMap;

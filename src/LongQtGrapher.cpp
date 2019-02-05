@@ -10,14 +10,17 @@ int main(int argc, char* argv[]) {
   QCoreApplication::setOrganizationDomain("http://hundlab.org");
   QCoreApplication::setApplicationName("LongQtGrapher");
 
-  QDir location =
+  QString location = QFileDialog::getExistingDirectory(
+      Q_NULLPTR, "Choose Data Directory",
       QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation)
-          .first();
-  location = QDir(QFileDialog::getExistingDirectory(
-      Q_NULLPTR, "Choose Data Directory", location.absolutePath()));
+          .first());
+  if(location == "") {
+      return 0;
+  }
+
   Grapher* window;
   try {
-    window = new Grapher(location);
+    window = new Grapher(QDir(location));
     window->showMaximized();
   } catch (std::runtime_error&) {
     return 0;
