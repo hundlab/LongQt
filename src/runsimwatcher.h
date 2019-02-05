@@ -2,6 +2,7 @@
 #define RUNSIMWATCHER_H
 
 #include <QObject>
+#include <utility>
 #include "runsim.h"
 namespace LQ = LongQt;
 
@@ -23,7 +24,7 @@ class RunSimWatcher : public QObject {
   void finishWatch();
 
   LQ::RunSim* __runsim;
-  bool __started = false;
+  std::pair<double, double> __range;
 };
 
 #endif  // RUNSIMWATCHER_H

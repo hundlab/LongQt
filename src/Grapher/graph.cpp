@@ -12,6 +12,7 @@
 #include <QPointer>
 #include <QProgressDialog>
 #include <QScopedPointer>
+#include <algorithm>
 #include <exception>
 
 Grapher::Grapher(QDir read_location, QWidget* parent)
@@ -38,6 +39,24 @@ QFileInfoList Grapher::getFileNames(QDir location) {
       toReturn << file;
     }
   }
+  std::sort(
+      toReturn.begin(), toReturn.end(), [](QFileInfo& fst, QFileInfo& snd) {
+        auto fstNums =
+            fst.baseName().split(QRegExp("\\D+"), QString::SkipEmptyParts);
+        auto sndNums =
+            snd.baseName().split(QRegExp("\\D+"), QString::SkipEmptyParts);
+        if (fstNums.length() > 1 && sndNums.length() > 1) {
+          if (fstNums[0].toInt() == sndNums[0].toInt()) {
+            return fstNums[1].toInt() < sndNums[1].toInt();
+          } else {
+            return fstNums[0].toInt() < sndNums[0].toInt();
+          }
+        } else if (fstNums.length() > 0 && sndNums.length() > 0) {
+          return fstNums[0].toInt() < sndNums[0].toInt();
+        } else {
+          return fst.baseName() < snd.baseName();
+        }
+      });
   return toReturn;
 }
 QFileInfoList Grapher::getFileNamesBar(QDir location) {
@@ -62,7 +81,9 @@ QString Grapher::getName(QFileInfo file) {
     return "Cell";
   }
 }
+
 Grapher::~Grapher() { delete ui; }
+
 void Grapher::buildLineGraphs(QFileInfoList files, DssD dssData) {
   QString xName = "t";
   if (files.isEmpty()) {

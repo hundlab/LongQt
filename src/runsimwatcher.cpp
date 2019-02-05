@@ -2,9 +2,10 @@
 #include <QDebug>
 #include <QEvent>
 #include <chrono>
+#define RANGE 100000
 
 RunSimWatcher::RunSimWatcher(LongQt::RunSim *runsim, QObject *parent)
-    : QObject(parent), __runsim(runsim) {
+    : QObject(parent), __runsim(runsim), __range(0,0) {
   __runsim->startCallback(std::bind(&RunSimWatcher::startWatch, this));
   __runsim->finishedCallback(std::bind(&RunSimWatcher::finishWatch, this));
   if (!__runsim->finished()) {
@@ -17,8 +18,12 @@ void RunSimWatcher::timerEvent(QTimerEvent *e) {
     QObject::killTimer(e->timerId());
     return;
   }
-  double progress = __runsim->progress();
-  emit progressValueChanged(progress);
+  if(this->__range.first == this->__range.second) {
+      this->__range = __runsim->progressRange();
+  }
+  double range = this->__range.second - this->__range.first;
+  double progress = (RANGE*__runsim->progress())/range;
+  emit progressValueChanged((int)progress);
 }
 
 void RunSimWatcher::cancel() { this->__runsim->cancel(); }
@@ -26,8 +31,10 @@ void RunSimWatcher::cancel() { this->__runsim->cancel(); }
 void RunSimWatcher::startWatch() {
   using namespace std::chrono;
   QObject::startTimer(milliseconds(500), Qt::CoarseTimer);
-  auto range = __runsim->progressRange();
-  emit progressRangeChanged((int)range.first, (int)range.second);
+  this->__range = __runsim->progressRange();
+  emit progressRangeChanged((int)0,(int)RANGE);
 }
 
 void RunSimWatcher::finishWatch() { emit finished(); }
+
+#undef RANGE

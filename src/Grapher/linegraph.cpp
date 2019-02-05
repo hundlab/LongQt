@@ -10,7 +10,7 @@ LineGraph::LineGraph(QString xLabel, QString yLabel, QDir saveDir,
                      QWidget* parent)
     : QWidget(parent), ui(new Ui::LineGraph) {
   ui->setupUi(this);
-  this->unitsMap = GuiUtils::readMap(":/hoverText/dvarsUnits.txt");
+  this->unitsMap = GuiUtils::readMap(":/hoverText/dvarsUnits.json");
   this->controlLocation = -1;
   this->xLabel = xLabel;
   this->yLabel = yLabel;
