@@ -47,7 +47,7 @@ class GridSetupWidget : public QWidget {
 
   GridModel* model;
  private slots:
-  void on_chooseType_currentIndexChanged(QString type);
+  void on_setType_clicked();
   void on_toggleMeasure_clicked();
   void on_toggleStim_clicked();
  public slots:

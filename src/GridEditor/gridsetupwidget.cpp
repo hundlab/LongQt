@@ -73,6 +73,14 @@ void GridSetupWidget::createMenu() {
           &GridSetupWidget::cellChanged);
 }
 
+void GridSetupWidget::on_setType_clicked() {
+  QString type = this->ui->chooseType->currentText();
+  auto selected = this->ui->cellGrid->selectionModel()->selectedIndexes();
+  for (auto index : selected) {
+    this->model->setData(index, type);
+  }
+}
+
 void GridSetupWidget::setGrid(Grid* grid) {
   this->grid = grid;
   //	delete this->model;
@@ -81,12 +89,6 @@ void GridSetupWidget::setGrid(Grid* grid) {
 }
 Grid* GridSetupWidget::getGrid() { return this->grid; }
 shared_ptr<GridProtocol> GridSetupWidget::getProtocol() { return this->proto; }
-void GridSetupWidget::on_chooseType_currentIndexChanged(QString type) {
-  auto selected = this->ui->cellGrid->selectionModel()->selectedIndexes();
-  for (auto index : selected) {
-    this->model->setData(index, type);
-  }
-}
 void GridSetupWidget::on_toggleMeasure_clicked() {
   auto selected = ui->cellGrid->selectionModel()->selectedIndexes();
   for (auto index : selected) {

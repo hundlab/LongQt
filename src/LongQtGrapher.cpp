@@ -3,12 +3,14 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include "graph.h"
+#include "guiUtils.h"
 
 int main(int argc, char* argv[]) {
   QApplication a(argc, argv);
   QCoreApplication::setOrganizationName("Hund lab BME OSU");
   QCoreApplication::setOrganizationDomain("http://hundlab.org");
   QCoreApplication::setApplicationName("LongQtGrapher");
+  QCoreApplication::setApplicationVersion(GuiUtils::version);
 
   QString location = QFileDialog::getExistingDirectory(
       Q_NULLPTR, "Choose Data Directory",

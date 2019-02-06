@@ -1,5 +1,6 @@
 #include <appparser.h>
 #include <QApplication>
+#include "guiUtils.h"
 
 int main(int argc, char* argv[]) {
   QCoreApplication* app;
@@ -7,7 +8,7 @@ int main(int argc, char* argv[]) {
   app->setOrganizationName("Hund lab BME OSU");
   app->setOrganizationDomain("http://hundlab.org");
   app->setApplicationName("LongQt");
-  app->setApplicationVersion("v0.2");
+  app->setApplicationVersion(GuiUtils::version);
 
   AppParser parser(app);
   parser.process();
