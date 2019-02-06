@@ -47,5 +47,6 @@ class PvarMenu : public QWidget {
   void on_removeButton_triggered();
   void on_infoButton_triggered();
   void on_refreshButton_triggered();
+  void on_treeWidget_itemSelectionChanged();
 };
 #endif

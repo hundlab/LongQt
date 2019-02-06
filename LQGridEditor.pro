@@ -25,7 +25,7 @@ windows {
 }
 macx {
     QMAKE_MAC_SDK = macosx10.12
-    ICON = LongQt.icns
+    ICON = LongQtIcon.icns
 }
 linux {
     debug {

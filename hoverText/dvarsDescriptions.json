@@ -1,7 +1,10 @@
 {
 	"Default": {
 		"Ca": "Ca2+ current through the L-type Ca2+ channel",
-		"CaM": "Activated CaMKII",
+        "CaMKII": "Activated Ca2+/calmodulin-dependent protein kinase II",
+        "CaM": "Calmodulin, Ca2+ buffer in myoplasm",
+        "CaMI": "Concentration of calmodulin bound to Ca2+ buffer in bulk myoplasm",
+        "CaMR": "Concentration of calmodulin bound to Ca2+ buffer in restricted space",
 		"Csqnb": "Concentration of Ca2+ bound Calsequestrin",
 		"Gate.a": "Activation gate of Ito1",
 		"Gate.aa": "Ca2+-dependent inactivation gate of Ito2",
@@ -51,9 +54,6 @@
 		"cajI": "Ca2+ concentration in junction",
 		"caslI": "Ca2+ concentration in sarcolemma",
 		"clI": "Intracellular Cl- concentration",
-		"cmdn": "Calmodulin, Ca2+ buffer in myoplasm",
-		"cmdnI": "Concentration of calmodulin bound to Ca2+ buffer in bulk myoplasm",
-		"cmdnR": "Concentration of calmodulin bound to Ca2+ buffer in restricted space",
 		"csqn": "Calsequestrin, Ca2+ buffer in JSR",
 		"dVdt": "Change in voltage with respect fo time",
 		"fBlock": "",

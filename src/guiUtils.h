@@ -12,7 +12,7 @@
 #include <QTextStream>
 
 namespace GuiUtils {
-//version number for LongQt
+// version number for LongQt
 static const char* version = "v0.4";
 
 // used to read in hoverTexts from thier files

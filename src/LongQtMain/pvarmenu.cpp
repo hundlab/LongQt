@@ -81,6 +81,15 @@ void PvarMenu::on_addButton_triggered() {
   addmenu->show();
 }
 
+void PvarMenu::on_treeWidget_itemSelectionChanged() {
+    QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
+    if(!items.empty()) {
+        ui->infoButton->setEnabled(true);
+    } else {
+        ui->infoButton->setEnabled(false);
+    }
+}
+
 void PvarMenu::on_removeButton_triggered() {
   this->on_actionDelete_triggered();
 }

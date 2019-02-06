@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = LongQt
 TEMPLATE = app
 
-CONFIG += c++11 static
+CONFIG += c++11 wayland-compositor
 
 include(src/GridEditor/GridEdit.pri)
 include(src/LongQtMain/LongQtMain.pri)
@@ -25,7 +25,7 @@ windows {
 }
 macx {
     QMAKE_MAC_SDK = macosx10.12
-    ICON = LongQt.icns
+    ICON = LongQtIcon.icns
 }
 linux {
     debug {
