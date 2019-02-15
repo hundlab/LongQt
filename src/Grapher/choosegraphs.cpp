@@ -17,6 +17,8 @@ ChooseGraphs::ChooseGraphs(QCustomPlot* plot, QWidget* parent)
                                       i % numCollums);
     connect(chooseToggle, &ChooseGraphsToggle::stateChanged,
             [=](bool) { plot->replot(); });
+    connect(ui->toggleButton, &QPushButton::pressed,
+            [=]() { chooseToggle->changeState(!chooseToggle->state()); });
   }
 }
 

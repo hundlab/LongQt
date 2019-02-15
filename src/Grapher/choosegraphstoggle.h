@@ -18,8 +18,11 @@ class ChooseGraphsToggle : public QWidget {
  public:
   explicit ChooseGraphsToggle(QCPGraph* graph, QWidget* parent = 0);
   ~ChooseGraphsToggle();
+    bool state();
  signals:
   void stateChanged(bool state);
+ public slots:
+  void changeState(bool state);
 
  private:
   Ui::ChooseGraphsToggle* ui;

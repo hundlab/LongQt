@@ -10,6 +10,14 @@ ChooseGraphsToggle::ChooseGraphsToggle(QCPGraph* graph, QWidget* parent)
 }
 
 ChooseGraphsToggle::~ChooseGraphsToggle() { delete ui; }
+
+bool ChooseGraphsToggle::state() { return graph->visible(); }
+
+void ChooseGraphsToggle::changeState(bool state) {
+  ui->toggleGraph->setChecked(state);
+  graph->setVisible(state);
+  if (state != graph->visible()) emit stateChanged(state);
+}
 void ChooseGraphsToggle::on_toggleGraph_toggled(bool checked) {
   graph->setVisible(checked);
   emit stateChanged(checked);

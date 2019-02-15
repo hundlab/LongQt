@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>98</width>
+    <width>236</width>
     <height>144</height>
    </rect>
   </property>
@@ -34,11 +34,11 @@
   <property name="modal">
    <bool>false</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QGridLayout" name="gridLayout">
    <property name="sizeConstraint">
     <enum>QLayout::SetMinAndMaxSize</enum>
    </property>
-   <item>
+   <item row="0" column="0" colspan="3">
     <widget class="QScrollArea" name="scrollArea">
      <property name="enabled">
       <bool>true</bool>
@@ -66,8 +66,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>78</width>
-        <height>95</height>
+        <width>216</width>
+        <height>97</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -90,12 +90,32 @@
      </widget>
     </widget>
    </item>
-   <item>
+   <item row="1" column="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
       <set>QDialogButtonBox::Ok</set>
      </property>
     </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="toggleButton">
+     <property name="text">
+      <string>Toggle Selection</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
