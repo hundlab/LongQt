@@ -102,9 +102,6 @@ bool GridModel::setData(const QModelIndex& index, const QVariant& value, int) {
     info.col = index.column();
     try {
       info.cell = this->cellMap.at(value.toString().toStdString())();
-      info.dx = proto->cell()->par("dx");
-      info.dy = proto->cell()->par("dy");
-      info.np = proto->cell()->par("np");
       if (info.cell->par("dtmin") < proto->cell()->par("dtmin")) {
         proto->cell()->setPar("dtmin", info.cell->par("dtmin"));
       }
@@ -149,9 +146,6 @@ bool GridModel::setData(const QModelIndex& index, const QVariant& value, int) {
       CellInfo u;
       u.row = index.parent().row();
       u.col = index.parent().column();
-      u.dx = proto->cell()->par("dx");
-      u.dy = proto->cell()->par("dy");
-      u.np = proto->cell()->par("np");
       // this works because column is setup follow cellutils_side.h:Side
       double val = value.toDouble();
       if (this->percent) {
