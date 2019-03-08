@@ -43,7 +43,7 @@ MvarMenu::~MvarMenu() {}
 void MvarMenu::setupMenu() {
   int cellType = 0;
   QMap<string, int> measIds;
-  set<string> measOptionsDefault = MeasureDefault().variables();
+  auto& measMaker = this->proto->measureMgr().measMaker;
   for (auto& cellVar : this->proto->cell()->vars()) {
     this->cellVars.append(cellVar.c_str());
     auto cellItem = new QTreeWidgetItem(
@@ -51,15 +51,7 @@ void MvarMenu::setupMenu() {
         cellType);
     cellItem->setData(0, Qt::ToolTipRole,
                       this->dvarsDescriptions[cellVar.c_str()]);
-    set<string> measOptions;
-    if (proto->measureMgr().varsMeas.count(cellVar) > 0) {
-      string measureName = proto->measureMgr().varsMeas.at(cellVar);
-      QScopedPointer<Measure> m(
-          proto->measureMgr().varMeasCreator.at(measureName)({}));
-      measOptions = m->variables();
-    } else {
-      measOptions = measOptionsDefault;
-    }
+    set<string> measOptions = measMaker.measureOptions(measMaker.measureType(cellVar));
     auto selection = proto->measureMgr().selection();
     for (auto& measVar : measOptions) {
       if (!measIds.contains(measVar.c_str())) {
