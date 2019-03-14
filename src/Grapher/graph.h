@@ -31,7 +31,7 @@ class Grapher : public QDialog {
   QFileInfoList getFileNames(QDir location);
   QFileInfoList getFileNames();
   QFileInfoList getFileNamesBar(QDir location);
-  QString getName(QFileInfo file);
+  QString getName(QFileInfo file, QString position);
   QDir read_location;
  private slots:
   void buildLineGraphs(QFileInfoList files, DssD dssData = {});

@@ -47,8 +47,10 @@ void RunWidget::on_runButton_clicked() {
 }
 
 void RunWidget::on_saveButton_clicked() {
+  QDir startDir = this->working_dir;
+  startDir.cdUp();
   QString filename = QFileDialog::getSaveFileName(
-      this, "Save Simulation Settings", QString(), "XML files (*.xml)");
+      this, "Save Simulation Settings", startDir.absolutePath(), "XML files (*.xml)");
   if (filename != "") {
     SettingsIO::getInstance()->writeSettings(filename, this->proto);
   }
@@ -58,7 +60,7 @@ void RunWidget::setWorkingDir(QDir& dir) { working_dir = dir; }
 
 void RunWidget::cancel() {
   watcher.cancel();
-//  ui->runButton->setEnabled(true);
+  //  ui->runButton->setEnabled(true);
   emit canceled();
 }
 void RunWidget::finish() {

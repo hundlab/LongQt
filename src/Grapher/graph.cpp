@@ -34,49 +34,29 @@ QFileInfoList Grapher::getFileNames() {
 QFileInfoList Grapher::getFileNames(QDir location) {
   QFileInfoList toReturn;
   for (QFileInfo file : location.entryInfoList()) {
-    if (QRegExp("cell_\\d+_\\d+_dt\\d+_dvars|dt\\d+_dvars")
-            .exactMatch(file.baseName())) {
+    if (QRegExp("trace\\d+").exactMatch(file.baseName())) {
       toReturn << file;
     }
   }
-  std::sort(
-      toReturn.begin(), toReturn.end(), [](QFileInfo& fst, QFileInfo& snd) {
-        auto fstNums =
-            fst.baseName().split(QRegExp("\\D+"), QString::SkipEmptyParts);
-        auto sndNums =
-            snd.baseName().split(QRegExp("\\D+"), QString::SkipEmptyParts);
-        if (fstNums.length() > 1 && sndNums.length() > 1) {
-          if (fstNums[0].toInt() == sndNums[0].toInt()) {
-            return fstNums[1].toInt() < sndNums[1].toInt();
-          } else {
-            return fstNums[0].toInt() < sndNums[0].toInt();
-          }
-        } else if (fstNums.length() > 0 && sndNums.length() > 0) {
-          return fstNums[0].toInt() < sndNums[0].toInt();
-        } else {
-          return fst.baseName() < snd.baseName();
-        }
-      });
   return toReturn;
 }
 QFileInfoList Grapher::getFileNamesBar(QDir location) {
   QFileInfoList toReturn;
   for (QFileInfo file : location.entryInfoList(QDir::Files)) {
-    if (QRegExp("\\S*dss\\d+").exactMatch(file.baseName()) &&
-        !QRegExp("dss\\d+_state").exactMatch(file.baseName()) &&
-        !QRegExp("dss\\d+_pvars").exactMatch(file.baseName())) {
+    if (QRegExp("meas\\d+").exactMatch(file.baseName())) {
       toReturn << file;
     }
   }
   return toReturn;
 }
-QString Grapher::getName(QFileInfo file) {
-  QStringList nums;
-  nums = file.baseName().split(QRegExp("\\D+"), QString::SkipEmptyParts);
+QString Grapher::getName(QFileInfo file, QString position) {
+  QStringList trial =
+      file.baseName().split(QRegExp("\\D+"), QString::SkipEmptyParts);
+  QStringList nums = position.split(QRegExp("\\D+"), QString::SkipEmptyParts);
   if (nums.length() > 1) {
     return "Cell " + nums[0] + " " + nums[1];
-  } else if (nums.length() > 0) {
-    return "Trial " + nums[0];
+  } else if (trial.length() > 0) {
+    return "Trial " + trial[0];
   } else {
     return "Cell";
   }
@@ -120,42 +100,57 @@ void Grapher::buildLineGraphs(QFileInfoList files, DssD dssData) {
     }
     QTextStream in(&file);
     QVector<QVector<double>> y;
-    int xIndex;
-    QStringList split_line;
+    QMap<QString, int> xIndex;
+    QStringList header;
     // watch problems with first line of labels
-    QString fline = in.readLine();
-    split_line = fline.split("\t", QString::SkipEmptyParts);
-    y = QVector<QVector<double>>(split_line.length());
+    header = in.readLine().split("\t", QString::SkipEmptyParts);
+    QStringList cells;
+    QStringList props;
+    for (auto name : header) {
+      auto split = name.split("/");
+      if (split.size() > 1) {
+        cells.push_back(split[0]);
+        props.push_back(split[1]);
+      } else if (split.size() == 1) {
+        cells.push_back("");
+        props.push_back(split.first());
+      }
+      if (split.size() > 0) {
+        if (props.last() == xName) {
+          xIndex.insert(cells.last(), props.size() - 1);
+        }
+      }
+    }
+    if (xIndex.isEmpty()) {
+      QMessageBox::warning(0, "ERROR NO TIME",
+                           "File " + fileInfo.fileName() +
+                               " had no variable for " + xName +
+                               " which is the selected x variable");
+      return;
+    }
+
+    y = QVector<QVector<double>>(header.length());
     while (!in.atEnd()) {
       QStringList values = in.readLine().split("\t", QString::SkipEmptyParts);
-      for (int i = 0; i < values.length() && i < split_line.length(); i++) {
+      for (int i = 0; i < values.length() && i < header.length(); i++) {
         y[i].push_back(values[i].toDouble());
       }
     }
     file.close();
 
-    // Need to sort out which variable is time now::
-    xIndex = split_line.indexOf(xName);
-    if (xIndex == -1) {
-      QMessageBox::warning(0, "ERROR NO TIME",
-                           "File " + fileInfo.fileName() +
-                               " had no variable for " + xName +
-                               " which is the selected x variable");
-      continue;
-    }
-    for (int i = 0; i < split_line.length(); i++) {
-      if (i == xIndex) {
+    for (int i = 0; i < props.length(); i++) {
+      int pos = xIndex[cells[i]];
+      if (pos == i) {
         continue;
       }
-      if (!graphMap.contains(split_line[i])) {
-        auto graph = new LineGraph(split_line[xIndex], split_line[i],
-                                   this->read_location);
-        graphMap.insert(split_line[i], graph);
-        ui->tabWidget->addTab(graph, split_line[i]);
+      if (!graphMap.contains(props[i])) {
+        auto graph = new LineGraph(props[pos], props[i], this->read_location);
+        graphMap.insert(props[i], graph);
+        ui->tabWidget->addTab(graph, props[i]);
         graph->populateList(dssData);
       }
-      graphMap[split_line[i]]->addData(y[xIndex], y[i],
-                                       this->getName(fileInfo));
+      graphMap[props[i]]->addData(y[pos], y[i],
+                                  this->getName(fileInfo, cells[i]));
     }
     progressCounter++;
   }
@@ -170,18 +165,21 @@ Grapher::DssD Grapher::dssData() {
       continue;
     }
     QTextStream in(&file);
-    QStringList names = in.readLine().split("\t", QString::SkipEmptyParts);
-    QStringList values = in.readLine().split("\t", QString::SkipEmptyParts);
-    auto name = names.begin();
+    QStringList header = in.readLine().split("\t", QString::SkipEmptyParts);
+    QString line;
+    while (!in.atEnd()) {
+      line = in.readLine();
+    }
+    QStringList values = line.split("\t", QString::SkipEmptyParts);
+    auto name = header.begin();
     auto value = values.begin();
-    for (; name != names.end() && value != values.end(); name++, value++) {
+    for (; name != header.end() && value != values.end(); name++, value++) {
       auto splitName = name->split("/");
       if (splitName.size() < 2) continue;
-      auto var = splitName[splitName.size() - 2];
-      auto property = splitName.last();
-      auto instance = splitName.size() > 2
-                          ? splitName[splitName.size() - 3]
-                          : "trail" + fileInfo.baseName().split('s').last();
+      QString property = splitName.last();
+      QString var = splitName.size() == 3 ? splitName[1] : splitName.first();
+      QString position = splitName.size() == 3 ? splitName.first() : "";
+      auto instance = this->getName(fileInfo, position);
       dssDat.append(
           std::make_tuple(instance, var, property, value->toDouble()));
     }
