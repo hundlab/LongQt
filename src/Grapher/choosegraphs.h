@@ -18,6 +18,12 @@ class ChooseGraphs : public QDialog {
   explicit ChooseGraphs(QCustomPlot* plot, QWidget* parent = 0);
   ~ChooseGraphs();
 
+ public slots:
+  void updateNames();
+
+ signals:
+  void namesChanged();
+
  private:
   Ui::ChooseGraphs* ui;
   QCustomPlot* plot;

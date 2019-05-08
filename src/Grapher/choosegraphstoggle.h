@@ -23,6 +23,7 @@ class ChooseGraphsToggle : public QWidget {
   void stateChanged(bool state);
  public slots:
   void changeState(bool state);
+  void updateName();
 
  private:
   Ui::ChooseGraphsToggle* ui;

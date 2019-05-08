@@ -11,6 +11,7 @@
 #include <QShortcut>
 #include <QVector>
 #include <QWidget>
+#include "datareader.h"
 
 namespace Ui {
 class LineGraph;
@@ -23,8 +24,7 @@ class LineGraph : public QWidget {
                      QWidget* parent = 0);
   ~LineGraph();
   void addData(QVector<double>& x, QVector<double>& y, QString name);
-  void populateList(
-      QVector<std::tuple<QString, QString, QString, double>> dssData);
+  void populateList(LongQt::DataReader::SimData data);
 
  private:
   void Initialize();

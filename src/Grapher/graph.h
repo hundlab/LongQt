@@ -9,6 +9,9 @@
 #include <QListWidget>
 #include <exception>
 
+#include "bargraph.h"
+#include "datareader.h"
+#include "linegraph.h"
 #include "qcustomplot.h"
 
 namespace Ui {
@@ -28,15 +31,13 @@ class Grapher : public QDialog {
 
  private:
   void Initialize();
-  QFileInfoList getFileNames(QDir location);
-  QFileInfoList getFileNames();
-  QFileInfoList getFileNamesBar(QDir location);
-  QString getName(QFileInfo file, QString position);
   QDir read_location;
+  QMap<QString, LineGraph *> graphMap;
+  QMap<QString, barGraph *> barMap;
+  int numSims;
  private slots:
-  void buildLineGraphs(QFileInfoList files, DssD dssData = {});
-  void buildBarGraphs(DssD dssData);
-  DssD dssData();
+  void buildLineGraphs(LongQt::DataReader::SimData data, QString prefix = "");
+  void buildBarGraphs(LongQt::DataReader::SimData data, QString prefix = "");
   void on_loadNew_clicked();
 
  private:

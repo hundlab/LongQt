@@ -18,6 +18,9 @@ void ChooseGraphsToggle::changeState(bool state) {
   graph->setVisible(state);
   if (state != graph->visible()) emit stateChanged(state);
 }
+void ChooseGraphsToggle::updateName() {
+  ui->toggleGraph->setText(graph->name());
+}
 void ChooseGraphsToggle::on_toggleGraph_toggled(bool checked) {
   graph->setVisible(checked);
   emit stateChanged(checked);

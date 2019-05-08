@@ -19,7 +19,11 @@ ChooseGraphs::ChooseGraphs(QCustomPlot* plot, QWidget* parent)
             [=](bool) { plot->replot(); });
     connect(ui->toggleButton, &QPushButton::pressed,
             [=]() { chooseToggle->changeState(!chooseToggle->state()); });
+    connect(this, &ChooseGraphs::namesChanged, chooseToggle,
+            &ChooseGraphsToggle::updateName);
   }
 }
 
 ChooseGraphs::~ChooseGraphs() { delete ui; }
+
+void ChooseGraphs::updateNames() { emit namesChanged(); }

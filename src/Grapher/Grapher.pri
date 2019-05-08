@@ -7,7 +7,8 @@ $$PWD/bargraph.cpp\
 $$PWD/choosegraphs.cpp\
 $$PWD/linegraph.cpp\
 $$PWD/labelaxisticker.cpp\
-$$PWD/loadingprogress.cpp
+$$PWD/loadingprogress.cpp \
+$$PWD/ordinalspinbox.cpp
 
 HEADERS  += $$PWD/qcustomplot.h\
 $$PWD/bargraph.h\
@@ -16,7 +17,8 @@ $$PWD/linegraph.h\
 $$PWD/choosegraphs.h\
 $$PWD/choosegraphstoggle.h\
 $$PWD/labelaxisticker.h\
-$$PWD/loadingprogress.h
+$$PWD/loadingprogress.h \
+$$PWD/ordinalspinbox.h
 
 FORMS    += $$PWD/linegraph.ui\
 $$PWD/graph.ui\

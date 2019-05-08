@@ -11,6 +11,7 @@ TARGET = LongQt
 TEMPLATE = app
 
 CONFIG += c++11 wayland-compositor
+#DEFINES += QCUSTOMPLOT_USE_OPENGL
 
 include(src/GridEditor/GridEdit.pri)
 include(src/LongQtMain/LongQtMain.pri)

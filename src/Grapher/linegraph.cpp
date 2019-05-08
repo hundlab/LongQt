@@ -6,6 +6,8 @@
 #include "guiUtils.h"
 #include "ui_linegraph.h"
 
+namespace LQ = LongQt;
+
 LineGraph::LineGraph(QString xLabel, QString yLabel, QDir saveDir,
                      QWidget* parent)
     : QWidget(parent), ui(new Ui::LineGraph) {
@@ -30,6 +32,7 @@ void LineGraph::Initialize() {
   connect(right, &QShortcut::activated, this, &LineGraph::shiftRight);
   connect(up, &QShortcut::activated, this, &LineGraph::shiftUp);
   connect(down, &QShortcut::activated, this, &LineGraph::shiftDown);
+  ui->plot->setOpenGl(true);
   ui->plot->xAxis->grid()->setVisible(false);
   ui->plot->yAxis->grid()->setVisible(false);
   ui->plot->xAxis->setLabelFont(QFont(font().family(), 16));
@@ -53,9 +56,7 @@ void LineGraph::Initialize() {
 }
 
 LineGraph::~LineGraph() { delete ui; }
-QColor genColor(int num) {
-  return QColor::fromHsv((num * 4 * 17) % 360, 200, 200);
-}
+
 void LineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
   if (x.isEmpty() || y.isEmpty()) {
     return;
@@ -63,8 +64,9 @@ void LineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
   this->x.append(x);
   this->y.append(y);
   ui->plot->addGraph();
-  ui->plot->graph()->setData(x, y);
-  ui->plot->graph()->setPen(QPen(genColor(this->x.size())));
+  ui->plot->graph()->setData(x, y, true);
+  ui->plot->graph()->setPen(
+      QPen(QBrush(GuiUtils::genColor(this->x.size())), 3));
   ui->plot->graph()->setName(name);
   ui->plot->yAxis->rescale();
   ui->plot->xAxis->setRange(x.first(), x.last());
@@ -93,46 +95,29 @@ void LineGraph::on_loadControl_clicked() {
 }
 bool LineGraph::control_on_graph(QVector<double>& x, QVector<double>& y,
                                  QString& name) {
-  QString filename = QFileDialog::getOpenFileName(
-      this, tr("Open File"), saveDir.absolutePath(),
-      "All Files (*.*);;Text File(*.txt)");
-  QFile file1(filename);
-  if (!file1.open(QIODevice::ReadOnly)) {
-    QMessageBox::information(0, "error", file1.errorString());
-  } else {
-    name = QFileInfo(filename).dir().dirName();
-    QTextStream in(&file1);
-    int point = 0;
-    QString fline = in.readLine();
-    QStringList split_line = fline.split("\t");
-    int varpos = split_line.indexOf(yLabel);
-    if (varpos == -1) {
-      QMessageBox::information(0, "Error", yLabel + " not found!");
-      return false;
-    }
-    int timepos = split_line.indexOf(xLabel);
-    if (timepos == -1) {
-      QMessageBox::information(0, "Error", xLabel + " not found!");
-      return false;
-    }
-    while (!in.atEnd()) {
-      QString line = in.readLine();
-      QStringList split_line = line.split("\t");
-      y.push_back(split_line[varpos].toDouble());
-      x.push_back(split_line[timepos].toDouble());
-      point++;
-    }
-    file1.close();
-    return true;
+  QString location = QFileDialog::getExistingDirectory(
+      Q_NULLPTR, "Choose Data Directory",
+      QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation)
+          .first());
+  if (location == "") {
+    return false;
   }
+
   return false;
 }
-void LineGraph::populateList(
-    QVector<std::tuple<QString, QString, QString, double>> dssData) {
-  for (auto val : dssData) {
-    if (std::get<1>(val) != yLabel) continue;
-    new QTreeWidgetItem(ui->treeWidget, {std::get<0>(val), std::get<2>(val),
-                                         QString::number(std::get<3>(val))});
+void LineGraph::populateList(LQ::DataReader::SimData data) {
+  for (int trial = 0; trial < data.meas.size(); ++trial) {
+    auto& meas = data.meas[trial];
+    for (int pos = 0; pos < meas.header.size(); ++pos) {
+      QString var_name = meas.header[pos].var_name.c_str();
+      QString prop_name = meas.header[pos].prop_name.c_str();
+      if (var_name != yLabel || meas.data[pos].size() == 0) continue;
+      QString name_info =
+          GuiUtils::getName(trial, meas.header[pos].cell_info_parsed);
+      new QTreeWidgetItem(
+          ui->treeWidget,
+          {name_info, prop_name, QString::number(meas.data[pos].back())});
+    }
   }
   for (int i = 0; i < ui->treeWidget->columnCount(); ++i) {
     ui->treeWidget->resizeColumnToContents(i);

@@ -10,7 +10,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = LongQtGrapher
 TEMPLATE = app
 
-CONFIG += c++11
+CONFIG += c++1z
+#DEFINES += QCUSTOMPLOT_USE_OPENGL
 
 include(../LongQt-model/src/model.pri)
 include(src/Utils.pri)
@@ -20,6 +21,7 @@ RESOURCES = LongQtGrapher.qrc
 
 windows {
     RC_FILE = LongQt.rc
+    QMAKE_CXXFLAGS += -std:c++17
 }
 macx {
     QMAKE_MAC_SDK = macosx10.12

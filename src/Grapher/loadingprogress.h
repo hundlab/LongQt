@@ -11,6 +11,7 @@
 #include <QDialog>
 #include <QFileInfoList>
 #include <QMap>
+#include <QSet>
 
 namespace Ui {
 class LoadingProgressDialog;
@@ -18,24 +19,20 @@ class LoadingProgressDialog;
 
 class LoadingProgressDialog : public QDialog {
   Q_OBJECT
-  Q_PROPERTY(bool multiCell READ multiCell WRITE setMultiCell)
 
  public:
-  explicit LoadingProgressDialog(QFileInfoList files, QWidget *parent = 0);
+  explicit LoadingProgressDialog(QSet<int> trials, QWidget *parent = nullptr);
   ~LoadingProgressDialog();
-  QFileInfoList getFilesToLoad() const;
-  bool multiCell();
-  void setMultiCell(bool value);
+  QSet<int> getExcludes() const;
 
  protected slots:
   virtual void closeEvent(QCloseEvent *e);
 
  private:
   Ui::LoadingProgressDialog *ui;
-  bool m_multiCell = false;
-  QMap<QPair<int, int>, QCheckBox *> trials;
-  QFileInfoList filesToLoad;
-  QFileInfoList files;
+  QMap<int, QCheckBox *> trialCheckboxes;
+  QSet<int> excludedTrials;
+  QSet<int> trials;
   void createOptions();
  private slots:
   void on_skipButton_clicked();

@@ -62,7 +62,20 @@ inline QMap<QString, QString> concatMaps(QMap<QString, QString> m1,
 }
 // used by gridEditor and Grapher to get colors that wont repeat
 inline QColor genColor(int num, int saturation = 200) {
-  return QColor::fromHsv((num * 4 * 17) % 360, saturation, 200);
+  // return QColor::fromHsv((num * 4 * 17) % 360, saturation, 200);
+  QList<QString> colors = {"#4477aa", "#66ccee", "#228833", "#ccbb44",
+                           "#ee6677", "#aa3377", "#bbbbbb"};
+  return QColor(colors[int(num % colors.length())]);
+}
+
+inline QString getName(int trial, std::vector<int> cellInfo,
+                       QString prefix = "") {
+  if (cellInfo.size() > 1) {
+    return prefix + "Cell " + QString::number(cellInfo[0]) + " " +
+           QString::number(cellInfo[1]);
+  } else {
+    return prefix + "Trial " + QString::number(trial);
+  }
 }
 }  // namespace GuiUtils
 #endif

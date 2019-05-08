@@ -52,22 +52,9 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QSpinBox" name="spinBox">
+    <widget class="OrdinalSpinBox" name="trialSpinBox">
      <property name="suffix">
-      <string>th row</string>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>200</number>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QSpinBox" name="columnSpinBox">
-     <property name="suffix">
-      <string>th column</string>
+      <string> trial</string>
      </property>
      <property name="minimum">
       <number>1</number>
@@ -88,7 +75,7 @@
         <x>0</x>
         <y>0</y>
         <width>594</width>
-        <height>226</height>
+        <height>231</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="checkBoxLayout"/>
@@ -97,6 +84,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>OrdinalSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>ordinalspinbox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
