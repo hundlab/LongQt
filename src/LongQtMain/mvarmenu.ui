@@ -15,6 +15,18 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Choose what data to output from the simulation</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QTreeWidget" name="measView">
      <property name="sortingEnabled">
       <bool>true</bool>
@@ -32,10 +44,32 @@
       <property name="text">
        <string>Name</string>
       </property>
+      <property name="toolTip">
+       <string>Name of the Variable</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Measure</string>
+      </property>
+      <property name="toolTip">
+       <string>Measures taken every beat</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Trace</string>
+      </property>
+      <property name="toolTip">
+       <string>A trace of the values taken on by the variable during the simulation</string>
+      </property>
      </column>
      <column>
       <property name="text">
        <string>Type</string>
+      </property>
+      <property name="toolTip">
+       <string/>
       </property>
      </column>
     </widget>
@@ -54,6 +88,9 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="percrepolLabel">
+       <property name="toolTip">
+        <string>Measurements are all recorded once per beat. Measurment begins at the minimum voltage and contiunes until percent repolarization is reached. If it is set to 0% measurement will stop directly after the maxium. If 100% is set it will attempt to find the next minium. Typical values are 50%, 75% and 90%.</string>
+       </property>
        <property name="text">
         <string>Percent Repolarization</string>
        </property>

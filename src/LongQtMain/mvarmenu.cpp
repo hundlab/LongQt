@@ -41,37 +41,51 @@ MvarMenu::MvarMenu(shared_ptr<Protocol> proto, QWidget* parent)
 MvarMenu::~MvarMenu() {}
 
 void MvarMenu::setupMenu() {
-  int cellType = 0;
+  int cellVarID = 0;
   QMap<string, int> measIds;
   auto& measMaker = this->proto->measureMgr().measMaker;
   for (auto& cellVar : this->proto->cell()->vars()) {
     this->cellVars.append(cellVar.c_str());
     auto cellItem = new QTreeWidgetItem(
-        ui->measView, {cellVar.c_str(), this->getType(cellVar.c_str())},
-        cellType);
+        ui->measView, {cellVar.c_str(), "", "", this->getType(cellVar.c_str())},
+        cellVarID);
     cellItem->setData(0, Qt::ToolTipRole,
                       this->dvarsDescriptions[cellVar.c_str()]);
-    set<string> measOptions = measMaker.measureOptions(measMaker.measureType(cellVar));
-    auto selection = proto->measureMgr().selection();
-    for (auto& measVar : measOptions) {
-      if (!measIds.contains(measVar.c_str())) {
-        int id = measIds.size();
-        measIds[measVar] = id;
-        this->measVars.append(measVar);
+    {
+      set<string> measOptions =
+          measMaker.measureOptions(measMaker.measureType(cellVar));
+      auto selection = proto->measureMgr().selection();
+      for (auto& measVar : measOptions) {
+        if (!measIds.contains(measVar.c_str())) {
+          int id = measIds.size();
+          measIds[measVar] = id;
+          this->measVars.append(measVar);
+        }
+        auto measItem = new QTreeWidgetItem(cellItem, {"", measVar.c_str()},
+                                            measIds[measVar]);
+        measItem->setData(0, Qt::ToolTipRole,
+                          this->measDescriptions[measVar.c_str()]);
+        if (selection.count(cellVar) > 0 &&
+            selection.at(cellVar).count(measVar) > 0) {
+          measItem->setCheckState(1, Qt::Checked);
+        } else {
+          measItem->setCheckState(1, Qt::Unchecked);
+        }
       }
-      auto measItem =
-          new QTreeWidgetItem(cellItem, {measVar.c_str()}, measIds[measVar]);
-      measItem->setData(0, Qt::ToolTipRole,
-                        this->measDescriptions[measVar.c_str()]);
-      if (selection.count(cellVar) > 0 &&
-          selection.at(cellVar).count(measVar) > 0) {
-        measItem->setCheckState(0, Qt::Checked);
+      //    this->setParentCheckedState(cellItem, 1);
+    }
+    {
+      auto selection = this->proto->cell()->getVariableSelection();
+      if (selection.count(cellVar)) {
+        cellItem->setCheckState(2, Qt::Checked);
       } else {
-        measItem->setCheckState(0, Qt::Unchecked);
+        cellItem->setCheckState(2, Qt::Unchecked);
+      }
+      if (cellVar == "t" || cellVar == "vOld") {
+        cellItem->setDisabled(true);
       }
     }
-    this->setParentCheckedState(cellItem, 0);
-    ++cellType;
+    ++cellVarID;
   }
   ui->percrepolBox->setValue(proto->measureMgr().percrepol());
 }

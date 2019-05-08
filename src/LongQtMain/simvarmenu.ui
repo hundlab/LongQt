@@ -14,7 +14,7 @@
    <string>Simulation Variables Menu</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
       <number>0</number>
@@ -29,7 +29,7 @@
       <attribute name="title">
        <string>Simulation Variables</string>
       </attribute>
-      <layout class="QHBoxLayout" name="variablesLayout" stretch="">
+      <layout class="QHBoxLayout" name="variablesLayout">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
@@ -41,6 +41,18 @@
       </attribute>
       <layout class="QHBoxLayout" name="filesLayout"/>
      </widget>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Change how the simulation is run.</string>
+     </property>
     </widget>
    </item>
   </layout>
