@@ -12,8 +12,7 @@ AddSingleCellPvar::AddSingleCellPvar(
   ui->setupUi(this);
 
   this->proto = proto;
-  this->pvarsDescriptions = GuiUtils::readMap(
-      ":/hoverText/pvarsDescriptions.json", proto->cell()->type());
+  this->pvarsDescriptions = GuiUtils::readDesc(":/hoverText/cellParsDesc.json");
 
   this->updateIonChannelType();
   this->setCurrentSelect(parampair.first, parampair.second);
@@ -48,16 +47,19 @@ void AddSingleCellPvar::setCurrentSelect(QString name,
 }
 
 void AddSingleCellPvar::updateIonChannelType() {
-  QRegExp allowed_vars = QRegExp("Factor|Conc");
   ui->ionChannelType->clear();
+  int pos = 0;
   for (auto& pvarName : this->proto->cell()->pars()) {
-    if (allowed_vars.indexIn(pvarName.c_str()) != -1) {
+    if (this->pvarsDescriptions.contains(pvarName.c_str())) {
       ui->ionChannelType->addItem(pvarName.c_str());
+      auto& desc = this->pvarsDescriptions[pvarName.c_str()];
+      auto tip = desc["Description"];
+      if (desc.contains("Units")) {
+        tip += ", " + desc["Units"];
+      }
+      ui->ionChannelType->setItemData(pos, tip, Qt::ToolTipRole);
+      ++pos;
     }
-  }
-  for (int i = 0; i < ui->ionChannelType->count(); ++i) {
-    auto tip = this->pvarsDescriptions[ui->ionChannelType->itemText(i)];
-    ui->ionChannelType->setItemData(i, tip, Qt::ToolTipRole);
   }
 }
 

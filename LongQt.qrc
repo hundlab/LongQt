@@ -8,5 +8,6 @@
         <file>hoverText/parsDescriptions.json</file>
         <file>hoverText/pvarsDescriptions.json</file>
         <file>hoverText/simvarsDesc.json</file>
+        <file>hoverText/cellParsDesc.json</file>
     </qresource>
 </RCC>

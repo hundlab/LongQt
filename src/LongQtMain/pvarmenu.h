@@ -33,7 +33,7 @@ class PvarMenu : public QWidget {
 
  private:
   QPointer<AddSingleCellPvar> addmenu;
-  QMap<QString, QString> pvarsDescriptions;
+  QMap<QString, QMap<QString, QString>> pvarsDescriptions;
 
  public slots:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);

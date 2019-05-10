@@ -14,23 +14,26 @@ AddGridCellPvar::AddGridCellPvar(QTableView* view,
   this->view = view;
   this->proto = proto;
   this->updateIonChannelType();
-  this->pvarsDescriptions = GuiUtils::readMap(
-      ":/hoverText/pvarsDescriptions.json", proto->cell()->type());
+  this->pvarsDescriptions = GuiUtils::readDesc(":/hoverText/cellParsDesc.json");
 }
 
 AddGridCellPvar::~AddGridCellPvar() { delete ui; }
 
 void AddGridCellPvar::updateIonChannelType() {
-  QRegExp allowed_vars = QRegExp("Factor");
-  QStringList toAdd;
   ui->ionChannelType->clear();
+  int pos = 0;
   for (auto& pvarName : this->proto->cell()->pars()) {
-    if (allowed_vars.indexIn(pvarName.c_str()) != -1) {
-      toAdd += pvarName.c_str();
+    if (this->pvarsDescriptions.contains(pvarName.c_str())) {
+      ui->ionChannelType->addItem(pvarName.c_str());
+      auto& desc = this->pvarsDescriptions[pvarName.c_str()];
+      auto tip = desc["Description"];
+      if (desc.contains("Units")) {
+        tip += ", " + desc["Units"];
+      }
+      ui->ionChannelType->setItemData(pos, tip, Qt::ToolTipRole);
+      ++pos;
     }
   }
-  toAdd.removeDuplicates();
-  ui->ionChannelType->addItems(toAdd);
 }
 
 void AddGridCellPvar::on_randomize_stateChanged(int state) {

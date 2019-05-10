@@ -27,7 +27,7 @@ class AddGridCellPvar : public QDialog {
   std::set<std::pair<int, int>> getInitial();
 
   std::shared_ptr<LQ::GridProtocol> proto;
-  QMap<QString, QString> pvarsDescriptions;
+  QMap<QString, QMap<QString, QString>> pvarsDescriptions;
   Ui::AddGridCellPvar *ui;
   QPointer<QTableView> view = 0;
 

@@ -10,8 +10,8 @@ PvarMenu::PvarMenu(shared_ptr<Protocol> proto, QWidget *parent)
     : QWidget(parent), ui(new Ui::PvarMenu) {
   ui->setupUi(this);
   this->proto = proto;
-  this->pvarsDescriptions = GuiUtils::readMap(
-      ":/hoverText/pvarsDescriptions.json", proto->cell()->type());
+  this->pvarsDescriptions =
+      GuiUtils::readDesc(":/hoverText/cellParsDesc.json");
   ui->treeWidget->addAction(ui->actionDelete);
   ui->treeWidget->addAction(ui->actionShow_Cells);
   this->updateList();
@@ -26,7 +26,8 @@ void PvarMenu::updateList() {
         ui->treeWidget,
         QString(pvar.second->IonChanParam::str(pvar.first).c_str())
             .split("\t"));
-    temp->setData(0, Qt::ToolTipRole, pvarsDescriptions[pvar.first.c_str()]);
+    temp->setData(0, Qt::ToolTipRole,
+                  pvarsDescriptions[pvar.first.c_str()]["Description"]);
   }
 }
 
@@ -82,12 +83,12 @@ void PvarMenu::on_addButton_triggered() {
 }
 
 void PvarMenu::on_treeWidget_itemSelectionChanged() {
-    QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
-    if(!items.empty()) {
-        ui->infoButton->setEnabled(true);
-    } else {
-        ui->infoButton->setEnabled(false);
-    }
+  QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
+  if (!items.empty()) {
+    ui->infoButton->setEnabled(true);
+  } else {
+    ui->infoButton->setEnabled(false);
+  }
 }
 
 void PvarMenu::on_removeButton_triggered() {

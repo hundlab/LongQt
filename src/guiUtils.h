@@ -83,6 +83,7 @@ inline QMap<QString, QString> concatMaps(QMap<QString, QString> m1,
   }
   return returnMap;
 }
+
 // used by gridEditor and Grapher to get colors that wont repeat
 inline QColor genColor(int num, int saturation = 200) {
   // return QColor::fromHsv((num * 4 * 17) % 360, saturation, 200);

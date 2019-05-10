@@ -28,7 +28,7 @@ class AddSingleCellPvar : public QDialog {
 
   Ui::AddSingleCellPvar *ui;
   std::shared_ptr<LQ::Protocol> proto = 0;
-  QMap<QString, QString> pvarsDescriptions;
+  QMap<QString, QMap<QString, QString>> pvarsDescriptions;
 
  public slots:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);
