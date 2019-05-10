@@ -6,9 +6,11 @@
 using namespace std;
 using namespace LongQt;
 
-SimvInt::SimvInt(shared_ptr<Protocol> proto, string name, QWidget *parent)
+SimvInt::SimvInt(shared_ptr<Protocol> proto, string name, QString units,
+                 QWidget *parent)
     : Simvar(proto, name, parent) {
   this->widg = new QSpinBox();
+  this->widg->setSuffix(" " + units);
   auto layout = new OneItemLayout(this);
   layout->addWidget(widg);
   widg->setRange(/*std::numeric_limits<double>::min()*/ -100000,

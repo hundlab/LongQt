@@ -44,8 +44,7 @@ SimvarMenu::SimvarMenu(shared_ptr<Protocol> initial_proto, QWidget* parent)
   ui->setupUi(this);
   // setup class variables
   proto = initial_proto;
-  descriptions = GuiUtils::readMap(":/hoverText/parsDescriptions.json",
-                                   proto->cell()->type());
+  descriptions = GuiUtils::readDesc(":/hoverText/simvarsDesc.json");
   this->createMenu();
 }
 
@@ -64,10 +63,15 @@ SimvarMenu::~SimvarMenu() {
 void SimvarMenu::createMenu() {
   QMap<QString, QFormLayout*> simvars_layouts;
   map<string, SimvarInitializer> initializers = {
-      {"double", [](shared_ptr<Protocol> proto,
-                    string name) { return new SimvDouble(proto, name); }},
-      {"int", [](shared_ptr<Protocol> proto,
-                 string name) { return new SimvInt(proto, name); }},
+      {"double",
+       [this](shared_ptr<Protocol> proto, string name) {
+         return new SimvDouble(proto, name,
+                               descriptions[name.c_str()]["Units"]);
+       }},
+      {"int",
+       [this](shared_ptr<Protocol> proto, string name) {
+         return new SimvInt(proto, name, descriptions[name.c_str()]["Units"]);
+       }},
       {"bool", [](shared_ptr<Protocol> proto,
                   string name) { return new SimvBool(proto, name); }},
       {"file", [](shared_ptr<Protocol> proto,
@@ -86,8 +90,8 @@ void SimvarMenu::createMenu() {
     if (simvars_layouts.find(type) == simvars_layouts.end()) {
       simvars_layouts.insert(type, new QFormLayout());
     }
-    QLabel* simvars_label = new QLabel(name);
-    simvars_label->setToolTip(descriptions[name]);
+    QLabel* simvars_label = new QLabel(descriptions[name]["Name"]);
+    simvars_label->setToolTip(descriptions[name]["Description"]);
     try {
       auto widg = initializers.at(type)(proto, name);
       widg->setObjectName(name);

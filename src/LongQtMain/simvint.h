@@ -9,7 +9,7 @@ namespace LQ = LongQt;
 class SimvInt : public Simvar {
  public:
   explicit SimvInt(std::shared_ptr<LQ::Protocol> proto, std::string name,
-                   QWidget* parent = 0);
+                   QString units, QWidget* parent = 0);
   ~SimvInt();
 
  private:

@@ -1,0 +1,62 @@
+{
+    "amp": {
+        "Description": "Amplitude (peak - min)",
+        "Name": "Amplitude"
+    },
+    "cl": {
+        "Description": "Cycle length",
+        "Name": "Cycle length"
+    },
+    "ddr": {
+        "Description": "Diastolic depolarization rate",
+        "Name": "Diastolic depolarization rate"
+    },
+    "deriv2ndt": {
+        "Description": "Time of the second derivative maximum",
+        "Name": "Time of Maximum d²/dt²"
+    },
+    "derivt": {
+        "Description": "Time of the first derivative maximum",
+        "Name": "Time of Maximum d/dt"
+    },
+    "dur": {
+        "Description": "Duration of the action potential",
+        "Name": "Duration"
+    },
+    "durtime1": {
+        "Description": "Time at which duration measurement begins",
+        "Name": "Begin time of duration"
+    },
+    "maxderiv": {
+        "Description": "Maximum value of the first derivative",
+        "Name": "Maximum d/dt"
+    },
+    "maxt": {
+        "Description": "Time at which the maximum value occurred",
+        "Name": "Time of Maximum"
+    },
+    "min": {
+        "Description": "Minimum of measured variable durring each action potential",
+        "Name": "Minimum value"
+    },
+    "mint": {
+        "Description": "Time at which the minimum value occurred",
+        "Name": "Time of minimum"
+    },
+    "peak": {
+        "Description": "Maximum of measured variable durring each action potential",
+        "Name": "Maximum value"
+    },
+    "vartakeoff": {
+        "Description": "The point where the upstroke in the action potential begins",
+        "Name": "Takeoff value"
+    },
+    "avg": {
+	"Description": "Average of values",
+	"Name": "Average"
+    },
+    "stdev": {
+	"Description": "Standard Deviation of values",
+	"Name": "Standard Deviation"
+    }
+}

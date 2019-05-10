@@ -34,7 +34,7 @@ class SimvarMenu : public QWidget {
   Ui::SimvarMenu* ui;
   std::shared_ptr<LQ::Protocol> proto;
   // Buttons & their labels
-  QMap<QString, QString> descriptions;
+  QMap<QString, QMap<QString, QString>> descriptions;
   QMap<QString, Simvar*> simvars;
   GridSetupWidget* grid = 0;
   VoltageClampSetupWidget* voltageClamp = 0;

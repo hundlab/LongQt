@@ -7,5 +7,6 @@
         <file>hoverText/measDescriptions.json</file>
         <file>hoverText/parsDescriptions.json</file>
         <file>hoverText/pvarsDescriptions.json</file>
+        <file>hoverText/simvarsDesc.json</file>
     </qresource>
 </RCC>

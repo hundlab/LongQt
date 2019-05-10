@@ -40,6 +40,29 @@ inline QMap<QString, QString> readMap(QString fileName,
 
   return map;
 }
+
+inline QMap<QString, QMap<QString, QString>> readDesc(QString fileName) {
+  QMap<QString, QMap<QString, QString>> map;
+  QFile* file = new QFile(fileName);
+  file->open(QIODevice::ReadOnly | QIODevice::Text);
+  if (!file->isOpen()) return map;
+  QJsonDocument doc = QJsonDocument::fromJson(file->readAll());
+  if (doc.isNull()) return map;
+  file->close();
+  delete file;
+
+  QJsonObject jmap = doc.object();
+  for (auto it = jmap.begin(); it != jmap.end(); ++it) {
+    QMap<QString, QString> entryMap;
+    auto value = it.value().toObject();
+    for (auto jt = value.begin(); jt != value.end(); ++jt) {
+      entryMap[jt.key()] = jt.value().toString();
+    }
+    map[it.key()] = entryMap;
+  }
+  return map;
+}
+
 // also for hoverTexts (add units &etc)
 inline QMap<QString, QString> concatMaps(QMap<QString, QString> m1,
                                          QString divider,

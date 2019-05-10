@@ -9,7 +9,7 @@ namespace LQ = LongQt;
 class SimvDouble : public Simvar {
  public:
   explicit SimvDouble(std::shared_ptr<LQ::Protocol> proto, std::string name,
-                      QWidget* parent = 0);
+                      QString units, QWidget* parent = 0);
   ~SimvDouble();
 
  private:

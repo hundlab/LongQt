@@ -1,0 +1,193 @@
+{
+    "IcabFactor": {
+        "Description": "Fraction multiplied by background Ca2+ current"
+    },
+    "IcabjuncFactor": {
+        "Description": "Fraction multiplied by background Ca2+ current in junction"
+    },
+    "IcabslFactor": {
+        "Description": "Fraction multiplied by background Ca2+ current in sarcolemma"
+    },
+    "IcajuncFactor": {
+        "Description": "Fraction multiplied by Ca2+ current in junction"
+    },
+    "IcakFactor": {
+        "Description": "Fraction multiplied by K+ current through L-type Ca2+ channel "
+    },
+    "IcalFactor": {
+        "Description": "Fraction multiplied by L-type Ca2+ current"
+    },
+    "IcanajuncFactor": {
+        "Description": "Fraction multiplied by Na+ current through L-type Ca2+ channel in junction"
+    },
+    "IcanaslFactor": {
+        "Description": "Fraction multiplied by Na+ current through L-type Ca2+ channel in sarcolemma"
+    },
+    "IcaslFactor": {
+        "Description": "Fraction multiplied by Ca2+ current in sarcolemma"
+    },
+    "IcattFactor": {
+        "Description": "Fraction multiplied by Ca2+ current through T-Type Ca2+ channel"
+    },
+    "IclbFactor": {
+        "Description": "Fraction multiplied by background Cl- current"
+    },
+    "IclbkFactor": {
+        "Description": "Fraction multiplied by background Cl- current"
+    },
+    "IclcaFactor": {},
+    "IclcajuncFactor": {
+        "Description": "Fraction multiplied by Ca2+-activated Cl current in junction"
+    },
+    "IclcaslFactor": {
+        "Description": "Fraction multiplied by Ca2+-activated Cl current in sarcolemma"
+    },
+    "IhFactor": {
+        "Description": "Fraction multiplied by hyperpolarization-activated current"
+    },
+    "Ik1Factor": {
+        "Description": "Fraction multiplied by time-independent K+ current"
+    },
+    "IkachFactor": {
+        "Description": "Fraction multiplied by acetylcholine-sensitive K+ current"
+    },
+    "IkbFactor": {},
+    "IkclFactor": {
+        "Description": "Fraction multiplied by K+-Cl transporter "
+    },
+    "IkpFactor": {
+        "Description": "Fraction multiplied by plateau K+ current"
+    },
+    "IkrFactor": {
+        "Description": "Fraction multiplied by rapid delayed rectifier K+ current"
+    },
+    "IksFactor": {
+        "Description": "Fraction multiplied by slow delayed rectifier K+ current"
+    },
+    "IksjuncFactor": {
+        "Description": "Fraction multiplied by slow delayed rectifier K+ current in junction"
+    },
+    "IkssFactor": {},
+    "IksslFactor": {
+        "Description": "Fraction multiplied by slow delayed rectifier K+ current in sarcolemma"
+    },
+    "IkurFactor": {
+        "Description": "Fraction multiplied by ultrarapid delayed rectifier K+ current "
+    },
+    "IlcaFactor": {
+        "Description": "Fraction multiplied by L-type Ca2+ current"
+    },
+    "IleakFactor": {
+        "Description": "Fraction multiplied by Ca2+ leak from JSR to myoplasm"
+    },
+    "InaFactor": {
+        "Description": "Fraction multiplied by fast Na+ current"
+    },
+    "InabFactor": {
+        "Description": "Fraction multiplied by background Na+ current"
+    },
+    "InabjuncFactor": {
+        "Description": "Fraction multiplied by background Na+ current in junction "
+    },
+    "InabslFactor": {
+        "Description": "Fraction multiplied by background Na+ current in sarcolemma"
+    },
+    "InacaFactor": {
+        "Description": "Fraction multiplied by Na+-Ca2+ exchanger"
+    },
+    "InacaFactorbulk": {
+        "Description": "Fraction multiplied by bulk Na+-Ca2+ exchanger current"
+    },
+    "InacaFactorss": {
+        "Description": "Fraction multiplied by subspace Na+-Ca2+ exchanger current"
+    },
+    "InacajuncFactor": {
+        "Description": "Fraction multiplied by Na+-Ca2+ exchanger in junction"
+    },
+    "InacaslFactor": {
+        "Description": "Fraction multiplied by Na+-Ca2+ exchanger in sarcolemma"
+    },
+    "InaclFactor": {
+        "Description": "Fraction multiplied by Na+-Cl transporter "
+    },
+    "InajuncFactor": {
+        "Description": "Fraction multiplied by fast Na+ current in junction"
+    },
+    "InakFactor": {
+        "Description": "Fraction multiplied by Na+-K+ pump"
+    },
+    "InakjuncFactor": {
+        "Description": "Fraction multiplied by Na+-K+ pump in junction"
+    },
+    "InakslFactor": {
+        "Description": "Fraction multiplied by Na+-K+ pump in sarcolemma"
+    },
+    "InalFactor": {
+        "Description": "Fraction multiplied by late Na+ current"
+    },
+    "InalPFactor": {},
+    "InaslFactor": {
+        "Description": "Fraction multiplied by fast Na+ current in sarcolemma"
+    },
+    "InskFactor": {},
+    "InsnaFactor": {},
+    "IpcaFactor": {
+        "Description": "Fraction multiplied by sarcolemmal Ca2+ pump"
+    },
+    "IpcajuncFactor": {
+        "Description": "Fraction multiplied by sarcolemmal Ca2+ pump in junction"
+    },
+    "IpcaslFactor": {
+        "Description": "Fraction multiplied by sarcolemmal Ca2+ pump in sarcolemma"
+    },
+    "IpkFactor": {
+        "Description": "Fraction multiplied by plateau K+ current "
+    },
+    "IpkjuncFactor": {
+        "Description": "Fraction multiplied by plateau K+ current in junction"
+    },
+    "IpkslFactor": {
+        "Description": "Fraction multiplied by plateau K+ current in sarcolemma"
+    },
+    "IrelFactor": {
+        "Description": "Fraction multiplied by Ca2+ release from JSR to myoplasm"
+    },
+    "IstFactor": {
+        "Description": "Fraction multiplied by sustained inward current"
+    },
+    "IsusFactor": {
+        "Description": "Fraction multiplied by sustained component of 4AP-sensitive current"
+    },
+    "Ito2Factor": {
+        "Description": "Fraction multiplied by Ca2+-dependent transient outward Cl- current"
+    },
+    "ItoFactor": {
+        "Description": "Fraction multiplied by 4AP-sensitive transient outward K+ current"
+    },
+    "ItofFactor": {},
+    "ItosFactor": {},
+    "ItrFactor": {
+        "Description": "Fraction multiplied by Ca2+ transfer from NSR to JSR"
+    },
+    "ItrekFactor": {},
+    "IupFactor": {
+        "Description": "Fraction multiplied by Ca2+ uptake from myoplasm to NSR"
+    },
+    "JSRcaRelFactor": {},
+    "JleakFactor": {},
+    "JrelFactor": {},
+    "JsercaFactor": {
+        "Description": "Fraction multiplied by sarco/endoplasmic reticulum Ca2+-ATPase flux "
+    },
+    "JsrcarelFactor": {
+        "Description": "Fraction multiplied by Ca2+ release from SR flux"
+    },
+    "JsrleakFactor": {
+        "Description": "Fraction multiplied by Ca2+ leak from SR flux"
+    },
+    "JtrFactor": {},
+    "JtrpnFactor": {},
+    "JupFactor": {},
+    "JxferFactor": {},
+    "ROS": {"Description": "Concentration of Reactive Oxygen Species", "Units": "μm"}
+}

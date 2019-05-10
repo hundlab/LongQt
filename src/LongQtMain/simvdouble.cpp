@@ -6,9 +6,10 @@ using namespace std;
 using namespace LongQt;
 
 SimvDouble::SimvDouble(std::shared_ptr<LQ::Protocol> proto, std::string name,
-                       QWidget *parent)
+                       QString units, QWidget *parent)
     : Simvar(proto, name, parent) {
   this->widg = new QDoubleSpinBox(this);
+  this->widg->setSuffix(" " + units);
   auto layout = new OneItemLayout(this);
   layout->addWidget(widg);
   widg->setRange(/*std::numeric_limits<double>::min()*/ -100000,

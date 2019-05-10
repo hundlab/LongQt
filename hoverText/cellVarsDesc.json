@@ -1,0 +1,573 @@
+{
+    "Ca": {
+        "Description": "Ca2+ current through the L-type Ca2+ channel",
+        "Units": "uA/uF"
+    },
+    "CaM": {
+        "Description": "Calmodulin, Ca2+ buffer in myoplasm",
+        "Units": "mM"
+    },
+    "CaMI": {
+        "Description": "Concentration of calmodulin bound to Ca2+ buffer in bulk myoplasm",
+        "Units": "mM"
+    },
+    "CaMKII": {
+        "Description": "Activated Ca2+/calmodulin-dependent protein kinase II",
+        "Units": ""
+    },
+    "CaMR": {
+        "Description": "Concentration of calmodulin bound to Ca2+ buffer in restricted space",
+        "Units": "mM"
+    },
+    "Csqnb": {
+        "Description": "Concentration of Ca2+ bound Calsequestrin",
+        "Units": "mM"
+    },
+    "Gate.a": {
+        "Description": "Activation gate of Ito1",
+        "Units": ""
+    },
+    "Gate.aa": {
+        "Description": "Ca2+-dependent inactivation gate of Ito2",
+        "Units": ""
+    },
+    "Gate.d": {
+        "Description": "Activation gate of ICaL",
+        "Units": ""
+    },
+    "Gate.dt": {
+        "Description": "Activation gate of ICaT",
+        "Units": ""
+    },
+    "Gate.f": {
+        "Description": "Fast voltage-dependent inactivation gate of ICaL",
+        "Units": ""
+    },
+    "Gate.f_ca": {
+        "Description": "Intracellular calcium-dependent inactivation gate of ICaL",
+        "Units": ""
+    },
+    "Gate.f_cabj": {
+        "Description": "Calcium-dependent inactivation gate of ICaL in junction",
+        "Units": ""
+    },
+    "Gate.f_cabsl": {
+        "Description": "Calcium-dependent inactivation gate of ICaL in sarcolemma",
+        "Units": ""
+    },
+    "Gate.fca": {
+        "Description": "Fast Ca2+-dependent inactivation gate of ICaL",
+        "Units": ""
+    },
+    "Gate.fca2": {
+        "Description": "Slow Ca2+-dependent inactivation gate of ICaL",
+        "Units": ""
+    },
+    "Gate.ft": {
+        "Description": "Inactivation gating variable for ICaT",
+        "Units": ""
+    },
+    "Gate.g": {
+        "Description": "Calcium-dependent inactivation gate of Irel",
+        "Units": ""
+    },
+    "Gate.h": {
+        "Description": "Fast inactivation gate of INa",
+        "Units": ""
+    },
+    "Gate.hl": {
+        "Description": "Inactivation gate of INaL",
+        "Units": ""
+    },
+    "Gate.i": {
+        "Description": "Fast inactivation gate of Ito1",
+        "Units": ""
+    },
+    "Gate.i2": {
+        "Description": "Slow inactivation gate of Ito1",
+        "Units": ""
+    },
+    "Gate.j": {
+        "Description": "Slow inactivation gate of INa",
+        "Units": ""
+    },
+    "Gate.m": {
+        "Description": "Activation gate of INa",
+        "Units": ""
+    },
+    "Gate.ml": {
+        "Description": "Activation gate of INaL",
+        "Units": ""
+    },
+    "Gate.n": {
+        "Description": "Activation gating variable for IKs",
+        "Units": ""
+    },
+    "Gate.paf": {
+        "Description": "Fast activation gating variable for IKr",
+        "Units": ""
+    },
+    "Gate.pas": {
+        "Description": "Slow activation gating variable for IKr",
+        "Units": ""
+    },
+    "Gate.pi": {
+        "Description": "Inactivation gating variable for IKr",
+        "Units": ""
+    },
+    "Gate.q": {
+        "Description": "Inactivation gating variable for Ito",
+        "Units": ""
+    },
+    "Gate.qa": {
+        "Description": "Activation gating variable for Ist",
+        "Units": ""
+    },
+    "Gate.qi": {
+        "Description": "Inactivation gating variable for Ist",
+        "Units": ""
+    },
+    "Gate.r": {
+        "Description": "Activation gating variable for Ito and Isus",
+        "Units": ""
+    },
+    "Gate.s": {
+        "Description": "Voltage-dependent inactivation gate of Ito",
+        "Units": ""
+    },
+    "Gate.xf": {
+        "Description": "Fast inactivation gate of Ito",
+        "Units": ""
+    },
+    "Gate.xkr": {
+        "Description": "Activation gate of IKr",
+        "Units": ""
+    },
+    "Gate.xks": {
+        "Description": "Fast activation gate of IKs",
+        "Units": ""
+    },
+    "Gate.xkur": {
+        "Description": "Fast activation gate of IKur",
+        "Units": ""
+    },
+    "Gate.xr": {
+        "Description": "Activation gate of IKr",
+        "Units": ""
+    },
+    "Gate.xr1": {
+        "Description": "Activation gate of IKr",
+        "Units": ""
+    },
+    "Gate.xr2": {
+        "Description": "Inactivation gate of IKr",
+        "Units": ""
+    },
+    "Gate.xs": {
+        "Description": "Fast activation gate of IKs",
+        "Units": ""
+    },
+    "Gate.xs2": {
+        "Description": "Slow activation gate of IKs",
+        "Units": ""
+    },
+    "Gate.y": {
+        "Description": "Activation gating variable for Ih",
+        "Units": ""
+    },
+    "Gate.yf": {
+        "Description": "Slow inactivation gate of Ito",
+        "Units": ""
+    },
+    "Gate.ykur": {
+        "Description": "Slow activation gate of Ikur",
+        "Units": ""
+    },
+    "caI": {
+        "Description": "Concentration of free and buffered intracellular Ca2+",
+        "Units": "mmol/L"
+    },
+    "caJsr": {
+        "Description": "Ca2+ concentration in junctional sarcoplasmic reticulum",
+        "Units": "mmol/L"
+    },
+    "caNsr": {
+        "Description": "Ca2+ concentration in network sarcoplasmic reticulum",
+        "Units": "mmol/L"
+    },
+    "caR": {
+        "Description": "Ca2+ concentration in restricted space",
+        "Units": "mmol/L"
+    },
+    "caSr": {
+        "Description": "Ca2+ concentration in sarcoplasmic reticulum",
+        "Units": "mmol/L"
+    },
+    "cajI": {
+        "Description": "Ca2+ concentration in junction",
+        "Units": "mmol/L"
+    },
+    "caslI": {
+        "Description": "Ca2+ concentration in sarcolemma",
+        "Units": "mmol/L"
+    },
+    "clI": {
+        "Description": "Intracellular Cl- concentration",
+        "Units": "mM"
+    },
+    "csqn": {
+        "Description": "Calsequestrin, Ca2+ buffer in JSR",
+        "Units": "mM"
+    },
+    "dVdt": {
+        "Description": "Change in voltage with respect fo time",
+        "Units": "mV/ms"
+    },
+    "fBlock": {
+        "Description": "",
+        "Units": ""
+    },
+    "fBound": {
+        "Description": "Fraction of active CaMKII subunits with bound Ca2+/calmodulin",
+        "Units": ""
+    },
+    "fI": {
+        "Description": "Fraction of inactive CaMKII subunits",
+        "Units": ""
+    },
+    "fOx": {
+        "Description": "Fraction of active oxidized CaMKII subunits",
+        "Units": ""
+    },
+    "fOxP": {
+        "Description": "Fraction of active oxidized/autophosphorylated CaMKII subunits",
+        "Units": ""
+    },
+    "fPhos": {
+        "Description": "Fraction of active autophosphorylated CaMKII subunits",
+        "Units": ""
+    },
+    "iCa": {
+        "Description": "Ca2+ current through the L-type Ca2+ channel",
+        "Units": "uA/uF"
+    },
+    "iCaL": {
+        "Description": "Total L-type Ca2+ current due to calcium, sodium, and potassium through L-type Ca2+ channel in sarcolemma and junction",
+        "Units": "uA/uF"
+    },
+    "iCab": {
+        "Description": "Background Ca2+ current",
+        "Units": "uA/uF"
+    },
+    "iCabjunc": {
+        "Description": "Background Ca2+ current in junction",
+        "Units": "uA/uF"
+    },
+    "iCabsl": {
+        "Description": "Background Ca2+ current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iCait": {
+        "Description": "",
+        "Units": "uA/uF"
+    },
+    "iCajunc": {
+        "Description": "Ca2+ current in junction and sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iCak": {
+        "Description": "Potassium current through L-type Ca2+ channel",
+        "Units": "uA/uF"
+    },
+    "iCal": {
+        "Description": "L-type Ca2+ channel current",
+        "Units": "uA/uF"
+    },
+    "iCana": {
+        "Description": "Sodium current through L-type Ca2+ channel",
+        "Units": "uA/uF"
+    },
+    "iCanajunc": {
+        "Description": "Sodium current through L-type Ca2+ channel in junction",
+        "Units": "uA/uF"
+    },
+    "iCanasl": {
+        "Description": "Sodium current through L-type Ca2+ channel in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iCart ": {
+        "Description": "Total calcium current due to L-type, T-type, and sodium-calcium exchanger",
+        "Units": "uA/uF"
+    },
+    "iCasl": {
+        "Description": "Total Ca2+ current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iCat": {
+        "Description": "Ca2+ current through the T-type Ca2+ channel",
+        "Units": "uA/uF"
+    },
+    "iCatt": {
+        "Description": "T-type Ca2+ channel current",
+        "Units": "uA/uF"
+    },
+    "iClbk": {
+        "Description": "Background Cl current",
+        "Units": "uA/uF"
+    },
+    "iClca": {
+        "Description": "Ca2+-activated Cl current",
+        "Units": "uA/uF"
+    },
+    "iClcajunc": {
+        "Description": "Ca2+-activated Cl current in junction",
+        "Units": "uA/uF"
+    },
+    "iClcasl": {
+        "Description": "Ca2+-activated Cl current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iClt": {
+        "Description": "Total transmembrane Cl- current",
+        "Units": "uA/uF"
+    },
+    "iDiff": {
+        "Description": "Ca2+ transfer from restricted space to myoplasm",
+        "Units": "mmol/L per ms"
+    },
+    "iH": {
+        "Description": "Hyperpolarization-activated current",
+        "Units": "uA/uF"
+    },
+    "iHk": {
+        "Description": "Potassium component of hyperpolarization-activated current",
+        "Units": "uA/uF"
+    },
+    "iHna": {
+        "Description": "Sodium component of hyperpolarization-activated current",
+        "Units": "uA/uF"
+    },
+    "iK1": {
+        "Description": "Time-independent K+ current",
+        "Units": "uA/uF"
+    },
+    "iKach": {
+        "Description": "Acetylcholine-sensitive K+ current",
+        "Units": "uA/uF"
+    },
+    "iKp": {
+        "Description": "Plateau K+ current",
+        "Units": "uA/uF"
+    },
+    "iKpjunc": {
+        "Description": "Plateau K+ current in junction",
+        "Units": "uA/uF"
+    },
+    "iKpsl": {
+        "Description": "Plateau K+ current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iKr": {
+        "Description": "Rapid delayed rectifier K+ current",
+        "Units": "uA/uF"
+    },
+    "iKs": {
+        "Description": "Slow delayed rectifier K+ current",
+        "Units": "uA/uF"
+    },
+    "iKsjunc": {
+        "Description": "Slow delayed rectifier K+ current in junction",
+        "Units": "uA/uF"
+    },
+    "iKssl": {
+        "Description": "Slow delayed rectifier K+ current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iKt": {
+        "Description": "Total transmembrane K+ current",
+        "Units": "uA/uF"
+    },
+    "iKur": {
+        "Description": "Ultrarapid delayed rectifier K+ current",
+        "Units": "uA/uF"
+    },
+    "iLeak": {
+        "Description": "Ca2+ leak from JSR to myoplasm",
+        "Units": "mmol/L per ms"
+    },
+    "iNa": {
+        "Description": "Fast Na+ current",
+        "Units": "uA/uF"
+    },
+    "iNaKjunc": {
+        "Description": "Na+-K+ pump in junction",
+        "Units": "uA/uF"
+    },
+    "iNaKsl": {
+        "Description": "Na+-K+ pump in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iNab": {
+        "Description": "Background sodium current",
+        "Units": "uA/uF"
+    },
+    "iNabjunc": {
+        "Description": "Background Na+ current in junction",
+        "Units": "uA/uF"
+    },
+    "iNabsl": {
+        "Description": "Background Na+ current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iNaca": {
+        "Description": "Na+-Ca2+ exchanger",
+        "Units": "uA/uF"
+    },
+    "iNacar": {
+        "Description": "Na+-Ca2+ exchanger in restricted space membrane",
+        "Units": "uA/uF"
+    },
+    "iNajunc": {
+        "Description": "Total Na+ current in junction",
+        "Units": "uA/uF"
+    },
+    "iNak": {
+        "Description": "Na+-K+ pump",
+        "Units": "uA/uF"
+    },
+    "iNal": {
+        "Description": "Late Na+ current",
+        "Units": "uA/uF"
+    },
+    "iNasl": {
+        "Description": "Total Na+ current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iNat": {
+        "Description": "Total transmembrane Na+ current",
+        "Units": "uA/uF"
+    },
+    "iNcxjunc": {
+        "Description": "Na+-Ca2+ exchanger current in junction",
+        "Units": "uA/uF"
+    },
+    "iNcxsl": {
+        "Description": "Na+-Ca2+ exchanger current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "iPca": {
+        "Description": "Sarcolemmal Ca2+ pump",
+        "Units": "uA/uF"
+    },
+    "iRel": {
+        "Description": "Ca2+ release from JSR to myoplasm",
+        "Units": "mmol/L per ms"
+    },
+    "iSt": {
+        "Description": "Sustained inward current",
+        "Units": "uA/uF"
+    },
+    "iSus": {
+        "Description": "Sustained component of the 4AP-sensitive current",
+        "Units": "uA/uF"
+    },
+    "iTo": {
+        "Description": "4AP-sensitive transient outward K+ current",
+        "Units": "uA/uF"
+    },
+    "iTo2": {
+        "Description": "Ca2+-dependent transient outward Cl- current",
+        "Units": "uA/uF"
+    },
+    "iTof": {
+        "Description": "Fast component of transient outward K+ current",
+        "Units": "uA/uF"
+    },
+    "iTos": {
+        "Description": "Slow component of transient outward K+ current",
+        "Units": "uA/uF"
+    },
+    "iTot": {
+        "Description": "Total transmembrane current",
+        "Units": "uA/uF"
+    },
+    "iTr": {
+        "Description": "Ca2+ transfer from network to junctional sarcoplasmic reticulum",
+        "Units": "mmol/L per ms"
+    },
+    "iTrek": {
+        "Description": "TREK-1 K+ current",
+        "Units": "uA/uF"
+    },
+    "iUp": {
+        "Description": "Ca2+ uptake from myoplasm to NSR",
+        "Units": "mmol/L per ms"
+    },
+    "ipCa": {
+        "Description": "Ca2+ pump current",
+        "Units": "uA/uF"
+    },
+    "ipCajunc": {
+        "Description": "Ca2+ pump current in junction",
+        "Units": "uA/uF"
+    },
+    "ipCasl": {
+        "Description": "Ca2+ pump current in sarcolemma",
+        "Units": "uA/uF"
+    },
+    "ipK": {
+        "Description": "Plateau potassium current",
+        "Units": "uA/uF"
+    },
+    "kI": {
+        "Description": "Intracellular potassium concentration",
+        "Units": "mM"
+    },
+    "mgI": {
+        "Description": "Intracellular magnesium concentration",
+        "Units": "mM"
+    },
+    "naI": {
+        "Description": "Intracellular sodium concentration",
+        "Units": "mM"
+    },
+    "najI": {
+        "Description": "Junction sodium concentration",
+        "Units": "mM"
+    },
+    "naslI": {
+        "Description": "Sarcolemma sodium concentration",
+        "Units": "mM"
+    },
+    "ryRopen": {
+        "Description": "Activation gate of IRel",
+        "Units": ""
+    },
+    "t": {
+        "Description": "Time",
+        "Units": "ms"
+    },
+    "troponin": {
+        "Units": "mM"
+    },
+    "trpn": {
+        "Description": "troponin",
+        "Units": "mM"
+    },
+    "trpnCa": {
+        "Description": "Concentration of troponin with Ca2+ bound at Ca2+ site",
+        "Units": "mM"
+    },
+    "trpnMg": {
+        "Description": "Concentration of troponin with Ca2+ bound at Mg2+ site",
+        "Units": "mM"
+    },
+    "trpnMgmg": {
+        "Description": "Concentration of troponin with Mg2+ bound at Mg2+ site",
+        "Units": "mM"
+    },
+    "vOld": {
+        "Description": "Transmembrane potential",
+        "Units": "mV"
+    }
+}
