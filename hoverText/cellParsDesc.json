@@ -189,5 +189,7 @@
     "JtrpnFactor": {},
     "JupFactor": {},
     "JxferFactor": {},
-    "ROS": {"Description": "Concentration of Reactive Oxygen Species", "Units": "μm"}
+    "ROS": {"Description": "Concentration of Reactive Oxygen Species", "Units": "μm"},
+    "ICaMKIIFactor": {"Description": "Fraction multiplied by concentraion of CaM felt by CaMKII"},
+    "IkiFactor": {}
 }

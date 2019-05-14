@@ -35,8 +35,6 @@ class Simulation : public QWidget {
   std::shared_ptr<LQ::Protocol> proto;
   QString date_time;
   QList<QWidget*> menu_list;
-  // utility functions & classes
-  void leave_current(int current);
   // buttons
   QPushButton* next_button;
   QPushButton* cancel_button;
