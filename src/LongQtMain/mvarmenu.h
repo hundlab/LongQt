@@ -12,6 +12,7 @@
 #include <QWidget>
 
 #include "protocol.h"
+#include "dataoutputselectionmodel.h"
 namespace LQ = LongQt;
 
 namespace Ui {
@@ -26,7 +27,6 @@ class MvarMenu : public QWidget {
 
  private:
   void setupMenu();
-  QString getType(QString name);
 
   std::shared_ptr<LQ::Protocol> proto;
   QMap<QString, QString> dvarsDescriptions;
@@ -34,6 +34,7 @@ class MvarMenu : public QWidget {
   QVector<std::string> cellVars;
   QVector<std::string> measVars;
   Ui::MvarMenu* ui;
+  DataOutputSelectionModel* model;
  private slots:
   void addMeas(QTreeWidgetItem* item, int column);
   void childMeas(QTreeWidgetItem* item, int column);

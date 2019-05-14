@@ -22,7 +22,9 @@ SOURCES +=\
     $$PWD/oneitemlayout.cpp \
     $$PWD/voltageclampsetupwidget.cpp \
     $$PWD/voltageclampmodel.cpp \
-    $$PWD/voltageclampdelegate.cpp
+    $$PWD/voltageclampdelegate.cpp \
+    $$PWD/dataoutputselectionmodel.cpp \
+    $$PWD/dataoutputitem.cpp
 
 HEADERS  +=\
 	$$PWD/dvarmenu.h\
@@ -46,7 +48,9 @@ HEADERS  +=\
     $$PWD/oneitemlayout.h \
     $$PWD/voltageclampsetupwidget.h \
     $$PWD/voltageclampmodel.h \
-    $$PWD/voltageclampdelegate.h
+    $$PWD/voltageclampdelegate.h \
+    $$PWD/dataoutputselectionmodel.h \
+    $$PWD/dataoutputitem.h
 
 FORMS += \
     $$PWD/runwidget.ui \

@@ -27,51 +27,19 @@
     </widget>
    </item>
    <item>
-    <widget class="QTreeWidget" name="measView">
+    <widget class="QTreeView" name="measView">
      <property name="sortingEnabled">
       <bool>true</bool>
      </property>
-     <attribute name="headerDefaultSectionSize">
-      <number>150</number>
-     </attribute>
-     <attribute name="headerHighlightSections">
-      <bool>true</bool>
-     </attribute>
      <attribute name="headerMinimumSectionSize">
       <number>150</number>
      </attribute>
-     <column>
-      <property name="text">
-       <string>Name</string>
-      </property>
-      <property name="toolTip">
-       <string>Name of the Variable</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Measure</string>
-      </property>
-      <property name="toolTip">
-       <string>Measures taken every beat</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Trace</string>
-      </property>
-      <property name="toolTip">
-       <string>A trace of the values taken on by the variable during the simulation</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Type</string>
-      </property>
-      <property name="toolTip">
-       <string/>
-      </property>
-     </column>
+     <attribute name="headerShowSortIndicator" stdset="0">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="headerStretchLastSection">
+      <bool>true</bool>
+     </attribute>
     </widget>
    </item>
    <item>

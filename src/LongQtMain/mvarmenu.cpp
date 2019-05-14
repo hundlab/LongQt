@@ -19,20 +19,23 @@ MvarMenu::MvarMenu(shared_ptr<Protocol> proto, QWidget* parent)
   ui->setupUi(this);
   // setup class variables
   this->proto = proto;
-
-  auto type = proto->cell()->type();
-  this->dvarsDescriptions = GuiUtils::concatMaps(
-      GuiUtils::readMap(":/hoverText/dvarsDescriptions.json", type), ", ",
-      GuiUtils::readMap(":/hoverText/dvarsUnits.json", type));
-  this->measDescriptions =
-      GuiUtils::readMap(":/hoverText/measDescriptions.json", type);
-  this->setupMenu();
-  connect(ui->measView,
-          static_cast<void (QTreeWidget::*)(QTreeWidgetItem*, int)>(
-              &QTreeWidget::itemChanged),
-          this,
-          static_cast<void (MvarMenu::*)(QTreeWidgetItem*, int)>(
-              &MvarMenu::addMeas));
+  this->model = new DataOutputSelectionModel(this->proto, this);
+  ui->measView->setModel(this->model);
+//  ui->measView->setItemDelegate(
+//      new DataOutputSelectionDelegate(this->ui->measView));
+  //  auto type = proto->cell()->type();
+  //  this->dvarsDescriptions = GuiUtils::concatMaps(
+  //      GuiUtils::readMap(":/hoverText/dvarsDescriptions.json", type), ",
+  //      ", GuiUtils::readMap(":/hoverText/dvarsUnits.json", type));
+  //  this->measDescriptions =
+  //      GuiUtils::readMap(":/hoverText/measDescriptions.json", type);
+  //  this->setupMenu();
+  //  connect(ui->measView,
+  //          static_cast<void (QTreeWidget::*)(QTreeWidgetItem*, int)>(
+  //              &QTreeWidget::itemChanged),
+  //          this,
+  //          static_cast<void (MvarMenu::*)(QTreeWidgetItem*, int)>(
+  //              &MvarMenu::addMeas));
   connect(ui->percrepolBox,
           static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
           [this](int val) { this->proto->measureMgr().percrepol(val); });
@@ -41,64 +44,64 @@ MvarMenu::MvarMenu(shared_ptr<Protocol> proto, QWidget* parent)
 MvarMenu::~MvarMenu() {}
 
 void MvarMenu::setupMenu() {
-  int cellVarID = 0;
-  QMap<string, int> measIds;
-  auto& measMaker = this->proto->measureMgr().measMaker;
-  for (auto& cellVar : this->proto->cell()->vars()) {
-    this->cellVars.append(cellVar.c_str());
-    auto cellItem = new QTreeWidgetItem(
-        ui->measView, {cellVar.c_str(), "", "", this->getType(cellVar.c_str())},
-        cellVarID);
-    cellItem->setData(0, Qt::ToolTipRole,
-                      this->dvarsDescriptions[cellVar.c_str()]);
-    {
-      set<string> measOptions =
-          measMaker.measureOptions(measMaker.measureType(cellVar));
-      auto selection = proto->measureMgr().selection();
-      for (auto& measVar : measOptions) {
-        if (!measIds.contains(measVar.c_str())) {
-          int id = measIds.size();
-          measIds[measVar] = id;
-          this->measVars.append(measVar);
-        }
-        auto measItem = new QTreeWidgetItem(cellItem, {"", measVar.c_str()},
-                                            measIds[measVar]);
-        measItem->setData(0, Qt::ToolTipRole,
-                          this->measDescriptions[measVar.c_str()]);
-        if (selection.count(cellVar) > 0 &&
-            selection.at(cellVar).count(measVar) > 0) {
-          measItem->setCheckState(1, Qt::Checked);
-        } else {
-          measItem->setCheckState(1, Qt::Unchecked);
-        }
-      }
-      //    this->setParentCheckedState(cellItem, 1);
-    }
-    {
-      auto selection = this->proto->cell()->getVariableSelection();
-      if (selection.count(cellVar)) {
-        cellItem->setCheckState(2, Qt::Checked);
-      } else {
-        cellItem->setCheckState(2, Qt::Unchecked);
-      }
-      if (cellVar == "t" || cellVar == "vOld") {
-        cellItem->setDisabled(true);
-      }
-    }
-    ++cellVarID;
-  }
+  //  int cellVarID = 0;
+  //  QMap<string, int> measIds;
+  //  auto& measMaker = this->proto->measureMgr().measMaker;
+  //  for (auto& cellVar : this->proto->cell()->vars()) {
+  //    this->cellVars.append(cellVar.c_str());
+  //    auto cellItem = new QTreeWidgetItem(
+  //        ui->measView, {cellVar.c_str(), "", "",
+  //        this->getType(cellVar.c_str())}, cellVarID);
+  //    cellItem->setData(0, Qt::ToolTipRole,
+  //                      this->dvarsDescriptions[cellVar.c_str()]);
+  //    {
+  //      set<string> measOptions =
+  //          measMaker.measureOptions(measMaker.measureType(cellVar));
+  //      auto selection = proto->measureMgr().selection();
+  //      for (auto& measVar : measOptions) {
+  //        if (!measIds.contains(measVar.c_str())) {
+  //          int id = measIds.size();
+  //          measIds[measVar] = id;
+  //          this->measVars.append(measVar);
+  //        }
+  //        auto measItem = new QTreeWidgetItem(cellItem, {"", measVar.c_str()},
+  //                                            measIds[measVar]);
+  //        measItem->setData(0, Qt::ToolTipRole,
+  //                          this->measDescriptions[measVar.c_str()]);
+  //        if (selection.count(cellVar) > 0 &&
+  //            selection.at(cellVar).count(measVar) > 0) {
+  //          measItem->setCheckState(1, Qt::Checked);
+  //        } else {
+  //          measItem->setCheckState(1, Qt::Unchecked);
+  //        }
+  //      }
+  //      //    this->setParentCheckedState(cellItem, 1);
+  //    }
+  //    {
+  //      auto selection = this->proto->cell()->getVariableSelection();
+  //      if (selection.count(cellVar)) {
+  //        cellItem->setCheckState(2, Qt::Checked);
+  //      } else {
+  //        cellItem->setCheckState(2, Qt::Unchecked);
+  //      }
+  //      if (cellVar == "t" || cellVar == "vOld") {
+  //        cellItem->setDisabled(true);
+  //      }
+  //    }
+  //    ++cellVarID;
+  //  }
   ui->percrepolBox->setValue(proto->measureMgr().percrepol());
 }
 void MvarMenu::reset() {
   this->cellVars.clear();
   this->measVars.clear();
-  ui->measView->clear();
   bool oldState = ui->measView->blockSignals(true);
   setupMenu();
   ui->measView->blockSignals(oldState);
 }
 void MvarMenu::changeProto(shared_ptr<Protocol> proto) {
   this->proto = proto;
+  this->model->changeProto(proto);
   this->reset();
 }
 void MvarMenu::changeCell(shared_ptr<Cell> cell) {
@@ -106,6 +109,7 @@ void MvarMenu::changeCell(shared_ptr<Cell> cell) {
     Logger::getInstance()->write(
         "DvarMenu: Cell is not the same as proto's cell");
   }
+  this->model->changeCell(cell);
   this->reset();
 }
 void MvarMenu::addMeas(QTreeWidgetItem* item, int column) {
@@ -160,17 +164,4 @@ void MvarMenu::setChildrenCheckedStates(QTreeWidgetItem* item, int column,
   for (int i = 0; i < item->childCount(); ++i) {
     item->child(i)->setCheckState(column, state);
   }
-}
-
-QString MvarMenu::getType(QString name) {
-  QMap<QString, QRegExp> groups = {
-      {"Gates", QRegExp("^Gate.", Qt::CaseInsensitive)},
-      {"Currents", QRegExp("^i")},
-      {"Calcium Concentrations", QRegExp("^ca")}};
-  for (auto group = groups.begin(); group != groups.end(); ++group) {
-    if (group->indexIn(name) != -1) {
-      return group.key();
-    }
-  }
-  return "Other";
 }
