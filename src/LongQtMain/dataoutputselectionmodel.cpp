@@ -158,7 +158,7 @@ bool DataOutputSelectionModel::setData(const QModelIndex &index,
 Qt::ItemFlags DataOutputSelectionModel::flags(const QModelIndex &index) const {
   auto flag = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
   auto item = static_cast<DataOutputItem *>(index.internalPointer());
-  if (!item->isMeasItem() &&
+  if (!item->isMeasItem() && index.column() == 1 &&
       (item->varname == "vOld" || item->varname == "t")) {
     flag = flag & ~Qt::ItemIsEnabled;
   }
@@ -182,10 +182,11 @@ void DataOutputSelectionModel::changeCell(std::shared_ptr<LongQt::Cell> cell) {
 }
 
 void DataOutputSelectionModel::reset() {
+  QAbstractItemModel::beginResetModel();
   this->items.clear();
   auto vars = this->proto->cell()->vars();
   for (auto var : vars) {
     items.append(new DataOutputItem(proto, var));
   }
-  QAbstractItemModel::resetInternalData();
+  QAbstractItemModel::endResetModel();
 }

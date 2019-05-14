@@ -29,19 +29,9 @@ class MvarMenu : public QWidget {
   void setupMenu();
 
   std::shared_ptr<LQ::Protocol> proto;
-  QMap<QString, QString> dvarsDescriptions;
-  QMap<QString, QString> measDescriptions;
-  QVector<std::string> cellVars;
-  QVector<std::string> measVars;
   Ui::MvarMenu* ui;
   DataOutputSelectionModel* model;
- private slots:
-  void addMeas(QTreeWidgetItem* item, int column);
-  void childMeas(QTreeWidgetItem* item, int column);
-  void parentMeas(QTreeWidgetItem* item, int column);
-  void setParentCheckedState(QTreeWidgetItem* item, int column);
-  void setChildrenCheckedStates(QTreeWidgetItem* item, int column,
-                                Qt::CheckState state);
+
  public slots:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);
   void changeCell(std::shared_ptr<LQ::Cell> cell);
