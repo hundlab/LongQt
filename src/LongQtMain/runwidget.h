@@ -28,10 +28,9 @@ class RunWidget;
 class RunWidget : public QWidget {
   Q_OBJECT
  public:
-  RunWidget(std::shared_ptr<LQ::Protocol> proto, QDir working_dir,
+  RunWidget(std::shared_ptr<LQ::Protocol> proto,
             QWidget* parent = 0);
  public slots:
-  void setWorkingDir(QDir& dir);
   void setProto(std::shared_ptr<LQ::Protocol> proto);
   void cancel();
  signals:
@@ -47,9 +46,7 @@ class RunWidget : public QWidget {
   void write_note();
 
   Ui::RunWidget* ui;
-  QWidget* parent;
   std::shared_ptr<LQ::Protocol> proto;
-  QDir working_dir;
   LQ::RunSim runner;
   RunSimWatcher watcher;
 };

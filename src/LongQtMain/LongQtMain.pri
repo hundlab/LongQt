@@ -5,7 +5,6 @@ SOURCES +=\
 	$$PWD/mvarmenu.cpp\
 	$$PWD/pvarmenu.cpp\
   $$PWD/runwidget.cpp \
-  $$PWD/heartcellsim.cpp \
 	$$PWD/CLISimulation.cpp \
 	$$PWD/appparser.cpp \
     $$PWD/addsinglecellpvar.cpp \
@@ -24,14 +23,14 @@ SOURCES +=\
     $$PWD/voltageclampmodel.cpp \
     $$PWD/voltageclampdelegate.cpp \
     $$PWD/dataoutputselectionmodel.cpp \
-    $$PWD/dataoutputitem.cpp
+    $$PWD/dataoutputitem.cpp \
+    $$PWD/longqtmainwindow.cpp
 
 HEADERS  +=\
 	$$PWD/dvarmenu.h\
 	$$PWD/mvarmenu.h\
 	$$PWD/pvarmenu.h \
   $$PWD/runwidget.h \
-  $$PWD/heartcellsim.h \
 	$$PWD/CLISimulation.h \
 	$$PWD/appparser.h \
     $$PWD/addsinglecellpvar.h\
@@ -50,7 +49,8 @@ HEADERS  +=\
     $$PWD/voltageclampmodel.h \
     $$PWD/voltageclampdelegate.h \
     $$PWD/dataoutputselectionmodel.h \
-    $$PWD/dataoutputitem.h
+    $$PWD/dataoutputitem.h \
+    $$PWD/longqtmainwindow.h
 
 FORMS += \
     $$PWD/runwidget.ui \
@@ -60,5 +60,6 @@ FORMS += \
     $$PWD/mvarmenu.ui \
     $$PWD/simvarmenu.ui \
     $$PWD/simvint.ui \
-    $$PWD/voltageclampsetupwidget.ui
+    $$PWD/voltageclampsetupwidget.ui \
+    $$PWD/longqtmainwindow.ui
 

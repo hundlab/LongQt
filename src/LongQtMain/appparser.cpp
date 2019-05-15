@@ -1,6 +1,6 @@
 #include "appparser.h"
 #include "CLISimulation.h"
-#include "heartcellsim.h"
+#include "longqtmainwindow.h"
 #include "logger.h"
 
 #include <QApplication>
@@ -82,7 +82,7 @@ void AppParser::start() {
     if (!simvarsFiles.isEmpty()) {
       simvarsFile = simvarsFiles.first();
     }
-    Simulation* window = new Simulation(simvarsFile);
+    LongQtMainWindow* window = new LongQtMainWindow(simvarsFile);
     window->show();
     QSettings settings;
     if (settings.value("showHelp", true).toBool()) {

@@ -15,42 +15,37 @@
 #include <QLineEdit>
 #include <QList>
 #include <QListWidget>
+#include <QMainWindow>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QStackedWidget>
 
 #include "protocol.h"
+
 namespace LQ = LongQt;
 
-class Simulation : public QWidget {
+namespace Ui {
+class LongQtMainWindow;
+}
+
+class LongQtMainWindow : public QMainWindow {
   Q_OBJECT
 
  public:
-  Simulation(QString simvarFile = "", QWidget* parent = 0);
-  ~Simulation();
+  LongQtMainWindow(QString simvarFile = "", QWidget* parent = 0);
+  ~LongQtMainWindow();
 
  private:
-  QWidget* parent;
   std::shared_ptr<LQ::Protocol> proto;
-  QString date_time;
-  QList<QWidget*> menu_list;
-  // buttons
-  QPushButton* next_button;
-  QPushButton* cancel_button;
-  QPushButton* about_button;
-  // organizational widgets
-  QListWidget* menu_options;
-  QStackedWidget* menu;
-  // layouts
-  QGridLayout* main_layout;
+  Ui::LongQtMainWindow* ui;
 
+  void insertItem(int pos, QWidget* widget, QString name, QString toolTip = "");
+  void appendItem(QWidget* widget, QString name, QString toolTip = "");
  private slots:
   void next_button_aciton();
   void list_click_aciton(int next_row);
-  void canceled();
   void finished();
-  void running();
   void changeProto(std::shared_ptr<LQ::Protocol> proto);
  signals:
   void cellChanged(std::shared_ptr<LQ::Cell>);
