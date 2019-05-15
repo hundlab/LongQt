@@ -22,7 +22,7 @@
 #include "chooseprotowidget.h"
 #include "dvarmenu.h"
 #include "graph.h"
-#include "heartcellsim.h"
+#include "longqtmainwindow.h"
 #include "mvarmenu.h"
 #include "protocol.h"
 #include "pvarmenu.h"
@@ -51,7 +51,7 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
   RunWidget* run = new RunWidget(proto, this);
 
   this->appendItem(
-      choose, "Set Protocol",
+      choose, "Set Protocol and Cell",
       "Choose the type of protocol to follow in the simulation (e.g. fix "
       "the cell membrane voltage)");
   this->appendItem(
@@ -60,7 +60,7 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
   this->appendItem(pvars, "Set Model Parameters",
                    "Set model constants or have them randomly choosen");
   this->appendItem(
-      mvars, "Select Output",
+      mvars, "Data Output",
       "Select which model variables should be written to a file (e.g. Ca "
       "Concentration) Measure properties related to output variables (e.g. "
       "action "
@@ -142,7 +142,13 @@ void LongQtMainWindow::insertItem(int pos, QWidget* widget, QString name,
 
 void LongQtMainWindow::appendItem(QWidget* widget, QString name,
                                   QString toolTip) {
-  this->insertItem(ui->menuList->count(), widget, name, toolTip);
+    this->insertItem(ui->menuList->count(), widget, name, toolTip);
+}
+
+void LongQtMainWindow::removeItem(int pos)
+{
+    ui->menuStack->removeWidget(ui->menuStack->widget(pos));
+    delete ui->menuList->takeItem(ui->menuList->item(pos));
 }
 
 void LongQtMainWindow::changeProto(shared_ptr<Protocol> proto) {

@@ -42,6 +42,7 @@ class LongQtMainWindow : public QMainWindow {
 
   void insertItem(int pos, QWidget* widget, QString name, QString toolTip = "");
   void appendItem(QWidget* widget, QString name, QString toolTip = "");
+  void removeItem(int pos);
  private slots:
   void next_button_aciton();
   void list_click_aciton(int next_row);
