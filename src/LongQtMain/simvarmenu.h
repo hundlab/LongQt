@@ -37,8 +37,9 @@ class SimvarMenu : public QWidget {
   // Buttons & their labels
   QMap<QString, QMap<QString, QString>> descriptions;
   QMap<QString, Simvar*> simvars;
-  GridSetupWidget* grid = 0;
-  VoltageClampSetupWidget* voltageClamp = 0;
+
+  //  GridSetupWidget* grid = 0;
+  //  VoltageClampSetupWidget* voltageClamp = 0;
   // initalizer
   void initialize(const std::map<std::string, LQ::GetSetRef>::iterator it);
   // screen functions

@@ -43,11 +43,13 @@ class LongQtMainWindow : public QMainWindow {
   void insertItem(int pos, QWidget* widget, QString name, QString toolTip = "");
   void appendItem(QWidget* widget, QString name, QString toolTip = "");
   void removeItem(int pos);
+  void setItemHidden(int pos, bool hidden);
 
-  void next_button_aciton();
+  void nextItem();
   void list_click_aciton(int next_row);
   void finished();
   void changeProto(std::shared_ptr<LQ::Protocol> proto);
+
  signals:
   void cellChanged(std::shared_ptr<LQ::Cell>);
   void protocolChanged(std::shared_ptr<LQ::Protocol>);

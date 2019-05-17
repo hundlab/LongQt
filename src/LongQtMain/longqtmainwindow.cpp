@@ -29,6 +29,7 @@
 #include "runwidget.h"
 #include "settingsIO.h"
 #include "simvarmenu.h"
+#include "specialmenu.h"
 #include "ui_longqtmainwindow.h"
 
 using namespace std;
@@ -46,6 +47,7 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
     this->proto = choose->getCurrentProto();
   }
   SimvarMenu* sims = new SimvarMenu(proto, this);
+  SpecialMenu* special = new SpecialMenu(this);
   MvarMenu* mvars = new MvarMenu(proto, this);
   PvarMenu* pvars = new PvarMenu(proto, this);
   RunWidget* run = new RunWidget(proto, this);
@@ -57,6 +59,9 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
   this->appendItem(
       sims, "Set Sim. Parameters",
       "Change model parameters (e.g. change an ion channel conductance)");
+  this->appendItem(special, "", "");
+  int special_pos = ui->menuStack->count() - 1;
+  this->setItemHidden(special_pos, true);
   this->appendItem(pvars, "Set Model Parameters",
                    "Set model constants or have them randomly choosen");
   this->appendItem(
@@ -78,6 +83,8 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
           &ChooseProtoWidget::changeProto);
   connect(this, &LongQtMainWindow::protocolChanged, sims,
           &SimvarMenu::changeProto);
+  connect(this, &LongQtMainWindow::protocolChanged, special,
+          &SpecialMenu::changeProto);
   connect(this, &LongQtMainWindow::protocolChanged, pvars,
           &PvarMenu::changeProto);
   connect(this, &LongQtMainWindow::protocolChanged, mvars,
@@ -94,10 +101,21 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
   connect(this, &LongQtMainWindow::cellChanged, choose,
           &ChooseProtoWidget::changeCell);
   connect(this, &LongQtMainWindow::cellChanged, sims, &SimvarMenu::changeCell);
+  connect(this, &LongQtMainWindow::cellChanged, special,
+          &SpecialMenu::changeCell);
   connect(this, &LongQtMainWindow::cellChanged, mvars, &MvarMenu::reset);
   connect(this, &LongQtMainWindow::cellChanged, pvars, &PvarMenu::changeCell);
   connect(this, &LongQtMainWindow::cellChanged, mvars, &MvarMenu::changeCell);
   connect(run, &RunWidget::finished, this, &LongQtMainWindow::finished);
+
+  connect(special, &SpecialMenu::noWidget,
+          [this, special_pos]() { this->setItemHidden(special_pos, true); });
+  connect(special, &SpecialMenu::nameChanged,
+          [this, special_pos](QString name) {
+            auto item = ui->menuList->item(special_pos);
+            item->setText(name);
+            item->setHidden(false);
+          });
 
   this->setWindowTitle("LongQt");
   this->showMaximized();
@@ -128,7 +146,7 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
   connect(ui->menuList, &QListWidget::currentRowChanged, this,
           &LongQtMainWindow::list_click_aciton);
   connect(ui->nextButton, &QPushButton::clicked, this,
-          &LongQtMainWindow::next_button_aciton);
+          &LongQtMainWindow::nextItem);
 }
 
 LongQtMainWindow::~LongQtMainWindow() {}
@@ -154,6 +172,14 @@ void LongQtMainWindow::removeItem(int pos) {
   delete ui->menuList->takeItem(pos);
 }
 
+void LongQtMainWindow::setItemHidden(int pos, bool hidden) {
+  ui->menuList->item(pos)->setHidden(hidden);
+  int curIdx = ui->menuStack->currentIndex();
+  if (pos == curIdx && hidden) {
+    this->nextItem();
+  }
+}
+
 void LongQtMainWindow::changeProto(shared_ptr<Protocol> proto) {
   this->proto = proto;
 }
@@ -161,11 +187,14 @@ void LongQtMainWindow::list_click_aciton(int next_row) {
   ui->menuStack->setCurrentIndex(next_row);
   ui->menuList->setCurrentRow(next_row);
 }
-void LongQtMainWindow::next_button_aciton() {
+void LongQtMainWindow::nextItem() {
   int current_row = ui->menuStack->currentIndex();
   if (ui->menuStack->count() > current_row + 1) {
     ui->menuStack->setCurrentIndex(current_row + 1);
     ui->menuList->setCurrentRow(current_row + 1);
+    if (ui->menuList->item(current_row + 1)->isHidden()) {
+      this->nextItem();
+    }
   }
 }
 void LongQtMainWindow::finished() {
