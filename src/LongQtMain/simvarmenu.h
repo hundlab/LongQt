@@ -28,7 +28,8 @@ class SimvarMenu : public QWidget {
   void removeGrid();
 
  private:
-  typedef std::function<Simvar*(std::shared_ptr<LQ::Protocol>, std::string)>
+  typedef std::function<std::pair<QWidget*, Simvar*>(
+      std::shared_ptr<LQ::Protocol>, std::string)>
       SimvarInitializer;
 
   Ui::SimvarMenu* ui;

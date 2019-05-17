@@ -71,29 +71,33 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
       "simulation");
 
   // menu
-  connect(choose, &ChooseProtoWidget::protocolChanged, sims,
-          &SimvarMenu::changeProto);
-  connect(choose, &ChooseProtoWidget::protocolChanged, pvars,
-          &PvarMenu::changeProto);
-  connect(choose, &ChooseProtoWidget::protocolChanged, mvars,
-          &MvarMenu::changeProto);
-  connect(choose, &ChooseProtoWidget::protocolChanged, run,
-          &RunWidget::setProto);
   connect(choose, &ChooseProtoWidget::protocolChanged, this,
+          &LongQtMainWindow::protocolChanged);
+
+  connect(this, &LongQtMainWindow::protocolChanged, choose,
+          &ChooseProtoWidget::changeProto);
+  connect(this, &LongQtMainWindow::protocolChanged, sims,
+          &SimvarMenu::changeProto);
+  connect(this, &LongQtMainWindow::protocolChanged, pvars,
+          &PvarMenu::changeProto);
+  connect(this, &LongQtMainWindow::protocolChanged, mvars,
+          &MvarMenu::changeProto);
+  connect(this, &LongQtMainWindow::protocolChanged, run, &RunWidget::setProto);
+  connect(this, &LongQtMainWindow::protocolChanged, this,
           &LongQtMainWindow::changeProto);
 
   connect(choose, &ChooseProtoWidget::cellChanged, this,
           &LongQtMainWindow::cellChanged);
+  //  connect(sims, &SimvarMenu::cellChanged, this,
+  //  &LongQtMainWindow::cellChanged);
+
   connect(this, &LongQtMainWindow::cellChanged, choose,
           &ChooseProtoWidget::changeCell);
-  connect(sims, &SimvarMenu::cellChanged, this, &LongQtMainWindow::cellChanged);
   connect(this, &LongQtMainWindow::cellChanged, sims, &SimvarMenu::changeCell);
   connect(this, &LongQtMainWindow::cellChanged, mvars, &MvarMenu::reset);
   connect(this, &LongQtMainWindow::cellChanged, pvars, &PvarMenu::changeCell);
   connect(this, &LongQtMainWindow::cellChanged, mvars, &MvarMenu::changeCell);
-  connect(run, SIGNAL(canceled()), this, SLOT(canceled()));
-  connect(run, SIGNAL(finished()), this, SLOT(finished()));
-  connect(run, SIGNAL(running()), this, SLOT(running()));
+  connect(run, &RunWidget::finished, this, &LongQtMainWindow::finished);
 
   this->setWindowTitle("LongQt");
   this->showMaximized();
@@ -121,10 +125,10 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
       settings.setValue("showHelp", true);
     }
   });
-  connect(ui->menuList, SIGNAL(currentRowChanged(int)), this,
-          SLOT(list_click_aciton(int)));
-  connect(ui->nextButton, SIGNAL(clicked()), this, SLOT(next_button_aciton()));
-
+  connect(ui->menuList, &QListWidget::currentRowChanged, this,
+          &LongQtMainWindow::list_click_aciton);
+  connect(ui->nextButton, &QPushButton::clicked, this,
+          &LongQtMainWindow::next_button_aciton);
 }
 
 LongQtMainWindow::~LongQtMainWindow() {}
@@ -142,13 +146,12 @@ void LongQtMainWindow::insertItem(int pos, QWidget* widget, QString name,
 
 void LongQtMainWindow::appendItem(QWidget* widget, QString name,
                                   QString toolTip) {
-    this->insertItem(ui->menuList->count(), widget, name, toolTip);
+  this->insertItem(ui->menuList->count(), widget, name, toolTip);
 }
 
-void LongQtMainWindow::removeItem(int pos)
-{
-    ui->menuStack->removeWidget(ui->menuStack->widget(pos));
-    delete ui->menuList->takeItem(ui->menuList->item(pos));
+void LongQtMainWindow::removeItem(int pos) {
+  ui->menuStack->removeWidget(ui->menuStack->widget(pos));
+  delete ui->menuList->takeItem(pos);
 }
 
 void LongQtMainWindow::changeProto(shared_ptr<Protocol> proto) {

@@ -6,23 +6,21 @@
 using namespace std;
 using namespace LongQt;
 
-SimvInt::SimvInt(shared_ptr<Protocol> proto, string name, QString units,
-                 QWidget *parent)
+SimvInt::SimvInt(shared_ptr<Protocol> proto, string name, QSpinBox *parent)
     : Simvar(proto, name, parent) {
-  this->widg = new QSpinBox();
-  this->widg->setSuffix(" " + units);
-  auto layout = new OneItemLayout(this);
-  layout->addWidget(widg);
-  widg->setRange(/*std::numeric_limits<double>::min()*/ -100000,
-                 std::numeric_limits<int>::max());
+  parent->setToolTip(this->getToolTip());
+  parent->setSuffix(" " + this->descriptions[name.c_str()]["Units"]);
+  parent->setRange(/*std::numeric_limits<double>::min()*/ -100000,
+                   std::numeric_limits<int>::max());
 
-  connect(widg, QOverload<int>::of(&QSpinBox::valueChanged), this,
+  connect(parent, QOverload<int>::of(&QSpinBox::valueChanged), this,
           &SimvInt::update_model);
 }
 
 void SimvInt::update_ui() {
+  auto parent = static_cast<QSpinBox *>(this->parent());
   string value = proto->parsStr(this->name);
-  widg->setValue(std::stoi(value));
+  parent->setValue(std::stoi(value));
   emit updated();
 }
 

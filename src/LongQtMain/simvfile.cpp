@@ -5,19 +5,18 @@
 using namespace std;
 using namespace LongQt;
 
-SimvFile::SimvFile(shared_ptr<Protocol> proto, string name, QWidget *parent)
+SimvFile::SimvFile(shared_ptr<Protocol> proto, string name, QLineEdit *parent)
     : Simvar(proto, name, parent) {
-  this->widg = new QLineEdit(this);
-  auto layout = new OneItemLayout(this);
-  layout->addWidget(widg);
-  widg->setReadOnly(true);
-  connect(widg, &QLineEdit::textEdited, this, &SimvFile::update_model);
+  parent->setToolTip(this->getToolTip());
+  parent->setReadOnly(true);
+  connect(parent, &QLineEdit::textEdited, this, &SimvFile::update_model);
 }
 
 void SimvFile::update_ui() {
+  auto parent = static_cast<QLineEdit *>(this->parent());
   QString model_line = QString(proto->parsStr(this->name).c_str());
-  if (widg->text() != model_line) {
-    widg->setText(model_line);
+  if (parent->text() != model_line) {
+    parent->setText(model_line);
   }
   emit updated();
 }

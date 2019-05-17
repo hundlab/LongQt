@@ -10,16 +10,17 @@ using namespace LongQt;
 
 SimvDir::SimvDir(shared_ptr<Protocol> proto, string name, QWidget* parent)
     : Simvar(proto, name, parent) {
+  parent->setToolTip(this->getToolTip());
   line = new QLineEdit();
   QPushButton* setDir = new QPushButton("Choose");
-  QHBoxLayout* layout = new QHBoxLayout(this);
+  QHBoxLayout* layout = new QHBoxLayout(parent);
   layout->setContentsMargins(0, 0, 0, 0);
   layout->addWidget(line);
   layout->addWidget(setDir);
   connect(line, &QLineEdit::textEdited, this, &SimvDir::update_model);
   connect(setDir, &QPushButton::clicked, [=]() {
     QString value = QFileDialog::getExistingDirectory(
-        this, QString(name.c_str()), proto->parsStr(this->name).c_str());
+        parent, QString(name.c_str()), proto->parsStr(this->name).c_str());
     if (value != "") {
       this->update_model(value);
       this->update_ui();

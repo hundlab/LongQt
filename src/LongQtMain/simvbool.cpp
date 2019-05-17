@@ -5,17 +5,15 @@
 using namespace std;
 using namespace LongQt;
 
-SimvBool::SimvBool(shared_ptr<Protocol> proto, string name, QWidget *parent)
+SimvBool::SimvBool(shared_ptr<Protocol> proto, string name, QCheckBox *parent)
     : Simvar(proto, name, parent) {
-  this->widg = new QCheckBox();
-  auto layout = new OneItemLayout(this);
-  layout->addWidget(widg);
-  connect(widg, &QCheckBox::stateChanged, this, &SimvBool::update_model);
+  parent->setToolTip(this->getToolTip());
+  connect(parent, &QCheckBox::stateChanged, this, &SimvBool::update_model);
 }
 
 void SimvBool::update_ui() {
   string value = proto->parsStr(this->name);
-  widg->setChecked(CellUtils::stob(value));
+  static_cast<QCheckBox *>(parent())->setChecked(CellUtils::stob(value));
   emit updated();
 }
 

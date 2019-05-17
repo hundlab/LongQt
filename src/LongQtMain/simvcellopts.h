@@ -6,23 +6,25 @@
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QMap>
+#include <QVBoxLayout>
 namespace LQ = LongQt;
 
 class SimvCellOpts : public Simvar {
  public:
   explicit SimvCellOpts(std::shared_ptr<LQ::Protocol> proto, std::string name,
-                        QWidget* parent = 0);
+                        QGroupBox* parent);
+
   ~SimvCellOpts();
-  void createMenu();
+
+  void update_ui() override;
+  void update_model(bool value);
+  void changeCell(std::shared_ptr<LQ::Cell>) override;
 
  private:
-  virtual void update_ui();
-  void update_model(bool value);
+  void setup(QGroupBox* parent);
 
+  QVBoxLayout* vbox;
   QMap<std::string, QCheckBox*> checkMap;
-  QGroupBox* widg;
- public slots:
-  virtual void changeCell(std::shared_ptr<LQ::Cell>);
 };
 
 #endif  // SimvCellOpts_H

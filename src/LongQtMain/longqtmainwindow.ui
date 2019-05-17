@@ -21,23 +21,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="2">
-     <widget class="QPushButton" name="aboutButton">
-      <property name="text">
-       <string>About</string>
-      </property>
-      <property name="icon">
-       <iconset theme="&quot;help-about&quot;"/>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2">
-     <widget class="QPushButton" name="nextButton">
-      <property name="text">
-       <string>Next</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" rowspan="3">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
@@ -55,6 +38,23 @@
         <number>0</number>
        </property>
       </widget>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QPushButton" name="aboutButton">
+      <property name="text">
+       <string>About</string>
+      </property>
+      <property name="icon">
+       <iconset theme="&quot;help-about&quot;"/>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QPushButton" name="nextButton">
+      <property name="text">
+       <string>Next</string>
+      </property>
      </widget>
     </item>
    </layout>

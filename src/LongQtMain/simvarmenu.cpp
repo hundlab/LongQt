@@ -64,25 +64,34 @@ void SimvarMenu::createMenu() {
   QMap<QString, QFormLayout*> simvars_layouts;
   map<string, SimvarInitializer> initializers = {
       {"double",
-       [this](shared_ptr<Protocol> proto, string name) {
-         return new SimvDouble(proto, name,
-                               descriptions[name.c_str()]["Units"]);
+       [](shared_ptr<Protocol> proto, string name) {
+         auto widg = new QDoubleSpinBox;
+         return std::make_pair(widg,new SimvDouble(proto, name, widg));
        }},
       {"int",
-       [this](shared_ptr<Protocol> proto, string name) {
-         return new SimvInt(proto, name, descriptions[name.c_str()]["Units"]);
+       [](shared_ptr<Protocol> proto, string name) {
+         auto widg = new QSpinBox;
+         return  std::make_pair(widg,new SimvInt(proto, name, widg));
        }},
       {"bool", [](shared_ptr<Protocol> proto,
-                  string name) { return new SimvBool(proto, name); }},
+                  string name) {
+           auto widg = new QCheckBox;
+           return  std::make_pair(widg, new SimvBool(proto, name, widg)); }},
       {"file", [](shared_ptr<Protocol> proto,
-                  string name) { return new SimvFile(proto, name); }},
+                  string name) {
+           auto widg = new QLineEdit;
+           return  std::make_pair(widg, new SimvFile(proto, name, widg)); }},
       {"directory", [](shared_ptr<Protocol> proto,
-                       string name) { return new SimvDir(proto, name); }},
-      {"cell", [](shared_ptr<Protocol> proto,
-                  string name) { return new SimvCell(proto, name); }},
+                       string name) {
+           auto widg = new QWidget;
+           return  std::make_pair(widg, new SimvDir(proto, name, widg)); }}
+/*      {"cell", [this](shared_ptr<Protocol> proto,
+                  string name) { auto simv = new SimvCell(proto, name);
+     connect(simv, &Simvar::cellChanged, this, &SimvarMenu::cellChanged);
+    return simv;}},
       {"cell_option", [](shared_ptr<Protocol> proto, string name) {
          return new SimvCellOpts(proto, name);
-       }}};
+       }}*/};
   // do all the work for simvars setup
   for (auto par : proto->parsList()) {
     auto name = par.first.c_str();
@@ -90,17 +99,19 @@ void SimvarMenu::createMenu() {
     if (simvars_layouts.find(type) == simvars_layouts.end()) {
       simvars_layouts.insert(type, new QFormLayout());
     }
-    QLabel* simvars_label = new QLabel(descriptions[name]["Name"]);
-    simvars_label->setToolTip(descriptions[name]["Description"]);
     try {
-      auto widg = initializers.at(type)(proto, name);
+      QWidget* widg;
+      Simvar* simvar;
+      std::tie(widg, simvar) = initializers.at(type)(proto, name);
+      QLabel* simvars_label = new QLabel;
+      simvar->setupLabel(simvars_label);
+      simvars.insert(name, simvar);
+      simvars_layouts[type]->addRow(simvars_label, static_cast<QWidget*>(widg));
       widg->setObjectName(name);
-      simvars.insert(name, widg);
-      simvars_layouts[type]->addRow(simvars_label, widg);
-      connect(widg, &Simvar::cellChanged, this, &SimvarMenu::cellChanged);
     } catch (std::out_of_range) {
-      Logger::getInstance()->write("SimvarsMenu: intializer for {} not found",
-                                   type);
+      //      Logger::getInstance()->write("SimvarsMenu: intializer for {} not
+      //      found",
+      //                                   type);
     }
   }
   if (simvars_layouts["double"] != NULL) {
@@ -112,12 +123,12 @@ void SimvarMenu::createMenu() {
   if (simvars_layouts["bool"] != NULL) {
     ui->variablesLayout->addLayout(simvars_layouts["bool"]);
   }
-  QString celloptsLabel =
-      static_cast<QLabel*>(simvars_layouts["cell_option"]->takeAt(0)->widget())
-          ->text();
-  QWidget* cellopts = simvars_layouts["cell_option"]->takeAt(0)->widget();
-  simvars_layouts["cell"]->addRow(celloptsLabel, cellopts);
-  ui->variablesLayout->addLayout(simvars_layouts["cell"]);
+  //  QString celloptsLabel =
+  //      static_cast<QLabel*>(simvars_layouts["cell_option"]->takeAt(0)->widget())
+  //          ->text();
+  //  QWidget* cellopts = simvars_layouts["cell_option"]->takeAt(0)->widget();
+  //  simvars_layouts["cell"]->addRow(celloptsLabel, cellopts);
+  //  ui->variablesLayout->addLayout(simvars_layouts["cell"]);
   ui->filesLayout->addLayout(simvars_layouts["file"]);
   ui->filesLayout->addLayout(simvars_layouts["directory"]);
   // tabs settup

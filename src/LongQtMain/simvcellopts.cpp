@@ -9,27 +9,23 @@ using namespace std;
 using namespace LongQt;
 
 SimvCellOpts::SimvCellOpts(shared_ptr<Protocol> proto, string name,
-                           QWidget* parent)
+                           QGroupBox* parent)
     : Simvar(proto, name, parent) {
-  this->createMenu();
+  parent->setFlat(true);
+  parent->setTitle(this->getPrettyName());
+  parent->setToolTip(this->getToolTip());
+  this->vbox = new QVBoxLayout(parent);
+  this->setup(parent);
 }
 
-void SimvCellOpts::createMenu() {
-  this->widg = new QGroupBox(this);
-  widg->setFlat(true);
-  auto layout = new OneItemLayout(this);
-  layout->addWidget(widg);
-  auto vbox = new QVBoxLayout(widg);
-  bool first = true;
+void SimvCellOpts::setup(QGroupBox* parent) {
   for (auto& opt : this->proto->cell()->optionsMap()) {
     auto cbox = new QCheckBox(opt.first.c_str());
     vbox->addWidget(cbox);
     checkMap[opt.first] = cbox;
     connect(cbox, &QCheckBox::clicked, this, &SimvCellOpts::update_model);
-    if (first) {
-      first = false;
-    }
   }
+  this->update_ui();
 }
 
 void SimvCellOpts::update_ui() {
@@ -46,20 +42,30 @@ void SimvCellOpts::update_ui() {
 
 void SimvCellOpts::update_model(bool) {
   string value;
-  std::for_each(this->checkMap.keyBegin(), this->checkMap.keyEnd(),
-                [this, &value](const string& checkbox) {
-                  if (checkMap[checkbox]->checkState()) {
-                    value += checkbox + "|";
-                  }
-                });
+  for (const string& checkbox : this->checkMap.keys()) {
+    if (checkMap[checkbox]->checkState()) {
+      value += checkbox + "|";
+    }
+  }
   proto->parsStr(name, value);
   this->update_ui();
 }
 
-void SimvCellOpts::changeCell(shared_ptr<Cell>) {
-  qDeleteAll(this->children());
+void SimvCellOpts::changeCell(shared_ptr<Cell> cell) {
+  if (cell != proto->cell()) {
+    Logger::getInstance()->write(
+        "SimvCellOpts: Protocol cell does not match new cell");
+  }
+  QLayoutItem* item;
+  while ((item = vbox->takeAt(0)) != 0) {
+    if (item) {
+      delete item->widget();
+    }
+    delete item;
+  }
   this->checkMap.clear();
-  this->createMenu();
+  auto parent = static_cast<QGroupBox*>(this->parent());
+  this->setup(parent);
 }
 
 SimvCellOpts::~SimvCellOpts() {}

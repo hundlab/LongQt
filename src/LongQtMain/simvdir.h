@@ -10,13 +10,14 @@ namespace LQ = LongQt;
 class SimvDir : public Simvar {
  public:
   explicit SimvDir(std::shared_ptr<LQ::Protocol> proto, std::string name,
-                   QWidget* parent = 0);
+                   QWidget* parent);
+
   ~SimvDir();
 
- private:
-  virtual void update_ui();
+  void update_ui() override;
   void update_model(QString value);
 
+ private:
   QLineEdit* line;
 };
 

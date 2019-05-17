@@ -24,7 +24,8 @@ SOURCES +=\
     $$PWD/voltageclampdelegate.cpp \
     $$PWD/dataoutputselectionmodel.cpp \
     $$PWD/dataoutputitem.cpp \
-    $$PWD/longqtmainwindow.cpp
+    $$PWD/longqtmainwindow.cpp \
+    $$PWD/protochooser.cpp
 
 HEADERS  +=\
 	$$PWD/dvarmenu.h\
@@ -50,7 +51,8 @@ HEADERS  +=\
     $$PWD/voltageclampdelegate.h \
     $$PWD/dataoutputselectionmodel.h \
     $$PWD/dataoutputitem.h \
-    $$PWD/longqtmainwindow.h
+    $$PWD/longqtmainwindow.h \
+    $$PWD/protochooser.h
 
 FORMS += \
     $$PWD/runwidget.ui \

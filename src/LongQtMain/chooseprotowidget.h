@@ -11,7 +11,10 @@
 #include <QWidget>
 
 #include "cellutils.h"
+#include "protochooser.h"
 #include "protocol.h"
+#include "simvcell.h"
+#include "simvcellopts.h"
 namespace LQ = LongQt;
 
 namespace Ui {
@@ -30,21 +33,14 @@ class ChooseProtoWidget : public QWidget {
 
  private:
   Ui::ChooseProtoWidget* ui;
-  std::shared_ptr<LQ::Protocol> proto;
-  QWidget* parent;
-  QButtonGroup* clampType;
-  //    QComboBox* ui::cellType;
-  QString defaultCell;
-  QMap<int, std::string> protoNumMap;
+  ProtoChooser* clampType = 0;
+  SimvCellOpts* cellOptions = 0;
+  SimvCell* cellType = 0;
+
   void updateMenu();
- private slots:
-  void on_cellType_currentIndexChanged(QString name);
  public slots:
-  void changeProto(int value);
-  void changeProto(std::string name);
-  void changeProto(std::shared_ptr<LQ::Protocol>, bool raise = false);
   void changeCell(std::shared_ptr<LQ::Cell>);
-  void resetProto();
+  void changeProto(std::shared_ptr<LQ::Protocol>);
   void on_readSettings_clicked();
 };
 

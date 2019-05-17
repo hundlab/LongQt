@@ -5,26 +5,26 @@
 using namespace std;
 using namespace LongQt;
 
-SimvCell::SimvCell(shared_ptr<Protocol> proto, string name, QWidget* parent)
+SimvCell::SimvCell(shared_ptr<Protocol> proto, string name, QComboBox* parent)
     : Simvar(proto, name, parent) {
-  this->widg = new QComboBox();
-  auto layout = new OneItemLayout(this);
-  layout->addWidget(widg);
+  parent->setToolTip(this->getToolTip());
   QStringList cell_options;
   for (auto& im : proto->cellOptions()) {
     cell_options << im.c_str();
   }
-  widg->addItems(cell_options);
-  connect(widg, QOverload<const QString&>::of(&QComboBox::currentIndexChanged),
-          this, &SimvCell::update_model);
+  parent->addItems(cell_options);
+  connect(parent,
+          QOverload<const QString&>::of(&QComboBox::currentIndexChanged), this,
+          &SimvCell::update_model);
 }
 
 void SimvCell::update_ui() {
-  int index = widg->findText(proto->parsStr(this->name).c_str());
+  auto parent = static_cast<QComboBox*>(this->parent());
+  int index = parent->findText(proto->parsStr(this->name).c_str());
   if (index != -1) {
-    bool state = widg->blockSignals(true);
-    widg->setCurrentIndex(index);
-    widg->blockSignals(state);
+    bool state = parent->blockSignals(true);
+    parent->setCurrentIndex(index);
+    parent->blockSignals(state);
   }
   emit updated();
 }
@@ -33,6 +33,19 @@ void SimvCell::update_model(QString value) {
   proto->parsStr(name, value.toStdString());
   CellUtils::set_default_vals(*this->proto);
   emit cellChanged(this->proto->cell());
+}
+
+void SimvCell::changeProto(std::shared_ptr<Protocol> proto) {
+  Simvar::changeProto(proto);
+  auto parent = static_cast<QComboBox*>(this->parent());
+  bool signalState = parent->blockSignals(true);
+  parent->clear();
+  QStringList cell_options;
+  for (auto& im : proto->cellOptions()) {
+    cell_options << im.c_str();
+  }
+  parent->addItems(cell_options);
+  parent->blockSignals(signalState);
 }
 
 SimvCell::~SimvCell() {}

@@ -9,14 +9,11 @@ namespace LQ = LongQt;
 class SimvFile : public Simvar {
  public:
   explicit SimvFile(std::shared_ptr<LQ::Protocol> proto, std::string name,
-                    QWidget* parent = 0);
+                    QLineEdit* parent);
   ~SimvFile();
 
- private:
-  virtual void update_ui();
+  void update_ui() override;
   void update_model(QString value);
-
-  QLineEdit* widg;
 };
 
 #endif  // SimvFile_H

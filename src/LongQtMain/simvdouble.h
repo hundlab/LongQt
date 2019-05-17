@@ -9,14 +9,12 @@ namespace LQ = LongQt;
 class SimvDouble : public Simvar {
  public:
   explicit SimvDouble(std::shared_ptr<LQ::Protocol> proto, std::string name,
-                      QString units, QWidget* parent = 0);
+                      QDoubleSpinBox* parent);
+
   ~SimvDouble();
 
- private:
-  virtual void update_ui();
+  void update_ui() override;
   void update_model(double value);
-
-  QDoubleSpinBox* widg;
 };
 
 #endif  // SIMVDOUBLE_H
