@@ -8,6 +8,7 @@
 #include <QButtonGroup>
 #include <QComboBox>
 #include <QLabel>
+#include <QPointer>
 #include <QWidget>
 
 #include "cellutils.h"
@@ -33,9 +34,9 @@ class ChooseProtoWidget : public QWidget {
 
  private:
   Ui::ChooseProtoWidget* ui;
-  ProtoChooser* clampType = 0;
-  SimvCellOpts* cellOptions = 0;
-  SimvCell* cellType = 0;
+  QPointer<ProtoChooser> clampType;
+  QPointer<SimvCellOpts> cellOptions;
+  QPointer<SimvCell> cellType;
 
   void updateMenu();
  public slots:

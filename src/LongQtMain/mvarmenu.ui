@@ -13,9 +13,36 @@
   <property name="windowTitle">
    <string>MvarMenu</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QLabel" name="label">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="2">
+    <widget class="QLabel" name="beginMeasLabel">
+     <property name="text">
+      <string>beginMeas</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="percrepolBox">
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="value">
+      <number>50</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="percrepolLabel">
+     <property name="toolTip">
+      <string>Measurements are all recorded once per beat. Measurment begins at the minimum voltage and contiunes until percent repolarization is reached. If it is set to 0% measurement will stop directly after the maxium. If 100% is set it will attempt to find the next minium. Typical values are 50%, 75% and 90%.</string>
+     </property>
+     <property name="text">
+      <string>Percent Repolarization</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="4">
+    <widget class="QLabel" name="descriptionLabel">
      <property name="font">
       <font>
        <pointsize>12</pointsize>
@@ -26,7 +53,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item row="1" column="0" colspan="4">
     <widget class="QTreeView" name="measView">
      <property name="sortingEnabled">
       <bool>true</bool>
@@ -42,29 +69,28 @@
      </attribute>
     </widget>
    </item>
-   <item>
-    <layout class="QFormLayout" name="optionsLayout">
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="percrepolBox">
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="value">
-        <number>50</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="percrepolLabel">
-       <property name="toolTip">
-        <string>Measurements are all recorded once per beat. Measurment begins at the minimum voltage and contiunes until percent repolarization is reached. If it is set to 0% measurement will stop directly after the maxium. If 100% is set it will attempt to find the next minium. Typical values are 50%, 75% and 90%.</string>
-       </property>
-       <property name="text">
-        <string>Percent Repolarization</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="2" column="3">
+    <widget class="QDoubleSpinBox" name="beginMeasSpinBox"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="beginWriteLabel">
+     <property name="text">
+      <string>beginWrite</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QDoubleSpinBox" name="beginWriteSpinBox"/>
+   </item>
+   <item row="3" column="2">
+    <widget class="QLabel" name="writeIntLabel">
+     <property name="text">
+      <string>writeInt</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QSpinBox" name="writeIntSpinBox"/>
    </item>
   </layout>
  </widget>

@@ -10,10 +10,12 @@ PvarMenu::PvarMenu(shared_ptr<Protocol> proto, QWidget *parent)
     : QWidget(parent), ui(new Ui::PvarMenu) {
   ui->setupUi(this);
   this->proto = proto;
-  this->pvarsDescriptions =
-      GuiUtils::readDesc(":/hoverText/cellParsDesc.json");
+  this->pvarsDescriptions = GuiUtils::readDesc(":/hoverText/cellParsDesc.json");
   ui->treeWidget->addAction(ui->actionDelete);
   ui->treeWidget->addAction(ui->actionShow_Cells);
+  this->numTrials = new SimvInt(this->proto, "numtrials", ui->numTrialsSpinBox);
+  this->numTrials->setupLabel(ui->numTrialsLabel);
+  this->numTrials->update_ui();
   this->updateList();
 }
 
@@ -34,11 +36,15 @@ void PvarMenu::updateList() {
 void PvarMenu::changeProto(shared_ptr<Protocol> proto) {
   this->proto = proto;
   if (this->addmenu) addmenu->changeProto(proto);
+  this->numTrials->changeProto(this->proto);
+  this->numTrials->update_ui();
   this->updateList();
 }
 
 void PvarMenu::changeCell(shared_ptr<Cell> cell) {
   if (this->addmenu) addmenu->changeCell(cell);
+  this->numTrials->changeCell(cell);
+  this->numTrials->update_ui();
   this->updateList();
 }
 

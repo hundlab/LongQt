@@ -13,9 +13,13 @@ VoltageClampSetupWidget::VoltageClampSetupWidget(
 
   this->proto = initial_proto;
   this->model = new VoltageClampModel(proto, this);
-  this->ui->voltageClampView->setItemDelegate(
+  ui->voltageClampView->setItemDelegate(
       new VoltageClampDelegate(this->ui->voltageClampView));
+  this->tMax = new SimvDouble(this->proto, "tMax", ui->tMaxSpinBox);
+  this->tMax->setupLabel(ui->tMaxLabel);
   this->createMenu();
+  connect(this->model, &QAbstractTableModel::dataChanged, this->tMax,
+          &SimvDouble::update_ui);
   //    connect(ui->voltageWidget,&QTableWidget::cellChanged,this,&VoltageClampSetupWidget::update_model);
   //    connect(ui->voltageWidget,&QTableWidget::itemChanged,[this]
   //    (QTableWidgetItem* item)
@@ -39,4 +43,5 @@ void VoltageClampSetupWidget::createMenu() {
       this->model->removeRow(index.row());
     }
   });
+  this->tMax->update_ui();
 }

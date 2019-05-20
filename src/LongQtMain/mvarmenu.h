@@ -7,12 +7,15 @@
 #define MVARMENU_H
 
 #include <QMap>
+#include <QPointer>
 #include <QTreeWidgetItem>
 #include <QVector>
 #include <QWidget>
 
-#include "protocol.h"
 #include "dataoutputselectionmodel.h"
+#include "protocol.h"
+#include "simvdouble.h"
+#include "simvint.h"
 namespace LQ = LongQt;
 
 namespace Ui {
@@ -31,6 +34,9 @@ class MvarMenu : public QWidget {
   std::shared_ptr<LQ::Protocol> proto;
   Ui::MvarMenu* ui;
   DataOutputSelectionModel* model;
+  QPointer<SimvDouble> beginMeas;
+  QPointer<SimvDouble> beingWrite;
+  QPointer<SimvInt> writeInt;
 
  public slots:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);

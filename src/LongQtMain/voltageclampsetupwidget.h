@@ -1,10 +1,12 @@
 #ifndef VOLTAGECLAMPSETUPWIDGET_H
 #define VOLTAGECLAMPSETUPWIDGET_H
 
+#include "simvdouble.h"
 #include "voltageclampmodel.h"
 
 #include <voltageClampProtocol.h>
 #include <QWidget>
+#include <QPointer>
 namespace LQ = LongQt;
 
 namespace Ui {
@@ -25,6 +27,7 @@ class VoltageClampSetupWidget : public QWidget {
   VoltageClampModel *model;
   std::shared_ptr<LQ::VoltageClamp> proto;
   Ui::VoltageClampSetupWidget *ui;
+  QPointer<SimvDouble> tMax;
 };
 
 #endif  // VOLTAGECLAMPSETUPWIDGET_H

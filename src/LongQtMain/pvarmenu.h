@@ -12,6 +12,7 @@
 #include "addsinglecellpvar.h"
 #include "grid.h"
 #include "protocol.h"
+#include "simvint.h"
 namespace LQ = LongQt;
 
 namespace Ui {
@@ -34,6 +35,7 @@ class PvarMenu : public QWidget {
  private:
   QPointer<AddSingleCellPvar> addmenu;
   QMap<QString, QMap<QString, QString>> pvarsDescriptions;
+  QPointer<SimvInt> numTrials;
 
  public slots:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);

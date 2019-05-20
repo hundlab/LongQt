@@ -14,17 +14,17 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
-    <widget class="QPushButton" name="removeClamp">
-     <property name="text">
-      <string>Remove Clamp</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QPushButton" name="addClamp">
      <property name="text">
       <string>Add Clamp</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="removeClamp">
+     <property name="text">
+      <string>Remove Clamp</string>
      </property>
     </widget>
    </item>
@@ -43,6 +43,29 @@
    </item>
    <item row="1" column="0" colspan="3">
     <widget class="QTableView" name="voltageClampView"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="tMaxLabel">
+     <property name="text">
+      <string>TmaxLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QDoubleSpinBox" name="tMaxSpinBox"/>
+   </item>
+   <item row="2" column="2">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
