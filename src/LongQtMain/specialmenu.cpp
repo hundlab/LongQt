@@ -5,11 +5,14 @@
 
 #include "gridsetupwidget.h"
 #include "oneitemlayout.h"
+#include "stimulationsettings.h"
 #include "voltageclampsetupwidget.h"
 
 SpecialMenu::SpecialMenu(QWidget *parent) : QWidget(parent) {
   //{CurrentClamp::name, [this](auto proto) {}},
   specialMenus = {
+      {LQ::CurrentClamp::name,
+       [this](auto proto) { return new StimulationSettings(proto, this); }},
       {LQ::VoltageClamp::name,
        [this](auto proto) {
          return new VoltageClampSetupWidget(
@@ -22,7 +25,8 @@ SpecialMenu::SpecialMenu(QWidget *parent) : QWidget(parent) {
                  &SpecialMenu::cellChanged);
          return grid;
        }}};
-  names = {{LQ::VoltageClamp::name, "Voltage Clamp Setup"},
+  names = {{LQ::CurrentClamp::name, "Pacing Setup"},
+           {LQ::VoltageClamp::name, "Voltage Clamp Setup"},
            {LQ::GridProtocol::name, "Grid Setup"}};
 
   new OneItemLayout(this);

@@ -33,6 +33,16 @@ void PvarMenu::updateList() {
   }
 }
 
+void PvarMenu::hideNumTrials(bool hide) {
+  if (hide) {
+    ui->numTrialsSpinBox->hide();
+    ui->numTrialsLabel->hide();
+  } else {
+    ui->numTrialsSpinBox->show();
+    ui->numTrialsLabel->show();
+  }
+}
+
 void PvarMenu::changeProto(shared_ptr<Protocol> proto) {
   this->proto = proto;
   if (this->addmenu) addmenu->changeProto(proto);

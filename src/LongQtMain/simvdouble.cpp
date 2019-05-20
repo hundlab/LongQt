@@ -18,6 +18,7 @@ SimvDouble::SimvDouble(std::shared_ptr<LQ::Protocol> proto, std::string name,
 }
 
 void SimvDouble::update_ui() {
+  if (!this->proto->hasPar(this->name)) return;
   auto parent = static_cast<QDoubleSpinBox *>(this->parent());
   string value = proto->parsStr(this->name);
   parent->setValue(std::stod(value));

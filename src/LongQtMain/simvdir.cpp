@@ -12,6 +12,9 @@ SimvDir::SimvDir(shared_ptr<Protocol> proto, string name, QWidget* parent)
     : Simvar(proto, name, parent) {
   parent->setToolTip(this->getToolTip());
   line = new QLineEdit();
+  //  auto size = line->minimumSize();
+  //  size.setWidth(2 * size.width());
+  //  line->setMinimumSize(size);
   QPushButton* setDir = new QPushButton("Choose");
   QHBoxLayout* layout = new QHBoxLayout(parent);
   layout->setContentsMargins(0, 0, 0, 0);

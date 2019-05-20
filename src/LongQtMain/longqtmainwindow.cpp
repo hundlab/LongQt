@@ -62,7 +62,7 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
       "Change model parameters (e.g. change an ion channel conductance)");
   this->appendItem(special, "", "");
   int special_pos = ui->menuStack->count() - 1;
-  this->setItemHidden(special_pos, true);
+  //  this->setItemHidden(special_pos, true);
   this->appendItem(pvars, "Set Model Parameters",
                    "Set model constants or have them randomly choosen");
   this->appendItem(
@@ -118,6 +118,7 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
             item->setHidden(false);
           });
 
+  special->changeProto(this->proto);
   this->setWindowTitle("LongQt");
   this->showMaximized();
   // connect buttons

@@ -23,7 +23,7 @@ class SimvarMenu : public QWidget {
  public:
   explicit SimvarMenu(std::shared_ptr<LQ::Protocol> initial_proto,
                       QWidget* parent = nullptr);
-  ~SimvarMenu();
+  virtual ~SimvarMenu();
 
   void setNames(std::list<std::list<std::string>> names);
 

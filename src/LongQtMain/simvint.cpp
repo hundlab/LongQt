@@ -18,6 +18,7 @@ SimvInt::SimvInt(shared_ptr<Protocol> proto, string name, QSpinBox *parent)
 }
 
 void SimvInt::update_ui() {
+  if (!this->proto->hasPar(this->name)) return;
   auto parent = static_cast<QSpinBox *>(this->parent());
   string value = proto->parsStr(this->name);
   parent->setValue(std::stoi(value));

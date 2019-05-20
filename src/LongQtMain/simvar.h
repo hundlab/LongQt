@@ -26,6 +26,8 @@ class Simvar : public QObject {
   std::shared_ptr<LQ::Protocol> proto;
   std::string name;
 
+  QLabel* label = nullptr;
+
   static QMap<QString, QMap<QString, QString>> descriptions;
 
  signals:

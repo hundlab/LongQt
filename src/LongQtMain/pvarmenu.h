@@ -37,6 +37,8 @@ class PvarMenu : public QWidget {
   QMap<QString, QMap<QString, QString>> pvarsDescriptions;
   QPointer<SimvInt> numTrials;
 
+  void hideNumTrials(bool hide);
+
  public slots:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);
   void changeCell(std::shared_ptr<LQ::Cell> cell);

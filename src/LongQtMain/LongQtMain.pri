@@ -27,7 +27,8 @@ SOURCES +=\
     $$PWD/longqtmainwindow.cpp \
     $$PWD/protochooser.cpp \
     $$PWD/specialmenu.cpp \
-    $$PWD/simfiles.cpp
+    $$PWD/simfiles.cpp \
+    $$PWD/stimulationsettings.cpp
 
 HEADERS  +=\
 	$$PWD/dvarmenu.h\
@@ -56,7 +57,8 @@ HEADERS  +=\
     $$PWD/longqtmainwindow.h \
     $$PWD/protochooser.h \
     $$PWD/specialmenu.h \
-    $$PWD/simfiles.h
+    $$PWD/simfiles.h \
+    $$PWD/stimulationsettings.h
 
 FORMS += \
     $$PWD/runwidget.ui \
