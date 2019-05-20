@@ -82,6 +82,5 @@ void LQGridEditor::on_actionToggle_Second_Stim_triggered() {
 
 void LQGridEditor::on_actionSet_Sim_Parameters_triggered() {
   SimvarMenu* menu = new SimvarMenu(this->proto);
-  menu->removeGrid();
   menu->show();
 }

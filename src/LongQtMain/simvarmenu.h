@@ -5,6 +5,7 @@
 
 #include <simvar.h>
 
+#include <QPointer>
 #include <QWidget>
 
 #include <gridsetupwidget.h>
@@ -21,11 +22,10 @@ class SimvarMenu : public QWidget {
 
  public:
   explicit SimvarMenu(std::shared_ptr<LQ::Protocol> initial_proto,
-                      QWidget* parent = 0);
-  void createMenu();
+                      QWidget* parent = nullptr);
   ~SimvarMenu();
 
-  void removeGrid();
+  void setNames(std::list<std::list<std::string>> names);
 
  private:
   typedef std::function<std::pair<QWidget*, Simvar*>(
@@ -35,22 +35,18 @@ class SimvarMenu : public QWidget {
   Ui::SimvarMenu* ui;
   std::shared_ptr<LQ::Protocol> proto;
   // Buttons & their labels
-  QMap<QString, QMap<QString, QString>> descriptions;
-  QMap<QString, Simvar*> simvars;
+  QMap<QString, QPointer<Simvar>> simvars;
+  std::list<std::list<std::string>> names;
 
-  //  GridSetupWidget* grid = 0;
-  //  VoltageClampSetupWidget* voltageClamp = 0;
-  // initalizer
-  void initialize(const std::map<std::string, LQ::GetSetRef>::iterator it);
+  void createMenu();
+
   // screen functions
   void update_menu();  // make menu match pars
-  bool signalCellTypeChange = true;
 
- public slots:
+ public:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);
   void changeCell(std::shared_ptr<LQ::Cell>);
   void reset();
-  void setWorkingDir(QDir& dir);
  signals:
   void cellChanged(std::shared_ptr<LQ::Cell>);
   void updated();

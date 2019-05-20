@@ -26,7 +26,8 @@ SOURCES +=\
     $$PWD/dataoutputitem.cpp \
     $$PWD/longqtmainwindow.cpp \
     $$PWD/protochooser.cpp \
-    $$PWD/specialmenu.cpp
+    $$PWD/specialmenu.cpp \
+    $$PWD/simfiles.cpp
 
 HEADERS  +=\
 	$$PWD/dvarmenu.h\
@@ -54,7 +55,8 @@ HEADERS  +=\
     $$PWD/dataoutputitem.h \
     $$PWD/longqtmainwindow.h \
     $$PWD/protochooser.h \
-    $$PWD/specialmenu.h
+    $$PWD/specialmenu.h \
+    $$PWD/simfiles.h
 
 FORMS += \
     $$PWD/runwidget.ui \

@@ -13,37 +13,8 @@
   <property name="windowTitle">
    <string>Simulation Variables Menu</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <widget class="QTabWidget" name="tabs">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <property name="tabBarAutoHide">
-      <bool>false</bool>
-     </property>
-     <widget class="QWidget" name="variables">
-      <property name="label" stdset="0">
-       <string>Simulation</string>
-      </property>
-      <attribute name="title">
-       <string>Simulation Variables</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="variablesLayout">
-       <property name="sizeConstraint">
-        <enum>QLayout::SetDefaultConstraint</enum>
-       </property>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="files">
-      <attribute name="title">
-       <string>Simulation files</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="filesLayout"/>
-     </widget>
-    </widget>
-   </item>
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
     <widget class="QLabel" name="label">
      <property name="font">
       <font>
@@ -54,6 +25,22 @@
       <string>Change how the simulation is run.</string>
      </property>
     </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="itemsLayout"/>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

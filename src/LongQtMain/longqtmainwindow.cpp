@@ -28,6 +28,7 @@
 #include "pvarmenu.h"
 #include "runwidget.h"
 #include "settingsIO.h"
+#include "simfiles.h"
 #include "simvarmenu.h"
 #include "specialmenu.h"
 #include "ui_longqtmainwindow.h"
@@ -46,7 +47,7 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
   } else {
     this->proto = choose->getCurrentProto();
   }
-  SimvarMenu* sims = new SimvarMenu(proto, this);
+  SimFiles* sims = new SimFiles(proto, this);
   SpecialMenu* special = new SpecialMenu(this);
   MvarMenu* mvars = new MvarMenu(proto, this);
   PvarMenu* pvars = new PvarMenu(proto, this);
