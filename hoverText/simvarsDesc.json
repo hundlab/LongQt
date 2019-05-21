@@ -14,9 +14,9 @@
 	"celltype": {"Name": "Cell Type", "Description":"The cell model to use in the simulation"},
 	"cell_option": {"Name": "Cell Options", "Description": "Options modify the base model"},
 	"simvarfile": {"Name": "Simulation Settings", "Description":"Name of output file where all settings necessary to recreate a simulation are saved"},
-	"cellStateDir": {"Name": "Cell State", "Description":"Folder containing output text files with data and initial conditions"},
+    "cellStateDir": {"Name": "Read Cell State", "Description":"Folder containing output text files with data and initial conditions"},
 	"datadir": {"Name": "Data Folder", "Description":"Folder that will contain output of simulation"},
 	"writeint": {"Name": "Write interval", "Description":"The sampling data interval for variables in 'Select output' will be written to a file. (Small values here can cause long run-times)"},
-	"cellStateFile": {"Name": "Cell State", "Description":"The file to read the cell state from. Default is the most recently imported simvars file."},
+    "cellStateFile": {"Name": "Cell State File Name", "Description":"The file to read the cell state from. Default is the most recently imported simvars file."},
 	"stimNodes": {"Name": "Simulus Nodes", "Description":"The nodes in the grid to apply the stimulus"}
 }

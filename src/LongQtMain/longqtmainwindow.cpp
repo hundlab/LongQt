@@ -57,9 +57,8 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
       choose, "Set Protocol and Cell",
       "Choose the type of protocol to follow in the simulation (e.g. fix "
       "the cell membrane voltage)");
-  this->appendItem(
-      sims, "Set Sim. Parameters",
-      "Change model parameters (e.g. change an ion channel conductance)");
+  this->appendItem(sims, "Simulation Files",
+                   "Change Directorys used by the simulation");
   this->appendItem(special, "", "");
   int special_pos = ui->menuStack->count() - 1;
   //  this->setItemHidden(special_pos, true);
