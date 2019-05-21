@@ -12,7 +12,12 @@ SpecialMenu::SpecialMenu(QWidget *parent) : QWidget(parent) {
   //{CurrentClamp::name, [this](auto proto) {}},
   specialMenus = {
       {LQ::CurrentClamp::name,
-       [this](auto proto) { return new StimulationSettings(proto, this); }},
+       [this](auto proto) {
+         auto widg = new StimulationSettings(proto, this);
+         connect(this, &SpecialMenu::cellChangedInternal, widg,
+                 &StimulationSettings::changeCell);
+         return widg;
+       }},
       {LQ::VoltageClamp::name,
        [this](auto proto) {
          return new VoltageClampSetupWidget(
@@ -43,4 +48,6 @@ void SpecialMenu::changeProto(std::shared_ptr<LQ::Protocol> proto) {
   }
 }
 
-void SpecialMenu::changeCell(std::shared_ptr<LQ::Cell> cell) {}
+void SpecialMenu::changeCell(std::shared_ptr<LQ::Cell> cell) {
+  emit cellChangedInternal(cell);
+}

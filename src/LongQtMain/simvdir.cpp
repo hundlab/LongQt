@@ -29,6 +29,11 @@ SimvDir::SimvDir(shared_ptr<Protocol> proto, string name, QWidget* parent)
       this->update_ui();
     }
   });
+  connect(line, &QLineEdit::textChanged, [this]() {
+    auto text = line->text();
+    QFontMetrics fm(QFont("", 0));
+    line->setFixedSize(fm.width(text), fm.height());
+  });
 }
 
 void SimvDir::update_ui() {

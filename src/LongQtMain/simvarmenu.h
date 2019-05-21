@@ -27,6 +27,8 @@ class SimvarMenu : public QWidget {
 
   void setNames(std::list<std::list<std::string>> names);
 
+  void update_menu();
+
  private:
   typedef std::function<std::pair<QWidget*, Simvar*>(
       std::shared_ptr<LQ::Protocol>, std::string)>
@@ -37,11 +39,7 @@ class SimvarMenu : public QWidget {
   // Buttons & their labels
   QMap<QString, QPointer<Simvar>> simvars;
   std::list<std::list<std::string>> names;
-
   void createMenu();
-
-  // screen functions
-  void update_menu();  // make menu match pars
 
  public:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);

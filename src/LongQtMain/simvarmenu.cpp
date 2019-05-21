@@ -49,7 +49,7 @@ SimvarMenu::SimvarMenu(shared_ptr<Protocol> initial_proto, QWidget* parent)
 
 SimvarMenu::~SimvarMenu() { delete ui; }
 
-void SimvarMenu::setNames(std::list<std::list<std::string> > names) {
+void SimvarMenu::setNames(std::list<std::list<std::string>> names) {
   this->names = names;
   this->reset();
 }
@@ -119,7 +119,7 @@ void SimvarMenu::createMenu() {
     col += 2;
     row = 0;
   }
-  // make menu match proto
+  // update menu items to match data
   update_menu();
 }
 
