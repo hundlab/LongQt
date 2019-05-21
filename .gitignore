@@ -15,7 +15,6 @@ LQGridEditor
 build/*
 
 #data files and temp text editor files
-data*/
 defaultTrials/
 *.swp
 *.swo

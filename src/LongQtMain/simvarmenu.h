@@ -3,7 +3,7 @@
 
 #include "voltageclampsetupwidget.h"
 
-#include <simvar.h>
+#include "simvar.h"
 
 #include <QPointer>
 #include <QWidget>

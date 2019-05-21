@@ -20,10 +20,9 @@
 #include <iterator>
 
 #include "chooseprotowidget.h"
-#include "dvarmenu.h"
 #include "graph.h"
 #include "longqtmainwindow.h"
-#include "mvarmenu.h"
+#include "dataoutputselectionwidget.h"
 #include "protocol.h"
 #include "pvarmenu.h"
 #include "runwidget.h"
