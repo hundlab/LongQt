@@ -2,14 +2,9 @@
     <qresource prefix="/">
         <file>LICENSE</file>
         <file>startMessage.txt</file>
-        <file>hoverText/dvarsDescriptions.json</file>
-        <file>hoverText/dvarsUnits.json</file>
-        <file>hoverText/measDescriptions.json</file>
-        <file>hoverText/parsDescriptions.json</file>
-        <file>hoverText/pvarsDescriptions.json</file>
+        <file>hoverText/cellParsDesc.json</file>
         <file>hoverText/cellVarsDesc.json</file>
         <file>hoverText/measDesc.json</file>
         <file>hoverText/simvarsDesc.json</file>
-        <file>hoverText/cellParsDesc.json</file>
     </qresource>
 </RCC>
