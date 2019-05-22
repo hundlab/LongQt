@@ -20,9 +20,10 @@
 #include <iterator>
 
 #include "chooseprotowidget.h"
-#include "graph.h"
-#include "longqtmainwindow.h"
 #include "dataoutputselectionwidget.h"
+#include "graph.h"
+#include "gridwrapper.h"
+#include "longqtmainwindow.h"
 #include "protocol.h"
 #include "pvarmenu.h"
 #include "runwidget.h"
@@ -48,6 +49,7 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
   }
   SimFiles* sims = new SimFiles(proto, this);
   SpecialMenu* special = new SpecialMenu(this);
+  GridWrapper* grid = new GridWrapper(proto, this);
   MvarMenu* mvars = new MvarMenu(proto, this);
   PvarMenu* pvars = new PvarMenu(proto, this);
   RunWidget* run = new RunWidget(proto, this);
@@ -60,7 +62,9 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
                    "Change Directorys used by the simulation");
   this->appendItem(special, "", "");
   int special_pos = ui->menuStack->count() - 1;
-  //  this->setItemHidden(special_pos, true);
+  this->appendItem(grid, "Grid Setup", "");
+  int grid_pos = ui->menuStack->count() - 1;
+  this->setItemHidden(grid_pos, true);
   this->appendItem(pvars, "Set Model Parameters",
                    "Set model constants or have them randomly choosen");
   this->appendItem(
@@ -84,6 +88,8 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
           &SimvarMenu::changeProto);
   connect(this, &LongQtMainWindow::protocolChanged, special,
           &SpecialMenu::changeProto);
+  connect(this, &LongQtMainWindow::protocolChanged, grid,
+          &GridWrapper::changeProto);
   connect(this, &LongQtMainWindow::protocolChanged, pvars,
           &PvarMenu::changeProto);
   connect(this, &LongQtMainWindow::protocolChanged, mvars,
@@ -93,6 +99,8 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
           &LongQtMainWindow::changeProto);
 
   connect(choose, &ChooseProtoWidget::cellChanged, this,
+          &LongQtMainWindow::cellChanged);
+  connect(grid, &GridWrapper::cellChanged, this,
           &LongQtMainWindow::cellChanged);
   //  connect(sims, &SimvarMenu::cellChanged, this,
   //  &LongQtMainWindow::cellChanged);
@@ -115,6 +123,11 @@ LongQtMainWindow::LongQtMainWindow(QString simvarFile, QWidget* parent)
             item->setText(name);
             item->setHidden(false);
           });
+
+  connect(grid, &GridWrapper::widgetSet, [this, grid_pos](bool set) {
+    auto item = ui->menuList->item(grid_pos);
+    item->setHidden(!set);
+  });
 
   special->changeProto(this->proto);
   this->setWindowTitle("LongQt");
