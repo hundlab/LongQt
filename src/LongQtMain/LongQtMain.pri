@@ -9,7 +9,8 @@ SOURCES +=\
     $$PWD/protochooser.cpp \
     $$PWD/runwidget.cpp \
     $$PWD/simfiles.cpp \
-    $$PWD/simvarmenu.cpp
+    $$PWD/simvarmenu.cpp \
+    $$PWD/checkandwarn.cpp
 
 HEADERS  +=\
     $$PWD/CLISimulation.h \
@@ -21,12 +22,14 @@ HEADERS  +=\
     $$PWD/runwidget.h \
     $$PWD/simfiles.h \
     $$PWD/simvarmenu.h \
+    $$PWD/checkandwarn.h
 
 FORMS += \
     $$PWD/chooseprotowidget.ui\
     $$PWD/longqtmainwindow.ui \ 
     $$PWD/runwidget.ui \
-    $$PWD/simvarmenu.ui
+    $$PWD/simvarmenu.ui \
+    $$PWD/checkandwarn.ui
 
 include(CellParamsMenu/CellParamsMenu.pri)
 include(DataOutputMenu/DataOutputMenu.pri)

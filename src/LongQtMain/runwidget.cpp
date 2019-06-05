@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QTextStream>
+#include "checkandwarn.h"
 #include "settingsIO.h"
 #include "ui_runwidget.h"
 
@@ -39,6 +40,14 @@ void RunWidget::write_note() {
   note_file->close();
 }
 void RunWidget::on_runButton_clicked() {
+  auto checkWidg = new CheckAndWarn(this->proto);
+  if (checkWidg->hasWarnings()) {
+    int ret = checkWidg->exec();
+    if (ret == QDialog::DialogCode::Rejected) {
+      return;
+    }
+  }
+
   ui->runButton->setEnabled(false);
   runner.setSims(this->proto);
   this->write_note();

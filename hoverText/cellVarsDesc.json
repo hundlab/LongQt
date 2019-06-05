@@ -1,7 +1,7 @@
 {
     "Ca": {
         "Description": "Ca2+ current through the L-type Ca2+ channel",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "CaM": {
         "Description": "Calmodulin, Ca2+ buffer in myoplasm",
@@ -249,87 +249,87 @@
     },
     "iCa": {
         "Description": "Ca2+ current through the L-type Ca2+ channel",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCaL": {
         "Description": "Total L-type Ca2+ current due to calcium, sodium, and potassium through L-type Ca2+ channel in sarcolemma and junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCab": {
         "Description": "Background Ca2+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCabjunc": {
         "Description": "Background Ca2+ current in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCabsl": {
         "Description": "Background Ca2+ current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCait": {
         "Description": "",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCajunc": {
         "Description": "Ca2+ current in junction and sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCak": {
         "Description": "Potassium current through L-type Ca2+ channel",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCal": {
         "Description": "L-type Ca2+ channel current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCana": {
         "Description": "Sodium current through L-type Ca2+ channel",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCanajunc": {
         "Description": "Sodium current through L-type Ca2+ channel in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCanasl": {
         "Description": "Sodium current through L-type Ca2+ channel in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCart ": {
         "Description": "Total calcium current due to L-type, T-type, and sodium-calcium exchanger",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCasl": {
         "Description": "Total Ca2+ current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCat": {
         "Description": "Ca2+ current through the T-type Ca2+ channel",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iCatt": {
         "Description": "T-type Ca2+ channel current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iClbk": {
         "Description": "Background Cl current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iClca": {
         "Description": "Ca2+-activated Cl current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iClcajunc": {
         "Description": "Ca2+-activated Cl current in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iClcasl": {
         "Description": "Ca2+-activated Cl current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iClt": {
         "Description": "Total transmembrane Cl- current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iDiff": {
         "Description": "Ca2+ transfer from restricted space to myoplasm",
@@ -337,59 +337,59 @@
     },
     "iH": {
         "Description": "Hyperpolarization-activated current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iHk": {
         "Description": "Potassium component of hyperpolarization-activated current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iHna": {
         "Description": "Sodium component of hyperpolarization-activated current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iK1": {
         "Description": "Time-independent K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKach": {
         "Description": "Acetylcholine-sensitive K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKp": {
         "Description": "Plateau K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKpjunc": {
         "Description": "Plateau K+ current in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKpsl": {
         "Description": "Plateau K+ current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKr": {
         "Description": "Rapid delayed rectifier K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKs": {
         "Description": "Slow delayed rectifier K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKsjunc": {
         "Description": "Slow delayed rectifier K+ current in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKssl": {
         "Description": "Slow delayed rectifier K+ current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKt": {
         "Description": "Total transmembrane K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iKur": {
         "Description": "Ultrarapid delayed rectifier K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iLeak": {
         "Description": "Ca2+ leak from JSR to myoplasm",
@@ -397,67 +397,67 @@
     },
     "iNa": {
         "Description": "Fast Na+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNaKjunc": {
         "Description": "Na+-K+ pump in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNaKsl": {
         "Description": "Na+-K+ pump in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNab": {
         "Description": "Background sodium current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNabjunc": {
         "Description": "Background Na+ current in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNabsl": {
         "Description": "Background Na+ current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNaca": {
         "Description": "Na+-Ca2+ exchanger",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNacar": {
         "Description": "Na+-Ca2+ exchanger in restricted space membrane",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNajunc": {
         "Description": "Total Na+ current in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNak": {
         "Description": "Na+-K+ pump",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNal": {
         "Description": "Late Na+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNasl": {
         "Description": "Total Na+ current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNat": {
         "Description": "Total transmembrane Na+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNcxjunc": {
         "Description": "Na+-Ca2+ exchanger current in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iNcxsl": {
         "Description": "Na+-Ca2+ exchanger current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iPca": {
         "Description": "Sarcolemmal Ca2+ pump",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iRel": {
         "Description": "Ca2+ release from JSR to myoplasm",
@@ -465,31 +465,31 @@
     },
     "iSt": {
         "Description": "Sustained inward current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iSus": {
         "Description": "Sustained component of the 4AP-sensitive current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iTo": {
         "Description": "4AP-sensitive transient outward K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iTo2": {
         "Description": "Ca2+-dependent transient outward Cl- current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iTof": {
         "Description": "Fast component of transient outward K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iTos": {
         "Description": "Slow component of transient outward K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iTot": {
         "Description": "Total transmembrane current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iTr": {
         "Description": "Ca2+ transfer from network to junctional sarcoplasmic reticulum",
@@ -497,7 +497,7 @@
     },
     "iTrek": {
         "Description": "TREK-1 K+ current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "iUp": {
         "Description": "Ca2+ uptake from myoplasm to NSR",
@@ -505,19 +505,19 @@
     },
     "ipCa": {
         "Description": "Ca2+ pump current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "ipCajunc": {
         "Description": "Ca2+ pump current in junction",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "ipCasl": {
         "Description": "Ca2+ pump current in sarcolemma",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "ipK": {
         "Description": "Plateau potassium current",
-        "Units": "uA/uF"
+        "Units": "μA/μF"
     },
     "kI": {
         "Description": "Intracellular potassium concentration",

@@ -22,14 +22,11 @@ namespace LQ = LongQt;
 namespace Ui {
 class RunWidget;
 }
-// at the moment the progress bar is not terribly helpful this is because in the
-// multithreading done with QtConncurrent there is no good way to report
-// progress from inside one simulation only multiple trials can be displayed
+
 class RunWidget : public QWidget {
   Q_OBJECT
  public:
-  RunWidget(std::shared_ptr<LQ::Protocol> proto,
-            QWidget* parent = 0);
+  RunWidget(std::shared_ptr<LQ::Protocol> proto, QWidget* parent = nullptr);
  public slots:
   void setProto(std::shared_ptr<LQ::Protocol> proto);
   void cancel();

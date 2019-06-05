@@ -1,4 +1,7 @@
 {
+    "ICaMKIIFactor": {
+        "Description": "Fraction multiplied by concentraion of CaM felt by CaMKII"
+    },
     "IcabFactor": {
         "Description": "Fraction multiplied by background Ca2+ current"
     },
@@ -35,7 +38,9 @@
     "IclbkFactor": {
         "Description": "Fraction multiplied by background Cl- current"
     },
-    "IclcaFactor": {},
+    "IclcaFactor": {
+        "Description": "Fraction multiplied by Ca-activated Cl Current"
+    },
     "IclcajuncFactor": {
         "Description": "Fraction multiplied by Ca2+-activated Cl current in junction"
     },
@@ -51,9 +56,14 @@
     "IkachFactor": {
         "Description": "Fraction multiplied by acetylcholine-sensitive K+ current"
     },
-    "IkbFactor": {},
+    "IkbFactor": {
+        "Description": "Fraction multiplied by the K background current"
+    },
     "IkclFactor": {
         "Description": "Fraction multiplied by K+-Cl transporter "
+    },
+    "IkiFactor": {
+        "Description": "Fraction multiplied by the Time-independent K current"
     },
     "IkpFactor": {
         "Description": "Fraction multiplied by plateau K+ current"
@@ -67,7 +77,9 @@
     "IksjuncFactor": {
         "Description": "Fraction multiplied by slow delayed rectifier K+ current in junction"
     },
-    "IkssFactor": {},
+    "IkssFactor": {
+        "Description": "Fraction multiplied by the Noninactivating Steady-State K Current"
+    },
     "IksslFactor": {
         "Description": "Fraction multiplied by slow delayed rectifier K+ current in sarcolemma"
     },
@@ -125,12 +137,18 @@
     "InalFactor": {
         "Description": "Fraction multiplied by late Na+ current"
     },
-    "InalPFactor": {},
+    "InalPFactor": {
+        "Description": "Fraction multiplied by the late Na current due to phosphorylation"
+    },
     "InaslFactor": {
         "Description": "Fraction multiplied by fast Na+ current in sarcolemma"
     },
-    "InskFactor": {},
-    "InsnaFactor": {},
+    "InskFactor": {
+        "Description": ""
+    },
+    "InsnaFactor": {
+        "Description": ""
+    },
     "IpcaFactor": {
         "Description": "Fraction multiplied by sarcolemmal Ca2+ pump"
     },
@@ -164,18 +182,30 @@
     "ItoFactor": {
         "Description": "Fraction multiplied by 4AP-sensitive transient outward K+ current"
     },
-    "ItofFactor": {},
-    "ItosFactor": {},
+    "ItofFactor": {
+        "Description": "Fraction multiplied by Fast Transient Outward K Current"
+    },
+    "ItosFactor": {
+        "Description": "Fraction multiplied by Slow Transient Outward K Current"
+    },
     "ItrFactor": {
         "Description": "Fraction multiplied by Ca2+ transfer from NSR to JSR"
     },
-    "ItrekFactor": {},
+    "ItrekFactor": {
+        "Description": "Fraction multiplied by Two-pore Potassium channel"
+    },
     "IupFactor": {
         "Description": "Fraction multiplied by Ca2+ uptake from myoplasm to NSR"
     },
-    "JSRcaRelFactor": {},
-    "JleakFactor": {},
-    "JrelFactor": {},
+    "JSRcaRelFactor": {
+        "Description": "Fraction multiplied by the Ca release through the sarcoplasmic reticulum"
+    },
+    "JleakFactor": {
+        "Description": "Fraction multiplied by the Ca leak through the sarcoplasmic reticulum"
+    },
+    "JrelFactor": {
+        "Description": "Fraction multiplied by the Ca release through the sarcoplasmic reticulum"
+    },
     "JsercaFactor": {
         "Description": "Fraction multiplied by sarco/endoplasmic reticulum Ca2+-ATPase flux "
     },
@@ -185,11 +215,20 @@
     "JsrleakFactor": {
         "Description": "Fraction multiplied by Ca2+ leak from SR flux"
     },
-    "JtrFactor": {},
-    "JtrpnFactor": {},
-    "JupFactor": {},
-    "JxferFactor": {},
-    "ROS": {"Description": "Concentration of Reactive Oxygen Species", "Units": "μm"},
-    "ICaMKIIFactor": {"Description": "Fraction multiplied by concentraion of CaM felt by CaMKII"},
-    "IkiFactor": {}
+    "JtrFactor": {
+        "Description": "Fraction multiplied by the Ca flux from the network SR to junctional SR"
+    },
+    "JtrpnFactor": {
+        "Description": "Fraction multiplied by the Ca flux to troponin"
+    },
+    "JupFactor": {
+        "Description": "Fraction multiplied by the Ca uptake into the sarcoplasmic reticulum"
+    },
+    "JxferFactor": {
+        "Description": "Fraction multiplied by the Ca flux from the subspace volume to the bulk myoplasm"
+    },
+    "ROS": {
+        "Description": "Concentration of Reactive Oxygen Species",
+        "Units": "μm"
+    }
 }
