@@ -1,6 +1,8 @@
 /*
  * class GuiTuils is for generic methods or data used by any part of the gui
  *
+ * color schemes are borrowed from Paul Tol
+ * https://personal.sron.nl/~pault
  */
 
 #ifndef GUIUTILS_H
@@ -84,12 +86,30 @@ inline QMap<QString, QString> concatMaps(QMap<QString, QString> m1,
   return returnMap;
 }
 
+inline QColor getLightColor(int num, int saturation = -1) {
+  QList<QString> colors = {"#77AADD", "#EE8866", "#EEDD88", "#FFAABB",
+                           "#99DDFF", "#44BB99", "#BBCC33", "#AAAA00",
+                           "#DDDDDD", "#000000"};
+
+  auto color = QColor(colors[int(num % colors.length())]);
+  if (saturation >= 0 && saturation <= 255) {
+    color.setAlpha(saturation);
+    return color;
+  }
+  return color;
+}
+
 // used by gridEditor and Grapher to get colors that wont repeat
-inline QColor genColor(int num, int saturation = 200) {
+inline QColor genMutedColor(int num, int saturation = -1) {
   // return QColor::fromHsv((num * 4 * 17) % 360, saturation, 200);
   QList<QString> colors = {"#4477aa", "#66ccee", "#228833", "#ccbb44",
                            "#ee6677", "#aa3377", "#bbbbbb"};
-  return QColor(colors[int(num % colors.length())]);
+  auto color = QColor(colors[int(num % colors.length())]);
+  if (saturation >= 0 && saturation <= 255) {
+    color.setAlpha(saturation);
+    return color;
+  }
+  return color;
 }
 
 inline QString getName(int trial, std::vector<int> cellInfo,

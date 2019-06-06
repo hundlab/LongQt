@@ -127,6 +127,9 @@ void Grapher::buildBarGraphs(LongQt::DataReader::SimData data, QString prefix) {
   for (int trial = 0; trial < data.meas.size(); ++trial) {
     auto& meas = data.meas[trial];
     for (int pos = 0; pos < meas.data.size(); ++pos) {
+      if (meas.data[pos].size() == 0) {
+        continue;
+      }
       QString instance =
           GuiUtils::getName(trial, meas.header[pos].cell_info_parsed, prefix);
       QString var = meas.header[pos].var_name.c_str();

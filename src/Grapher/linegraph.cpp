@@ -66,7 +66,7 @@ void LineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
   ui->plot->addGraph();
   ui->plot->graph()->setData(x, y, true);
   ui->plot->graph()->setPen(
-      QPen(QBrush(GuiUtils::genColor(this->x.size())), 3));
+      QPen(QBrush(GuiUtils::genMutedColor(this->x.size())), 3));
   ui->plot->graph()->setName(name);
   ui->plot->yAxis->rescale();
   ui->plot->xAxis->setRange(x.first(), x.last());

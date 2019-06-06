@@ -16,13 +16,18 @@ GridDelegate::GridDelegate(QWidget *parent)
   int i = 0;
   for (auto &pair : cellMap) {
     QPalette palette;
-    if(pair.first == "Inexcitable Cell") {
-        palette.setColor(QPalette::Base, QColor(Qt::white));
+    if (pair.first == "Inexcitable Cell") {
+      auto white = QColor(Qt::white);
+      palette.setColor(QPalette::Base, white);
+      white.setAlpha(120);
+      palette.setColor(QPalette::Highlight, white);
+      palette.setColor(QPalette::HighlightedText, white);
     } else {
-        palette.setColor(QPalette::Base, GuiUtils::genColor(i));
+      palette.setColor(QPalette::Base, GuiUtils::getLightColor(i));
+      palette.setColor(QPalette::Highlight, GuiUtils::getLightColor(i, 120));
+      palette.setColor(QPalette::HighlightedText,
+                       GuiUtils::getLightColor(i, 120));
     }
-    palette.setColor(QPalette::Highlight, GuiUtils::genColor(i, 80));
-    palette.setColor(QPalette::HighlightedText, GuiUtils::genColor(i, 80));
 
     this->colors.insert(pair.first.c_str(), palette);
     i++;
