@@ -22,8 +22,8 @@ SimvCellOpts::SimvCellOpts(shared_ptr<Protocol> proto, string name,
 
 void SimvCellOpts::setup(QGroupBox* parent) {
   auto optMap = this->proto->cell()->optionsMap();
-  std::vector<std::pair<std::string, int>> optList(optMap.begin(),
-                                                   optMap.end());
+  std::vector<std::pair<std::string, bool>> optList(optMap.begin(),
+                                                    optMap.end());
   std::sort(optList.begin(), optList.end(),
             [](const auto& a, const auto& b) { return a.second < b.second; });
   for (auto& opt : optList) {
@@ -32,35 +32,20 @@ void SimvCellOpts::setup(QGroupBox* parent) {
     vbox->addWidget(cbox);
     checkMap[name] = cbox;
     connect(cbox, &QCheckBox::clicked,
-            [this, name]() { this->update_model(name); });
+            [this, name](bool value) { this->update_model(name, value); });
   }
   this->update_ui();
 }
 
 void SimvCellOpts::update_ui() {
-  QString model_line = QString(proto->parsStr(this->name).c_str());
-  QStringList optsList = model_line.split("|", QString::SkipEmptyParts);
-  for (auto& check : checkMap) {
-    check->setChecked(false);
-  }
-  for (auto& opt : optsList) {
-    this->checkMap[opt.toStdString()]->setChecked(true);
+  for (auto& opt : this->proto->cell()->optionsMap()) {
+    this->checkMap[opt.first.c_str()]->setChecked(opt.second);
   }
   emit updated();
 }
 
-void SimvCellOpts::update_model(string name) {
-  string value = name + "|";
-  for (const string& checkbox : this->checkMap.keys()) {
-    if (checkMap[checkbox]->checkState() && name != checkbox) {
-      value += checkbox + "|";
-    }
-  }
-  if (name == "WT") {
-    value = "WT";
-  }
-  auto conflicts = proto->cell()->checkConflicts(CellUtils::strToFlag(value));
-  proto->parsStr(this->name, value);
+void SimvCellOpts::update_model(string name, bool value) {
+  this->proto->cell()->setOption(name, value);
   this->update_ui();
 }
 
