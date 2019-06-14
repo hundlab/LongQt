@@ -22,17 +22,17 @@ SimvCellOpts::SimvCellOpts(shared_ptr<Protocol> proto, string name,
 
 void SimvCellOpts::setup(QGroupBox* parent) {
   auto optMap = this->proto->cell()->optionsMap();
-  std::vector<std::pair<std::string, bool>> optList(optMap.begin(),
-                                                    optMap.end());
-  std::sort(optList.begin(), optList.end(),
-            [](const auto& a, const auto& b) { return a.second < b.second; });
-  for (auto& opt : optList) {
+  for (auto& opt : optMap) {
     std::string name = opt.first;
     auto cbox = new QCheckBox(name.c_str());
     vbox->addWidget(cbox);
     checkMap[name] = cbox;
+    cbox->setToolTip(this->proto->cell()->optionDesc(name).c_str());
     connect(cbox, &QCheckBox::clicked,
             [this, name](bool value) { this->update_model(name, value); });
+  }
+  if (optMap.size() == 0) {
+    parent->setEnabled(false);
   }
   this->update_ui();
 }
