@@ -5,6 +5,8 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QVBoxLayout>
+#include <algorithm>
+#include <list>
 using namespace std;
 using namespace LongQt;
 
@@ -19,11 +21,18 @@ SimvCellOpts::SimvCellOpts(shared_ptr<Protocol> proto, string name,
 }
 
 void SimvCellOpts::setup(QGroupBox* parent) {
-  for (auto& opt : this->proto->cell()->optionsMap()) {
-    auto cbox = new QCheckBox(opt.first.c_str());
+  auto optMap = this->proto->cell()->optionsMap();
+  std::vector<std::pair<std::string, int>> optList(optMap.begin(),
+                                                   optMap.end());
+  std::sort(optList.begin(), optList.end(),
+            [](const auto& a, const auto& b) { return a.second < b.second; });
+  for (auto& opt : optList) {
+    std::string name = opt.first;
+    auto cbox = new QCheckBox(name.c_str());
     vbox->addWidget(cbox);
-    checkMap[opt.first] = cbox;
-    connect(cbox, &QCheckBox::clicked, this, &SimvCellOpts::update_model);
+    checkMap[name] = cbox;
+    connect(cbox, &QCheckBox::clicked,
+            [this, name]() { this->update_model(name); });
   }
   this->update_ui();
 }
@@ -40,14 +49,18 @@ void SimvCellOpts::update_ui() {
   emit updated();
 }
 
-void SimvCellOpts::update_model(bool) {
-  string value;
+void SimvCellOpts::update_model(string name) {
+  string value = name + "|";
   for (const string& checkbox : this->checkMap.keys()) {
-    if (checkMap[checkbox]->checkState()) {
+    if (checkMap[checkbox]->checkState() && name != checkbox) {
       value += checkbox + "|";
     }
   }
-  proto->parsStr(name, value);
+  if (name == "WT") {
+    value = "WT";
+  }
+  auto conflicts = proto->cell()->checkConflicts(CellUtils::strToFlag(value));
+  proto->parsStr(this->name, value);
   this->update_ui();
 }
 

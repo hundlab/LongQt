@@ -230,5 +230,10 @@
     "ROS": {
         "Description": "Concentration of Reactive Oxygen Species",
         "Units": "μm"
-    }
+    },
+    "Ical12Factor": {},
+    "Ical13Factor": {},
+    "IcatFactor": {},
+    "IfFactor": {},
+    "InaxrFactor": {}
 }

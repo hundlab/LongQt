@@ -39,7 +39,6 @@
     <addaction name="separator"/>
     <addaction name="actionSet_Conductivities"/>
     <addaction name="actionConfigure_Ion_Channels"/>
-    <addaction name="actionSet_Sim_Parameters"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>

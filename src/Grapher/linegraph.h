@@ -35,7 +35,7 @@ class LineGraph : public QWidget {
   QString xLabel;
   QString yLabel;
   QDir saveDir;
-  QMap<QString, QString> unitsMap;
+  QMap<QString, QMap<QString, QString>> descMap;
   int controlLocation;
   QShortcut* plus;
   QShortcut* minus;

@@ -69,3 +69,12 @@ O ’hara, Thomas, et al. “Simulation of the Undiseased Human Cardiac Ventricu
 Luo, C. H., and Y. Rudy. “Original Contributions A Model of the Ventricular
     Cardiac Action Potential.” Circulation Research, vol. 68, no. 6, 1991, pp.
     1501–26, doi:10.1161/01.RES.68.6.1501.
+
+Paul tol's colorschemes were used for plotting and in the GridEditor.
+See https://personal.sron.nl/~pault/ for background information and
+best usage of the schemes.
+
+Copyright (c) 2019, Paul Tol
+All rights reserved.
+
+License:  Standard 3-clause BSD

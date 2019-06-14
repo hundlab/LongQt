@@ -50,7 +50,7 @@ QVariant GridModel::dataDisplay(const QModelIndex& index) const {
     if (!n) {
       return QVariant();
     }
-    return QString(n->cell->type());
+    return QString(n->cell()->type());
   } else {
     pair<int, int> p = make_pair(index.parent().row(), index.parent().column());
     if (index.row() == 0) {
@@ -87,7 +87,7 @@ bool GridModel::setData(const QModelIndex& index, const QVariant& value, int) {
     try {
       auto node = (*grid)(index.row(), index.column());
       try {
-        node->cell = this->cellMap.at(value.toString().toStdString())();
+        node->cell(this->cellMap.at(value.toString().toStdString())());
         emit cellChanged(proto->cell());
         emit dataChanged(index, index);
       } catch (const std::out_of_range&) {

@@ -17,7 +17,7 @@ class SimvCellOpts : public Simvar {
   ~SimvCellOpts();
 
   void update_ui() override;
-  void update_model(bool value);
+  void update_model(std::string name);
   void changeCell(std::shared_ptr<LQ::Cell>) override;
 
  private:
