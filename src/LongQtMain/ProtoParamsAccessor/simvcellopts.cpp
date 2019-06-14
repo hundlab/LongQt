@@ -31,9 +31,6 @@ void SimvCellOpts::setup(QGroupBox* parent) {
     connect(cbox, &QCheckBox::clicked,
             [this, name](bool value) { this->update_model(name, value); });
   }
-  if (optMap.size() == 0) {
-    parent->setEnabled(false);
-  }
   this->update_ui();
 }
 
