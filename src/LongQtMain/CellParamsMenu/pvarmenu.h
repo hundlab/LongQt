@@ -23,13 +23,13 @@ class PvarMenu : public QWidget {
   Q_OBJECT
 
  public:
-  explicit PvarMenu(std::shared_ptr<LQ::Protocol> proto, QWidget *parent = 0);
+  explicit PvarMenu(std::shared_ptr<LQ::Protocol> proto, QWidget *parent = nullptr);
   virtual ~PvarMenu();
 
  protected:
   void updateList();
 
-  std::shared_ptr<LQ::Protocol> proto = 0;
+  std::shared_ptr<LQ::Protocol> proto = nullptr;
   Ui::PvarMenu *ui;
 
  private:

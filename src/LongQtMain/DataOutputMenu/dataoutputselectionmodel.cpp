@@ -52,8 +52,8 @@ int DataOutputSelectionModel::rowCount(const QModelIndex &parent) const {
   return 0;
 }
 
-int DataOutputSelectionModel::columnCount(const QModelIndex &parent) const {
-  return 4;
+int DataOutputSelectionModel::columnCount(const QModelIndex &) const {
+  return 5;
 }
 
 QVariant DataOutputSelectionModel::headerData(int section,
@@ -71,6 +71,8 @@ QVariant DataOutputSelectionModel::headerData(int section,
         return "Measure";
       case 3:
         return "Type";
+      case 4:
+        return "Description";
     }
   } else if (role == Qt::ToolTipRole) {
     switch (section) {
@@ -84,6 +86,8 @@ QVariant DataOutputSelectionModel::headerData(int section,
                "per beat";
       case 3:
         return "Type of the variable";
+      default:
+        return "";
     }
   }
   return QVariant();
@@ -110,6 +114,8 @@ QVariant DataOutputSelectionModel::dataDisplay(const QModelIndex &index) const {
       return item->displayData();
     case 3:
       return item->getType();
+    case 4:
+      return item->tooltipData();
     default:
       return QVariant();
   }

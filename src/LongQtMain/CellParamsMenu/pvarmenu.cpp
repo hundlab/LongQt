@@ -24,12 +24,16 @@ PvarMenu::~PvarMenu() { delete ui; }
 void PvarMenu::updateList() {
   this->ui->treeWidget->clear();
   for (auto &pvar : this->proto->pvars()) {
+    QStringList rowText = QString(pvar.second->IonChanParam::str(pvar.first).c_str())
+            .split("\t");
+    QString description = pvarsDescriptions[pvar.first.c_str()]["Description"];
+    rowText.append(description);
+
     auto temp = new QTreeWidgetItem(
         ui->treeWidget,
-        QString(pvar.second->IonChanParam::str(pvar.first).c_str())
-            .split("\t"));
+        rowText);
     temp->setData(0, Qt::ToolTipRole,
-                  pvarsDescriptions[pvar.first.c_str()]["Description"]);
+                  description);
   }
 }
 
@@ -86,7 +90,7 @@ void PvarMenu::on_actionShow_Cells_triggered() {
 
 void PvarMenu::on_addButton_triggered() {
   QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
-  PvarsCell::IonChanParam *param = NULL;
+  PvarsCell::IonChanParam *param = nullptr;
   QString name;
   if (items.length() > 0) {
     name = items[0]->data(0, 0).toString();
