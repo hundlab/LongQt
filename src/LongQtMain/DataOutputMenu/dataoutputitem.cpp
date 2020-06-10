@@ -72,7 +72,8 @@ QString DataOutputItem::tooltipData() const {
         this->measDescriptions[this->measname.c_str()]["Description"];
     return desc;
   } else {
-    return this->dvarsDescriptions[this->varname.c_str()]["Description"];
+      QString desc = this->dvarsDescriptions[this->varname.c_str()]["Description"];
+      return desc;
   }
 }
 

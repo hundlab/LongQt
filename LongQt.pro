@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = LongQt
 TEMPLATE = app
 
-CONFIG += c++11 wayland-compositor
+CONFIG += c++17 wayland-compositor
 #DEFINES += QCUSTOMPLOT_USE_OPENGL
 
 include(src/GridEditor/GridEdit.pri)

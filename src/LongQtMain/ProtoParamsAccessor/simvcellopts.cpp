@@ -36,7 +36,13 @@ void SimvCellOpts::setup(QGroupBox* parent) {
 
 void SimvCellOpts::update_ui() {
   for (auto& opt : this->proto->cell()->optionsMap()) {
-    this->checkMap[opt.first.c_str()]->setChecked(opt.second);
+    auto checkbox = this->checkMap[opt.first.c_str()];
+    if (checkbox) {
+      checkbox->setChecked(opt.second);
+    } else {
+      Logger::getInstance()->write(
+        "SimvCellOpts: Cell option missing from options map");
+    }
   }
   emit updated();
 }
