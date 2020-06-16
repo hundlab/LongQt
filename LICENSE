@@ -62,13 +62,16 @@ Lowe, John S., et al. “Voltage-Gated Nav Channel Targeting in the Heart
     Requires an Ankyrin-G Dependent Cellular Pathway.” The Journal of Cell Biology,
     vol. 180, no. 1, Rockefeller University Press, Jan. 2008, pp. 173–86,
     doi:10.1083/jcb.200710107.
-O ’hara, Thomas, et al. “Simulation of the Undiseased Human Cardiac Ventricular
+O’hara, Thomas, et al. “Simulation of the Undiseased Human Cardiac Ventricular
     Action Potential: Model Formulation and Experimental Validation.” PLoS Comput
     Biol, vol. 7, no. 5, American Heart Association, 2011, pp. 1002061–302,
     doi:10.1371/journal.pcbi.1002061.
 Luo, C. H., and Y. Rudy. “Original Contributions A Model of the Ventricular
     Cardiac Action Potential.” Circulation Research, vol. 68, no. 6, 1991, pp.
     1501–26, doi:10.1161/01.RES.68.6.1501.
+Henriquez, C. S., & Plonsey, R. (1987). Effect of resistive discontinuities
+    on waveshape and velocity in a single cardiac fibre. Medical & Biological
+    Engineering & Computing, 25(4), 428–438. https://doi.org/10.1007/BF02443364
 
 Paul tol's colorschemes were used for plotting and in the GridEditor.
 See https://personal.sron.nl/~pault/ for background information and

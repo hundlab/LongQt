@@ -31,7 +31,8 @@ QVariant VoltageClampModel::data(const QModelIndex &index, int role) const {
       return this->dataEdit(index);
     case Qt::DisplayRole:
       return this->dataDisplay(index);
-      break;
+    case Qt::ToolTipRole:
+      return this->dataToolTip(index);
     default:
       return QVariant();
   }
@@ -60,7 +61,16 @@ QVariant VoltageClampModel::dataDisplay(const QModelIndex &index) const {
     LQ::Logger::getInstance()->write(
         "VoltageClampModel: requested data is out of range");
   }
-  return QVariant();
+    return QVariant();
+}
+
+QVariant VoltageClampModel::dataToolTip(const QModelIndex &index) const
+{
+  if (index.column() == 0) {
+    return "Start time for voltage";
+  } else {
+    return "Voltage to be applied to the cell";
+  }
 }
 
 bool VoltageClampModel::setData(const QModelIndex &index, const QVariant &value,
@@ -69,7 +79,9 @@ bool VoltageClampModel::setData(const QModelIndex &index, const QVariant &value,
     auto tv = this->proto->clamps().at(index.row());
     if (index.column() == 0) {
       this->proto->removeClamp(index.row());
-      this->proto->insertClamp(value.toDouble(), tv.second);
+      int loc = this->proto->insertClamp(value.toDouble(), tv.second);
+      this->beginMoveRows(index.parent(), index.row(), index.row(), index.parent(), loc+1);
+      this->endMoveRows();
     } else if (index.column() == 1) {
       this->proto->changeClampVoltage(index.row(), value.toDouble());
     }

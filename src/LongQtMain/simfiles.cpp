@@ -11,6 +11,7 @@ SimFiles::SimFiles(std::shared_ptr<LongQt::Protocol> initial_proto,
   this->setNames({{"cellStateFile", "simvarfile"},
                   {"cellStateDir", "datadir"},
                   {"readCellState", "writeCellState"}});
+  this->setHeader("Change Simulation Filenames");
   QCheckBox* read = this->findChild<QCheckBox*>("readCellState");
   QWidget* cellStateDir = this->findChild<QWidget*>("cellStateDir");
   connect(read, &QCheckBox::toggled, cellStateDir, &QWidget::setEnabled);

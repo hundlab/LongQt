@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = LQGridEditor
 TEMPLATE = app
 
-CONFIG += c++11
+CONFIG += c++1z
 
 include(src/GridEditor/GridEdit.pri)
 include(src/LongQtMain/LongQtMain.pri)
@@ -22,6 +22,7 @@ RESOURCES = LongQt.qrc
 
 windows {
     RC_FILE = LongQt.rc
+    QMAKE_CXXFLAGS += -std:c++17
 }
 macx {
     QMAKE_MAC_SDK = macosx10.12

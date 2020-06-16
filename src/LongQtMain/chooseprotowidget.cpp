@@ -1,6 +1,7 @@
 #include <QFileDialog>
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QMessageBox>
 #include <QRadioButton>
 #include <QSlider>
 #include <QVBoxLayout>
@@ -31,6 +32,17 @@ void ChooseProtoWidget::Initialize() {
           &ChooseProtoWidget::cellChanged);
   connect(clampType, &ProtoChooser::protocolChanged, this,
           &ChooseProtoWidget::protocolChanged);
+  connect(ui->citationButton, &QPushButton::clicked, [this]() {
+      QMessageBox mb(QMessageBox::NoIcon,
+                     this->getCurrentProto()->cell()->type(),
+                     this->getCurrentProto()->cell()->citation()
+                     , QMessageBox::Ok, this);
+      mb.setStyleSheet(" QLabel {"
+                       " min-width: 40em;"
+                       "}");
+      mb.setTextInteractionFlags(Qt::TextSelectableByMouse);
+      mb.exec();
+  });
 }
 shared_ptr<Protocol> ChooseProtoWidget::getCurrentProto() {
   return clampType->proto;

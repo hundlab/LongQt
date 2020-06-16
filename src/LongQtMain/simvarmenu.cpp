@@ -123,6 +123,11 @@ void SimvarMenu::createMenu() {
   update_menu();
 }
 
+void SimvarMenu::setHeader(QString text)
+{
+    ui->label->setText(text);
+}
+
 void SimvarMenu::update_menu() {
   for (auto& simv : this->simvars) {
     simv->update_ui();

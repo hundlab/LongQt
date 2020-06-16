@@ -41,6 +41,9 @@ class SimvarMenu : public QWidget {
   std::list<std::list<std::string>> names;
   void createMenu();
 
+ protected:
+  void setHeader(QString text);
+
  public:
   void changeProto(std::shared_ptr<LQ::Protocol> proto);
   void changeCell(std::shared_ptr<LQ::Cell>);
