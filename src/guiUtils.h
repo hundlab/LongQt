@@ -13,9 +13,11 @@
 #include <QJsonObject>
 #include <QTextStream>
 
+#include "cellutils_core.h"
+
 namespace GuiUtils {
 // version number for LongQt
-static const char* version = "v0.4";
+static const char* version = LongQt::CellUtils::version;
 
 // used to read in hoverTexts from thier files
 inline QMap<QString, QString> readMap(QString fileName,
