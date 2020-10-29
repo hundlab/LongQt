@@ -46,7 +46,7 @@ class LineGraph : public QWidget {
  private slots:
   bool control_on_graph(QVector<double>& x, QVector<double>& y, QString& name);
   void on_save_clicked();
-  void on_loadControl_clicked();
+//  void on_loadControl_clicked();
   void on_chooseGraphs_clicked();
   void on_toggleLegend_clicked();
   void zoomIn();
