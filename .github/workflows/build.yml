@@ -18,16 +18,16 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {
-              name: "Windows Latest MSVC",
-              os: windows-latest,
-              build_type: "Release",
-              cc: "cl",
-              cxx: "cl",
-              environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-              generators: "Visual Studio 16 2019",
-              qt5: "./5.15.2/msvc2019_64/bin/qmake.exe"
-            }
+#          - {
+#              name: "Windows Latest MSVC",
+#              os: windows-latest,
+#              build_type: "Release",
+#              cc: "cl",
+#              cxx: "cl",
+#              environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+#              generators: "Visual Studio 16 2019",
+#              qt5: "./5.15.2/msvc2019_64/bin/qmake.exe"
+#            }
           - {
               name: "Ubuntu_Latest",
               os: ubuntu-latest,
@@ -37,21 +37,21 @@ jobs:
               generators: "Unix Makefiles",
               qt5: "qmake"
             }
-          - {
-              name: "macOS Latest Clang",
-              os: macos-latest,
-              build_type: "Release",
-              cc: "clang",
-              cxx: "clang++",
-              generators: "Ninja",
-              qt5: "/usr/local/opt/qt@5/bin/qmake"
-            }
+#          - {
+#              name: "macOS Latest Clang",
+#              os: macos-latest,
+#              build_type: "Release",
+#              cc: "clang",
+#              cxx: "clang++",
+#              generators: "Ninja",
+#              qt5: "/usr/local/opt/qt@5/bin/qmake"
+#            }
     
     steps:
       - uses: actions/checkout@v2
         with:
           repository: hundlab/LongQt-model
-          path: LongQt-model
+          path: ./LongQt-model
 
       - uses: actions/checkout@v2
 
@@ -87,7 +87,7 @@ jobs:
       - name: Configure LongQt
         shell: bash
         run: |
-          ${{ matrix.config.qt5 }}
+          ${{ matrix.config.qt5 }} LongQt.pro
 
       - name: Build LongQt
         shell: bash
