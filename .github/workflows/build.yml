@@ -87,7 +87,7 @@ jobs:
       - name: Configure LongQt
         shell: bash
         run: |
-          ${{ matrix.config.qt5 }} LongQt.pro
+          ${{ matrix.config.qt5 }} -makefile LongQt.pro
 
       - name: Build LongQt
         shell: bash

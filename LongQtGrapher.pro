@@ -13,7 +13,13 @@ TEMPLATE = app
 CONFIG += c++1z
 #DEFINES += QCUSTOMPLOT_USE_OPENGL
 
-include(../LongQt-model/src/model.pri)
+exists(../LongQt-model/src/model.pri) {
+  include(../LongQt-model/src/model.pri)
+}
+exists(./LongQt-model/src/model.pri) {
+  include(LongQt-model/src/model.pri)
+}
+
 include(src/Utils.pri)
 include(src/Grapher/Grapher.pri)
 
