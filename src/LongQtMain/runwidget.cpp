@@ -59,7 +59,7 @@ void RunWidget::on_runButton_clicked() {
 }
 
 void RunWidget::on_saveButton_clicked() {
-  QDir startDir = this->proto->getDataDir().c_str();
+  QDir startDir = QString(this->proto->getDataDir().c_str());
   startDir.cdUp();
   QString filename = QFileDialog::getSaveFileName(
       this, "Save Simulation Settings", startDir.absolutePath(),
