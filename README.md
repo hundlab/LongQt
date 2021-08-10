@@ -33,7 +33,7 @@ the other contents in the directory with it as they are often necessary for
 execution)*
 
 ## Install
-copy the execuatable from ./build/ to a convenient location to run it
+copy the executable from ./build/ to a convenient location to run it
 - on linux this would usually be ~/bin or /usr/local/bin
 - on windows the Desktop is often convenient as the location is not important
 - on Mac dragging the app into the Applications folder will work
