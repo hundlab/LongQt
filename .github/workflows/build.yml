@@ -26,7 +26,7 @@ jobs:
 #              cxx: "cl",
 #              environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
 #              generators: "Visual Studio 16 2019",
-#              qt5: "./5.15.2/msvc2019_64/bin/qmake.exe"
+#              qt5_path: "./5.15.2/msvc2019_64/lib/cmake/Qt5"
 #            }
           - {
               name: "Ubuntu_Latest",
@@ -35,7 +35,7 @@ jobs:
               cc: "gcc",
               cxx: "g++",
               generators: "Unix Makefiles",
-              qt5: "qmake"
+              qt5_path: ""
             }
 #          - {
 #              name: "macOS Latest Clang",
@@ -44,16 +44,19 @@ jobs:
 #              cc: "clang",
 #              cxx: "clang++",
 #              generators: "Ninja",
-#              qt5: "/usr/local/opt/qt@5/bin/qmake"
+#              qt5_path: "/usr/local/opt/qt@5/lib/cmake/Qt5"
 #            }
     
     steps:
       - uses: actions/checkout@v2
-        with:
-          repository: hundlab/LongQt-model
-          path: ./LongQt-model
 
-      - uses: actions/checkout@v2
+      - name: Download LongQt-model
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{secrets.ACC_LONGQT_MODEL}}
+          workflow: build.yml
+          name: LongQt-model-${{ runner.os }}
+          repo: hundlab/LongQt-model
 
       - name: Print env
         run: |
@@ -63,7 +66,8 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          choco install make
+          choco install cmake
+          cmake --version
           py -m pip install aqtinstall
           py -m aqt install 5.15.2 windows desktop win64_msvc2019_64
           cmd "${{ matrix.config.environment_script }}"
@@ -75,24 +79,34 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --assume-yes build-essential qt5-default
+          cmake --version
           gcc --version
 
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install qt@5
+          brew install cmake ninja qt@5
           export PATH="/usr/local/opt/qt@5/bin:$PATH"
+          ninja --version
+          cmake --verion
           clang --version
 
       - name: Configure LongQt
         shell: bash
         run: |
-          ${{ matrix.config.qt5 }} -makefile LongQt.pro
+          mkdir -p build
+          cmake \
+            -S . \
+            -B . \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+            -DCMAKE_INSTALL_PREFIX:PATH=./install \
+            -DQt5_DIR:PATH=${{ matrix.config.qt5_path }} \
+            -G "${{ matrix.config.generators }}"
 
       - name: Build LongQt
         shell: bash
         run: |
-          make
+          cmake --build . --config ${{ matrix.config.build_type }}
  
 #      - name: Upload Artifact
 #        uses: actions/upload-artifact@v2
