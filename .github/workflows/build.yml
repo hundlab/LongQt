@@ -27,6 +27,7 @@ jobs:
 #              environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
 #              generators: "Visual Studio 16 2019",
 #              qt5_path: "./5.15.2/msvc2019_64/lib/cmake/Qt5"
+#              longqt-model: ./share/cmake/LongQt-model
 #            }
           - {
               name: "Ubuntu_Latest",
@@ -36,6 +37,7 @@ jobs:
               cxx: "g++",
               generators: "Unix Makefiles",
               qt5_path: ""
+              longqt-model: ./share/cmake/LongQt-model
             }
 #          - {
 #              name: "macOS Latest Clang",
@@ -45,6 +47,7 @@ jobs:
 #              cxx: "clang++",
 #              generators: "Ninja",
 #              qt5_path: "/usr/local/opt/qt@5/lib/cmake/Qt5"
+#              longqt-model: ./share/cmake/LongQt-model
 #            }
     
     steps:
@@ -101,6 +104,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
             -DCMAKE_INSTALL_PREFIX:PATH=./install \
             -DQt5_DIR:PATH=${{ matrix.config.qt5_path }} \
+            -DLongQt-model_DIR:PATH=${{ matrix.config.longqt-model }} \
             -G "${{ matrix.config.generators }}"
 
       - name: Build LongQt
