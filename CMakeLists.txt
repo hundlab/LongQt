@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.16)
 
 project(LongQt VERSION 0.2)
 
@@ -103,3 +103,13 @@ target_link_libraries(LQGridEditor PUBLIC
 	LongQt-model
 )
 
+## Install executables
+install(TARGETS LongQt LongQtGrapher LQGridEditor
+	EXPORT LongQt
+	RUNTIME DESTINATION "bin"
+)
+if(${CMAKE_VERSION} VERSION_GREATER "3.21.0") 
+	if(WIN32 OR APPLE)
+		install(RUNTIME_DEPENDENCY_SET)
+	endif()
+endif() 
