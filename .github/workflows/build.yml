@@ -27,7 +27,7 @@ jobs:
               environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
               generators: "Visual Studio 16 2019",
               qt5_path: "./5.15.2/msvc2019_64/lib/cmake/Qt5",
-              longqt-model: ./share/cmake/LongQt-model
+              longqt-model: ./cmake/LongQt-model
             }
           - {
               name: "Ubuntu_Latest",
@@ -91,7 +91,7 @@ jobs:
           brew install cmake ninja qt@5
           export PATH="/usr/local/opt/qt@5/bin:$PATH"
           ninja --version
-          cmake --verion
+          cmake --version
           clang --version
 
       - name: Configure
