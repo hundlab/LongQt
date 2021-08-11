@@ -18,17 +18,17 @@ jobs:
       fail-fast: false
       matrix:
         config:
-#          - {
-#              name: "Windows Latest MSVC",
-#              os: windows-latest,
-#              build_type: "Release",
-#              cc: "cl",
-#              cxx: "cl",
-#              environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-#              generators: "Visual Studio 16 2019",
-#              qt5_path: "./5.15.2/msvc2019_64/lib/cmake/Qt5",
-#              longqt-model: ./share/cmake/LongQt-model
-#            }
+          - {
+              name: "Windows Latest MSVC",
+              os: windows-latest,
+              build_type: "Release",
+              cc: "cl",
+              cxx: "cl",
+              environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+              generators: "Visual Studio 16 2019",
+              qt5_path: "./5.15.2/msvc2019_64/lib/cmake/Qt5",
+              longqt-model: ./share/cmake/LongQt-model
+            }
           - {
               name: "Ubuntu_Latest",
               os: ubuntu-latest,
@@ -39,16 +39,16 @@ jobs:
               qt5_path: "",
               longqt-model: ./share/cmake/LongQt-model
             }
-#          - {
-#              name: "macOS Latest Clang",
-#              os: macos-latest,
-#              build_type: "Release",
-#              cc: "clang",
-#              cxx: "clang++",
-#              generators: "Ninja",
-#              qt5_path: "/usr/local/opt/qt@5/lib/cmake/Qt5",
-#              longqt-model: ./share/cmake/LongQt-model
-#            }
+          - {
+              name: "macOS Latest Clang",
+              os: macos-latest,
+              build_type: "Release",
+              cc: "clang",
+              cxx: "clang++",
+              generators: "Ninja",
+              qt5_path: "/usr/local/opt/qt@5/lib/cmake/Qt5",
+              longqt-model: ./share/cmake/LongQt-model
+            }
     
     steps:
       - uses: actions/checkout@v2
