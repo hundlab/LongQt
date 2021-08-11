@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(LongQt VERSION 0.2)
+project(LongQt VERSION 0.4)
 
 # Find includes in corresponding build directories
 set(CMAKE_CXX_STANDARD 17)

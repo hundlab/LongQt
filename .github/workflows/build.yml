@@ -111,10 +111,14 @@ jobs:
         shell: bash
         run: |
           cmake --build . --config ${{ matrix.config.build_type }}
+
+      - name: Install
+        shell: bash
+        run: cmake --install . --prefix ./install
  
-#      - name: Upload Artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: LongQt-model-${{ runner.os }}
-#          path: ./install
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: LongQt-${{ runner.os }}
+          path: ./install
 
