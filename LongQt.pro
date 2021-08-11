@@ -17,7 +17,7 @@ exists(../LongQt-model/src/model.pri) {
   include(../LongQt-model/src/model.pri)
 }
 exists(./LongQt-model/src/model.pri) {
-  include(LongQt-model/src/model.pri)
+  include(./LongQt-model/src/model.pri)
 }
 
 include(src/GridEditor/GridEdit.pri)
