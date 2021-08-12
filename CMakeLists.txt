@@ -5,6 +5,7 @@ project(LongQt VERSION 0.4)
 # Find includes in corresponding build directories
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#For linux and unix only
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 #set(CMAKE_BUILD_TYPE Release)
 
@@ -108,8 +109,8 @@ install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
 	RUNTIME DESTINATION "bin"
 )
-#if(${CMAKE_VERSION} VERSION_GREATER "3.21.0") 
-#	if(WIN32 OR APPLE)
-#		install(RUNTIME_DEPENDENCY_SET)
-#	endif()
-#endif() 
+if(${CMAKE_VERSION} VERSION_GREATER "3.21.0") 
+	if(WIN32 OR APPLE)
+		install(RUNTIME_DEPENDENCY_SET LongQt)
+	endif()
+endif() 
