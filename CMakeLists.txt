@@ -113,5 +113,7 @@ install(TARGETS LongQt LongQtGrapher LQGridEditor
 )
 
 if(WIN32 OR APPLE)
-	install(RUNTIME_DEPENDENCY_SET LongQt)
+	install(RUNTIME_DEPENDENCY_SET LongQt
+		OPTIONAL
+	)
 endif()
