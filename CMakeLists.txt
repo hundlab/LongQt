@@ -46,11 +46,8 @@ target_include_directories(LongQt PUBLIC
 
 set_target_properties(LongQt PROPERTIES
     VERSION ${PROJECT_VERSION_MAJOR}
-    SOVERSION ${PROJECT_VERSION_MINOR})
-
-if(APPLE)
-	set_target_properties(LongQt PROPERTIES BUNDLE TRUE)
-endif()
+    SOVERSION ${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE)
 
 target_link_libraries(LongQt PUBLIC 
 	Qt5::Core
@@ -74,11 +71,8 @@ target_include_directories(LongQtGrapher PUBLIC
 
 set_target_properties(LongQtGrapher PROPERTIES
     VERSION ${PROJECT_VERSION_MAJOR}
-    SOVERSION ${PROJECT_VERSION_MINOR})
-
-if(APPLE)
-	set_target_properties(LongQtGrapher PROPERTIES BUNDLE TRUE)
-endif()
+    SOVERSION ${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE)
 
 target_link_libraries(LongQtGrapher PUBLIC 
 	Qt5::Core
@@ -101,11 +95,8 @@ target_include_directories(LQGridEditor PUBLIC
 
 set_target_properties(LQGridEditor PROPERTIES
     VERSION ${PROJECT_VERSION_MAJOR}
-    SOVERSION ${PROJECT_VERSION_MINOR})
-
-if(APPLE)
-	set_target_properties(LQGridEditor PROPERTIES BUNDLE TRUE)
-endif()
+    SOVERSION ${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE)
 
 target_link_libraries(LQGridEditor PUBLIC 
 	Qt5::Core
@@ -118,8 +109,6 @@ target_link_libraries(LQGridEditor PUBLIC
 ## Install executables
 install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
-	RUNTIME DESTINATION "bin"
-	LIBRARY DESTINATION "lib"
 )
 
 ## Install dependancies for windows and OSX 
@@ -127,14 +116,23 @@ install(TARGETS LongQt LongQtGrapher LQGridEditor
 ## be copied by Qt's windeploy tool
 ## but on OSX this should be everything that is
 ## needed
-if(WIN32 OR APPLE)
+if(WIN32)
 	install(FILES
 		$<TARGET_FILE:Qt5::Core>
 		$<TARGET_FILE:Qt5::Gui>
 		$<TARGET_FILE:Qt5::Widgets>
 		$<TARGET_FILE:Qt5::PrintSupport>
 		$<TARGET_FILE:Qt5::Concurrent>
-		TYPE LIB
+		TYPE RUNTIME
+	)
+elseif(APPLE)
+	install(FILES
+		$<TARGET_FILE:Qt5::Core>
+		$<TARGET_FILE:Qt5::Gui>
+		$<TARGET_FILE:Qt5::Widgets>
+		$<TARGET_FILE:Qt5::PrintSupport>
+		$<TARGET_FILE:Qt5::Concurrent>
+		TYPE FRAMEWORK
 	)
 endif()
 
