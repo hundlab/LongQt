@@ -132,7 +132,7 @@ elseif(APPLE)
 		$<TARGET_FILE:Qt5::Widgets>
 		$<TARGET_FILE:Qt5::PrintSupport>
 		$<TARGET_FILE:Qt5::Concurrent>
-		TYPE FRAMEWORK
+		TYPE LIB
 	)
 endif()
 
