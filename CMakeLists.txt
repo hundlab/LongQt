@@ -109,6 +109,7 @@ target_link_libraries(LQGridEditor PUBLIC
 ## Install executables
 install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
+	RUNTIME DESTINATION "bin"
 )
 
 ## Install dependancies for windows and OSX 
@@ -123,7 +124,7 @@ if(WIN32)
 		$<TARGET_FILE:Qt5::Widgets>
 		$<TARGET_FILE:Qt5::PrintSupport>
 		$<TARGET_FILE:Qt5::Concurrent>
-		TYPE RUNTIME
+		TYPE BIN
 	)
 elseif(APPLE)
 	install(FILES
