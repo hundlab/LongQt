@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.16)
 
 project(LongQt VERSION 0.4)
 
@@ -48,6 +48,10 @@ set_target_properties(LongQt PROPERTIES
     VERSION ${PROJECT_VERSION_MAJOR}
     SOVERSION ${PROJECT_VERSION_MINOR})
 
+if(APPLE)
+	set_target_properties(LongQt PROPERTIES BUNDLE TRUE)
+endif()
+
 target_link_libraries(LongQt PUBLIC 
 	Qt5::Core
 	Qt5::Gui
@@ -72,6 +76,10 @@ set_target_properties(LongQtGrapher PROPERTIES
     VERSION ${PROJECT_VERSION_MAJOR}
     SOVERSION ${PROJECT_VERSION_MINOR})
 
+if(APPLE)
+	set_target_properties(LongQtGrapher PROPERTIES BUNDLE TRUE)
+endif()
+
 target_link_libraries(LongQtGrapher PUBLIC 
 	Qt5::Core
 	Qt5::Gui
@@ -95,6 +103,10 @@ set_target_properties(LQGridEditor PROPERTIES
     VERSION ${PROJECT_VERSION_MAJOR}
     SOVERSION ${PROJECT_VERSION_MINOR})
 
+if(APPLE)
+	set_target_properties(LQGridEditor PROPERTIES BUNDLE TRUE)
+endif()
+
 target_link_libraries(LQGridEditor PUBLIC 
 	Qt5::Core
 	Qt5::Gui
@@ -103,17 +115,37 @@ target_link_libraries(LQGridEditor PUBLIC
 	Qt5::Concurrent
 	LongQt-model
 )
-
 ## Install executables
 install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
-	RUNTIME_DEPENDENCY_SET LongQt
 	RUNTIME DESTINATION "bin"
 	LIBRARY DESTINATION "lib"
 )
 
+## Install dependancies for windows and OSX 
+## for windows more dependances will need to
+## be copied by Qt's windeploy tool
+## but on OSX this should be everything that is
+## needed
 if(WIN32 OR APPLE)
-	install(RUNTIME_DEPENDENCY_SET LongQt
-		OPTIONAL
+	install(FILES
+		$<TARGET_FILE:Qt5::Core>
+		$<TARGET_FILE:Qt5::Gui>
+		$<TARGET_FILE:Qt5::Widgets>
+		$<TARGET_FILE:Qt5::PrintSupport>
+		$<TARGET_FILE:Qt5::Concurrent>
+		TYPE LIB
 	)
 endif()
+
+## cmake has a builtin way to install dependancy
+## runtime libs, however at them moment this is
+## too agressive and installs everything under the
+## sun. Also it errors.
+## Note: there is a line you need to add to install
+## TARGETS directive for the below code to work
+#if(WIN32 OR APPLE)
+#	install(RUNTIME_DEPENDENCY_SET LongQt
+#		OPTIONAL
+#	)
+#endif()
