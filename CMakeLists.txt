@@ -109,7 +109,7 @@ target_link_libraries(LQGridEditor PUBLIC
 ## Install executables
 install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
-	RUNTIME DESTINATION "bin"
+	BUNDLE DESTINATION "bundle"
 )
 
 ## Install dependancies for windows and OSX 
