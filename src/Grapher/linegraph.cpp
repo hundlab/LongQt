@@ -32,7 +32,7 @@ void LineGraph::Initialize() {
   connect(right, &QShortcut::activated, this, &LineGraph::shiftRight);
   connect(up, &QShortcut::activated, this, &LineGraph::shiftUp);
   connect(down, &QShortcut::activated, this, &LineGraph::shiftDown);
-  ui->plot->setOpenGl(true);
+//  ui->plot->setOpenGl(true);
   ui->plot->xAxis->grid()->setVisible(false);
   ui->plot->yAxis->grid()->setVisible(false);
   ui->plot->xAxis->setLabelFont(QFont(font().family(), 16));
@@ -71,7 +71,7 @@ void LineGraph::addData(QVector<double>& x, QVector<double>& y, QString name) {
   ui->plot->addGraph();
   ui->plot->graph()->setData(x, y, true);
   ui->plot->graph()->setPen(
-      QPen(QBrush(GuiUtils::genMutedColor(this->x.size())), 3));
+      QPen(GuiUtils::genMutedColor(this->x.size())));
   ui->plot->graph()->setName(name);
   ui->plot->yAxis->rescale();
   ui->plot->xAxis->setRange(x.first(), x.last());
@@ -82,22 +82,22 @@ void LineGraph::on_save_clicked() {
       saveDir.absolutePath() + "/" + yLabel + "vs" + xLabel + ".jpg", 0, 0, 1.0,
       -1);
 }
-void LineGraph::on_loadControl_clicked() {
-  QVector<double> x, y;
-  QString name;
+//void LineGraph::on_loadControl_clicked() {
+//  QVector<double> x, y;
+//  QString name;
 
-  if (control_on_graph(x, y, name)) {
-    if (controlLocation >= 0 && controlLocation < x.size()) {
-      if (ui->plot->graph(controlLocation) != 0) {
-        ui->plot->removeGraph(controlLocation);
-      }
-      this->x.removeAt(controlLocation);
-      this->y.removeAt(controlLocation);
-    }
-    this->addData(x, y, name);
-    controlLocation = this->x.size() - 1;
-  }
-}
+//  if (control_on_graph(x, y, name)) {
+//    if (controlLocation >= 0 && controlLocation < x.size()) {
+//      if (ui->plot->graph(controlLocation) != 0) {
+//        ui->plot->removeGraph(controlLocation);
+//      }
+//      this->x.removeAt(controlLocation);
+//      this->y.removeAt(controlLocation);
+//    }
+//    this->addData(x, y, name);
+//    controlLocation = this->x.size() - 1;
+//  }
+//}
 bool LineGraph::control_on_graph(QVector<double>& x, QVector<double>& y,
                                  QString& name) {
   QString location = QFileDialog::getExistingDirectory(
