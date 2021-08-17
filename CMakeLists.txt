@@ -13,9 +13,6 @@ endif()
 
 find_package(Qt5 COMPONENTS Core Gui Widgets Concurrent PrintSupport REQUIRED)
 find_package(LongQt-model REQUIRED)
-if(APPLE)
-	include(BundleUtilites)
-endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/src/LongQtMain/LongQtMain.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/src/Grapher/Grapher.cmake")
@@ -149,25 +146,25 @@ if(TARGET Qt5::windeployqt)
 		POST_BUILD
 		COMMAND Qt5::windeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
 	)
-#elseif(TARGET Qt5::macdeployqt)
-#	add_custom_command(TARGET LongQt
-#		POST_BUILD
-#		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>"
-#	)
-#	add_custom_command(TARGET LongQtGrapher
-#		POST_BUILD
-#		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LongQtGrapher>/$<TARGET_FILE_NAME:LongQtGrapher>"
-#	)
-#	add_custom_command(TARGET LQGridEditor
-#		POST_BUILD
-#		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
-#	)
+elseif(TARGET Qt5::macdeployqt)
+	add_custom_command(TARGET LongQt
+		POST_BUILD
+		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>"
+	)
+	add_custom_command(TARGET LongQtGrapher
+		POST_BUILD
+		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LongQtGrapher>/$<TARGET_FILE_NAME:LongQtGrapher>"
+	)
+	add_custom_command(TARGET LQGridEditor
+		POST_BUILD
+		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
+	)
 endif()
 
 ## Install executables
 install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
-	BUNDLE DESTINATION "bundle"
+	BUNDLE DESTINATION .
 )
 #	FRAMEWORK DESTINATION "Frameworks"
 
@@ -190,15 +187,16 @@ if(WIN32)
 	#		TYPE BIN
 	#	)
 elseif(APPLE)
-	install(CODE
-		COMMAND "fixup_bundle(LongQt)"
-		COMMAND "fixup_bundle(LongQtGrapher)"
-		COMMAND "fixup_bundle(LQGridEditor)"
-	)
-	#	install(
-	#		DIRECTORY
-	#		"${CMAKE_CURRENT_BINARY_DIR}/libdeploy/"
-	#		TYPE BIN)
+	#	install(CODE
+	#		"include(BundleUtilites)"
+	#		COMMAND "fixup_bundle(LongQt)"
+	#		COMMAND "fixup_bundle(LongQtGrapher)"
+	#		COMMAND "fixup_bundle(LQGridEditor)"
+	#	)
+	install(
+		DIRECTORY
+		"${CMAKE_CURRENT_BINARY_DIR}/libdeploy/"
+		TYPE LIB)
 
 	#	install(FILES
 	#		$<TARGET_FILE:Qt5::Core>

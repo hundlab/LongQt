@@ -25,6 +25,7 @@ jobs:
               cc: "cl",
               cxx: "cl",
               environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+              vc_install_dir: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC"
               generators: "Visual Studio 16 2019",
               qt5_path: "./5.15.2/msvc2019_64/lib/cmake/Qt5",
               longqt-model: ./cmake
@@ -69,19 +70,20 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          choco install cmake
           cmake --version
           py -m pip install aqtinstall
           py -m aqt install 5.15.2 windows desktop win64_msvc2019_64
+          $Env:VCINSTALLDIR= "${{ matrix.config.vc_install_dir }}"
           cmd "${{ matrix.config.environment_script }}"
 
+          #choco install cmake
           #          choco install -y qt5-default
  
       - name: Install dependencies on ubuntu
         if: startsWith(matrix.config.name, 'Ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install --assume-yes build-essential
+          sudo apt-get install --assume-yes build-essential mesa-common-dev libglu1-mesa-dev
           python3 -m pip install aqtinstall
           python3 -m aqt install 5.15.2 linux desktop gcc_64
           cmake --version
@@ -90,7 +92,7 @@ jobs:
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install cmake ninja 
+          brew install ninja 
           python3 -m pip install aqtinstall
           python3 -m aqt install 5.15.2 mac desktop clang_64
           ninja --version
