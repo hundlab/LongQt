@@ -13,9 +13,15 @@ TEMPLATE = app
 CONFIG += c++17 wayland-compositor
 #DEFINES += QCUSTOMPLOT_USE_OPENGL
 
+exists(../LongQt-model/src/model.pri) {
+  include(../LongQt-model/src/model.pri)
+}
+exists(./LongQt-model/src/model.pri) {
+  include(./LongQt-model/src/model.pri)
+}
+
 include(src/GridEditor/GridEdit.pri)
 include(src/LongQtMain/LongQtMain.pri)
-include(../LongQt-model/src/model.pri)
 include(src/Grapher/Grapher.pri)
 include(src/Utils.pri)
 
