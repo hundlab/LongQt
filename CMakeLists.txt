@@ -111,31 +111,32 @@ install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
 	BUNDLE DESTINATION "bundle"
 )
+#	FRAMEWORK DESTINATION "Frameworks"
 
 ## Install dependancies for windows and OSX 
 ## for windows more dependances will need to
 ## be copied by Qt's windeploy tool
 ## but on OSX this should be everything that is
 ## needed
-if(WIN32)
-	install(FILES
-		$<TARGET_FILE:Qt5::Core>
-		$<TARGET_FILE:Qt5::Gui>
-		$<TARGET_FILE:Qt5::Widgets>
-		$<TARGET_FILE:Qt5::PrintSupport>
-		$<TARGET_FILE:Qt5::Concurrent>
-		TYPE BIN
-	)
-elseif(APPLE)
-	install(FILES
-		$<TARGET_FILE:Qt5::Core>
-		$<TARGET_FILE:Qt5::Gui>
-		$<TARGET_FILE:Qt5::Widgets>
-		$<TARGET_FILE:Qt5::PrintSupport>
-		$<TARGET_FILE:Qt5::Concurrent>
-		TYPE LIB
-	)
-endif()
+#if(WIN32)
+#	install(FILES
+#		$<TARGET_FILE:Qt5::Core>
+#		$<TARGET_FILE:Qt5::Gui>
+#		$<TARGET_FILE:Qt5::Widgets>
+#		$<TARGET_FILE:Qt5::PrintSupport>
+#		$<TARGET_FILE:Qt5::Concurrent>
+#		TYPE BIN
+#	)
+#elseif(APPLE)
+#	install(FILES
+#		$<TARGET_FILE:Qt5::Core>
+#		$<TARGET_FILE:Qt5::Gui>
+#		$<TARGET_FILE:Qt5::Widgets>
+#		$<TARGET_FILE:Qt5::PrintSupport>
+#		$<TARGET_FILE:Qt5::Concurrent>
+#		TYPE LIB
+#	)
+#endif()
 
 ## cmake has a builtin way to install dependancy
 ## runtime libs, however at them moment this is
