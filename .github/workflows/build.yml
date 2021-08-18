@@ -76,7 +76,6 @@ jobs:
           $Env:VCINSTALLDIR= "${{ matrix.config.vc_install_dir }}"
           cmd "${{ matrix.config.environment_script }}"
 
-          #choco install cmake
           #          choco install -y qt5-default
  
       - name: Install dependencies on ubuntu
