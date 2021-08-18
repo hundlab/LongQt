@@ -151,7 +151,7 @@ endif()
 ## Install executables
 install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
-	BUNDLE DESTINATION ./bundle
+	BUNDLE DESTINATION "./bin"
 )
 #	FRAMEWORK DESTINATION "Frameworks"
 
