@@ -132,13 +132,26 @@ if(TARGET Qt5::windeployqt)
 		POST_BUILD
 		COMMAND Qt5::windeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
 	)
+elseif(TARGET Qt5::macdeployqt)
+	add_custom_command(TARGET LongQt
+		POST_BUILD
+		COMMAND Qt5::macdeployqt "$<TARGET_FILE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>"
+	)
+	add_custom_command(TARGET LongQtGrapher
+		POST_BUILD
+		COMMAND Qt5::macdeployqt "$<TARGET_FILE_DIR:LongQtGrapher>/$<TARGET_FILE_NAME:LongQtGrapher>"
+	)
+	add_custom_command(TARGET LQGridEditor
+		POST_BUILD
+		COMMAND Qt5::macdeployqt "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
+	)
+
 endif()
 
 ## Install executables
 install(TARGETS LongQt LongQtGrapher LQGridEditor
 	EXPORT LongQt
 	BUNDLE DESTINATION ./bundle
-	LIBRARY NAMELINK_ONLY 
 )
 #	FRAMEWORK DESTINATION "Frameworks"
 
@@ -163,12 +176,12 @@ if(WIN32)
 	#		$<TARGET_FILE:Qt5::Concurrent>
 	#		TYPE BIN
 	#	)
-elseif(APPLE)
-	install(CODE
-		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LongQt.app"
-		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LongQtGrapher.app"
-		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LQGridEditor.app"
-	)
+	#elseif(APPLE)
+	#	install(CODE
+	#		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LongQt.app"
+	#		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LongQtGrapher.app"
+	#		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LQGridEditor.app"
+	#	)
 
 	#	install(CODE
 	#		"include(BundleUtilites)"

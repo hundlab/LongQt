@@ -1,5 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-name: CMake LongQt-model
+name: Build LongQt
 
 # Controls when the action will run. Manually triggered
 on: workflow_dispatch
