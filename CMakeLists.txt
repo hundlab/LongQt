@@ -143,7 +143,7 @@ elseif(TARGET Qt5::macdeployqt)
 	)
 	add_custom_command(TARGET LQGridEditor
 		POST_BUILD
-		COMMAND Qt5::macdeployqt "$<TARGET_BUNLE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
+		COMMAND Qt5::macdeployqt "$<TARGET_BUNDLE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
 	)
 
 endif()
