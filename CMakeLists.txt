@@ -135,7 +135,7 @@ if(TARGET Qt5::windeployqt)
 elseif(TARGET Qt5::macdeployqt)
 	add_custom_command(TARGET LongQt
 		POST_BUILD
-		COMMAND "message(\"$<TARGET_FILE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>\")"
+		COMMAND "echo \"$<TARGET_FILE_DIR:LongQt>\""
 	)
 
 	add_custom_command(TARGET LongQt
