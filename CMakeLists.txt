@@ -48,10 +48,10 @@ if(WIN32 AND TARGET Qt5::qmake AND NOT TARGET Qt5::windeployqt)
 elseif(APPLE AND TARGET Qt5::qmake AND NOT TARGET Qt5::macdeployqt)
 	get_target_property(_qt5_qmake_location Qt5::qmake IMPORTED_LOCATION)
 	get_filename_component(qt5_bin_location ${_qt5_qmake_location} DIRECTORY)
-	if(EXISTS "${qt5_bin_location}/macdeployqt.exe")
+	if(EXISTS "${qt5_bin_location}/macdeployqt")
 		add_executable(Qt5::macdeployqt IMPORTED)
 		set_target_properties(Qt5::macdeployqt PROPERTIES
-			IMPORTED_LOCATION "${qt5_bin_location}/macdeployqt.exe")
+			IMPORTED_LOCATION "${qt5_bin_location}/macdeployqt")
 	endif()
 	message("Qt5::macdeployqt added")
 
@@ -133,6 +133,11 @@ if(TARGET Qt5::windeployqt)
 		COMMAND Qt5::windeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
 	)
 elseif(TARGET Qt5::macdeployqt)
+	add_custom_command(TARGET LongQt
+		POST_BUILD
+		COMMAND "message(\"$<TARGET_FILE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>\")"
+	)
+
 	add_custom_command(TARGET LongQt
 		POST_BUILD
 		COMMAND Qt5::macdeployqt "$<TARGET_FILE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>"
