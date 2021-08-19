@@ -135,20 +135,15 @@ if(TARGET Qt5::windeployqt)
 elseif(TARGET Qt5::macdeployqt)
 	add_custom_command(TARGET LongQt
 		POST_BUILD
-		COMMAND "echo \"$<TARGET_FILE_DIR:LongQt>\""
-	)
-
-	add_custom_command(TARGET LongQt
-		POST_BUILD
-		COMMAND Qt5::macdeployqt "$<TARGET_FILE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>"
+		COMMAND Qt5::macdeployqt "$<TARGET_BUNDLE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>"
 	)
 	add_custom_command(TARGET LongQtGrapher
 		POST_BUILD
-		COMMAND Qt5::macdeployqt "$<TARGET_FILE_DIR:LongQtGrapher>/$<TARGET_FILE_NAME:LongQtGrapher>"
+		COMMAND Qt5::macdeployqt "$<TARGET_BUNDLE_DIR:LongQtGrapher>/$<TARGET_FILE_NAME:LongQtGrapher>"
 	)
 	add_custom_command(TARGET LQGridEditor
 		POST_BUILD
-		COMMAND Qt5::macdeployqt "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
+		COMMAND Qt5::macdeployqt "$<TARGET_BUNLE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
 	)
 
 endif()
