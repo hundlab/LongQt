@@ -21,9 +21,6 @@ if(NOT ${LongQt_subdir})
 else()
   add_subdirectory(../LongQt-model LongQt-model EXCLUDE_FROM_ALL)
 endif()
-if(APPLE)
-  include(BundleUtilites)
-endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/src/LongQtMain/LongQtMain.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/src/Grapher/Grapher.cmake")
@@ -40,6 +37,7 @@ elseif(APPLE)
 else()
   set(icon_file "")
 endif()
+set(license_file "LICENSE")
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${includes})
 set(CMAKE_AUTOMOC ON)
@@ -58,17 +56,17 @@ if(WIN32 AND TARGET Qt5::qmake AND NOT TARGET Qt5::windeployqt)
 elseif(APPLE AND TARGET Qt5::qmake AND NOT TARGET Qt5::macdeployqt)
   get_target_property(_qt5_qmake_location Qt5::qmake IMPORTED_LOCATION)
   get_filename_component(qt5_bin_location ${_qt5_qmake_location} DIRECTORY)
-  if(EXISTS "${qt5_bin_location}/macdeployqt.exe")
+  if(EXISTS "${qt5_bin_location}/macdeployqt")
     add_executable(Qt5::macdeployqt IMPORTED)
     set_target_properties(Qt5::macdeployqt PROPERTIES
-      IMPORTED_LOCATION "${qt5_bin_location}/macdeployqt.exe")
+      IMPORTED_LOCATION "${qt5_bin_location}/macdeployqt")
   endif()
   message("Qt5::macdeployqt added")
 
 endif()
 
 ## Build LongQt
-add_executable(LongQt
+add_executable(LongQt WIN32 MACOSX_BUNDLE
   "src/LongQt.cpp"
   ${sources}
   "LongQt.qrc"
@@ -77,11 +75,6 @@ add_executable(LongQt
 
 target_include_directories(LongQt PUBLIC
     "$<BUILD_INTERFACE:${includes}>")
-
-set_target_properties(LongQt PROPERTIES
-    VERSION ${PROJECT_VERSION_MAJOR}
-    SOVERSION ${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE)
 
 target_link_libraries(LongQt PUBLIC
   Qt5::Core
@@ -93,7 +86,7 @@ target_link_libraries(LongQt PUBLIC
 )
 
 ## Build LongQtGrapher
-add_executable(LongQtGrapher
+add_executable(LongQtGrapher WIN32 MACOSX_BUNDLE
   "src/LongQtGrapher.cpp"
   ${sources}
   "LongQtGrapher.qrc"
@@ -102,11 +95,6 @@ add_executable(LongQtGrapher
 
 target_include_directories(LongQtGrapher PUBLIC
     "$<BUILD_INTERFACE:${includes}>")
-
-set_target_properties(LongQtGrapher PROPERTIES
-    VERSION ${PROJECT_VERSION_MAJOR}
-    SOVERSION ${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE)
 
 target_link_libraries(LongQtGrapher PUBLIC
   Qt5::Core
@@ -117,7 +105,7 @@ target_link_libraries(LongQtGrapher PUBLIC
   LongQt-model
 )
 
-add_executable(LQGridEditor
+add_executable(LQGridEditor WIN32 MACOSX_BUNDLE
   "src/LQGridEditorMain.cpp"
   ${sources}
   "LongQt.qrc"
@@ -126,11 +114,6 @@ add_executable(LQGridEditor
 
 target_include_directories(LQGridEditor PUBLIC
     "$<BUILD_INTERFACE:${includes}>")
-
-set_target_properties(LQGridEditor PROPERTIES
-    VERSION ${PROJECT_VERSION_MAJOR}
-    SOVERSION ${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE)
 
 target_link_libraries(LQGridEditor PUBLIC
   Qt5::Core
@@ -157,26 +140,31 @@ if(TARGET Qt5::windeployqt)
     POST_BUILD
     COMMAND Qt5::windeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
   )
-#elseif(TARGET Qt5::macdeployqt)
-#	add_custom_command(TARGET LongQt
-#		POST_BUILD
-#		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LongQt>/$<TARGET_FILE_NAME:LongQt>"
-#	)
-#	add_custom_command(TARGET LongQtGrapher
-#		POST_BUILD
-#		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LongQtGrapher>/$<TARGET_FILE_NAME:LongQtGrapher>"
-#	)
-#	add_custom_command(TARGET LQGridEditor
-#		POST_BUILD
-#		COMMAND Qt5::macdeployqt --dir "${CMAKE_CURRENT_BINARY_DIR}/libdeploy" "$<TARGET_FILE_DIR:LQGridEditor>/$<TARGET_FILE_NAME:LQGridEditor>"
-#	)
+elseif(TARGET Qt5::macdeployqt)
+  add_custom_command(TARGET LongQt
+    POST_BUILD
+    COMMAND Qt5::macdeployqt "$<TARGET_BUNDLE_DIR:LongQt>"
+  )
+  add_custom_command(TARGET LongQtGrapher
+    POST_BUILD
+    COMMAND Qt5::macdeployqt "$<TARGET_BUNDLE_DIR:LongQtGrapher>"
+  )
+  add_custom_command(TARGET LQGridEditor
+    POST_BUILD
+    COMMAND Qt5::macdeployqt "$<TARGET_BUNDLE_DIR:LQGridEditor>"
+  )
+
 endif()
 
 ## Install executables
 install(TARGETS LongQt LongQtGrapher LQGridEditor
   EXPORT LongQt
-  BUNDLE DESTINATION "bundle"
+  BUNDLE DESTINATION "./bin"
 )
+#	FRAMEWORK DESTINATION "Frameworks"
+
+install(FILES ${license_file}
+  TYPE INFO)
 
 ## Install dependancies for windows and OSX
 ## for windows more dependances will need to
@@ -196,17 +184,24 @@ if(WIN32)
   #		$<TARGET_FILE:Qt5::Concurrent>
   #		TYPE BIN
   #	)
-elseif(APPLE)
-  install(CODE
-    COMMAND "fixup_bundle(LongQt)"
-    COMMAND "fixup_bundle(LongQtGrapher)"
-    COMMAND "fixup_bundle(LQGridEditor)"
-  )
+  #elseif(APPLE)
+  #	install(CODE
+  #		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LongQt.app"
+  #		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LongQtGrapher.app"
+  #		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LQGridEditor.app"
+  #	)
+
+  #	install(CODE
+  #		"include(BundleUtilites)"
+  #		COMMAND "fixup_bundle(LongQt)"
+  #		COMMAND "fixup_bundle(LongQtGrapher)"
+  #		COMMAND "fixup_bundle(LQGridEditor)"
+  #	)
   #	install(
   #		DIRECTORY
   #		"${CMAKE_CURRENT_BINARY_DIR}/libdeploy/"
-  #		TYPE BIN)
-
+  #		TYPE LIB)
+  #
   #	install(FILES
   #		$<TARGET_FILE:Qt5::Core>
   #		$<TARGET_FILE:Qt5::Gui>
