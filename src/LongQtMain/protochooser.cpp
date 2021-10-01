@@ -38,8 +38,8 @@ void ProtoChooser::changeProto(std::shared_ptr<Protocol> proto) {
 
 void ProtoChooser::update_model(int index) {
   auto newProto = CellUtils::protoMap.at(this->protoNums[index])();
-  newProto->cellStateDir = this->proto->cellStateDir;
-  newProto->datadir = this->proto->datadir;
+  newProto->setCellStateDir(this->proto->getCellStateDir());
+  newProto->setDataDirDirect(this->proto->getDataDir());
   auto old_cell = this->proto->cell();
   auto cellTypesList = newProto->cellOptions();
   if (std::any_of(cellTypesList.begin(), cellTypesList.end(),

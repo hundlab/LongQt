@@ -68,7 +68,7 @@ void ChooseProtoWidget::changeProto(std::shared_ptr<Protocol> proto) {
 
 void ChooseProtoWidget::on_readSettings_clicked() {
   QString fileName = QFileDialog::getOpenFileName(
-      this, "Choose Settings file", clampType->proto->datadir.string().c_str());
+      this, "Choose Settings file", clampType->proto->getDataDir().c_str());
   if (!fileName.isEmpty()) {
     SettingsIO* settingsMgr = SettingsIO::getInstance();
     clampType->changeProto(
