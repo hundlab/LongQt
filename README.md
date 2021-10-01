@@ -55,13 +55,18 @@ the directory structure needs to follow the description above. When running cmak
 `LongQt_subdir:BOOL=TRUE`. If using QtCreator this can be done through the projects tab, if using
 the command line, it can be specified as an argument to cmake `-DLongQt_subdir:BOOL=TRUE`.
 When LongQt is built, it will also produce executables for LongQt-Grapher and LQ-GridEditor.
+These can be run from the build directory, or by hitting run in QtCreator. To run
+LongQt-Grapher or LQ-GridEditor, change the run options in the projects tab.
 
-To install LongQt add the install target to the build process (in QtCreator) or run cmake
-with the install target (for command line). It is often best to set the install directory
-manually, I install into a install subdirectory in my home folder. Just set the
-CMAKE_INSTALL_PREFIX, and ensure that it ends in LongQt. Installation is not particularly
-necessary for LongQt development as it can be run directly from the build directory using
-QtCreator (or any other IDE). To run LongQt-Grapher or LQ-GridEditor in QtCreator, change the
-run option in the projects tab. For creating the installer used to distribute LongQt, see
-the [github.com/hundlab/LongQt-Installer](https://github.com/hundlab/LongQt-Installer)
-repository.
+### Build the LongQt-Installer
+
+ The primary reason to install LongQt is to
+build the LongQt Installer executable. If you are not currently trying to build the installer,
+you can stop reading the directions now. These steps can be followed at a later time
+when you are interested in building the installer. This is not needed for development,
+only for deployment (which is currently handled using github actions). Set the install directory
+manually, by setting CMAKE_INSTALL_PREFIX to `<LongQt-Installer root dir>/install/LongQt/`
+(this folder will not exist until it is created for the install). Then add the install
+directive to the build process. Then follow the remaining steps on the LongQt-Installer's README
+[github.com/hundlab/LongQt-Installer](https://github.com/hundlab/LongQt-Installer).
+
