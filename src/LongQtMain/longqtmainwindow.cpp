@@ -212,12 +212,12 @@ void LongQtMainWindow::nextItem() {
 }
 void LongQtMainWindow::finished() {
   QMessageBox::information(0, "Folder",
-                           "Simulation is finished!\n The folder is named: " +
-                               proto->datadir.absolutePath());
+                           ("Simulation is finished!\n The folder is named: " +
+                               proto->datadir.string()).c_str());
   try {
-    ui->menuStack->addWidget(new Grapher(proto->datadir, this));
+    ui->menuStack->addWidget(new Grapher(QString(proto->datadir.string().c_str()), this));
     ui->menuList->addItem("Graph " +
-                          QFileInfo(proto->datadir.absolutePath()).baseName());
+                          QFileInfo(proto->datadir.string().c_str()).baseName());
   } catch (std::runtime_error& e) {
     Logger::getInstance()->write("HearCellSim: data files not readable {}",
                                  e.what());
