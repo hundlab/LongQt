@@ -60,7 +60,7 @@ QVariant GridModel::dataDisplay(const QModelIndex& index) const {
         return this->proto->gridMeasureMgr().dataNodes().count(p) > 0;
       }
     } else if (index.row() == 1) {
-      return (*grid)(p)->getCondConst(CellUtils::Side(index.column()));
+      return (*grid)(p)->getConductivity(CellUtils::Side(index.column()));
     }
   }
   return QVariant();
@@ -127,9 +127,10 @@ bool GridModel::setData(const QModelIndex& index, const QVariant& value, int) {
         // this works because column is setup follow cellutils_side.h:Side
         double val = value.toDouble();
         if (this->percent) {
-          val /= 100;
+          node->setResistivity(CellUtils::Side(index.column()), val);
+        } else {
+          node->setConductivityDirect(CellUtils::Side(index.column()), val);
         }
-        node->setCondConst(CellUtils::Side(index.column()), this->percent, val);
         success = true;
       } catch (std::out_of_range) {
         Logger::getInstance()->write("({},{}) out of range",

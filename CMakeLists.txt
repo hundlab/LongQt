@@ -166,50 +166,12 @@ install(TARGETS LongQt LongQtGrapher LQGridEditor
 install(FILES ${license_file}
   TYPE INFO)
 
-## Install dependancies for windows and OSX
-## for windows more dependances will need to
-## be copied by Qt's windeploy tool
-## but on OSX this should be everything that is
-## needed
+## Install dependancies for windows
 if(WIN32)
   install(
     DIRECTORY
     "${CMAKE_CURRENT_BINARY_DIR}/libdeploy/"
     TYPE BIN)
-  #	install(FILES
-  #		$<TARGET_FILE:Qt5::Core>
-  #		$<TARGET_FILE:Qt5::Gui>
-  #		$<TARGET_FILE:Qt5::Widgets>
-  #		$<TARGET_FILE:Qt5::PrintSupport>
-  #		$<TARGET_FILE:Qt5::Concurrent>
-  #		TYPE BIN
-  #	)
-  #elseif(APPLE)
-  #	install(CODE
-  #		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LongQt.app"
-  #		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LongQtGrapher.app"
-  #		COMMAND Qt5::macdeployqt "${CMAKE_INSTALL_PREFIX}/bundle/LQGridEditor.app"
-  #	)
-
-  #	install(CODE
-  #		"include(BundleUtilites)"
-  #		COMMAND "fixup_bundle(LongQt)"
-  #		COMMAND "fixup_bundle(LongQtGrapher)"
-  #		COMMAND "fixup_bundle(LQGridEditor)"
-  #	)
-  #	install(
-  #		DIRECTORY
-  #		"${CMAKE_CURRENT_BINARY_DIR}/libdeploy/"
-  #		TYPE LIB)
-  #
-  #	install(FILES
-  #		$<TARGET_FILE:Qt5::Core>
-  #		$<TARGET_FILE:Qt5::Gui>
-  #		$<TARGET_FILE:Qt5::Widgets>
-  #		$<TARGET_FILE:Qt5::PrintSupport>
-  #		$<TARGET_FILE:Qt5::Concurrent>
-  #		TYPE LIB
-  #	)
 endif()
 
 ## cmake has a builtin way to install dependancy
