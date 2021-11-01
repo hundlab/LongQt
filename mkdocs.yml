@@ -1,6 +1,6 @@
 site_name: LongQt
 site_url: https://longqt.readthedocs.io
-nav:
+pages:
   - Home: index.md
   - Document Preface and Scope: PrefaceandScope.md
   - Introduction: Introduction.md
