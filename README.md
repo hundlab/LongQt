@@ -25,7 +25,7 @@ supports the cmake build system.
 
 ### Requirements
 
-- Qt version 5.12:  https://www.qt.io/
+- Qt version 5.15:  https://www.qt.io/
   - windows: install the MSVC compiled version
 - c++17 or greater compliant compiler
   - linux:      gcc

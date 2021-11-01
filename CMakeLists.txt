@@ -12,7 +12,8 @@ endif()
 #set(CMAKE_BUILD_TYPE Release)
 
 if(NOT DEFINED LongQt_subdir)
-    set(LongQt_subdir FALSE)
+    set(LongQt_subdir FALSE CACHE BOOL "Add LongQt-model as a subdirectory
+    with the same parent directory as LongQt")
 endif()
 
 find_package(Qt5 COMPONENTS Core Gui Widgets Concurrent PrintSupport REQUIRED)
