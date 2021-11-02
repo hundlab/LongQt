@@ -8,12 +8,12 @@ env:
   CMAKE_INSTALL_PREFIX: ~/install
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs: 
+jobs:
 # This workflow contains a single job called "build"
-  build: 
+  build:
 # The type of runner that the job will run on
     name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }} 
+    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -50,7 +50,7 @@ jobs:
               qt5_path: "./5.15.2/clang_64/lib/cmake/Qt5",
               longqt-model: ./share/cmake/LongQt-model
             }
-    
+
     steps:
       - uses: actions/checkout@v2
 
@@ -77,7 +77,7 @@ jobs:
           cmd "${{ matrix.config.environment_script }}"
 
           #          choco install -y qt5-default
- 
+
       - name: Install dependencies on ubuntu
         if: startsWith(matrix.config.name, 'Ubuntu')
         run: |
@@ -91,7 +91,7 @@ jobs:
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install ninja 
+          brew install ninja
           python3 -m pip install aqtinstall
           python3 -m aqt install 5.15.2 mac desktop clang_64
           ninja --version
@@ -109,7 +109,8 @@ jobs:
             -DCMAKE_INSTALL_PREFIX:PATH=./install \
             -DQt5_DIR:PATH=${{ matrix.config.qt5_path }} \
             -DLongQt-model_DIR:PATH=${{ matrix.config.longqt-model }} \
-            -G "${{ matrix.config.generators }}"
+            -G "${{ matrix.config.generators }}" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING="10.15"
 
       - name: Build
         shell: bash
@@ -119,7 +120,7 @@ jobs:
       - name: Install
         shell: bash
         run: cmake --install . --prefix ./install
- 
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
